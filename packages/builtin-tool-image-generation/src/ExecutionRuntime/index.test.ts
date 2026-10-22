@@ -73,6 +73,20 @@ const createService = (
   ...overrides,
 });
 
+const createServiceWithParameters = (parameters?: Record<string, unknown>) =>
+  createService({
+    listImageModels: vi.fn().mockResolvedValue({
+      providers: [
+        {
+          id: DEFAULT_IMAGE_GENERATION_PROVIDER,
+          models: [{ id: DEFAULT_IMAGE_GENERATION_MODEL, parameters }],
+          name: 'Provider 1',
+        },
+      ],
+      totalModels: 1,
+    }),
+  });
+
 describe('ImageGenerationExecutionRuntime', () => {
   it('lists available image models with descriptions and parameter hints', async () => {
     const runtime = new ImageGenerationExecutionRuntime(createService());
@@ -374,6 +388,119 @@ describe('ImageGenerationExecutionRuntime', () => {
     expect(result.error?.type).toBe('ImageGenerationFailed');
     expect(result.content).toContain('finished with errors');
     expect(result.content).toContain('Insufficient budget to perform this operation');
+  });
+
+  describe('model parameter schema', () => {
+    const getCreateImageParams = (service: ImageGenerationRuntimeService) =>
+      vi.mocked(service.createImage).mock.calls[0]![0].params;
+
+    it('maps aspectRatio to the closest size when the model only supports size', async () => {
+      const service = createServiceWithParameters({
+        imageUrls: { default: [] },
+        prompt: { default: '' },
+        quality: { default: 'auto', enum: ['auto', 'high'] },
+        size: { default: 'auto', enum: ['auto', '1024x1024', '1536x1024', '1024x1536'] },
+      });
+      const runtime = new ImageGenerationExecutionRuntime(service);
+
+      const result = await runtime.generateImage({
+        parameters: { aspectRatio: '16:9' },
+        prompt: 'A wide landscape',
+      });
+
+      expect(result.success).toBe(true);
+      expect(getCreateImageParams(service)).toEqual({
+        prompt: 'A wide landscape',
+        size: '1536x1024',
+      });
+      expect(result.content).toContain('Mapped aspectRatio 16:9 to size 1536x1024');
+      expect(result.state).toMatchObject({
+        parameterAdjustments: [expect.stringContaining('aspectRatio')],
+      });
+    });
+
+    it('drops parameters missing from the model schema and reports them', async () => {
+      const service = createServiceWithParameters({
+        prompt: { default: '' },
+        size: { default: '1024x1024', enum: ['1024x1024'] },
+      });
+      const runtime = new ImageGenerationExecutionRuntime(service);
+
+      const result = await runtime.generateImage({
+        parameters: { aspectRatio: '1:1', size: '1024x1024', style: 'vivid' },
+        prompt: 'A cat',
+      });
+
+      expect(getCreateImageParams(service)).toEqual({ prompt: 'A cat', size: '1024x1024' });
+      expect(result.content).toContain(
+        'Ignored parameters not supported by this model: aspectRatio, style.',
+      );
+    });
+
+    it('merges imageUrl into imageUrls when the model only accepts imageUrls', async () => {
+      const service = createServiceWithParameters({
+        imageUrls: { default: [] },
+        prompt: { default: '' },
+      });
+      const runtime = new ImageGenerationExecutionRuntime(service);
+
+      const result = await runtime.generateImage({
+        imageUrl: 'https://cdn.example.com/a.png',
+        imageUrls: ['https://cdn.example.com/a.png', 'https://cdn.example.com/b.png'],
+        prompt: 'Blend both images',
+      });
+
+      expect(getCreateImageParams(service)).toEqual({
+        imageUrls: ['https://cdn.example.com/a.png', 'https://cdn.example.com/b.png'],
+        prompt: 'Blend both images',
+      });
+      expect(result.content).toContain('Merged imageUrl into imageUrls');
+    });
+
+    it('uses the first reference image when the model only accepts imageUrl', async () => {
+      const service = createServiceWithParameters({
+        imageUrl: { default: null },
+        prompt: { default: '' },
+      });
+      const runtime = new ImageGenerationExecutionRuntime(service);
+
+      const result = await runtime.generateImage({
+        imageUrls: ['https://cdn.example.com/a.png', 'https://cdn.example.com/b.png'],
+        prompt: 'Edit the image',
+      });
+
+      expect(getCreateImageParams(service)).toEqual({
+        imageUrl: 'https://cdn.example.com/a.png',
+        prompt: 'Edit the image',
+      });
+      expect(result.content).toContain('https://cdn.example.com/b.png');
+    });
+
+    it('drops reference images when the model accepts none', async () => {
+      const service = createServiceWithParameters({ prompt: { default: '' } });
+      const runtime = new ImageGenerationExecutionRuntime(service);
+
+      const result = await runtime.generateImage({
+        imageUrl: 'https://cdn.example.com/a.png',
+        prompt: 'A cat',
+      });
+
+      expect(getCreateImageParams(service)).toEqual({ prompt: 'A cat' });
+      expect(result.content).toContain('Ignored parameters not supported by this model: imageUrl.');
+    });
+
+    it('forwards parameters unchanged when the model has no parameter schema', async () => {
+      const service = createServiceWithParameters(undefined);
+      const runtime = new ImageGenerationExecutionRuntime(service);
+
+      const result = await runtime.generateImage({
+        parameters: { aspectRatio: '16:9' },
+        prompt: 'A cat',
+      });
+
+      expect(getCreateImageParams(service)).toEqual({ aspectRatio: '16:9', prompt: 'A cat' });
+      expect(result.content).not.toContain('Parameter adjustments');
+    });
   });
 
   it('rejects invalid image counts before creating tasks', async () => {

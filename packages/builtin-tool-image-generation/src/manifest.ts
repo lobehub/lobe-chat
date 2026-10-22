@@ -65,12 +65,12 @@ export const ImageGenerationManifest: BuiltinToolManifest = {
           },
           imageUrl: {
             description:
-              'Single accessible reference image URL for image-to-image models. Omit for text-to-image.',
+              'Single accessible reference image URL, only for models whose parameter schema has imageUrl. Mutually exclusive with imageUrls. Omit for text-to-image.',
             type: ['string', 'null'],
           },
           imageUrls: {
             description:
-              'Multiple accessible reference image URLs for models that support multiple references.',
+              'Reference image URLs, only for models whose parameter schema has imageUrls. Mutually exclusive with imageUrl.',
             items: { type: 'string' },
             type: 'array',
           },
@@ -82,7 +82,7 @@ export const ImageGenerationManifest: BuiltinToolManifest = {
           parameters: {
             additionalProperties: true,
             description:
-              'Model-specific generation parameters. Call getImageModelParameters first and only pass supported keys such as size, aspectRatio, resolution, quality, steps, cfg, seed, promptExtend, watermark, or strength.',
+              "Model-specific generation parameters. Call getImageModelParameters first and only pass keys present in that model's parameter schema (for example, use size when the schema has size but no aspectRatio). Unsupported keys are dropped.",
             type: 'object',
           },
           prompt: {

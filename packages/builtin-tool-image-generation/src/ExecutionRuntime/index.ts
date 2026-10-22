@@ -3,7 +3,7 @@ import {
   AsyncTaskStatus,
   type BuiltinServerRuntimeOutput,
 } from '@lobechat/types';
-import type { RuntimeImageGenParams } from 'model-bank';
+import type { ModelParamsSchema, RuntimeImageGenParams } from 'model-bank';
 import { extractDefaultValues } from 'model-bank';
 
 import type {
@@ -19,6 +19,7 @@ import type {
   ListImageModelsParams,
   ListImageModelsState,
 } from '../types';
+import { sanitizeImageParams } from './sanitizeParams';
 
 const DEFAULT_LIST_LIMIT = 20;
 const MAX_LIST_LIMIT = 50;
@@ -49,6 +50,12 @@ export interface ImageGenerationRuntimeService {
     params: Required<Pick<ListImageModelsParams, 'limit'>> &
       Pick<ListImageModelsParams, 'provider'>,
   ) => Promise<ListImageModelsState>;
+}
+
+interface ResolvedImageModel {
+  model: string;
+  parameters?: ModelParamsSchema;
+  provider: string;
 }
 
 const clampInteger = (value: number | undefined, fallback: number, max: number) => {
@@ -298,6 +305,27 @@ const normalizeReferenceUrls = ({
   return normalized;
 };
 
+/**
+ * Appends the parameter changes made by `sanitizeImageParams` so the agent does not
+ * assume a dropped or remapped parameter took effect.
+ */
+const withParameterAdjustments = (
+  output: BuiltinServerRuntimeOutput,
+  adjustments: string[],
+): BuiltinServerRuntimeOutput => {
+  if (adjustments.length === 0) return output;
+
+  return {
+    ...output,
+    content: [
+      output.content,
+      'Parameter adjustments:',
+      ...adjustments.map((item) => `- ${item}`),
+    ].join('\n'),
+    state: { ...output.state, parameterAdjustments: adjustments },
+  };
+};
+
 export class ImageGenerationExecutionRuntime {
   private service: ImageGenerationRuntimeService;
 
@@ -364,27 +392,30 @@ export class ImageGenerationExecutionRuntime {
     }
   }
 
-  private async resolveImageModel(
-    provider?: string,
-    model?: string,
-  ): Promise<{ model: string; provider: string }> {
+  private async resolveImageModel(provider?: string, model?: string): Promise<ResolvedImageModel> {
     const state = await this.service.listImageModels({
       limit: MAX_PARAMETER_LOOKUP_LIMIT,
       provider,
     });
 
     if (model) {
-      const matchedProvider = state.providers.find(
-        (item) =>
-          (!provider || item.id === provider) &&
-          item.models.some((candidate) => candidate.id === model),
-      );
-
-      if (matchedProvider) return { model, provider: matchedProvider.id };
+      for (const providerItem of state.providers) {
+        if (provider && providerItem.id !== provider) continue;
+        const matchedModel = providerItem.models.find((candidate) => candidate.id === model);
+        if (matchedModel) {
+          return { model, parameters: matchedModel.parameters, provider: providerItem.id };
+        }
+      }
     } else {
       for (const providerItem of state.providers) {
         const firstModel = providerItem.models[0];
-        if (firstModel) return { model: firstModel.id, provider: providerItem.id };
+        if (firstModel) {
+          return {
+            model: firstModel.id,
+            parameters: firstModel.parameters,
+            provider: providerItem.id,
+          };
+        }
       }
     }
 
@@ -455,7 +486,7 @@ export class ImageGenerationExecutionRuntime {
       );
     }
 
-    let selection: { model: string; provider: string };
+    let selection: ResolvedImageModel;
     try {
       selection = await this.resolveImageModel(args.provider?.trim(), args.model?.trim());
     } catch (error) {
@@ -466,12 +497,47 @@ export class ImageGenerationExecutionRuntime {
     const { model, provider } = selection;
     const waitUntilComplete = args.waitUntilComplete !== false;
     const referenceUrls = normalizeReferenceUrls(args);
-    const params = {
-      ...args.parameters,
-      ...referenceUrls,
-      prompt,
-    } as RuntimeImageGenParams & Record<string, unknown>;
+    const { adjustments, params } = sanitizeImageParams(
+      { ...args.parameters, ...referenceUrls, prompt },
+      selection.parameters,
+    );
 
+    const output = await this.startGeneration(
+      {
+        imageNum,
+        model,
+        params: params as RuntimeImageGenParams & Record<string, unknown>,
+        prompt,
+        provider,
+        waitTimeoutMs: args.waitTimeoutMs,
+        waitUntilComplete,
+      },
+      context,
+    );
+
+    return withParameterAdjustments(output, adjustments);
+  }
+
+  private async startGeneration(
+    {
+      imageNum,
+      model,
+      params,
+      prompt,
+      provider,
+      waitTimeoutMs: requestedWaitTimeoutMs,
+      waitUntilComplete,
+    }: {
+      imageNum: number;
+      model: string;
+      params: RuntimeImageGenParams & Record<string, unknown>;
+      prompt: string;
+      provider: string;
+      waitTimeoutMs?: number;
+      waitUntilComplete: boolean;
+    },
+    context: GenerateImageRuntimeContext,
+  ): Promise<BuiltinServerRuntimeOutput> {
     try {
       const generationTopicId = await this.service.createGenerationTopic(
         'image',
@@ -529,7 +595,10 @@ export class ImageGenerationExecutionRuntime {
         };
       }
 
-      const waitTimeoutMs = resolveWaitTimeoutMs(args.waitTimeoutMs, context.executionTimeoutMs);
+      const waitTimeoutMs = resolveWaitTimeoutMs(
+        requestedWaitTimeoutMs,
+        context.executionTimeoutMs,
+      );
       let waitResult: { generations: GeneratedImageTask[]; timedOut: boolean };
       try {
         waitResult = await this.waitForGenerations(generations, waitTimeoutMs, context.signal);

@@ -97,6 +97,10 @@ export interface GenerateImageState {
   generationTopicId: string;
   imageNum: number;
   model: string;
+  /**
+   * Changes applied to the requested params to fit the model parameter schema.
+   */
+  parameterAdjustments?: string[];
   prompt: string;
   provider: string;
   waitError?: string;
