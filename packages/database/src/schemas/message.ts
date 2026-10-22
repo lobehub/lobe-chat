@@ -159,6 +159,12 @@ export const messages = pgTable(
     uniqueIndex('message_client_id_user_unique').on(table.clientId, table.userId),
     index('messages_topic_id_idx').on(table.topicId),
     index('messages_topic_id_updated_at_idx').on(table.topicId, table.updatedAt),
+    // Newest-page reads of a topic's mainline (`queryWithWhere`): serves the
+    // `ORDER BY created_at DESC, id DESC LIMIT n` id pick top-N instead of
+    // sorting every row of a long topic.
+    index('messages_topic_id_created_at_id_idx')
+      .on(table.topicId, table.createdAt, table.id)
+      .where(sql`${table.messageGroupId} IS NULL`),
     index('messages_parent_id_idx').on(table.parentId),
     index('messages_quota_id_idx').on(table.quotaId),
 

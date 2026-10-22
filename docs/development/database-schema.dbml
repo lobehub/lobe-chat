@@ -2511,6 +2511,7 @@ table messages {
     (client_id, user_id) [name: 'message_client_id_user_unique', unique]
     topic_id [name: 'messages_topic_id_idx']
     (topic_id, updated_at) [name: 'messages_topic_id_updated_at_idx']
+    (topic_id, created_at, id) [name: 'messages_topic_id_created_at_id_idx']
     parent_id [name: 'messages_parent_id_idx']
     quota_id [name: 'messages_quota_id_idx']
     user_id [name: 'messages_user_id_idx']

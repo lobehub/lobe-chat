@@ -1,0 +1,13 @@
+-- Newest-page reads of a topic's mainline (`MessagePageQueries.queryWithWhere`).
+--
+-- On cloud production this index must be built online before deploy:
+--
+--   CREATE INDEX CONCURRENTLY IF NOT EXISTS "messages_topic_id_created_at_id_idx"
+--   ON "messages" USING btree ("topic_id","created_at","id")
+--   WHERE "message_group_id" IS NULL;
+--
+-- The guarded statement below is then a NO-OP on databases that already have
+-- the index, while fresh / self-hosted databases still converge to the target
+-- schema during normal migration replay. Keep it non-CONCURRENTLY so local
+-- PGlite / normal migration replay remains compatible.
+CREATE INDEX IF NOT EXISTS "messages_topic_id_created_at_id_idx" ON "messages" USING btree ("topic_id","created_at","id") WHERE "messages"."message_group_id" IS NULL;
