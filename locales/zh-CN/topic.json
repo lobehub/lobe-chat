@@ -83,6 +83,7 @@
   "filter.groupMode.byTime": "按时间阶段",
   "filter.groupMode.flat": "平铺",
   "filter.noDevice": "未绑定设备",
+  "filter.onlyMine": "只看我创建的",
   "filter.organize": "整理",
   "filter.showCompleted": "显示已归档",
   "filter.sort": "排序",
