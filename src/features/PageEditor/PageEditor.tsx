@@ -1,7 +1,7 @@
 'use client';
 
 import { DEFAULT_BLOCK_ANCHOR_PADDING, EditorProvider } from '@lobehub/editor/react';
-import { createStaticStyles, cssVar, Flexbox } from '@lobehub/ui';
+import { cssVar, Flexbox } from '@lobehub/ui';
 import type { CSSProperties, FC, ReactNode, UIEvent } from 'react';
 import { memo, useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 
@@ -30,6 +30,7 @@ import HtmlPageBody, { useIsHtmlPage } from './HtmlPageBody';
 import LockedAlert from './LockedAlert';
 import LockStatusBanner from './LockStatusBanner';
 import { PageAgentProvider } from './PageAgentProvider';
+import overrideStyles from './PageEditor.module.css';
 import { PageEditorProvider } from './PageEditorProvider';
 import RightPanel from './RightPanel';
 import { usePageEditorStore } from './store';
@@ -89,23 +90,6 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
 });
-
-const overrideStyles = createStaticStyles(({ css }) => ({
-  editorContent: css`
-    .lobe-editor-table-scroll-wrapper.lobe-editor-table-scroll-wrapper {
-      --lobe-block-anchor-padding: var(--lobe-pageeditor-table-bleed-inline);
-
-      position: relative;
-      box-sizing: border-box;
-      width: 100cqi;
-      margin-inline: calc(var(--lobe-pageeditor-table-bleed-inline) * -1);
-    }
-
-    .lobe-editor-table-scroll-wrapper .editor_table {
-      width: max-content;
-    }
-  `,
-}));
 
 interface PageEditorProps {
   /** Composer that receives selections created by the Ask Copilot toolbar item. */

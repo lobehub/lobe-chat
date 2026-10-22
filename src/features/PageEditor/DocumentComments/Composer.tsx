@@ -1,6 +1,7 @@
 import type { DocumentCommentJson, DocumentCommentSelectionAnchor } from '@lobechat/types';
 import { ChatInput, ChatInputActionBar, SendButton, useEditor } from '@lobehub/editor/react';
 import { Avatar, Button, Flexbox, toast } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -718,7 +719,7 @@ const Composer = memo<ComposerProps>(
       return (
         <Flexbox gap={8} ref={rootRef}>
           <ChatInput
-            className={styles.composerPlain}
+            className={stylex.props(styles.composerPlain).className}
             header={showTypoBar ? <TypoBar editor={editor} /> : undefined}
             maxHeight={COMMENT_INPUT_MAX_HEIGHT}
             minHeight={56}
@@ -755,11 +756,11 @@ const Composer = memo<ComposerProps>(
 
     return (
       <Flexbox horizontal align={'flex-start'} gap={12} ref={rootRef}>
-        <Flexbox className={styles.composerAvatar}>
+        <Flexbox className={stylex.props(styles.composerAvatar).className}>
           <Avatar avatar={avatar} size={parentCommentId ? 28 : 32} />
         </Flexbox>
         <ChatInput
-          className={styles.composer}
+          className={stylex.props(styles.composer).className}
           flex={1}
           maxHeight={COMMENT_INPUT_MAX_HEIGHT}
           minHeight={72}
@@ -791,7 +792,7 @@ const Composer = memo<ComposerProps>(
                 {anchor && (
                   <AnchorQuote
                     anchor={anchor}
-                    className={styles.composerAnchor}
+                    xstyle={styles.composerAnchor}
                     onDismiss={clearAnchor}
                   />
                 )}
