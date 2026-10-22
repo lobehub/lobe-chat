@@ -4221,7 +4221,7 @@ When I am ___, I need ___
   'tools.title': 'Skills',
   'tab.environments': 'Environments',
   'environments.desc':
-    'How to set up a project: the repository to check out, the setup command, the variables. Initialize a folder on your drive from it when you create the folder in the directory picker.',
+    "How to set up a project: the repository to check out, the setup command, the variables. Pick one from the environment menu under the chat input, and the conversation's working directory — a temporary sandbox or a folder on your drive — is initialized from it once.",
   'environments.create': 'New environment',
   'environments.cancel': 'Cancel',
   'environments.createFailed': 'Could not create the environment',
@@ -4237,7 +4237,7 @@ When I am ___, I need ___
   'environments.remove': 'Delete environment',
   'environments.removeConfirmTitle': 'Delete environment {{name}}?',
   'environments.removeConfirmContent':
-    "Its specification, variables, its copy's folder and the saved snapshot go with it, and cannot be recovered.",
+    'Its specification and variables are deleted and cannot be recovered. Folders it already initialized keep their files.',
   'environments.storage.used': '{{used}} of {{total}}',
   'environments.storage.unmeasured': 'Storage not measured yet · {{total}} available',
   'environments.storage.measuredAt': 'Measured {{time}}. Refresh to measure again.',
@@ -4412,8 +4412,7 @@ When I am ___, I need ___
   'environments.sessions.reason.build_failed': 'Build failed',
   'environments.sessions.reason.build_timeout': 'Build timed out',
   'environments.sessions.reason.build_gone': 'Build interrupted',
-  'environments.form.desc':
-    'What a copy is built from — where the code comes from and what makes it usable.',
+  'environments.form.desc': 'Where the code comes from and what makes it usable.',
   'environments.form.appliesOnBuild':
     'Applied when a copy is created. Existing copies keep the definition they were made with — a rebuild replays that one, so use a new copy to pick this up.',
   'environments.form.appliesOnInit':
@@ -4429,7 +4428,7 @@ When I am ___, I need ___
   'environments.visibility.publicTag': 'Published',
   'environments.visibility.changeFailed': "Could not change this environment's visibility",
   'environments.visibility.readonlyHint':
-    'Published to this workspace by its creator: you can run in this environment, but only they can change what it builds.',
+    'Published to this workspace by its creator: you can initialize with this environment, but only they can change it.',
   'environments.files.browse': 'Browse files',
   'environments.files.back': 'Back',
   'environments.files.empty': 'This directory is empty',

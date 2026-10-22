@@ -68,3 +68,26 @@ export interface DirectorySource {
   selectBlockedReason?: (path: string) => string | undefined;
   useListing: (path?: string) => DirectoryListing;
 }
+
+/**
+ * What the path field shows. Without a listing — still loading, or failed —
+ * the folder asked for is shown in the source's own form (`/` for a drive's
+ * top level), not left empty for a placeholder that describes device paths.
+ */
+export const displayedDirectoryPath = ({
+  directoryPath,
+  displayPath,
+  draft,
+  requestedPath,
+}: {
+  directoryPath?: string;
+  displayPath?: (path: string) => string;
+  draft?: string;
+  requestedPath?: string;
+}): string => {
+  if (draft !== undefined) return draft;
+  const shown = directoryPath ?? requestedPath;
+  if (shown === undefined) return displayPath?.('') ?? '';
+
+  return displayPath?.(shown) ?? shown;
+};

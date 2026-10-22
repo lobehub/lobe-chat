@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 
 import NavItem from '@/features/NavPanel/components/NavItem';
 
-import type { DirectorySource } from './directorySource';
+import { type DirectorySource, displayedDirectoryPath } from './directorySource';
 import { getFolderIcon } from './folderIcons';
 import { NewFolderInput } from './NewFolderInput';
 import { useDirectoryBrowserState } from './useDirectoryBrowserState';
@@ -109,11 +109,12 @@ export const DirectoryBrowser = ({
   // browsed from until a retry succeeds.
   const canUseDirectory = !isLoading && !error && isPathConfirmed(directory?.path);
   const blockedReason = directory ? source.selectBlockedReason?.(directory.path) : undefined;
-  const displayedPath =
-    draft ??
-    (directory ? (source.displayPath?.(directory.path) ?? directory.path) : undefined) ??
-    path ??
-    '';
+  const displayedPath = displayedDirectoryPath({
+    directoryPath: directory?.path,
+    displayPath: source.displayPath,
+    draft,
+    requestedPath: path,
+  });
 
   const navigate = (nextPath?: string) => {
     setDirectoryPath(nextPath);
