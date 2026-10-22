@@ -1,4 +1,5 @@
 import { isDesktop } from '@lobechat/const';
+import type { ConnectorOAuthIpc } from '@lobechat/electron-client-ipc/types';
 
 import { ensureElectronIpc } from '@/utils/electron/ipc';
 
@@ -24,7 +25,7 @@ export const waitForConnectorOAuth = async (
   signal?.throwIfAborted();
   if (isDesktop) {
     // Native ownership survives provider COOP headers that sever window.opener.
-    const oauth = ensureElectronIpc().connectorOAuth;
+    const oauth: ConnectorOAuthIpc = ensureElectronIpc().connectorOAuth;
     const requestId = crypto.randomUUID();
     const onAbort = () => {
       oauth.cancel({ requestId }).catch((error: unknown) => {
