@@ -18,6 +18,9 @@ vi.mock('../controllers/task.controller', () => ({
     runTask(c: any) {
       return c.json({ data: { topicId: 'tpc-1' }, success: true }, 202);
     }
+    updateTask(c: any) {
+      return c.json({ data: { id: 'task-1' }, success: true });
+    }
   },
 }));
 
@@ -83,6 +86,35 @@ describe('GET /tasks/:id/runs', () => {
 
   it('rejects a page size over 100', async () => {
     const res = await requestAs(['agent:read'], '/task-1/runs?limit=500');
+
+    expect(res.status).toBe(400);
+  });
+});
+
+describe('PATCH /tasks/:id heartbeatInterval', () => {
+  it('accepts an interval of at least ten minutes', async () => {
+    const res = await requestAs(['agent:write'], '/task-1', {
+      body: { heartbeatInterval: 3600 },
+      method: 'PATCH',
+    });
+
+    expect(res.status).toBe(200);
+  });
+
+  it('accepts 0 to turn the heartbeat off', async () => {
+    const res = await requestAs(['agent:write'], '/task-1', {
+      body: { heartbeatInterval: 0 },
+      method: 'PATCH',
+    });
+
+    expect(res.status).toBe(200);
+  });
+
+  it('rejects an interval under ten minutes', async () => {
+    const res = await requestAs(['agent:write'], '/task-1', {
+      body: { heartbeatInterval: 60 },
+      method: 'PATCH',
+    });
 
     expect(res.status).toBe(400);
   });

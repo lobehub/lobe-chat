@@ -26,8 +26,9 @@ const DEFAULT_RUN_LIMIT = 20;
 
 type TaskRunRow = Awaited<ReturnType<TaskTopicModel['findWithHandoff']>>[number];
 
-// The handoff also carries the brief-emission audit (`briefDecision`), which is
-// lifecycle bookkeeping rather than run output, so only the result fields leave.
+// The brief-emission audit itself stays private; only its verdict leaves, as
+// `notable` — whether the lifecycle judged this run worth surfacing (always for
+// schedule ticks and errors, the LLM judge's call for heartbeat ticks).
 const toPublicRun = (row: TaskRunRow) => {
   const handoff = (row.handoff ?? {}) as TaskTopicHandoff;
   return {
@@ -37,6 +38,7 @@ const toPublicRun = (row: TaskRunRow) => {
     createdAt: row.createdAt,
     keyFindings: handoff.keyFindings ?? [],
     nextAction: handoff.nextAction ?? null,
+    notable: handoff.briefDecision ? handoff.briefDecision.emit : null,
     seq: row.seq,
     status: row.status,
     summary: handoff.summary ?? null,

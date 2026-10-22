@@ -11194,6 +11194,7 @@ export type PatchApiV1TasksByIdData = {
             [key: string]: unknown;
         };
         description?: string | null;
+        heartbeatInterval?: number;
         instruction?: string;
         name?: string;
         parentTaskId?: string | null;

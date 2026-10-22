@@ -352,6 +352,7 @@ describe('TaskRestService runs', () => {
     expect(runs).toEqual([
       expect.objectContaining({
         content: 'Round trip to Osaka is ¥1,880 on ANA.',
+        notable: true,
         seq: 3,
         status: 'completed',
         summary: 'Found a fare under budget',
@@ -363,6 +364,16 @@ describe('TaskRestService runs', () => {
     expect(runs[0]).not.toHaveProperty('briefDecision');
     expect(runs[0]).not.toHaveProperty('metadata');
     expect(runs[0]).not.toHaveProperty('operationId');
+  });
+
+  it('reports a run the lifecycle never judged as notable: null', async () => {
+    findWithHandoffMock.mockResolvedValue([
+      { createdAt: new Date(), handoff: null, seq: 1, status: 'running', topicId: 'tpc-1' },
+    ]);
+
+    const [run] = (await service().listRuns('task-1', {})) as Record<string, unknown>[];
+
+    expect(run).toMatchObject({ notable: null, summary: null, topicId: 'tpc-1' });
   });
 
   it('passes the requested page size through', async () => {

@@ -58,6 +58,15 @@ export const UpdateTaskRequestSchema = z
     automationMode: z.enum(['heartbeat', 'schedule']).nullish(),
     config: z.record(z.string(), z.unknown()).optional(),
     description: z.string().nullish(),
+    // Same bound as the in-app editor and the tRPC patch: 0 turns the heartbeat
+    // off, anything else is at least 10 minutes so a client cannot spin ticks.
+    heartbeatInterval: z
+      .number()
+      .int()
+      .refine((value) => value === 0 || value >= 600, {
+        message: 'heartbeatInterval must be 0 (disabled) or at least 600 seconds (10 minutes)',
+      })
+      .optional(),
     instruction: z.string().optional(),
     name: z.string().optional(),
     parentTaskId: z.string().nullish(),
