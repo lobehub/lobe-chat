@@ -1,4 +1,5 @@
-import { Button, cx, Tooltip } from '@lobehub/ui';
+import { Button, Tooltip } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import { CheckCheck } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -27,18 +28,18 @@ const InterventionTabBar = memo<InterventionTabBarProps>(
     const { t } = useTranslation('chat');
 
     return (
-      <div className={styles.tabBar}>
+      <div {...stylex.props(styles.tabBar)}>
         {interventions.map((item, index) => (
           <div
-            className={cx(styles.tab, index === activeIndex && styles.tabActive)}
             key={item.toolCallId}
+            {...stylex.props(styles.tab, index === activeIndex && styles.tabActive)}
             onClick={() => onTabChange(index)}
           >
             🔧 {item.apiName}
           </div>
         ))}
-        <div className={styles.tabTrailing}>
-          <span className={styles.tabCounter}>
+        <div {...stylex.props(styles.tabTrailing)}>
+          <span {...stylex.props(styles.tabCounter)}>
             {activeIndex + 1} / {interventions.length}
           </span>
           {/* Only shown for a real batch: with one pending call in the active

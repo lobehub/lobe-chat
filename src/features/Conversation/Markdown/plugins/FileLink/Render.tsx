@@ -1,7 +1,9 @@
 'use client';
 
 import { RENDERER_HANDLED_LINK_ATTR } from '@lobechat/desktop-bridge';
-import { A, createStaticStyles } from '@lobehub/ui';
+import { A } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import type { MouseEvent } from 'react';
 import { memo, useCallback } from 'react';
 
@@ -18,51 +20,36 @@ interface FileLinkProperties {
   linkLabel?: string;
 }
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  icon: css`
-    display: inline-flex;
-    flex-shrink: 0;
-    align-items: center;
-  `,
-  link: css`
-    cursor: pointer;
-
-    display: inline-flex;
-    gap: 4px;
-    align-items: center;
-
-    margin-inline: -2px;
-    padding-inline: 2px;
-    border-radius: ${cssVar.borderRadiusSM};
-
-    text-decoration: none;
-    vertical-align: -0.16em;
-
-    transition:
-      color 0.2s ${cssVar.motionEaseOut},
+const styles = stylex.create({
+  icon: { display: 'inline-flex', flexShrink: 0, alignItems: 'center' },
+  link: {
+    cursor: 'pointer',
+    display: 'inline-flex',
+    gap: '4px',
+    alignItems: 'center',
+    marginInline: '-2px',
+    paddingInline: '2px',
+    borderRadius: cssVar.borderRadiusSM,
+    textDecoration: { 'default': 'none', ':hover': 'underline' },
+    verticalAlign: '-0.16em',
+    transition: `color 0.2s ${cssVar.motionEaseOut},
       background 0.2s ${cssVar.motionEaseOut},
-      box-shadow 0.2s ${cssVar.motionEaseOut};
-
-    &:hover {
-      color: ${cssVar.colorLinkHover};
-      text-decoration: underline;
-      text-underline-offset: 2px;
-
-      background: ${cssVar.colorFillSecondary};
-      box-shadow: inset 0 0 0 1px ${cssVar.colorPrimaryBorder};
-    }
-
-    &:active {
-      color: ${cssVar.colorLinkActive};
-      background: ${cssVar.colorFill};
-    }
-
-    &:focus-visible {
-      outline: 2px solid ${cssVar.colorPrimaryBorder};
-      outline-offset: 2px;
-    }
-  `,
-}));
+      box-shadow 0.2s ${cssVar.motionEaseOut}`,
+    color: { 'default': null, ':hover': cssVar.colorLinkHover, ':active': cssVar.colorLinkActive },
+    textUnderlineOffset: { 'default': null, ':hover': '2px' },
+    backgroundColor: {
+      'default': null,
+      ':hover': cssVar.colorFillSecondary,
+      ':active': cssVar.colorFill,
+    },
+    backgroundImage: { 'default': null, ':hover': 'none', ':active': 'none' },
+    boxShadow: { 'default': null, ':hover': `inset 0 0 0 1px ${cssVar.colorPrimaryBorder}` },
+    outlineWidth: { 'default': null, ':focus-visible': '2px' },
+    outlineStyle: { 'default': null, ':focus-visible': 'solid' },
+    outlineColor: { 'default': null, ':focus-visible': cssVar.colorPrimaryBorder },
+    outlineOffset: { 'default': null, ':focus-visible': '2px' },
+  },
+});
 
 const Render = memo<MarkdownElementProps<FileLinkProperties>>(({ node }) => {
   const { fileId, linkHref, linkLabel } = node?.properties || {};
@@ -92,12 +79,12 @@ const Render = memo<MarkdownElementProps<FileLinkProperties>>(({ node }) => {
   return (
     <A
       {...(fileId ? { [RENDERER_HANDLED_LINK_ATTR]: 'true' } : {})}
-      className={styles.link}
+      className={stylex.props(styles.link).className}
       href={linkHref}
       rel="noopener noreferrer"
       onClick={handleClick}
     >
-      <span aria-hidden className={styles.icon}>
+      <span aria-hidden {...stylex.props(styles.icon)}>
         <FileIcon fileName={label} size={16} variant={'raw'} />
       </span>
       <span>{label}</span>
