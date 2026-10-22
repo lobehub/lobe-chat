@@ -222,6 +222,23 @@ describe('QuotaAccountManager on the desktop', () => {
     expect(screen.getAllByText('heteroAgent.claudeQuota.manage.notSignedIn')).toHaveLength(1);
   });
 
+  it('does not judge a bound device’s accounts by this desktop’s logins', async () => {
+    renderWithFreshCache(<QuotaAccountManager agentId={'agent-1'} deviceId={'device-1'} />);
+
+    // The device holds its own logins: `away` may well be signed in there.
+    await screen.findByText('away@example.com');
+    await waitFor(() =>
+      expect(radioFor('away@example.com').getAttribute('aria-disabled')).not.toBe('true'),
+    );
+    expect(heterogeneousAgentService.listClaudeCodeAccounts).not.toHaveBeenCalled();
+    expect(screen.queryByText('heteroAgent.claudeQuota.manage.notSignedIn')).toBeNull();
+    expect(screen.queryByText('heteroAgent.claudeQuota.manage.signIn')).toBeNull();
+    // Signing in here would not reach the device, so no local sign-in entry either.
+    expect(
+      screen.queryByRole('button', { name: /heteroAgent\.claudeQuota\.manage\.add/ }),
+    ).toBeNull();
+  });
+
   it('lists only Claude Code accounts, never another coding agent’s', async () => {
     vi.mocked(agentQuotaService.listAccounts).mockResolvedValue([
       account('here'),
