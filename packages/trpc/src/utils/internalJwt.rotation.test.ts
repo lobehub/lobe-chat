@@ -43,20 +43,20 @@ describe('internal JWT key rotation', () => {
     authEnvMock.JWKS_KEY = JSON.stringify({ keys: [keys.old.privateJwk, keys.new.privateJwk] });
   });
 
-  const signToken = (key: (typeof keys)[keyof typeof keys]) =>
+  const signToken = (key: (typeof keys)[keyof typeof keys], kid: string | null = key.kid) =>
     new SignJWT({ purpose: 'lobe-internal-call' })
-      .setProtectedHeader({ alg: 'RS256', kid: key.kid })
+      .setProtectedHeader(kid === null ? { alg: 'RS256' } : { alg: 'RS256', kid })
       .setIssuedAt()
       .setExpirationTime('5m')
       .sign(key.privateKey);
 
-  const signHeteroToken = (key: (typeof keys)[keyof typeof keys]) =>
+  const signHeteroToken = (key: (typeof keys)[keyof typeof keys], kid: string | null = key.kid) =>
     new SignJWT({
       capabilities: ['hetero:finish'],
       operation_id: 'operation-1',
       purpose: 'hetero-operation',
     })
-      .setProtectedHeader({ alg: 'RS256', kid: key.kid })
+      .setProtectedHeader(kid === null ? { alg: 'RS256' } : { alg: 'RS256', kid })
       .setIssuer('urn:lobehub:internal')
       .setAudience('urn:lobehub:hetero-operation')
       .setSubject('user-1')
@@ -107,5 +107,16 @@ describe('internal JWT key rotation', () => {
     await expect(validateInternalJWT(token)).resolves.toBe(true);
 
     authEnvMock.JWKS_KEY = JSON.stringify({ keys: [keys.old.privateJwk, keys.new.privateJwk] });
+  });
+
+  it('verifies in-flight tokens without kid after a second key is added', async () => {
+    const { validateHeteroOperationJWT, validateInternalJWT } = await import('./internalJwt');
+
+    authEnvMock.JWKS_KEY = JSON.stringify({ keys: [keys.old.privateJwk, keys.new.privateJwk] });
+
+    await expect(validateInternalJWT(await signToken(keys.old, null))).resolves.toBe(true);
+    await expect(
+      validateHeteroOperationJWT(await signHeteroToken(keys.old, null)),
+    ).resolves.toMatchObject({ operation_id: 'operation-1', sub: 'user-1' });
   });
 });

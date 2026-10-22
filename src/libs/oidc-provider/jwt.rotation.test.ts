@@ -41,17 +41,20 @@ describe('OIDC JWT key rotation', () => {
     authEnvMock.JWKS_KEY = JSON.stringify({ keys: [keys.old.privateJwk, keys.new.privateJwk] });
   });
 
-  const signToken = (key: (typeof keys)[keyof typeof keys], kid = key.kid) =>
+  const signToken = (key: (typeof keys)[keyof typeof keys], kid: string | null = key.kid) =>
     new SignJWT({ client_id: 'lobehub-desktop' })
-      .setProtectedHeader({ alg: 'RS256', kid })
+      .setProtectedHeader(kid === null ? { alg: 'RS256' } : { alg: 'RS256', kid })
       .setSubject('user-1')
       .setIssuedAt()
       .setExpirationTime('5m')
       .sign(key.privateKey);
 
-  const signAcceptanceReviewToken = (key: (typeof keys)[keyof typeof keys]) =>
+  const signAcceptanceReviewToken = (
+    key: (typeof keys)[keyof typeof keys],
+    kid: string | null = key.kid,
+  ) =>
     new SignJWT({ client_id: 'lobehub-review' })
-      .setProtectedHeader({ alg: 'RS256', kid: key.kid })
+      .setProtectedHeader(kid === null ? { alg: 'RS256' } : { alg: 'RS256', kid })
       .setAudience(`urn:lobehub:acceptance:${acceptanceId}`)
       .setSubject('user-1')
       .setIssuedAt()
@@ -96,5 +99,18 @@ describe('OIDC JWT key rotation', () => {
     });
 
     authEnvMock.JWKS_KEY = JSON.stringify({ keys: [keys.old.privateJwk, keys.new.privateJwk] });
+  });
+
+  it('verifies in-flight tokens without kid after a second key is added', async () => {
+    const { validateOIDCJWT, verifyAcceptanceReviewJWT } = await import('./jwt');
+
+    authEnvMock.JWKS_KEY = JSON.stringify({ keys: [keys.old.privateJwk, keys.new.privateJwk] });
+
+    await expect(validateOIDCJWT(await signToken(keys.old, null))).resolves.toMatchObject({
+      userId: 'user-1',
+    });
+    await expect(
+      verifyAcceptanceReviewJWT(await signAcceptanceReviewToken(keys.old, null)),
+    ).resolves.toMatchObject({ acceptanceId, userId: 'user-1' });
   });
 });
