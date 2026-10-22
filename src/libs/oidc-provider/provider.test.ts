@@ -84,6 +84,28 @@ describe('OIDC Provider - Market Client Integration', () => {
       vi.doUnmock('@/envs/app');
     });
 
+    it('should register toby as a public native client with its own callback scheme', async () => {
+      vi.doMock('@/envs/app', () => ({
+        appEnv: {
+          APP_URL: 'https://app.lobehub.com',
+          MARKET_BASE_URL: undefined,
+        },
+      }));
+
+      const { default: Provider } = await import('oidc-provider');
+      const { defaultClients } = await import('./config');
+      const provider = new Provider('https://app.lobehub.com/oidc', { clients: defaultClients });
+      const tobyClient = await provider.Client.find('toby');
+
+      expect(tobyClient?.applicationType).toBe('native');
+      expect(tobyClient?.tokenEndpointAuthMethod).toBe('none');
+      expect(tobyClient?.grantTypes).toEqual(['authorization_code', 'refresh_token']);
+      expect(tobyClient?.redirectUriAllowed('com.lobehub.toby://auth/callback')).toBe(true);
+      expect(tobyClient?.redirectUriAllowed('com.lobehub.app://auth/callback')).toBe(false);
+
+      vi.doUnmock('@/envs/app');
+    });
+
     it('should export API_AUDIENCE constant', async () => {
       vi.doMock('@/envs/app', () => ({
         appEnv: {
