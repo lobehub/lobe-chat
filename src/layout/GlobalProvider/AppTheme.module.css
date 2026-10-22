@@ -11,6 +11,7 @@
   scrollbar-width: none;
 }
 
+/* stylelint-disable-next-line no-descending-specificity -- the id rule wins on specificity, not order */
 .scrollbar :global(#lobe-mobile-scroll-container) ::-webkit-scrollbar {
   width: 0;
   height: 0;
