@@ -1,19 +1,9 @@
 'use client';
 
 import { Github } from '@lobehub/icons';
-import {
-  confirmModal,
-  createStaticStyles,
-  cssVar,
-  cx,
-  Flexbox,
-  Icon,
-  Popover,
-  Skeleton,
-  Text,
-  toast,
-  Tooltip,
-} from '@lobehub/ui';
+import { confirmModal, Flexbox, Icon, Popover, Skeleton, Text, toast, Tooltip } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import {
   ChevronDownIcon,
   FolderClockIcon,
@@ -50,105 +40,71 @@ import { workingDirectoryChipStyles } from './workingDirectoryChipStyles';
 
 export type { SandboxSelection } from './useSandboxMode';
 
-const styles = createStaticStyles(({ css }) => ({
+const styles = stylex.create({
+  blocked: { color: cssVar.colorWarning },
+  blockedNotice: {
+    paddingBlock: '8px',
+    paddingInline: '8px',
+    borderRadius: cssVar.borderRadius,
+    fontSize: '12px',
+    color: cssVar.colorWarningText,
+    backgroundColor: cssVar.colorWarningBg,
+    backgroundImage: 'none',
+  },
   /** The environment and the directory on an instance's second line. */
-  environmentRow: css`
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  `,
+  environmentRow: { overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' },
   /**
    * The pool caption, in the execution-target menu's own shape. The space
    * above it is what makes it a section start instead of one more line: two
    * grey captions stacked with even spacing read as a pair, not as a heading
    * over its contents.
    */
-  groupLabel: css`
-    margin-block-start: 6px;
-    padding-block: 4px;
-
-    font-size: 11px;
-    font-weight: 500;
-    color: ${cssVar.colorTextQuaternary};
-  `,
+  groupLabel: {
+    marginBlockStart: '6px',
+    paddingBlock: '4px',
+    fontSize: '11px',
+    fontWeight: 500,
+    color: cssVar.colorTextQuaternary,
+  },
   /** Title, its explainer and the way out — the execution-device menu's header. */
-  header: css`
-    display: flex;
-    gap: 6px;
-    align-items: center;
-    justify-content: space-between;
-
-    padding-block: 4px;
-  `,
-  headerInfo: css`
-    cursor: help;
-    color: ${cssVar.colorTextQuaternary};
-    transition: color 0.2s;
-
-    &:hover {
-      color: ${cssVar.colorTextSecondary};
-    }
-  `,
-  headerTitle: css`
-    font-size: 12px;
-    font-weight: 500;
-    color: ${cssVar.colorTextTertiary};
-  `,
-  manageButton: css`
-    cursor: pointer;
-
-    display: flex;
-    gap: 3px;
-    align-items: center;
-
-    padding: 0;
-    border: none;
-
-    font-size: 11px;
-    color: ${cssVar.colorTextQuaternary};
-
-    background: none;
-
-    transition: color 0.2s;
-
-    &:hover {
-      color: ${cssVar.colorPrimary};
-    }
-  `,
-  notice: css`
-    padding-block: 8px;
-    font-size: 12px;
-    color: ${cssVar.colorTextDescription};
-  `,
-  option: css`
-    && {
-      padding-inline: 0;
-    }
-  `,
-  skeletonRow: css`
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    padding-block: 8px;
-  `,
-  blocked: css`
-    color: ${cssVar.colorWarning};
-  `,
-  blockedNotice: css`
-    padding-block: 8px;
-    padding-inline: 8px;
-    border-radius: ${cssVar.borderRadius};
-
-    font-size: 12px;
-    color: ${cssVar.colorWarningText};
-
-    background: ${cssVar.colorWarningBg};
-  `,
-  temporary: css`
-    padding-block-end: 4px;
-    border-block-end: 1px solid ${cssVar.colorBorderSecondary};
-  `,
-}));
+  header: {
+    display: 'flex',
+    gap: '6px',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingBlock: '4px',
+  },
+  headerInfo: {
+    cursor: 'help',
+    color: { 'default': cssVar.colorTextQuaternary, ':hover': cssVar.colorTextSecondary },
+    transition: 'color 0.2s',
+  },
+  headerTitle: { fontSize: '12px', fontWeight: 500, color: cssVar.colorTextTertiary },
+  manageButton: {
+    cursor: 'pointer',
+    display: 'flex',
+    gap: '3px',
+    alignItems: 'center',
+    paddingBlock: '0',
+    paddingInline: '0',
+    borderWidth: '0',
+    borderStyle: 'none',
+    fontSize: '11px',
+    color: { 'default': cssVar.colorTextQuaternary, ':hover': cssVar.colorPrimary },
+    backgroundColor: 'transparent',
+    backgroundImage: 'none',
+    transition: 'color 0.2s',
+  },
+  notice: { paddingBlock: '8px', fontSize: '12px', color: cssVar.colorTextDescription },
+  option: { paddingInline: '0' },
+  skeletonRow: { display: 'flex', gap: '10px', alignItems: 'center', paddingBlock: '8px' },
+  temporary: {
+    paddingBlockEnd: '4px',
+    borderBottomWidth: '1px',
+    borderBottomStyle: 'solid',
+    borderBottomColor: cssVar.colorBorderSecondary,
+  },
+});
 
 /**
  * The shape the instance list is about to take: a caption over a row. Without it the section is simply absent while
@@ -158,8 +114,12 @@ const styles = createStaticStyles(({ css }) => ({
  */
 const EnvironmentSectionSkeleton = memo(() => (
   <Flexbox gap={2}>
-    <Skeleton.Text className={styles.environmentRow} rows={1} style={{ width: 96 }} />
-    <div className={styles.skeletonRow}>
+    <Skeleton.Text
+      className={stylex.props(styles.environmentRow).className}
+      rows={1}
+      style={{ width: 96 }}
+    />
+    <div {...stylex.props(styles.skeletonRow)}>
       <Skeleton.Avatar shape={'square'} size={28} />
       <Flexbox flex={1} gap={4}>
         <Skeleton.Text rows={1} style={{ width: 120 }} />
@@ -434,18 +394,18 @@ const SandboxInstancePicker = memo<SandboxInstancePickerProps>(
     // more empty child is harmless.
     const content = (
       <Flexbox gap={2} style={{ maxWidth: 360, minWidth: 280 }}>
-        <div className={styles.header}>
+        <div {...stylex.props(styles.header)}>
           <Flexbox horizontal align={'center'} gap={4}>
-            <span className={styles.headerTitle}>{t('sandboxStorage.pickerTitle')}</span>
+            <span {...stylex.props(styles.headerTitle)}>{t('sandboxStorage.pickerTitle')}</span>
             <Tooltip title={t('sandboxStorage.pickerInfoTooltip')}>
-              <span className={styles.headerInfo}>
+              <span {...stylex.props(styles.headerInfo)}>
                 <Icon icon={InfoIcon} size={12} />
               </span>
             </Tooltip>
           </Flexbox>
           {entitled && (
             <button
-              className={styles.manageButton}
+              {...stylex.props(styles.manageButton)}
               type={'button'}
               onClick={() => leaveTo(() => navigate('/settings/environments'))}
             >
@@ -456,7 +416,7 @@ const SandboxInstancePicker = memo<SandboxInstancePickerProps>(
         </div>
 
         {current && currentBlocked && (
-          <Text className={styles.blockedNotice}>
+          <Text className={stylex.props(styles.blockedNotice).className}>
             {t('sandboxStorage.privateInstanceBlocked', { name: current.name })}
           </Text>
         )}
@@ -467,18 +427,18 @@ const SandboxInstancePicker = memo<SandboxInstancePickerProps>(
             is still building holds the same lease, but no conversation is
             running in it: its row already says "Building". */}
         {current && !currentBlocked && isCopyOccupied(current) && !isCopyBuilding(current) && (
-          <Text className={styles.blockedNotice}>
+          <Text className={stylex.props(styles.blockedNotice).className}>
             {t('sandboxStorage.instanceBusy', { name: current.name })}
           </Text>
         )}
 
-        <Flexbox className={styles.temporary}>
+        <Flexbox className={stylex.props(styles.temporary).className}>
           <OptionRow
             active={value.mode === 'ephemeral'}
-            className={styles.option}
             desc={t('sandboxStorage.ephemeralDesc')}
             icon={<Icon icon={TimerIcon} size={16} />}
             label={t('sandboxStorage.ephemeral')}
+            xstyle={styles.option}
             onClick={() => void select({ mode: 'ephemeral' })}
           />
         </Flexbox>
@@ -489,11 +449,11 @@ const SandboxInstancePicker = memo<SandboxInstancePickerProps>(
           // more place files could go — and the tag says why it is not
           // simply selectable.
           <OptionRow
-            className={styles.option}
             desc={t('sandboxStorage.persistentUpsellDesc')}
             icon={<Icon icon={FolderClockIcon} size={16} />}
             label={t('sandboxStorage.persistentUpsell')}
             tag={t('pro', { ns: 'common' })}
+            xstyle={styles.option}
             onClick={() => leaveTo(openSandboxStorageUpsell)}
           />
         )}
@@ -501,17 +461,19 @@ const SandboxInstancePicker = memo<SandboxInstancePickerProps>(
         {entitled && (environmentsLoading || instancesLoading) && <EnvironmentSectionSkeleton />}
 
         {entitled && Boolean(environmentError) && (
-          <Text className={styles.notice}>{t('sandboxStorage.environmentsUnavailable')}</Text>
+          <Text className={stylex.props(styles.notice).className}>
+            {t('sandboxStorage.environmentsUnavailable')}
+          </Text>
         )}
 
         {entitled && hasNoEnvironments && (
           // Nothing to choose from yet: environments are made on the
           // environment page — this menu picks, it does not author.
           <OptionRow
-            className={styles.option}
             desc={t('sandboxStorage.setUpEnvironmentDesc')}
             icon={<Icon icon={PlusIcon} size={16} />}
             label={t('sandboxStorage.setUpEnvironment')}
+            xstyle={styles.option}
             onClick={() => leaveTo(() => navigate('/settings/environments'))}
           />
         )}
@@ -520,14 +482,14 @@ const SandboxInstancePicker = memo<SandboxInstancePickerProps>(
 
         {entitled && listsReady && inWorkspace && privatePool.length > 0 && (
           <>
-            <div className={styles.groupLabel}>{t('sandboxStorage.privateGroup')}</div>
+            <div {...stylex.props(styles.groupLabel)}>{t('sandboxStorage.privateGroup')}</div>
             {privatePool.map(renderEnvironment)}
           </>
         )}
 
         {entitled && listsReady && inWorkspace && workspacePool.length > 0 && (
           <>
-            <div className={styles.groupLabel}>{t('sandboxStorage.workspaceGroup')}</div>
+            <div {...stylex.props(styles.groupLabel)}>{t('sandboxStorage.workspaceGroup')}</div>
             {workspacePool.map(renderEnvironment)}
           </>
         )}
@@ -536,7 +498,7 @@ const SandboxInstancePicker = memo<SandboxInstancePickerProps>(
             menu's enroll hint, in this menu's terms. One line however many
             were dropped; which ones is the settings page's job. */}
         {entitled && hiddenPrivateCount > 0 && (
-          <Text className={styles.notice}>
+          <Text className={stylex.props(styles.notice).className}>
             {t('sandboxStorage.publicAgentHint', { count: hiddenPrivateCount })}
           </Text>
         )}
@@ -571,12 +533,14 @@ const SandboxInstancePicker = memo<SandboxInstancePickerProps>(
                 : undefined
             }
           >
-            <div className={cx(workingDirectoryChipStyles.chip, currentBlocked && styles.blocked)}>
+            <div
+              {...stylex.props(workingDirectoryChipStyles.chip, currentBlocked && styles.blocked)}
+            >
               {chipIcon}
               {resolvingInstance ? (
                 <Skeleton.Text rows={1} style={{ height: 12, width: 56 }} />
               ) : (
-                <span className={workingDirectoryChipStyles.label}>{chipLabel}</span>
+                <span {...stylex.props(workingDirectoryChipStyles.label)}>{chipLabel}</span>
               )}
               <Icon icon={ChevronDownIcon} size={12} />
             </div>

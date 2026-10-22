@@ -2,16 +2,9 @@
 
 import { type EnvironmentKind } from '@lobechat/types';
 import { Github } from '@lobehub/icons';
-import {
-  ActionIcon,
-  createStaticStyles,
-  cssVar,
-  DropdownMenu,
-  Flexbox,
-  Icon,
-  Popover,
-  Tooltip,
-} from '@lobehub/ui';
+import { ActionIcon, DropdownMenu, Flexbox, Icon, Popover, Tooltip } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import {
   ChevronDownIcon,
   ChevronRightIcon,
@@ -32,34 +25,24 @@ import {
   type PickerCopy,
 } from './sandboxEnvironmentRows';
 
-const styles = createStaticStyles(({ css }) => ({
-  desc: css`
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  `,
-  inlineCopies: css`
-    margin-inline-start: 18px;
-    padding-inline-start: 8px;
-    border-inline-start: 1px solid ${cssVar.colorBorderSecondary};
-  `,
-  option: css`
-    && {
-      padding-inline: 0;
-    }
-  `,
-  submenuArrow: css`
-    display: flex;
-    align-items: center;
-    color: ${cssVar.colorTextQuaternary};
-  `,
-  submenuTitle: css`
-    padding-block: 4px;
-    font-size: 11px;
-    font-weight: 500;
-    color: ${cssVar.colorTextQuaternary};
-  `,
-}));
+const styles = stylex.create({
+  desc: { overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' },
+  inlineCopies: {
+    marginInlineStart: '18px',
+    paddingInlineStart: '8px',
+    borderInlineStartWidth: '1px',
+    borderInlineStartStyle: 'solid',
+    borderInlineStartColor: cssVar.colorBorderSecondary,
+  },
+  option: { paddingInline: '0' },
+  submenuArrow: { display: 'flex', alignItems: 'center', color: cssVar.colorTextQuaternary },
+  submenuTitle: {
+    paddingBlock: '4px',
+    fontSize: '11px',
+    fontWeight: 500,
+    color: cssVar.colorTextQuaternary,
+  },
+});
 
 /**
  * Desktop pointers open a second menu on hover; touch screens and narrow
@@ -211,16 +194,16 @@ const SandboxEnvironmentRow = memo<SandboxEnvironmentRowProps>(
       return (
         <OptionRow
           active={active}
-          className={styles.option}
-          desc={<span className={styles.desc}>{copy.workingDirectory}</span>}
+          disabled={unavailable && !active}
+          desc={<span {...stylex.props(styles.desc)}>{copy.workingDirectory}</span>}
           // Already this conversation's own copy: it stays selectable however
           // the lease reads — "you cannot pick what you are already using" is
           // never the right thing to say.
-          disabled={unavailable && !active}
           extra={menu(copy)}
           icon={icon(16)}
           key={copy.id}
           label={copy.name}
+          xstyle={styles.option}
           tags={[copy.isDefault ? t('sandboxStorage.defaultCopy') : null, statusTag(copy)].filter(
             Boolean,
           )}
@@ -246,7 +229,7 @@ const SandboxEnvironmentRow = memo<SandboxEnvironmentRowProps>(
 
     const arrow = row.hasSubmenu ? (
       hoverSubmenu ? (
-        <span className={styles.submenuArrow}>
+        <span {...stylex.props(styles.submenuArrow)}>
           <Icon icon={ChevronRightIcon} size={14} />
         </span>
       ) : (
@@ -273,12 +256,12 @@ const SandboxEnvironmentRow = memo<SandboxEnvironmentRowProps>(
     const environmentRow = (
       <OptionRow
         active={row.copies.some((copy) => copy.id === boundInstanceId)}
-        className={styles.option}
-        desc={<span className={styles.desc}>{desc}</span>}
+        desc={<span {...stylex.props(styles.desc)}>{desc}</span>}
         disabled={!row.selectable || busy}
         extra={extra}
         icon={icon(16)}
         label={environment.name}
+        xstyle={styles.option}
         tags={[
           t(kind === 'files' ? 'sandboxStorage.kind.files' : 'sandboxStorage.kind.code'),
           statusTag(displayed),
@@ -301,7 +284,7 @@ const SandboxEnvironmentRow = memo<SandboxEnvironmentRowProps>(
           trigger={'hover'}
           content={
             <Flexbox gap={2} style={{ maxWidth: 320, minWidth: 240 }}>
-              <div className={styles.submenuTitle}>{t('sandboxStorage.copies')}</div>
+              <div {...stylex.props(styles.submenuTitle)}>{t('sandboxStorage.copies')}</div>
               {copyList}
             </Flexbox>
           }
@@ -313,7 +296,7 @@ const SandboxEnvironmentRow = memo<SandboxEnvironmentRowProps>(
     return (
       <div data-testid={`sandbox-env-row-${environment.id}`}>
         {environmentRow}
-        {expanded && <div className={styles.inlineCopies}>{copyList}</div>}
+        {expanded && <div {...stylex.props(styles.inlineCopies)}>{copyList}</div>}
       </div>
     );
   },
