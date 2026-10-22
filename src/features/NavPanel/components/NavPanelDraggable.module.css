@@ -1,3 +1,4 @@
+/* stylelint-disable selector-pseudo-class-no-unknown -- CSS Modules :global() */
 /* The panel hides the sidebar header buttons until it is hovered. They are
    other components' elements, reached by id (TOGGLE_BUTTON_ID in
    ToggleLeftPanelButton, USER_DROPDOWN_ICON_ID in ../constants, BACK_BUTTON_ID in
