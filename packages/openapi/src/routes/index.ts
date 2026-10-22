@@ -24,6 +24,7 @@ import ResponsesRoutes from './responses.route';
 import RolesRoutes from './roles.route';
 import AgentSignalsRoutes from './signals.route';
 import TasksRoutes from './tasks.route';
+import ToolsRoutes from './tools.route';
 import TopicsRoutes from './topics.route';
 import UsageRoutes from './usage.route';
 import UsersRoutes from './users.route';
@@ -55,6 +56,7 @@ export default {
   'roles': RolesRoutes,
   'signals': AgentSignalsRoutes,
   'tasks': TasksRoutes,
+  'tools': ToolsRoutes,
   'topics': TopicsRoutes,
   'users': UsersRoutes,
   'usage': UsageRoutes,
