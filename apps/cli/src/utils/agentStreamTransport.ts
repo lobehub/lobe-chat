@@ -452,34 +452,55 @@ export const consumeAgentStream = (
   // arriving mid-read would print ahead of supervisor history the server had
   // already published — an out-of-order transcript, most likely on resume, when
   // buffered member frames land while the first read is still pending. Hold
-  // mirrored deliveries behind the in-flight pass, keeping their own order.
-  let catchUpInFlight: Promise<boolean> | undefined;
-  let mirroredDelivery: Promise<void> = Promise.resolve();
+  // mirrored deliveries behind every in-flight pass, keeping their own order.
+  let catchUpDepth = 0;
+  const queuedMirrored: AgentStreamEvent[] = [];
+  const emitMirrored = (event: AgentStreamEvent) => {
+    try {
+      resolved.onMirroredEvent?.(event);
+    } catch (error) {
+      fail(toError(error));
+    }
+  };
   const deliverMirrored = (event: AgentStreamEvent) => {
-    const inFlight = catchUpInFlight;
-    mirroredDelivery = mirroredDelivery
-      .then(() => inFlight)
-      .then(() => {
-        if (!stopped) resolved.onMirroredEvent?.(event);
-      })
-      .catch((error) => fail(toError(error)));
+    if (stopped) return;
+    // Queued rather than chained on the pass promise: a terminal pass closes the
+    // transport from inside that same promise, so a chained continuation would
+    // observe `stopped` and drop member output.
+    if (catchUpDepth > 0) {
+      queuedMirrored.push(event);
+      return;
+    }
+    emitMirrored(event);
+  };
+  const flushMirrored = () => {
+    while (queuedMirrored.length > 0 && !stopped) emitMirrored(queuedMirrored.shift()!);
   };
 
   const runCatchUp = (): Promise<boolean> => {
     const pass = (async () => {
+      catchUpDepth += 1;
       try {
         const terminal = await journal.catchUp();
-        if (terminal) finish();
+        if (terminal) {
+          // Mirrored frames queued behind this read belong to the transcript the
+          // run is about to report as complete: drain them before `finish()`
+          // flips `stopped`, or a fast group run silently loses member output.
+          flushMirrored();
+          finish();
+        }
         return terminal;
       } catch (error) {
         fail(error as Error);
         return false;
+      } finally {
+        catchUpDepth -= 1;
+        // Only the last pass may drain: a pass that returns immediately because
+        // the journal is already reading must not release frames queued behind
+        // the read that is actually in flight.
+        if (catchUpDepth === 0) flushMirrored();
       }
     })();
-    catchUpInFlight = pass;
-    void pass.then(() => {
-      if (catchUpInFlight === pass) catchUpInFlight = undefined;
-    });
     return pass;
   };
   // Chunk wakes are coalesced: the first one reads immediately and opens a

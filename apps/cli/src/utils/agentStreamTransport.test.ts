@@ -175,6 +175,48 @@ describe('recoverable WebSocket transport', () => {
     stream.close();
   });
 
+  it('drains mirrored member frames queued behind a terminal catch-up instead of dropping them', async () => {
+    let release: (page: AgentHistoryPage) => void = () => {};
+    const pending = new Promise<AgentHistoryPage>((resolve) => {
+      release = resolve;
+    });
+    readHistory = vi.fn(() => pending);
+
+    const printed: AgentStreamEvent[] = [];
+    const stream = consumeAgentStream(
+      { ...options(), onMirroredEvent: (event) => printed.push(event) },
+      (event) => {
+        printed.push(event);
+        return event.type === 'agent_runtime_end';
+      },
+    );
+    await flush();
+
+    // The frame lands while the read that turns out terminal is still in flight,
+    // so it is queued behind that read rather than delivered immediately.
+    const memberChunk = { ...event(3, 'stream_chunk', 'member'), operationId: 'op-member-2' };
+    sockets[0].message({ event: memberChunk, id: 'gateway-1', type: 'agent_event' });
+    await flush();
+    expect(printed).toHaveLength(0);
+
+    release({
+      available: true,
+      events: [event(2, 'stream_chunk', 'supervisor'), event(4, 'agent_runtime_end')],
+      hasMore: false,
+      nextCursor: '4-0',
+    });
+    await flush();
+
+    // Success must not be reported with member output missing from the transcript.
+    await expect(stream.done).resolves.toBeUndefined();
+    expect(printed.map((item) => item.type)).toEqual([
+      'stream_chunk',
+      'agent_runtime_end',
+      'stream_chunk',
+    ]);
+    expect((printed.at(-1)?.data as { content?: string }).content).toBe('member');
+  });
+
   it('reconnects with backoff and recovers missed output exactly once', async () => {
     journal.push(event(2, 'stream_chunk', 'before'));
     const done = streamAgentEvents(options());
