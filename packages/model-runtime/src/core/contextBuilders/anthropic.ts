@@ -1,5 +1,6 @@
 import type Anthropic from '@anthropic-ai/sdk';
-import { imageUrlToBase64, resolveImageMimeTypeFromBase64 } from '../../utils/imageToBase64';
+import { imageUrlToBase64 } from '../../utils/imageToBase64';
+import { resolveImageMimeTypeFromBase64 } from '../../utils/imageMimeType';
 import type OpenAI from 'openai';
 
 import type { OpenAIChatMessage, UserMessageContentPart } from '../../types';
