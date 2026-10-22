@@ -32,7 +32,6 @@
   "artifacts.svg.download.svg": "Download as SVG",
   "canvas.frameTitle": "Canvas preview",
   "canvas.generating": "Generating v{{version}}…",
-  "canvas.menu.openInTab": "Open in new tab",
   "canvas.menu.openPublic": "Open public link",
   "canvas.menu.publish": "Publish v{{version}} to a public link",
   "canvas.menu.publishing": "Publishing…",

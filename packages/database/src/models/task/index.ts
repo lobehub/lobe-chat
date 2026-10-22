@@ -80,13 +80,13 @@ export class TaskModel {
     }
 
     // A prefix is derived from placement, never accepted as a creation field.
+    // Anyone who can see a project may file work in it; project settings stay
+    // with its creator.
     let identifierPrefix = DEFAULT_TASK_IDENTIFIER_PREFIX;
     if (createData.projectId) {
-      const project = await new ProjectModel(
-        this.db,
-        this.userId,
-        this.workspaceId,
-      ).findManageableById(createData.projectId);
+      const project = await new ProjectModel(this.db, this.userId, this.workspaceId).findById(
+        createData.projectId,
+      );
       if (!project) throw new Error('Project not found');
       identifierPrefix = project.identifier;
     }

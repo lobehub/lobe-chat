@@ -384,6 +384,22 @@ export interface TopicDeviceDirectory {
  *   Groups carry no title — the renderer names them from its directory and
  *   device registries.
  */
+/**
+ * The device a topic runs on: an explicit `metadata.boundDeviceId` wins, then
+ * the device of its project working directory. Shared by device grouping and
+ * the project sidebar's device filter so both attribute topics the same way.
+ */
+export const createTopicDeviceResolver = (directories?: ReadonlyArray<TopicDeviceDirectory>) => {
+  const deviceIdByDirectoryId = new Map(
+    (directories ?? []).map((directory) => [directory.id, directory.deviceId]),
+  );
+  return (topic: ChatTopic): string | undefined =>
+    topic.metadata?.boundDeviceId ??
+    (topic.projectWorkingDirectoryId
+      ? (deviceIdByDirectoryId.get(topic.projectWorkingDirectoryId) ?? undefined)
+      : undefined);
+};
+
 export const groupTopicsByDevice = (
   topics: ChatTopic[],
   field: 'createdAt' | 'updatedAt',
@@ -391,16 +407,10 @@ export const groupTopicsByDevice = (
 ): GroupedTopic[] => {
   if (!topics.length) return [];
 
-  const deviceIdByDirectoryId = new Map(
-    (directories ?? []).map((directory) => [directory.id, directory.deviceId]),
-  );
+  const resolveDeviceId = createTopicDeviceResolver(directories);
   const groupsMap = new Map<string, ChatTopic[]>();
   for (const topic of topics) {
-    const deviceId =
-      topic.metadata?.boundDeviceId ??
-      (topic.projectWorkingDirectoryId
-        ? deviceIdByDirectoryId.get(topic.projectWorkingDirectoryId)
-        : undefined);
+    const deviceId = resolveDeviceId(topic);
     const id = deviceId ? `${DEVICE_GROUP_PREFIX}${deviceId}` : NO_DEVICE_GROUP_ID;
     const existing = groupsMap.get(id);
     if (existing) {
@@ -458,7 +468,7 @@ export const STATUS_GROUP_ORDER: TopicStatusBucket[] = [
  * server can't see) or persisted as `running` lands in `running`; then the
  * persisted status, defaulting to `active`.
  */
-const resolveStatusBucket = (
+export const resolveStatusBucket = (
   topic: ChatTopic,
   loadingTopicIds?: ReadonlySet<string>,
 ): TopicStatusBucket => {
@@ -503,4 +513,44 @@ export const groupTopicsByStatus = (
     children: groupsMap.get(status)!,
     id: status,
   }));
+};
+
+/** Status buckets a list can be narrowed to; archived work has its own toggle. */
+export const TOPIC_STATUS_FILTERS = ['pending', 'running', 'scheduled', 'active'] as const;
+export type TopicStatusFilter = (typeof TOPIC_STATUS_FILTERS)[number];
+
+/** `none` keeps the topics no device is attributed to. */
+export type TopicDeviceFilter = string | 'none';
+
+export interface TopicListFilter {
+  device?: TopicDeviceFilter;
+  status?: TopicStatusFilter;
+}
+
+/**
+ * Narrow a topic list by status bucket and device, using the same attribution
+ * as status and device grouping. An empty filter returns the list unchanged.
+ */
+export const filterTopics = (
+  topics: ChatTopic[],
+  filter: TopicListFilter,
+  {
+    directories,
+    loadingTopicIds,
+  }: {
+    directories?: ReadonlyArray<TopicDeviceDirectory>;
+    loadingTopicIds?: ReadonlySet<string>;
+  } = {},
+): ChatTopic[] => {
+  const { device, status } = filter;
+  if (!device && !status) return topics;
+  const resolveDeviceId = createTopicDeviceResolver(directories);
+  return topics.filter((topic) => {
+    if (status && resolveStatusBucket(topic, loadingTopicIds) !== status) return false;
+    if (device) {
+      const deviceId = resolveDeviceId(topic);
+      if (device === 'none' ? !!deviceId : deviceId !== device) return false;
+    }
+    return true;
+  });
 };

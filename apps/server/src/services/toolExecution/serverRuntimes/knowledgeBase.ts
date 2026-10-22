@@ -14,7 +14,7 @@ import { type ServerRuntimeRegistration } from './types';
 
 export const knowledgeBaseRuntime: ServerRuntimeRegistration = {
   factory: (context) => {
-    const { userId, serverDB, agentId, agentVisibility, taskId, workspaceId } = context;
+    const { userId, serverDB, agentId, agentVisibility, projectId, taskId, workspaceId } = context;
     if (!userId || !serverDB) {
       throw new Error('userId and serverDB are required for Knowledge Base execution');
     }
@@ -40,9 +40,16 @@ export const knowledgeBaseRuntime: ServerRuntimeRegistration = {
         const knowledge = await agentModel.getAgentAssignedKnowledge(agentId);
         return knowledge.knowledgeBases.filter((k) => k.enabled && k.id).map((k) => k.id as string);
       };
+      // Every agent working inside a project — its coordinator, or a member
+      // running one of its tasks — searches the project's knowledge too.
+      const projectKnowledgeBaseIds = () => {
+        if (projectId) return projectModel.getEnabledKnowledgeBaseIds(projectId);
+        if (taskId) return projectModel.getEnabledKnowledgeBaseIdsForTask(taskId);
+        return Promise.resolve([]);
+      };
       const [agentIds, projectIds] = await Promise.all([
         agentKnowledgeBaseIds(),
-        taskId ? projectModel.getEnabledKnowledgeBaseIdsForTask(taskId) : Promise.resolve([]),
+        projectKnowledgeBaseIds(),
       ]);
       return [...new Set([...agentIds, ...projectIds])];
     };

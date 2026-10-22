@@ -58,6 +58,7 @@ import {
   PageEditorContextInjector,
   PageSelectionsInjector,
   PlanInjector,
+  ProjectContextInjector,
   ProjectInstructionsInjector,
   RuntimeAdditionalContextProvider,
   selectActivatedSkills,
@@ -473,6 +474,11 @@ export class MessagesEngine {
                 xml: stepContext?.stepPageEditor?.xml || initialContext.pageEditor.xml,
               }
             : undefined),
+      }),
+      // Project context (members, linked knowledge, open tasks) for a run inside a project
+      new ProjectContextInjector({
+        contextPrompt: initialContext?.projectContext?.contextPrompt,
+        enabled: !!initialContext?.projectContext?.contextPrompt,
       }),
       // Task Manager page context (inject current tasks list/detail to last user message)
       new TaskManagerContextInjector({

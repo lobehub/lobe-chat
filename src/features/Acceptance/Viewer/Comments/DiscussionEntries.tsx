@@ -11,7 +11,7 @@ import { checkDisplayTitle } from '../../utils';
 import { useAcceptanceScope } from '../AcceptanceScope';
 import { collectEvidenceById } from '../Checks/CheckHistory';
 import type { AcceptanceCheck } from '../Checks/types';
-import { acceptanceCheckPath } from '../routes';
+import { acceptanceCheckPath, useAcceptanceRouteBase } from '../routes';
 import { commentAnchorId } from './anchor';
 import CommentCard, { commentAuthorName, CommentAvatar } from './CommentCard';
 import CommentThread from './CommentThread';
@@ -126,11 +126,15 @@ TimelineMessage.displayName = 'AcceptanceTimelineMessage';
 export const CheckReference = memo<{ check?: AcceptanceCheck }>(({ check }) => {
   const { t } = useTranslation('verify');
   const { acceptanceId, embedded } = useAcceptanceScope();
+  const routeBase = useAcceptanceRouteBase();
   if (!check) return null;
   const label = `C${check.seq} · ${checkDisplayTitle(check.title, t('acceptance.checks.holisticTitle'))}`;
   if (embedded) return <span className={entryStyles.checkLink}>{label}</span>;
   return (
-    <Link className={entryStyles.checkLink} to={acceptanceCheckPath(acceptanceId, check.id)}>
+    <Link
+      className={entryStyles.checkLink}
+      to={acceptanceCheckPath(acceptanceId, check.id, routeBase)}
+    >
       {label}
     </Link>
   );

@@ -10,7 +10,7 @@ import { verifyService } from '@/services/verify';
 
 import { useAcceptanceScope } from '../AcceptanceScope';
 import { openAddCheckModal } from '../Checks/AddCheckModal';
-import { acceptanceCheckPath, acceptanceOverviewPath } from '../routes';
+import { acceptanceCheckPath, acceptanceOverviewPath, useAcceptanceRouteBase } from '../routes';
 import { checksForTurn } from '../turnChecks';
 import { useAcceptanceBundle } from '../useAcceptanceBundle';
 import { useAcceptanceTurn } from '../useAcceptanceTurn';
@@ -25,6 +25,7 @@ const AcceptanceFocusWorkspace = () => {
   const query = searchParams.toString() ? `?${searchParams}` : '';
   const params = useParams<{ checkId?: string }>();
   const { acceptanceId } = useAcceptanceScope();
+  const routeBase = useAcceptanceRouteBase();
   const { data, mutate } = useAcceptanceBundle(acceptanceId);
   const { turn } = useAcceptanceTurn();
   const turnChecks = data ? checksForTurn(data, turn) : [];
@@ -62,12 +63,12 @@ const AcceptanceFocusWorkspace = () => {
       onBack={() =>
         (location.state as { fromCheckList?: boolean } | null)?.fromCheckList
           ? navigate(-1)
-          : navigate(acceptanceOverviewPath(acceptanceId) + query, { replace: true })
+          : navigate(acceptanceOverviewPath(acceptanceId, routeBase) + query, { replace: true })
       }
       // Stepping between checks replaces the entry in place, carrying the
       // "came from the list" flag so the back arrow still knows where to land.
       onSelectCheck={(id) =>
-        navigate(acceptanceCheckPath(acceptanceId, id) + query, {
+        navigate(acceptanceCheckPath(acceptanceId, id, routeBase) + query, {
           replace: true,
           state: location.state,
         })

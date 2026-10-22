@@ -133,7 +133,7 @@ export class TaskService {
     }
 
     if (createData.projectId) {
-      const project = await this.projectModel.findManageableById(createData.projectId);
+      const project = await this.projectModel.findById(createData.projectId);
       if (!project) throw new TRPCError({ code: 'NOT_FOUND', message: 'Project not found' });
     }
 

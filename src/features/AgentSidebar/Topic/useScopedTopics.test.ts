@@ -3,7 +3,11 @@ import { act, renderHook } from '@testing-library/react';
 import { createElement, type PropsWithChildren, useState } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { TopicListRevealContext, TopicListScopeContext } from './TopicListScope';
+import {
+  TopicListFilterContext,
+  TopicListRevealContext,
+  TopicListScopeContext,
+} from './TopicListScope';
 import { pinCoordinatorGroup, useScopedSidebarTopics } from './useScopedTopics';
 
 const fixture = vi.hoisted(() => ({ topicId: undefined as string | undefined }));
@@ -171,6 +175,48 @@ describe('Project topics use the canonical Agent sidebar rules', () => {
       'agent:agent-b',
       'agent:agent-a',
     ]);
+  });
+});
+
+describe('Project topic filters', () => {
+  const filteredWrapper =
+    (filter: { device?: string; status?: 'pending' | 'running' | 'scheduled' | 'active' }) =>
+    ({ children }: PropsWithChildren) =>
+      createElement(
+        TopicListScopeContext,
+        { value: { projectId: 'project-a' } },
+        createElement(
+          TopicListFilterContext,
+          { value: { filter, setFilter: () => {} } },
+          createElement(RevealHost, null, children),
+        ),
+      );
+
+  beforeEach(() => {
+    fixture.topicId = undefined;
+  });
+
+  it('narrows the agent groups to one status bucket', () => {
+    const { result } = renderHook(() => useScopedSidebarTopics(20, 'updatedAt', 'byAgent', false), {
+      wrapper: filteredWrapper({ status: 'pending' }),
+    });
+    expect(result.current.topics.map((topic) => topic.id)).toEqual(['new']);
+    expect(result.current.groups.map((group) => group.id)).toEqual(['agent:agent-b']);
+  });
+
+  it('narrows to the topics on one device', () => {
+    const { result } = renderHook(() => useScopedSidebarTopics(20, 'updatedAt', 'byAgent', false), {
+      wrapper: filteredWrapper({ device: 'device-a' }),
+    });
+    expect(result.current.topics.map((topic) => topic.id)).toEqual(['old']);
+  });
+
+  it('narrows strictly, even past the open topic', () => {
+    fixture.topicId = 'star';
+    const { result } = renderHook(() => useScopedSidebarTopics(20, 'updatedAt', 'byAgent', false), {
+      wrapper: filteredWrapper({ device: 'device-a' }),
+    });
+    expect(result.current.topics.map((topic) => topic.id)).toEqual(['old']);
   });
 });
 

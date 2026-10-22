@@ -27,6 +27,7 @@ import {
   getProjectDashboardPath,
   getProjectGoalsPath,
   getProjectTasksPath,
+  isProjectSectionActive,
 } from './navigation';
 import ProjectHeader from './ProjectHeader';
 
@@ -59,7 +60,7 @@ const ProjectSidebarContent = memo(() => {
     <SideBarLayout
       header={header}
       body={
-        <Flexbox gap={8} paddingInline={4}>
+        <Flexbox gap={1} paddingInline={4}>
           <NavItem
             active={pathname === projectTasksPath}
             icon={ListTodoIcon}
@@ -74,16 +75,14 @@ const ProjectSidebarContent = memo(() => {
           />
           {dashboardEnabled && (
             <NavItem
+              active={isProjectSectionActive(pathname, projectDashboardPath)}
               icon={LayoutDashboardIcon}
               title={t('sections.dashboard')}
-              active={
-                pathname === projectDashboardPath || pathname.startsWith(`${projectDashboardPath}/`)
-              }
               onClick={() => navigate(projectDashboardPath)}
             />
           )}
           <NavItem
-            active={pathname === projectAcceptancePath}
+            active={isProjectSectionActive(pathname, projectAcceptancePath)}
             icon={ClipboardCheckIcon}
             title={t('sections.acceptance')}
             onClick={() => navigate(projectAcceptancePath)}

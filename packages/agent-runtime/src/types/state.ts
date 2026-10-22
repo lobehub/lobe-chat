@@ -92,6 +92,8 @@ export interface AgentRunOrigin {
   groupId?: string;
   // --- Run tree ---
   lineage?: AgentRunLineage;
+  /** Project the conversation (or the run's task) belongs to. */
+  projectId?: string;
   scope?: string;
   sessionId?: string;
   /** Run-scoped Agent Signal marker for background self-iteration / memory runs. */

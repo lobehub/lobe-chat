@@ -32,7 +32,6 @@
   "artifacts.svg.download.svg": "下载为 SVG",
   "canvas.frameTitle": "画布预览",
   "canvas.generating": "正在生成 v{{version}}…",
-  "canvas.menu.openInTab": "在新标签页打开",
   "canvas.menu.openPublic": "打开公开链接",
   "canvas.menu.publish": "将 v{{version}} 发布到公开链接",
   "canvas.menu.publishing": "发布中…",
