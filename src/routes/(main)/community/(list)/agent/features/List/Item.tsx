@@ -177,7 +177,7 @@ const AssistantItem = memo<DiscoverAssistantItem>(
               {author && (
                 <div
                   {...sx(
-                    userName && styles.author,
+                    !!userName && styles.author,
                     undefined,
                     userName ? undefined : { color: 'inherit' },
                   )}
