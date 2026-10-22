@@ -4,7 +4,7 @@ import { AGENT_CHAT_URL, DEFAULT_AVATAR, GROUP_CHAT_URL } from '@lobechat/const'
 import type { SidebarAgentItem } from '@lobechat/types';
 import { agentDisplayName, agentSecondaryDisplayName } from '@lobechat/types';
 import { ContextMenuTrigger, type DropdownItem, Flexbox, Tooltip } from '@lobehub/ui';
-import { ActionIcon, Avatar, createStaticStyles, cssVar, Tag, Text } from '@lobehub/ui';
+import { ActionIcon, Avatar, createStaticStyles, cssVar, Text } from '@lobehub/ui';
 import dayjs from 'dayjs';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import { memo, type MouseEvent, useCallback, useRef, useState } from 'react';
@@ -23,11 +23,10 @@ export const ACTION_COL_WIDTH = 64;
 const AUTHOR_COL_WIDTH = 20;
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
-  // Shrinks before the title does, so a long description never truncates the
-  // name it describes.
+  // Second line, so name, role and description no longer compete for one
+  // line; rows without a description stay single-line.
   description: css`
-    flex: 1 1 0;
-    min-width: 0;
+    line-height: 18px;
   `,
   // The link spans the name column (not the whole row) — a management list
   // is for scanning and acting, and a full-row link turns clicks on the
@@ -48,6 +47,12 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     &:hover .agent-row-title {
       text-decoration: underline;
     }
+  `,
+  // Plain secondary text (as in the sidebar), not a filled tag: a tag weighed
+  // as much as the name. Shrinks before the name, so the name stays readable.
+  role: css`
+    flex: 0 10 auto;
+    min-width: 0;
   `,
   row: css`
     padding-block: 8px;
@@ -147,30 +152,35 @@ const AgentRow = memo<AgentRowProps>(
             to={type === 'group' ? GROUP_CHAT_URL(id) : AGENT_CHAT_URL(id, false)}
           >
             <AgentAvatar item={item} size={28} />
-            <Flexbox flex={1} style={{ minWidth: 0 }}>
-              {/* Single-line row (Linear-style density): the description trails
-                the name and gives way first when the row runs out of room. */}
-              <Flexbox horizontal align={'center'} gap={6} style={{ minWidth: 0 }}>
+            <Flexbox flex={1} gap={2} style={{ minWidth: 0 }}>
+              <Flexbox horizontal align={'baseline'} gap={8} style={{ minWidth: 0 }}>
                 <Text ellipsis className={'agent-row-title'} weight={500}>
                   {displayTitle}
                 </Text>
                 {roleTag ? (
-                  <Tag size={'small'} style={{ flex: 'none' }}>
-                    {roleTag}
-                  </Tag>
-                ) : null}
-                {description ? (
                   <Text
                     ellipsis
-                    className={styles.description}
+                    className={styles.role}
                     fontSize={12}
-                    title={description}
+                    title={roleTag}
                     type={'secondary'}
                   >
-                    {description}
+                    {roleTag}
                   </Text>
                 ) : null}
               </Flexbox>
+              {description ? (
+                <Text
+                  ellipsis
+                  className={styles.description}
+                  fontSize={12}
+                  // Inline: Text's own color class would otherwise win.
+                  style={{ color: cssVar.colorTextTertiary }}
+                  title={description}
+                >
+                  {description}
+                </Text>
+              ) : null}
             </Flexbox>
           </WorkspaceLink>
           {/* Trailing cluster (Task-list-style): label pills + author avatar +
