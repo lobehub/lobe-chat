@@ -38,7 +38,7 @@
     "@lobechat/business-model-runtime": "workspace:*",
     "@lobechat/const": "workspace:*",
     "@lobechat/ssrf-safe-fetch": "workspace:*",
-    "@lobechat/utils": "workspace:*",
+    "@lobechat/types": "workspace:*",
     "async-retry": "^1.3.3",
     "buffer.js": "npm:buffer@^6.0.3",
     "dayjs": "^1.11.21",
@@ -57,10 +57,9 @@
     "type-fest": "^5.7.0",
     "url-join": "^5.0.0"
   },
-  "devDependencies": {
-    "@lobechat/types": "workspace:*"
-  },
   "peerDependencies": {
     "zod": "^4.4.3"
-  }
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/lobehub/lobehub/tree/canary/packages/model-runtime"
 }

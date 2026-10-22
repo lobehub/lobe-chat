@@ -22,10 +22,10 @@
     "test:update": "vitest -u"
   },
   "dependencies": {
+    "@lobechat/agent-templates": "workspace:*",
     "@lobechat/const": "workspace:*",
-    "@lobechat/database": "workspace:*",
     "@lobechat/prompts": "workspace:*",
-    "@lobechat/utils": "workspace:*",
+    "@lobechat/types": "workspace:*",
     "buffer.js": "npm:buffer@^6.0.3",
     "debug": "^4.4.3",
     "es-toolkit": "^1.49.0",
@@ -40,7 +40,8 @@
     "xastscript": "^4.0.0"
   },
   "devDependencies": {
-    "@lobechat/types": "workspace:*",
     "@types/debug": "^4.1.13"
-  }
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/lobehub/lobehub/tree/canary/packages/context-engine"
 }
