@@ -1,10 +1,10 @@
 import type { ChannelMemberRole, ChannelVisibility } from '@lobechat/types';
 import { and, desc, eq, isNull, sql } from 'drizzle-orm';
 
-import type { ChannelItem, ChannelMemberItem } from '../schemas';
-import { channelMembers, channels } from '../schemas';
-import type { LobeChatDatabase, Transaction } from '../type';
-import { normalizeWorkspaceId } from '../utils/workspace';
+import type { ChannelItem, ChannelMemberItem } from '../../schemas';
+import { channelMembers, channels } from '../../schemas';
+import type { LobeChatDatabase, Transaction } from '../../type';
+import { normalizeWorkspaceId } from '../../utils/workspace';
 
 const ROLE_RANK: Record<ChannelMemberRole, number> = { admin: 1, member: 0, owner: 2 };
 
