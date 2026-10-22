@@ -26,13 +26,13 @@ describe('useVerifyReportUrl', () => {
     mocks.bundle = undefined;
   });
 
-  it('links a run in an acceptance to its round', () => {
+  it('links a run in an acceptance to its round under the active workspace', () => {
     mocks.bundle = { run: { acceptanceId: 'acc_1', roundIndex: 2 } };
     const { result } = renderHook(() => useVerifyReportUrl());
 
     expect(result.current).toEqual({
-      externalUrl: 'https://app.lobehub.com/acceptance/acc_1?r=2',
-      reportUrl: 'https://app.lobehub.com/acceptance/acc_1?r=2',
+      externalUrl: 'https://app.lobehub.com/lobe-team/acceptance/acc_1?r=2',
+      reportUrl: 'https://app.lobehub.com/lobe-team/acceptance/acc_1?r=2',
       runId: 'run_1',
       standalone: false,
     });
