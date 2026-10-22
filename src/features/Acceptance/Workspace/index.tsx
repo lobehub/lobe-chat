@@ -129,11 +129,11 @@ const AcceptanceWorkspace = memo<AcceptanceWorkspaceProps>(({ projectId }) => {
 
   const topBar = standalone ? (
     <ShellTopBar
+      scope={isSignedIn ? <AcceptanceScopeSwitcher /> : undefined}
       title={t('acceptance.workspace.title')}
       titleExtra={
         isSignedIn && (
           <>
-            <AcceptanceScopeSwitcher />
             <ActionIcon
               icon={Menu}
               size={'small'}
