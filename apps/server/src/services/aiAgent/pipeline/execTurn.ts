@@ -449,9 +449,16 @@ export const execAgentTurn = async (
 
   const runContext: ExecRunContext = {
     agentConfig,
+    // Facts the turn resolved (builder target, project) ride on the context so
+    // every later stage — and the frozen operation origin — reads one value.
     appContext:
-      turn.editingAgentId && turn.editingAgentId !== appContext?.editingAgentId
-        ? { ...appContext, editingAgentId: turn.editingAgentId }
+      (turn.editingAgentId && turn.editingAgentId !== appContext?.editingAgentId) ||
+      turn.projectId !== appContext?.projectId
+        ? {
+            ...appContext,
+            editingAgentId: turn.editingAgentId ?? appContext?.editingAgentId,
+            projectId: turn.projectId,
+          }
         : appContext,
     assistantMessageId: turn.assistantMessageId,
     canUseDevice,

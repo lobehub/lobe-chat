@@ -484,6 +484,8 @@ export interface OperationCreationParams {
      * callSubAgent child (which shares `isSubAgent: true`).
      */
     orchestrationRole?: 'supervisor' | 'member';
+    /** Project the run belongs to, stored on `state.origin.projectId`. */
+    projectId?: string;
     scope?: string | null;
     /** Conversation/session locator used to rebuild an authenticated Review route. */
     sessionId?: string;
