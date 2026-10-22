@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { PipelineContext } from '../../types';
 import { MessageContentProcessor, VISION_DOWNGRADE_PLACEHOLDER } from '../MessageContent';
 
-vi.mock('../../utils/imageToBase64', async (importOriginal) => {
+vi.mock('@lobechat/utils/imageToBase64', async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>();
   return {
     ...actual,
