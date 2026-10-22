@@ -5,11 +5,13 @@ import { createStaticStyles, cssVar, Icon } from '@lobehub/ui';
 import { $getRoot } from 'lexical';
 import { PlusIcon } from 'lucide-react';
 import type { FocusEvent, KeyboardEvent } from 'react';
-import { memo, useCallback, useEffect, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { EditorCanvas } from '@/features/EditorCanvas';
 import { useEnterToSend } from '@/hooks/useEnterToSend';
+
+import { useFoldableComposer } from './useFoldableComposer';
 
 /**
  * The result page's closing move: ask the goal's agent about what was just
@@ -85,15 +87,9 @@ interface GoalFollowUpComposerProps {
 const GoalFollowUpComposer = memo<GoalFollowUpComposerProps>(({ hidden, onSend }) => {
   const { t } = useTranslation('chat');
   const editor = useEditor();
-  const [expanded, setExpanded] = useState(false);
+  const { expanded, fold, open, triggerRef } = useFoldableComposer(editor);
   const [hasContent, setHasContent] = useState(false);
   const shouldSendOnEnter = useEnterToSend();
-
-  // The input is only visible after the commit that opens it, so focus waits
-  // for that render instead of happening inside the click handler.
-  useEffect(() => {
-    if (expanded) editor?.focus();
-  }, [editor, expanded]);
 
   const handleContentChange = useCallback(() => {
     editor
@@ -107,24 +103,28 @@ const GoalFollowUpComposer = memo<GoalFollowUpComposerProps>(({ hidden, onSend }
     if (!message) return;
     editor?.cleanDocument?.();
     setHasContent(false);
-    setExpanded(false);
+    fold();
     onSend(message);
-  }, [editor, onSend]);
+  }, [editor, fold, onSend]);
 
   // Clicking away folds an empty input back into the pill; a draft keeps it
   // open so the reader can see what is still unsent.
   const handleBlur = useCallback(
     (event: FocusEvent<HTMLDivElement>) => {
       if (hasContent || event.currentTarget.contains(event.relatedTarget as Node | null)) return;
-      setExpanded(false);
+      fold();
     },
-    [hasContent],
+    [fold, hasContent],
   );
 
   // Escape always folds it; the editor stays mounted, so a draft is kept.
-  const handleKeyDown = useCallback((event: KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === 'Escape') setExpanded(false);
-  }, []);
+  // Focus goes back to the pill, so the keyboard can reopen the draft.
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLDivElement>) => {
+      if (event.key === 'Escape') fold(true);
+    },
+    [fold],
+  );
 
   return (
     // The dock itself carries `hidden`: a wrapper would become the sticky
@@ -134,7 +134,7 @@ const GoalFollowUpComposer = memo<GoalFollowUpComposerProps>(({ hidden, onSend }
       hidden={hidden}
     >
       {!expanded && (
-        <button className={styles.pill} type={'button'} onClick={() => setExpanded(true)}>
+        <button className={styles.pill} ref={triggerRef} type={'button'} onClick={open}>
           <Icon icon={PlusIcon} size={16} />
           {t('goalProcess.result.followUp.trigger')}
         </button>
