@@ -1,5 +1,6 @@
 import { cleanObject } from '@lobechat/utils/object';
 import createDebug from 'debug';
+import type { RuntimeImageGenParamsValue } from 'model-bank';
 import type OpenAI from 'openai';
 
 import type {
@@ -23,24 +24,6 @@ interface CreateOpenAICompatibleImageOptions {
 }
 
 /**
- * Returns the reference images from whichever of `imageUrl` / `imageUrls` the caller set.
- *
- * Both fields feed the same upstream input, so a payload carrying both is rejected instead of
- * letting one silently win while the generation is still billed.
- */
-const getReferenceUrls = ({
-  imageUrl,
-  imageUrls,
-}: Pick<CreateImagePayload['params'], 'imageUrl' | 'imageUrls'>): string[] => {
-  const single = typeof imageUrl === 'string' && imageUrl.trim() ? [imageUrl] : [];
-  const list = imageUrls ?? [];
-  if (single.length > 0 && list.length > 0) {
-    throw new Error('Pass reference images in either imageUrl or imageUrls, not both.');
-  }
-  return list.length > 0 ? list : single;
-};
-
-/**
  * Generate images using traditional OpenAI images API (DALL-E, etc.)
  */
 async function generateByImageMode(
@@ -55,9 +38,27 @@ async function generateByImageMode(
 
   log('Creating image with model: %s and params: %O', requestModel, params);
 
-  const referenceUrls = getReferenceUrls(params);
-  const { imageUrl: _imageUrl, imageUrls: _imageUrls, ...userInput }: Record<string, any> = params;
-  if (referenceUrls.length > 0) userInput.image = referenceUrls;
+  // Both fields map to the API's single `image` input. Reject a payload carrying both instead of
+  // letting one silently overwrite the other while the generation is still billed.
+  if (params.imageUrl && params.imageUrls?.length) {
+    throw new Error('Pass reference images in either imageUrl or imageUrls, not both.');
+  }
+
+  // Map parameter names, mapping imageUrls to image
+  const paramsMap = new Map<RuntimeImageGenParamsValue, string>([
+    ['imageUrls', 'image'],
+    ['imageUrl', 'image'],
+  ]);
+  const userInput: Record<string, any> = Object.fromEntries(
+    Object.entries(params).map(([key, value]) => [
+      paramsMap.get(key as RuntimeImageGenParamsValue) ?? key,
+      value,
+    ]),
+  );
+  // unify image input to array
+  if (typeof userInput.image === 'string' && userInput.image.trim() !== '') {
+    userInput.image = [userInput.image];
+  }
 
   // https://platform.openai.com/docs/api-reference/images/createEdit
   const isImageEdit = Array.isArray(userInput.image) && userInput.image.length > 0;
@@ -200,8 +201,12 @@ async function generateByChatModel(
     },
   ];
 
-  // `:image` model cards declare `imageUrls` (CHAT_MODEL_IMAGE_GENERATION_PARAMS).
-  const referenceUrls = getReferenceUrls(params);
+  // `:image` model cards declare only `imageUrls` (CHAT_MODEL_IMAGE_GENERATION_PARAMS). Reject
+  // `imageUrl` so the caller resends in the declared field instead of generating without it.
+  if (params.imageUrl) {
+    throw new Error('Chat image models take reference images in imageUrls, not imageUrl.');
+  }
+  const referenceUrls = params.imageUrls ?? [];
   // Download references concurrently; Promise.all keeps their order for the message content.
   const processedImageUrls = await Promise.all(
     referenceUrls.map(async (imageUrl) => {

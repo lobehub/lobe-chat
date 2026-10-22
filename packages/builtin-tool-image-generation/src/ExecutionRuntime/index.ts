@@ -3,7 +3,7 @@ import {
   AsyncTaskStatus,
   type BuiltinServerRuntimeOutput,
 } from '@lobechat/types';
-import type { ModelParamsSchema, RuntimeImageGenParams } from 'model-bank';
+import type { RuntimeImageGenParams } from 'model-bank';
 import { extractDefaultValues } from 'model-bank';
 
 import type {
@@ -19,7 +19,6 @@ import type {
   ListImageModelsParams,
   ListImageModelsState,
 } from '../types';
-import { resolveReferenceImages } from './referenceImages';
 
 const DEFAULT_LIST_LIMIT = 20;
 const MAX_LIST_LIMIT = 50;
@@ -271,6 +270,34 @@ const formatWaitFailedContent = (state: GenerateImageState, message: string) =>
     .filter((line): line is string => Boolean(line))
     .join('\n');
 
+const normalizeReferenceUrls = ({
+  imageUrl,
+  imageUrls,
+  parameters,
+}: GenerateImageParams): { imageUrl?: null | string; imageUrls?: string[] } => {
+  const normalized: { imageUrl?: null | string; imageUrls?: string[] } = {};
+
+  if (imageUrl === null || (typeof imageUrl === 'string' && imageUrl.trim())) {
+    normalized.imageUrl = typeof imageUrl === 'string' ? imageUrl.trim() : imageUrl;
+  } else if (typeof parameters?.imageUrl === 'string' && parameters.imageUrl.trim()) {
+    normalized.imageUrl = parameters.imageUrl.trim();
+  }
+
+  const urlList =
+    imageUrls && imageUrls.length > 0
+      ? imageUrls
+      : Array.isArray(parameters?.imageUrls)
+        ? parameters.imageUrls
+        : [];
+
+  const normalizedUrls = urlList
+    .filter((url): url is string => typeof url === 'string' && !!url.trim())
+    .map((url) => url.trim());
+  if (normalizedUrls.length > 0) normalized.imageUrls = normalizedUrls;
+
+  return normalized;
+};
+
 export class ImageGenerationExecutionRuntime {
   private service: ImageGenerationRuntimeService;
 
@@ -340,30 +367,24 @@ export class ImageGenerationExecutionRuntime {
   private async resolveImageModel(
     provider?: string,
     model?: string,
-  ): Promise<{ model: string; parameters?: ModelParamsSchema; provider: string }> {
+  ): Promise<{ model: string; provider: string }> {
     const state = await this.service.listImageModels({
       limit: MAX_PARAMETER_LOOKUP_LIMIT,
       provider,
     });
 
     if (model) {
-      for (const providerItem of state.providers) {
-        if (provider && providerItem.id !== provider) continue;
-        const matchedModel = providerItem.models.find((candidate) => candidate.id === model);
-        if (matchedModel) {
-          return { model, parameters: matchedModel.parameters, provider: providerItem.id };
-        }
-      }
+      const matchedProvider = state.providers.find(
+        (item) =>
+          (!provider || item.id === provider) &&
+          item.models.some((candidate) => candidate.id === model),
+      );
+
+      if (matchedProvider) return { model, provider: matchedProvider.id };
     } else {
       for (const providerItem of state.providers) {
         const firstModel = providerItem.models[0];
-        if (firstModel) {
-          return {
-            model: firstModel.id,
-            parameters: firstModel.parameters,
-            provider: providerItem.id,
-          };
-        }
+        if (firstModel) return { model: firstModel.id, provider: providerItem.id };
       }
     }
 
@@ -434,7 +455,7 @@ export class ImageGenerationExecutionRuntime {
       );
     }
 
-    let selection: { model: string; parameters?: ModelParamsSchema; provider: string };
+    let selection: { model: string; provider: string };
     try {
       selection = await this.resolveImageModel(args.provider?.trim(), args.model?.trim());
     } catch (error) {
@@ -444,19 +465,10 @@ export class ImageGenerationExecutionRuntime {
 
     const { model, provider } = selection;
     const waitUntilComplete = args.waitUntilComplete !== false;
-    const references = resolveReferenceImages(args, selection.parameters);
-    if (!references.success) {
-      return errorOutput('InvalidReferenceImages', references.error, { model, provider });
-    }
-
-    const {
-      imageUrl: _imageUrl,
-      imageUrls: _imageUrls,
-      ...otherParameters
-    } = args.parameters ?? {};
+    const referenceUrls = normalizeReferenceUrls(args);
     const params = {
-      ...otherParameters,
-      ...references.params,
+      ...args.parameters,
+      ...referenceUrls,
       prompt,
     } as RuntimeImageGenParams & Record<string, unknown>;
 

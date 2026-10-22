@@ -80,7 +80,7 @@ describe('createOpenAICompatibleImage', () => {
           model: 'gemini-2.0-flash-exp:image',
           params: {
             prompt: 'Edit this image',
-            imageUrl: mockImageUrl,
+            imageUrls: [mockImageUrl],
           },
         };
 
@@ -121,7 +121,7 @@ describe('createOpenAICompatibleImage', () => {
           model: 'test-model:image',
           params: {
             prompt: 'Process this',
-            imageUrl: mockImageUrl,
+            imageUrls: [mockImageUrl],
           },
         };
 
@@ -143,7 +143,7 @@ describe('createOpenAICompatibleImage', () => {
           model: 'test-model:image',
           params: {
             prompt: 'Process this',
-            imageUrl: mockImageUrl,
+            imageUrls: [mockImageUrl],
           },
         };
 
@@ -190,7 +190,7 @@ describe('createOpenAICompatibleImage', () => {
           model: 'vision-model:image',
           params: {
             prompt: 'Convert and process',
-            imageUrl: mockHttpImageUrl,
+            imageUrls: [mockHttpImageUrl],
           },
         };
 
@@ -213,7 +213,7 @@ describe('createOpenAICompatibleImage', () => {
           model: 'test-model:image',
           params: {
             prompt: 'Process this',
-            imageUrl: mockInvalidUrl,
+            imageUrls: [mockInvalidUrl],
           },
         };
 
@@ -474,7 +474,7 @@ describe('createOpenAICompatibleImage', () => {
           model: 'vision-model:image',
           params: {
             prompt: 'Edit this image by adding a sunset',
-            imageUrl: mockImageUrl,
+            imageUrls: [mockImageUrl],
           },
         };
 
@@ -705,6 +705,20 @@ describe('createOpenAICompatibleImage', () => {
       ).rejects.toThrow('Pass reference images in either imageUrl or imageUrls, not both.');
       expect(mockClient.images.edit).not.toHaveBeenCalled();
       expect(mockClient.images.generate).not.toHaveBeenCalled();
+    });
+
+    it('rejects imageUrl for :image chat models, which declare only imageUrls', async () => {
+      await expect(
+        createOpenAICompatibleImage(
+          mockClient,
+          {
+            model: 'google/gemini-2.5-flash-image:image',
+            params: { imageUrl: 'data:image/png;base64,Zmlyc3Q=', prompt: 'Edit this image' },
+          },
+          'openrouter',
+        ),
+      ).rejects.toThrow('Chat image models take reference images in imageUrls, not imageUrl.');
+      expect(mockClient.chat.completions.create).not.toHaveBeenCalled();
     });
 
     it('sends imageUrls references to :image chat models in order', async () => {
