@@ -38,6 +38,19 @@ export class AgentStreamHistoryError extends Error {
   }
 }
 
+/**
+ * The server has no event journal endpoint: the independently released CLI is
+ * newer than the server it talks to. This is a compatibility gap, not a lost
+ * history, so it must reach the caller untouched — the caller degrades to
+ * status polling instead of reporting an unconfirmable outcome.
+ */
+export class AgentJournalUnsupportedError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'AgentJournalUnsupportedError';
+  }
+}
+
 const DEFAULT_MAX_RETRIES = 6;
 const CONNECT_TIMEOUT_MS = 10_000;
 const HEARTBEAT_INTERVAL_MS = 30_000;
@@ -109,6 +122,8 @@ class AgentEventJournal {
       if (this.stopped) return false;
       const failure = toError(error);
       log.debug(`Agent history recovery failed: ${failure.message}`);
+      // A server without the journal procedure cannot be retried into having it.
+      if (failure instanceof AgentJournalUnsupportedError) throw failure;
       // tRPC auth/not-found responses must not be retried or masked by completion.
       const code = (error as { data?: { code?: string } })?.data?.code;
       if (
@@ -338,8 +353,9 @@ class GatewayWakeChannel {
  * This avoids mixing two unrelated cursor spaces (Gateway ids vs Redis ids),
  * live/replay races, and dependence on the Gateway's in-memory buffer.
  *
- * `done` resolves after the terminal event and rejects only with
- * `AgentStreamHistoryError`: any failure means the output may be incomplete.
+ * `done` resolves after the terminal event and rejects with
+ * `AgentStreamHistoryError` when the output may be incomplete, or with
+ * `AgentJournalUnsupportedError` when the server has no journal to read at all.
  * `abort` lets the consumer end the stream as incomplete (e.g. a stall check).
  */
 export const consumeAgentStream = (
@@ -421,7 +437,9 @@ export const consumeAgentStream = (
     if (stopped) return;
     close();
     rejectDone(
-      error instanceof AgentStreamHistoryError ? error : new AgentStreamHistoryError(error.message),
+      error instanceof AgentStreamHistoryError || error instanceof AgentJournalUnsupportedError
+        ? error
+        : new AgentStreamHistoryError(error.message),
     );
   };
 

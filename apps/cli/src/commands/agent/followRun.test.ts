@@ -57,4 +57,37 @@ describe('followAgentRun', () => {
 
     await expect(followAgentRun('op-1')).rejects.toThrow('boom');
   });
+
+  it('surfaces a server without the journal as a compatibility failure, not a lost history', async () => {
+    historyQuery.mockRejectedValue(
+      Object.assign(new Error('No procedure found on path "aiAgent.getOperationStreamHistory"'), {
+        data: { code: 'NOT_FOUND' },
+      }),
+    );
+    streamAgentEvents.mockImplementation(async ({ readHistory }) => {
+      await readHistory('1-0', new AbortController().signal);
+      return { kind: 'completed' };
+    });
+
+    await expect(followAgentRun('op-1')).rejects.toMatchObject({
+      name: 'AgentJournalUnsupportedError',
+    });
+  });
+
+  it('keeps an unknown operation id on the incomplete-history path', async () => {
+    historyQuery.mockRejectedValue(
+      Object.assign(new Error('Operation not found'), { data: { code: 'NOT_FOUND' } }),
+    );
+    // Mirror the transport: a non-compatibility read failure becomes a history failure.
+    streamAgentEvents.mockImplementation(async ({ readHistory }) => {
+      try {
+        await readHistory('1-0', new AbortController().signal);
+      } catch (error) {
+        throw new AgentStreamHistoryError((error as Error).message);
+      }
+      return { kind: 'completed' };
+    });
+
+    await expect(followAgentRun('op-1')).resolves.toEqual({ kind: 'unknown' });
+  });
 });

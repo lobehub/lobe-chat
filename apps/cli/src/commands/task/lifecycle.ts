@@ -7,6 +7,31 @@ import { resolveLocalDeviceId } from '../../utils/device';
 import { outputJson } from '../../utils/format';
 import { log } from '../../utils/logger';
 import { followAgentRun } from '../agent/followRun';
+import { pollAgentRunStatus, RUN_POLL_INTERVAL_MS } from '../agent/runStatus';
+
+type LifecycleClient = Awaited<ReturnType<typeof getTrpcClient>>;
+
+/**
+ * Follow a task run, degrading to status polling whenever the live stream cannot
+ * be used — a gateway that is unreachable, or a server predating the CLI's agent
+ * event journal (the CLI ships independently of the server). Without this the
+ * task would exit 3 having printed nothing.
+ */
+const followTaskRun = async (
+  client: LifecycleClient,
+  operationId: string,
+  options: { json?: boolean; verbose?: boolean },
+) => {
+  try {
+    return await followAgentRun(operationId, { json: options.json, verbose: options.verbose });
+  } catch (error) {
+    const reason = error instanceof Error ? error.message : String(error);
+    log.warn(
+      `Live stream unavailable (${reason}). Polling run status every ${RUN_POLL_INTERVAL_MS / 1000}s…`,
+    );
+    return pollAgentRunStatus(client, operationId, { json: options.json });
+  }
+};
 
 export function registerLifecycleCommands(task: Command) {
   // ── start ──────────────────────────────────────────────
@@ -73,7 +98,7 @@ export function registerLifecycleCommands(task: Command) {
           return;
         }
 
-        const outcome = await followAgentRun(result.operationId, {
+        const outcome = await followTaskRun(client, result.operationId, {
           json: options.json,
           verbose: options.verbose,
         });
@@ -202,7 +227,7 @@ export function registerLifecycleCommands(task: Command) {
           }
 
           // Connect to the gateway WebSocket and wait for completion
-          const outcome = await followAgentRun(operationId, {
+          const outcome = await followTaskRun(client, operationId, {
             json: options.json,
             verbose: options.verbose,
           });

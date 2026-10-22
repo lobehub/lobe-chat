@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { registerLifecycleCommands } from './lifecycle';
 
-const { client, followAgentRun } = vi.hoisted(() => ({
+const { client, followAgentRun, pollAgentRunStatus } = vi.hoisted(() => ({
   client: {
     task: {
       addComment: { mutate: vi.fn() },
@@ -16,10 +16,15 @@ const { client, followAgentRun } = vi.hoisted(() => ({
     topic: { getTopicDetail: { query: vi.fn() } },
   },
   followAgentRun: vi.fn(),
+  pollAgentRunStatus: vi.fn(),
 }));
 
 vi.mock('../../api/client', () => ({ getTrpcClient: vi.fn(async () => client) }));
 vi.mock('../agent/followRun', () => ({ followAgentRun }));
+vi.mock('../agent/runStatus', () => ({
+  RUN_POLL_INTERVAL_MS: 10_000,
+  pollAgentRunStatus,
+}));
 vi.mock('../../utils/logger', () => ({
   log: { error: vi.fn(), info: vi.fn(), warn: vi.fn() },
 }));
@@ -158,6 +163,7 @@ describe('task lifecycle — following the agent stream', () => {
     }) as any);
     for (const fn of Object.values(client.task)) Object.values(fn)[0].mockReset();
     followAgentRun.mockReset();
+    pollAgentRunStatus.mockReset();
     client.task.find.query.mockResolvedValue({
       data: { assigneeAgentId: 'agt_1', identifier: 'T-1', status: 'pending' },
     });
@@ -211,6 +217,25 @@ describe('task lifecycle — following the agent stream', () => {
     expect(exitSpy).not.toHaveBeenCalled();
     // task streams opt out of the quiet-window probe: a long silent tool call is healthy
     expect(followAgentRun.mock.calls[0][1]).not.toHaveProperty('onStall');
+  });
+
+  it('falls back to status polling when the server has no agent event journal', async () => {
+    followAgentRun.mockRejectedValue(
+      Object.assign(new Error('This server has no agent event journal'), {
+        name: 'AgentJournalUnsupportedError',
+      }),
+    );
+    pollAgentRunStatus.mockResolvedValue({ kind: 'completed', status: 'done' });
+
+    await createProgram().parseAsync(['node', 'test', 'task', 'start', 'T-1', '--follow']);
+
+    expect(pollAgentRunStatus).toHaveBeenCalledWith(
+      client,
+      'op-1',
+      expect.objectContaining({ json: undefined }),
+    );
+    expect(client.task.heartbeat.mutate).toHaveBeenCalled();
+    expect(process.exitCode).toBeUndefined();
   });
 
   it.each([

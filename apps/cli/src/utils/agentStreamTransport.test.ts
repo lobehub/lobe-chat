@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { streamAgentEvents } from './agentStream';
 import type { AgentHistoryPage } from './agentStreamTransport';
-import { consumeAgentStream } from './agentStreamTransport';
+import { AgentJournalUnsupportedError, consumeAgentStream } from './agentStreamTransport';
 
 let sockets: TestSocket[];
 class TestSocket {
@@ -205,6 +205,18 @@ describe('recoverable WebSocket transport', () => {
     await flush();
     await failure;
     expect(consoleLog).toHaveBeenCalledTimes(1);
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it('rejects a server without the journal procedure without retrying it', async () => {
+    readHistory.mockRejectedValue(
+      new AgentJournalUnsupportedError('This server has no agent event journal'),
+    );
+    const done = streamAgentEvents({ ...options(), json: true });
+    const failure = expect(done).rejects.toMatchObject({ name: 'AgentJournalUnsupportedError' });
+    await flush();
+    await failure;
+    expect(readHistory).toHaveBeenCalledTimes(1);
     expect(vi.getTimerCount()).toBe(0);
   });
 
