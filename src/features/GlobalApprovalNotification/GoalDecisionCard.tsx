@@ -1,6 +1,7 @@
 'use client';
 
 import { ActionIcon, Button, toast } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import { ArrowUpRight, ChevronUp } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -131,11 +132,11 @@ const GoalDecisionCard = ({ item, onCollapse, onDismiss }: GoalDecisionCardProps
   );
 
   return (
-    <div data-pending-hotkey-scope className={styles.card}>
+    <div data-pending-hotkey-scope {...stylex.props(styles.card)}>
       {/* The goal's agent asks, the way a run approval leads with the agent
           whose run is waiting; a machine gate is asked by the system. */}
-      <div className={styles.header}>
-        <div className={styles.headerMeta}>
+      <div {...stylex.props(styles.header)}>
+        <div {...stylex.props(styles.headerMeta)}>
           <GoalDecisionAsker
             agentId={goal.agentId}
             category={category ?? 'judgment'}
@@ -164,13 +165,13 @@ const GoalDecisionCard = ({ item, onCollapse, onDismiss }: GoalDecisionCardProps
         )}
       </div>
 
-      <div className={styles.requestContext}>
-        <div className={styles.headerTitle}>{goal.title}</div>
+      <div {...stylex.props(styles.requestContext)}>
+        <div {...stylex.props(styles.headerTitle)}>{goal.title}</div>
       </div>
 
-      <div className={styles.content}>
+      <div {...stylex.props(styles.content)}>
         {item.type === 'decision' && reviewAcceptanceId ? (
-          <div className={styles.reviewSummary}>
+          <div {...stylex.props(styles.reviewSummary)}>
             {localizedCoordinatorReason(coordinatorGateReason(item.decision.question), t as any)}
           </div>
         ) : item.type === 'decision' ? (
@@ -208,7 +209,7 @@ const GoalDecisionCard = ({ item, onCollapse, onDismiss }: GoalDecisionCardProps
         )}
       </div>
 
-      <div className={styles.goalActions}>
+      <div {...stylex.props(styles.goalActions)}>
         {onDismiss && (
           <Button
             size="small"
@@ -219,7 +220,7 @@ const GoalDecisionCard = ({ item, onCollapse, onDismiss }: GoalDecisionCardProps
             {t('globalApproval.dismiss')}
           </Button>
         )}
-        <div className={styles.goalActionsSlot} ref={setActionsPortalTarget} />
+        <div {...stylex.props(styles.goalActionsSlot)} ref={setActionsPortalTarget} />
         {reviewAcceptanceId && (
           <Button size="small" type="primary" onClick={openReview}>
             {t('goalProcess.gate.openReview')}
