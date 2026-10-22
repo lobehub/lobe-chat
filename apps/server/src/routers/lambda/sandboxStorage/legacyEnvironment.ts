@@ -1,4 +1,5 @@
 import { TRPCError } from '@trpc/server';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import { EnvironmentModel } from '@/database/models/environment';
@@ -85,11 +86,10 @@ const legacyRemoveEnvironment = instanceProcedure
     const instances = (await ctx.instanceModel.query({ environmentId: environment.id })).filter(
       (entry) => entry.kind === 'sandbox',
     );
-    const drives = await Promise.all(
-      instances.map(async (instance) => ({
-        instance,
-        ...(await resolveInstanceDrive(ctx, instance)),
-      })),
+    const drives = await pMap(
+      instances,
+      async (instance) => ({ instance, ...(await resolveInstanceDrive(ctx, instance)) }),
+      { concurrency: 5 },
     );
 
     // As released: the rows in one transaction, the snapshots dropped last
