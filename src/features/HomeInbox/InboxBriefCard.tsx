@@ -204,11 +204,11 @@ const InboxBriefCard = memo<InboxBriefCardProps>(({ bare, brief }) => {
 
   return (
     <Block
+      className={stylex.props(briefStyles.card, stylex.defaultMarker()).className}
       gap={10}
       padding={12}
       style={{ borderRadius: cssVar.borderRadiusLG }}
       variant={'outlined'}
-      className={stylex.props(briefStyles.card, stylex.defaultMarker()).className}
     >
       {content}
     </Block>

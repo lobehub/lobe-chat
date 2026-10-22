@@ -213,10 +213,10 @@ const SidebarTree = memo<SidebarTreeProps>(({ groups, scope, onScopeChange, onSe
               <Flexbox
                 horizontal
                 align="center"
+                gap={4}
                 className={
                   stylex.props(styles.parent, scope === source && styles.childActive).className
                 }
-                gap={4}
                 onClick={() => onScopeChange(source)}
               >
                 <Icon

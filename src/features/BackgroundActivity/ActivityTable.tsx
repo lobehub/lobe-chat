@@ -201,9 +201,9 @@ function ActivityRows({ activity, selected }: { activity: Activity; selected: bo
         }}
       >
         <Icon
+          className={stylex.props(tableStyles.chevron, open && tableStyles.chevronOpen).className}
           icon={ChevronRightIcon}
           size={14}
-          className={stylex.props(tableStyles.chevron, open && tableStyles.chevronOpen).className}
         />
         <span {...stylex.props(tableStyles.label)} title={activity.label}>
           {alert && (

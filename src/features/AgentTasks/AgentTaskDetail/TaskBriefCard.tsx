@@ -72,12 +72,12 @@ const TaskBriefCard = memo<TaskBriefCardProps>(
 
     return (
       <Block
+        className={stylex.props(briefStyles.card, stylex.defaultMarker()).className}
         gap={12}
         paddingBlock={12}
         paddingInline={8}
         style={{ borderRadius: cssVar.borderRadiusLG }}
         variant={'outlined'}
-        className={stylex.props(briefStyles.card, stylex.defaultMarker()).className}
       >
         <Flexbox horizontal align={'center'} gap={8} style={{ overflow: 'hidden' }}>
           <BriefIcon muted={isResolved} size={24} type={brief.type} />

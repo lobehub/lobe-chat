@@ -82,12 +82,12 @@ const CloudBanner = memo<{ mobile?: boolean }>(({ mobile }) => {
   );
   return (
     <Center
+      className={stylex.props(isDarkMode ? styles.containerDark : styles.containerLight).className}
       flex={'none'}
       height={BANNER_HEIGHT}
       paddingInline={16}
       ref={ref}
       width={'100%'}
-      className={stylex.props(isDarkMode ? styles.containerDark : styles.containerLight).className}
     >
       <div {...stylex.props(styles.background)} />
       <Center horizontal className={stylex.props(styles.wrapper).className} gap={16} width={'100%'}>
