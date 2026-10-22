@@ -219,7 +219,8 @@ export const driveTaskFromVerify = async (
         .listByRun(run.id)
         .then((results) =>
           results.some(
-            (r) => r.status === 'errored' && isOutOfCreditsFailure(r.toulmin?.limitation),
+            (r) =>
+              r.required && r.status === 'errored' && isOutOfCreditsFailure(r.toulmin?.limitation),
           ),
         )
         .catch((error) => {
