@@ -3,7 +3,14 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { BATCH_FRAME_HEAD } from './Graph/batchLayout';
+import {
+  BATCH_FRAME_HEAD,
+  BATCH_RETRO_MARK,
+  BATCH_RETRO_ROW,
+  BATCH_ROW_LABEL,
+  BATCH_SQUARE,
+  BATCH_SQUARE_GAP,
+} from './Graph/batchLayout';
 import { RAIL_ROW, RAIL_TOP } from './useResultAnchorRail';
 
 // StyleX cannot read constants imported from regular modules, so these values are written out in
@@ -21,6 +28,14 @@ describe('StyleX literals copied from layout constants', () => {
   });
 
   it('keeps BatchGroups frameHead in step with BATCH_FRAME_HEAD', () => {
-    expect(read('Graph/BatchGroups.tsx')).toContain(`height: '${BATCH_FRAME_HEAD}px'`);
+    const source = read('Graph/BatchGroups.tsx');
+
+    expect(source).toContain(`height: '${BATCH_FRAME_HEAD}px'`);
+    expect(source).toContain(`gap: '${BATCH_SQUARE_GAP}px'`);
+    expect(source).toContain(`width: '${BATCH_RETRO_MARK}px'`);
+    expect(source).toContain(`height: '${BATCH_RETRO_ROW}px'`);
+    expect(source).toContain(`width: '${BATCH_ROW_LABEL}px'`);
+    expect(source).toContain(`width: '${BATCH_SQUARE}px'`);
+    expect(source).toContain(`height: '${BATCH_SQUARE}px'`);
   });
 });

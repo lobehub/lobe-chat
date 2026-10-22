@@ -32,10 +32,7 @@ import type { GoalNodeView } from '../goalGraphViewModel';
 import { GATE_COLOR, KIND_COLOR, KIND_ICON, SKILL_COLOR, SKILL_ICON } from '../shared';
 import {
   BATCH_FRAME_HEAD,
-  BATCH_RETRO_MARK,
   BATCH_RETRO_ROW,
-  BATCH_ROW_LABEL,
-  BATCH_SQUARE,
   BATCH_SQUARE_GAP,
 } from './batchLayout';
 import {
@@ -204,7 +201,7 @@ const styles = stylex.create({
   wavesBody: {
     display: 'flex',
     flexDirection: 'column',
-    gap: `${BATCH_SQUARE_GAP}px`,
+    gap: '10px', // BATCH_SQUARE_GAP
     paddingBlockStart: '8px',
     paddingBlockEnd: '4px',
     paddingInline: '10px',
@@ -228,7 +225,7 @@ const styles = stylex.create({
     flex: 'none',
     gap: '4px',
     alignItems: 'center',
-    width: `${BATCH_RETRO_MARK}px`,
+    width: '150px', // BATCH_RETRO_MARK
     marginInlineStart: '4px',
     paddingInlineStart: '8px',
     borderInlineStartWidth: '1px',
@@ -250,12 +247,12 @@ const styles = stylex.create({
   retroLayer: { borderRadius: cssVar.borderRadiusSM },
   retroRow: {
     cursor: 'default',
-    height: `${BATCH_RETRO_ROW}px`,
+    height: '44px', // BATCH_RETRO_ROW
     borderColor: cssVar.colorBorderSecondary,
   },
   rowLabel: {
     flex: 'none',
-    width: `${BATCH_ROW_LABEL}px`,
+    width: '44px', // BATCH_ROW_LABEL
     fontFamily: cssVar.fontFamilyCode,
     fontSize: '10px',
     lineHeight: 1,
@@ -267,8 +264,8 @@ const styles = stylex.create({
     cursor: 'default',
     display: 'inline-block',
     flex: 'none',
-    width: `${BATCH_SQUARE}px`,
-    height: `${BATCH_SQUARE}px`,
+    width: '12px', // BATCH_SQUARE
+    height: '12px',
     padding: 0,
     borderStyle: 'none',
     borderRadius: '3px',
