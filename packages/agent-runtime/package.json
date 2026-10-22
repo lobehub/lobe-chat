@@ -11,7 +11,9 @@
   "dependencies": {
     "@lobechat/utils": "workspace:*",
     "ajv": "^8.20.0",
-    "p-map": "^7.0.5"
+    "es-toolkit": "^1.50.0",
+    "p-map": "^7.0.5",
+    "partial-json": "^0.1.7"
   },
   "devDependencies": {
     "@lobechat/context-engine": "workspace:*",
