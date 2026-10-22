@@ -1,10 +1,12 @@
 import { toast } from '@lobehub/ui';
+import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
 import type {
   AiModelReasoningConfig,
   AiModelSortMap,
   AiProviderModelListItem,
   CreateAiModelParams,
+  EnabledAiModel,
   ToggleAiModelEnableParams,
   UpdateAiModelParams,
 } from 'model-bank';
@@ -19,7 +21,7 @@ import { aiModelService } from '@/services/aiModel';
 import type { AiInfraStore } from '@/store/aiInfra/store';
 import type { StoreSetter } from '@/store/types';
 
-import { modelReasoningConfigKey } from './initialState';
+import { modelReasoningConfigKey, seedModelReasoningConfigMap } from './initialState';
 import {
   aiModelListEntity,
   aiModelListResource,
@@ -231,6 +233,40 @@ export class AiModelActionImpl {
   removeAiModel = async (id: string, providerId: string): Promise<void> => {
     await aiModelService.deleteAiModel({ id, providerId });
     await this.#get().refreshAiModelList();
+  };
+
+  /**
+   * Seeds the map from a complete server snapshot of saved reasoning configs
+   * (the runtime-state response) through the replica.
+   *
+   * A raw write to `modelReasoningConfigMap` would leave the replica entry — and
+   * its bookkeeping — absent, so a storage hydration resolving after this
+   * response would treat memory as empty and repaint an older persisted row over
+   * the confirmed snapshot. Routing the seed through `updateMany` writes those
+   * values as confirmed entries: they persist, and a later hydration keeps them.
+   *
+   * Keys with an in-flight save keep their optimistic value (`seedModelReasoningConfigMap`
+   * skips them), and unchanged keys are left alone so a revalidation costs no writes.
+   */
+  seedModelReasoningConfigs = (
+    configs: Record<string, AiModelReasoningConfig>,
+    models: Pick<EnabledAiModel, 'id' | 'providerId'>[],
+  ): void => {
+    const state = this.#get();
+    const next = seedModelReasoningConfigMap(
+      state.modelReasoningConfigMap,
+      configs,
+      models,
+      state.modelReasoningConfigUpdatingKeys,
+    );
+
+    const entries = Object.keys(next)
+      .filter((key) => !isEqual(next[key], state.modelReasoningConfigMap[key]))
+      .map((key) => ({ apply: () => ({ value: next[key] }), key }));
+
+    if (entries.length === 0) return;
+
+    this.#reasoningConfig.updateMany(entries);
   };
 
   /**

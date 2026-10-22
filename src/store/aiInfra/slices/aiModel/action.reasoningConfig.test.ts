@@ -635,4 +635,38 @@ describe('AiModelAction reasoning config', () => {
       ).toBeUndefined();
     });
   });
+
+  describe('seedModelReasoningConfigs', () => {
+    it('seeds the snapshot as confirmed entries and keeps an in-flight save', () => {
+      act(() => {
+        useStore.setState({
+          modelReasoningConfigMap: { 'openai/gpt-5.2': { reasoningEffort: 'high' } },
+          modelReasoningConfigUpdatingKeys: ['openai/gpt-5.2'],
+        });
+      });
+
+      act(() => {
+        useStore.getState().seedModelReasoningConfigs(
+          { 'anthropic/claude-sonnet-4-5': { reasoningEffort: 'low' } },
+          [
+            { id: 'gpt-5.2', providerId: 'openai' },
+            { id: 'claude-sonnet-4-5', providerId: 'anthropic' },
+          ] as any,
+        );
+      });
+
+      const state = useStore.getState();
+      // A save in flight keeps its optimistic value and gets no replica entry.
+      expect(state.modelReasoningConfigMap['openai/gpt-5.2']).toEqual({ reasoningEffort: 'high' });
+      expect(state.modelReasoningConfigReplica.entries['openai/gpt-5.2']).toBeUndefined();
+      // The server's snapshot lands as a confirmed entry, so a hydration still
+      // in flight cannot repaint an older persisted row over it.
+      expect(state.modelReasoningConfigMap['anthropic/claude-sonnet-4-5']).toEqual({
+        reasoningEffort: 'low',
+      });
+      expect(
+        state.modelReasoningConfigReplica.entries['anthropic/claude-sonnet-4-5'],
+      ).toBeDefined();
+    });
+  });
 });
