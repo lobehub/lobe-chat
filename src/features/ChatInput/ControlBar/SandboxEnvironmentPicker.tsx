@@ -158,9 +158,7 @@ const SandboxEnvironmentPicker = memo<SandboxEnvironmentPickerProps>(({ onChange
           <Text className={stylex.props(styles.hint).className} type={'danger'}>
             {t('sandboxEnvironment.loadFailed')}
           </Text>
-          <Button size={'small'} onClick={() => void mutate()}>
-            {t('sandboxEnvironment.retry')}
-          </Button>
+          <Button onClick={() => void mutate()}>{t('sandboxEnvironment.retry')}</Button>
         </Flexbox>
       )}
     </Flexbox>
