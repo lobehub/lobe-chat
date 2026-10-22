@@ -35,6 +35,7 @@ import {
   type QuotaLatestReading,
   useAgentQuotaStore,
 } from '@/store/agentQuota';
+import { useElectronStore } from '@/store/electron';
 
 const styles = createStaticStyles(({ css }) => ({
   footer: css`
@@ -121,9 +122,9 @@ AccountReadingsSync.displayName = 'AccountReadingsSync';
 interface QuotaAccountManagerProps {
   agentId: string;
   /**
-   * Bound execution device the agent runs on. Its logins live on that machine,
-   * not on the desktop showing this modal, so local sign-in state says nothing
-   * about which accounts it can run.
+   * Bound execution device the agent runs on. A remote device's logins live
+   * on that machine, not on the desktop showing this modal, so local sign-in
+   * state says nothing about which accounts it can run there.
    */
   deviceId?: string;
 }
@@ -155,8 +156,10 @@ const QuotaAccountManager = memo<QuotaAccountManagerProps>(({ agentId, deviceId 
   const { error: accountsError } = useFetchQuotaAccounts();
   useFetchQuotaBindings(agentId);
   // Only the desktop runs Claude Code locally, so only it has logins to show —
-  // and only when this agent runs here rather than on a bound device.
-  const managesLocalLogins = isDesktop && !deviceId;
+  // and only when this agent runs here: in-process, or through the gateway on
+  // this desktop's own device row, which spawns on the same logins.
+  const currentDeviceId = useElectronStore((s) => s.gatewayDeviceInfo?.deviceId);
+  const managesLocalLogins = isDesktop && (!deviceId || deviceId === currentDeviceId);
   useFetchClaudeLocalAccounts(managesLocalLogins);
   const localAccounts = useAgentQuotaStore((s) => s.claudeLocalAccounts);
   const loginPending = useAgentQuotaStore((s) => s.claudeLoginPending);
