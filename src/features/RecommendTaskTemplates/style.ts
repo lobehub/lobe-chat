@@ -1,9 +1,6 @@
 import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
 import * as stylex from '@stylexjs/stylex';
 
-const REVEAL_HOVER = stylex.when.ancestor(':hover');
-const REVEAL_FOCUS = stylex.when.ancestor(':focus-within');
-
 // `card` and `compactRow` carry `stylex.defaultMarker()`; the dismiss button
 // reveals itself from their hover (and, in the compact row, focus-within) state.
 export const styles = stylex.create({
@@ -44,13 +41,13 @@ export const styles = stylex.create({
     minWidth: '0',
   },
   dismissBtn: {
-    pointerEvents: { default: 'none', [REVEAL_HOVER]: 'auto' },
+    pointerEvents: { default: 'none', [stylex.when.ancestor(':hover')]: 'auto' },
     flexShrink: 0,
-    opacity: { default: 0, [REVEAL_HOVER]: 1 },
+    opacity: { default: 0, [stylex.when.ancestor(':hover')]: 1 },
     transition: 'opacity 0.15s',
   },
   dismissBtnCompact: {
-    pointerEvents: { default: 'none', [REVEAL_HOVER]: 'auto', [REVEAL_FOCUS]: 'auto' },
-    opacity: { default: 0, [REVEAL_HOVER]: 1, [REVEAL_FOCUS]: 1 },
+    pointerEvents: { default: 'none', [stylex.when.ancestor(':hover')]: 'auto', [stylex.when.ancestor(':focus-within')]: 'auto' },
+    opacity: { default: 0, [stylex.when.ancestor(':hover')]: 1, [stylex.when.ancestor(':focus-within')]: 1 },
   },
 });
