@@ -180,11 +180,10 @@ export const useTopicItemDropdownMenu = ({
         key: 'delete',
         label: t('delete', { ns: 'common' }),
         onClick: () => {
-          void confirmRemoveTopic({
-            onConfirm: async (removeFiles) => {
-              await removeTopic(id, removeFiles);
+          confirmRemoveTopic({
+            onConfirm: async () => {
+              await removeTopic(id, true);
             },
-            topicIds: [id],
           });
         },
         sfSymbol: 'trash',

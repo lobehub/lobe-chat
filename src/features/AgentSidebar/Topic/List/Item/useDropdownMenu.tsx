@@ -333,10 +333,10 @@ export const useTopicItemDropdownMenu = ({
         key: 'delete',
         label: t('delete', { ns: 'common' }),
         onClick: () => {
-          void confirmRemoveTopic({
-            onConfirm: async (removeFiles) => {
+          confirmRemoveTopic({
+            onConfirm: async () => {
               try {
-                await removeTopic(id, removeFiles);
+                await removeTopic(id, true);
                 if (scope) {
                   if (routeTopicId === id) navigate(`/project/${scope.projectId}`);
                   await refresh();
@@ -349,7 +349,6 @@ export const useTopicItemDropdownMenu = ({
                 );
               }
             },
-            topicIds: [id],
           });
         },
         sfSymbol: 'trash',

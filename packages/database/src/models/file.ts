@@ -649,33 +649,6 @@ export class FileModel {
   };
 
   /**
-   * Whether any of the given topics contains a user-owned file attached to a
-   * message. This intentionally checks for attachment presence rather than
-   * deletability: shared files should still be disclosed in the confirmation
-   * UI, while {@link findDeletableFilesByTopicId} remains responsible for
-   * preserving references that survive the topic deletion.
-   */
-  hasFilesByTopicIds = async (topicIds: string[]): Promise<boolean> => {
-    if (topicIds.length === 0) return false;
-
-    const [file] = await this.db
-      .select({ id: messagesFiles.fileId })
-      .from(messagesFiles)
-      .innerJoin(messages, eq(messagesFiles.messageId, messages.id))
-      .innerJoin(files, eq(messagesFiles.fileId, files.id))
-      .where(
-        and(
-          inArray(messages.topicId, topicIds),
-          eq(messagesFiles.userId, this.userId),
-          this.ownership(),
-        ),
-      )
-      .limit(1);
-
-    return Boolean(file);
-  };
-
-  /**
    * Collect the user-uploaded files that should be pre-loaded into a sandbox for
    * the given topic. Combines two associations and de-duplicates by file id:
    * - files attached to messages inside the topic (`messages_files`)
@@ -715,14 +688,26 @@ export class FileModel {
 
   /**
    * Find the user-uploaded files that can be safely deleted when a topic is
-   * removed: files attached to messages inside the topic that have **no other
-   * reference** surviving the deletion.
+   * removed: files this user created, attached to messages inside the topic,
+   * that have **no other reference** surviving the deletion.
+   *
+   * In a workspace the caller can attach another member's public file, so a
+   * candidate must be the caller's own upload, and references count no matter
+   * which member made them.
    *
    * Deleting a `files` row cascades to `messages_files` and `files_to_sessions`,
    * so a file still referenced elsewhere would silently disappear from there.
    * A candidate is therefore preserved (excluded) when it is still attached:
-   * - to a message in another topic (or a message with no topic), or
-   * - at the session level (`files_to_sessions`), which outlives a single topic.
+   * - to a message in another topic (or a message with no topic),
+   * - at the session level (`files_to_sessions`), which outlives a single topic,
+   * - to a knowledge base (`knowledge_base_files`) or an agent (`agents_files`),
+   * - to an image generation (`generations`), whose record the delete would drop,
+   * - to any document (`documents.fileId`). A parsed copy of the file
+   *   (`sourceType='file'`) is not disposable: a Page imported in Page Explorer,
+   *   a chat attachment's parse and an agent's VFS import are indistinguishable
+   *   rows, all listed as Pages, and `deleteMany` would delete them with the file,
+   * - as the TTS audio of a message outside the topic (`message_tts`), or
+   * - as acceptance evidence (`verify_evidence`), whose attachment would be lost.
    *
    * Session-level files are likewise never returned, matching the behaviour
    * documented on {@link findFilesToInitInSandbox}.
@@ -732,13 +717,30 @@ export class FileModel {
       .selectDistinct({ id: messagesFiles.fileId })
       .from(messagesFiles)
       .innerJoin(messages, eq(messagesFiles.messageId, messages.id))
-      .where(and(eq(messages.topicId, topicId), eq(messagesFiles.userId, this.userId)));
+      .innerJoin(files, eq(messagesFiles.fileId, files.id))
+      .where(
+        and(
+          eq(messages.topicId, topicId),
+          eq(messagesFiles.userId, this.userId),
+          eq(files.userId, this.userId),
+        ),
+      );
 
     const candidateIds = candidates.map((row) => row.id);
     if (candidateIds.length === 0) return [];
 
-    const [messageRefsOutsideTopic, sessionRefs] = await Promise.all([
-      // same file attached to a message in a different topic (or no topic)
+    const [
+      messageRefsOutsideTopic,
+      sessionRefs,
+      knowledgeBaseRefs,
+      agentRefs,
+      generationRefs,
+      documentRefs,
+      ttsRefsOutsideTopic,
+      evidenceRefs,
+    ] = await Promise.all([
+      // same file attached to a message in a different topic (or no topic),
+      // by any member
       this.db
         .selectDistinct({ id: messagesFiles.fileId })
         .from(messagesFiles)
@@ -746,25 +748,62 @@ export class FileModel {
         .where(
           and(
             inArray(messagesFiles.fileId, candidateIds),
-            eq(messagesFiles.userId, this.userId),
             or(ne(messages.topicId, topicId), isNull(messages.topicId)),
           ),
         ),
-      // same file attached at the session level — survives topic deletion
+      // same file attached at the session level by any member — survives topic deletion
       this.db
         .selectDistinct({ id: filesToSessions.fileId })
         .from(filesToSessions)
+        .where(inArray(filesToSessions.fileId, candidateIds)),
+      // knowledge base / agent knowledge / image generation: none of these
+      // belong to the topic, so the file must outlive it
+      this.db
+        .selectDistinct({ id: knowledgeBaseFiles.fileId })
+        .from(knowledgeBaseFiles)
+        .where(inArray(knowledgeBaseFiles.fileId, candidateIds)),
+      this.db
+        .selectDistinct({ id: agentsFiles.fileId })
+        .from(agentsFiles)
+        .where(inArray(agentsFiles.fileId, candidateIds)),
+      this.db
+        .selectDistinct({ id: generations.fileId })
+        .from(generations)
+        .where(inArray(generations.fileId, candidateIds)),
+      // any document built on the file: deleting the file would delete or
+      // orphan it, and a parsed copy may be a Page the user kept
+      this.db
+        .selectDistinct({ id: documents.fileId })
+        .from(documents)
+        .where(inArray(documents.fileId, candidateIds)),
+      // TTS audio of a message that survives the topic: the delete would
+      // cascade its TTS row away. Audio of the topic's own messages goes with them.
+      this.db
+        .selectDistinct({ id: messageTTS.fileId })
+        .from(messageTTS)
+        .innerJoin(messages, eq(messageTTS.id, messages.id))
         .where(
           and(
-            inArray(filesToSessions.fileId, candidateIds),
-            eq(filesToSessions.userId, this.userId),
+            inArray(messageTTS.fileId, candidateIds),
+            or(ne(messages.topicId, topicId), isNull(messages.topicId)),
           ),
         ),
+      // acceptance evidence keeps the file as its attachment
+      this.db
+        .selectDistinct({ id: verifyEvidence.fileId })
+        .from(verifyEvidence)
+        .where(inArray(verifyEvidence.fileId, candidateIds)),
     ]);
 
-    const referencedElsewhere = new Set<string>([
+    const referencedElsewhere = new Set<string | null>([
       ...messageRefsOutsideTopic.map((row) => row.id),
       ...sessionRefs.map((row) => row.id),
+      ...knowledgeBaseRefs.map((row) => row.id),
+      ...agentRefs.map((row) => row.id),
+      ...generationRefs.map((row) => row.id),
+      ...documentRefs.map((row) => row.id),
+      ...ttsRefsOutsideTopic.map((row) => row.id),
+      ...evidenceRefs.map((row) => row.id),
     ]);
 
     return candidateIds.filter((id) => !referencedElsewhere.has(id));

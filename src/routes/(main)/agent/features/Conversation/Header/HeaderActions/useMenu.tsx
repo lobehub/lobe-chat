@@ -340,11 +340,10 @@ export const useMenu = (): { menuHeader?: ReactNode; menuItems: () => DropdownIt
           key: 'delete',
           label: t('delete', { ns: 'common' }),
           onClick: () => {
-            void confirmRemoveTopic({
-              onConfirm: async (removeFiles) => {
-                await removeTopic(topicId, removeFiles);
+            confirmRemoveTopic({
+              onConfirm: async () => {
+                await removeTopic(topicId, true);
               },
-              topicIds: [topicId],
             });
           },
         },

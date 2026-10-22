@@ -41,13 +41,12 @@ export const useRecentItemDropdownMenu = (item: RecentItem) => {
 
   const handleDelete = useCallback(() => {
     if (item.type === 'topic') {
-      void confirmRemoveTopic({
-        onConfirm: async (removeFiles) => {
+      confirmRemoveTopic({
+        onConfirm: async () => {
           // Home has no active agent/group, so chatStore.removeTopic early-returns; call the service directly.
-          await topicService.removeTopic(item.id, removeFiles);
+          await topicService.removeTopic(item.id, true);
           await refreshRecents();
         },
-        topicIds: [item.id],
       });
       return;
     }

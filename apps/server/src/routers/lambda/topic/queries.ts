@@ -9,7 +9,6 @@ import { TRPCError } from '@trpc/server';
 import { and, eq, inArray } from 'drizzle-orm';
 import { z } from 'zod';
 
-import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
 import { MessageModel } from '@/database/models/message';
 import { agents, chatGroups } from '@/database/schemas';
 import { notTrashed } from '@/database/utils/softDelete';
@@ -242,22 +241,17 @@ export const queryRouter = router({
 
       return { items: result.items, total: result.total };
     }),
+  /**
+   * @deprecated Topic deletion no longer offers an attachment choice: every delete
+   * requests file cleanup, and the trash purge keeps whatever is still used
+   * elsewhere. Kept for released Desktop builds and cached web bundles that still
+   * pre-check before opening the dialog. Answering "no files" hides their
+   * obsolete checkbox while their default still requests cleanup, so they follow
+   * the new behavior. Remove once those clients have aged out.
+   */
   hasTopicFiles: topicProcedure
-    .use(withScopedPermission('topic:delete'))
     .input(z.object({ ids: z.array(z.string()).min(1) }))
-    .query(async ({ input, ctx }) => {
-      try {
-        const hasFiles = await ctx.fileModel.hasFilesByTopicIds(input.ids);
-        return { data: { hasFiles }, success: true };
-      } catch (error) {
-        console.error('[topic:hasTopicFiles]', error);
-        throw new TRPCError({
-          cause: error,
-          code: 'INTERNAL_SERVER_ERROR',
-          message: 'Failed to check topic files',
-        });
-      }
-    }),
+    .query(() => ({ data: { hasFiles: false }, success: true })),
   hasTopics: topicProcedure.query(async ({ ctx }) => {
     return (await ctx.topicModel.count()) === 0;
   }),

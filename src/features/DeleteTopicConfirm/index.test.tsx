@@ -1,9 +1,7 @@
 /**
  * @vitest-environment happy-dom
  */
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-
-import { topicService } from '@/services/topic';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { confirmRemoveTopic } from './index';
 
@@ -23,60 +21,31 @@ describe('confirmRemoveTopic', () => {
     confirmModalMock.mockReset();
   });
 
-  afterEach(() => {
-    vi.restoreAllMocks();
-    vi.useRealTimers();
+  // Regression: the dialog used to wait on an attachment lookup with a 500ms
+  // fallback, so a slow lookup showed a file option for topics without files.
+  it('opens synchronously with a fixed description and no attachment choice', () => {
+    confirmRemoveTopic({ onConfirm: vi.fn() });
+
+    expect(confirmModalMock).toHaveBeenCalledTimes(1);
+    expect(confirmModalMock.mock.calls[0][0].content).toBe('actions.confirmRemoveTopic');
   });
 
-  it('hides the file option but keeps cleanup enabled when topics have no files', async () => {
-    vi.spyOn(topicService, 'hasTopicFiles').mockResolvedValue(false);
+  it('runs the confirm callback on ok', async () => {
     const onConfirm = vi.fn();
+    confirmRemoveTopic({ onConfirm });
 
-    await confirmRemoveTopic({ onConfirm, topicIds: ['topic-1'] });
+    await confirmModalMock.mock.calls[0][0].onOk();
 
-    const config = confirmModalMock.mock.calls[0][0];
-    expect(config.content.props.showRemoveFiles).toBe(false);
-
-    // Files attached between the precheck snapshot and confirm must still be
-    // cleaned up, so the hidden state confirms with removal enabled.
-    await config.onOk();
-    expect(onConfirm).toHaveBeenCalledWith(true);
+    expect(onConfirm).toHaveBeenCalledTimes(1);
   });
 
-  it('shows the file option and defaults to file removal when a selected topic has files', async () => {
-    vi.spyOn(topicService, 'hasTopicFiles').mockResolvedValue(true);
-    const onConfirm = vi.fn();
+  it('uses caller-provided copy', () => {
+    confirmRemoveTopic({ content: 'bulk', okText: 'ok', onConfirm: vi.fn(), title: 'title' });
 
-    await confirmRemoveTopic({ onConfirm, topicIds: ['topic-1', 'topic-2'] });
-
-    const config = confirmModalMock.mock.calls[0][0];
-    expect(config.content.props.showRemoveFiles).toBe(true);
-
-    await config.onOk();
-    expect(onConfirm).toHaveBeenCalledWith(true);
-  });
-
-  it('shows the file option when attachment presence cannot be determined', async () => {
-    vi.spyOn(topicService, 'hasTopicFiles').mockRejectedValue(new Error('lookup failed'));
-    vi.spyOn(console, 'error').mockImplementation(() => {});
-
-    await confirmRemoveTopic({ onConfirm: vi.fn(), topicIds: ['topic-1'] });
-
-    const config = confirmModalMock.mock.calls[0][0];
-    expect(config.content.props.showRemoveFiles).toBe(true);
-  });
-
-  it('opens the conservative file option when the lookup exceeds 500ms', async () => {
-    vi.useFakeTimers();
-    vi.spyOn(topicService, 'hasTopicFiles').mockReturnValue(new Promise(() => {}));
-
-    const confirmation = confirmRemoveTopic({ onConfirm: vi.fn(), topicIds: ['topic-1'] });
-    expect(confirmModalMock).not.toHaveBeenCalled();
-
-    await vi.advanceTimersByTimeAsync(500);
-    await confirmation;
-
-    const config = confirmModalMock.mock.calls[0][0];
-    expect(config.content.props.showRemoveFiles).toBe(true);
+    expect(confirmModalMock.mock.calls[0][0]).toMatchObject({
+      content: 'bulk',
+      okText: 'ok',
+      title: 'title',
+    });
   });
 });
