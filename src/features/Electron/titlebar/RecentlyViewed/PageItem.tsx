@@ -50,10 +50,10 @@ const PageItem = memo<PageItemProps>(({ item, isPinned, onClose }) => {
     <Flexbox
       horizontal
       align="center"
+      gap={8}
       className={
         stylex.props(styles.item, isActive && styles.itemActive, stylex.defaultMarker()).className
       }
-      gap={8}
       onClick={handleClick}
     >
       {meta.icon && (

@@ -323,13 +323,13 @@ const TabBar = () => {
               <Flexbox
                 horizontal
                 align={'center'}
+                gap={2}
+                style={{ width: OVERFLOW_CONTROL_WIDTH }}
+                title={t('tab.overflow', { count: hiddenCount })}
                 className={cx(
                   electronStylish.nodrag,
                   stylex.props(styles.overflowButton).className,
                 )}
-                gap={2}
-                style={{ width: OVERFLOW_CONTROL_WIDTH }}
-                title={t('tab.overflow', { count: hiddenCount })}
               >
                 <ChevronDown size={12} />
                 {hiddenCount}
