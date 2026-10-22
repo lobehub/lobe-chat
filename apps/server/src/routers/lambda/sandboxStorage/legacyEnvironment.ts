@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { router } from '@/libs/trpc/lambda';
 
-import { newConfigurationSchema } from '../_schema/environment';
+import { configurationSchema } from '../_schema/environment';
 import { environmentProcedures } from '../environment';
 import { rethrowDuplicateEnvironmentName } from './constraintErrors';
 import { driveForEnvironment } from './driveScope';
@@ -24,7 +24,9 @@ import { nameSchema, visibilitySchema } from './schemas';
 const legacyCreateEnvironment = instanceProcedure
   .input(
     z.object({
-      configuration: newConfigurationSchema.optional(),
+      // The released input, `files` included: desktop clients bundle the
+      // form that still offers it. The new endpoint creates code only.
+      configuration: configurationSchema.optional(),
       description: z.string().max(2000).optional(),
       name: nameSchema,
       visibility: visibilitySchema.optional(),

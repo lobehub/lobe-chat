@@ -171,6 +171,17 @@ describe('sandboxStorage.createEnvironment, as released', () => {
     expect(await instancesOf(created.id)).toHaveLength(1);
   });
 
+  it('should still create the Files environment a released client offers', async () => {
+    const created = await drive().createEnvironment({
+      configuration: { kind: 'files' },
+      name: 'Notes',
+      visibility: 'public',
+      withDefaultInstance: true,
+    });
+
+    expect(created.defaultInstance).toMatchObject({ environmentId: created.id });
+  });
+
   it('should be the definition alone without the flag', async () => {
     const created = await drive().createEnvironment({ name: 'Atlas', visibility: 'public' });
 
