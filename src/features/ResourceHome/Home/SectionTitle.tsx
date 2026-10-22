@@ -1,33 +1,24 @@
 'use client';
 
-import { createStaticStyles, Flexbox, Spin } from '@lobehub/ui';
+import { Flexbox, Spin } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  title: css`
-    margin: 0;
-    font-size: 15px;
-    font-weight: 600;
-    color: ${cssVar.colorText};
-  `,
-  viewAll: css`
-    cursor: pointer;
-
-    border: none;
-
-    font-size: 13px;
-    color: ${cssVar.colorTextSecondary};
-
-    background: none;
-
-    &:hover {
-      color: ${cssVar.colorText};
-    }
-  `,
-}));
+const styles = stylex.create({
+  title: { margin: '0', fontSize: '15px', fontWeight: 600, color: cssVar.colorText },
+  viewAll: {
+    cursor: 'pointer',
+    borderStyle: 'none',
+    fontSize: '13px',
+    color: { 'default': cssVar.colorTextSecondary, ':hover': cssVar.colorText },
+    backgroundColor: 'transparent',
+    backgroundImage: 'none',
+  },
+});
 
 interface SectionTitleProps {
   /** The cards are the local copy and a refresh is in flight. */
@@ -44,11 +35,15 @@ const SectionTitle = memo<SectionTitleProps>(({ loading, title, viewAllUrl }) =>
   return (
     <Flexbox horizontal align={'center'} justify={'space-between'}>
       <Flexbox horizontal align={'center'} gap={8}>
-        <h2 className={styles.title}>{title}</h2>
+        <h2 {...stylex.props(styles.title)}>{title}</h2>
         {loading && <Spin size="small" variant="network" />}
       </Flexbox>
       {viewAllUrl && (
-        <button className={styles.viewAll} type={'button'} onClick={() => navigate(viewAllUrl)}>
+        <button
+          {...stylex.props(styles.viewAll)}
+          type={'button'}
+          onClick={() => navigate(viewAllUrl)}
+        >
           {t('home.viewAll')}
         </button>
       )}

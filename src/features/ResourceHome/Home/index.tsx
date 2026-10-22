@@ -1,6 +1,8 @@
 'use client';
 
-import { createStaticStyles, cssVar, Flexbox } from '@lobehub/ui';
+import { Flexbox } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -12,19 +14,17 @@ import RecentFiles from './RecentFiles';
 import RecentPages from './RecentPages';
 import RecentWorks from './RecentWorks';
 
-const styles = createStaticStyles(({ css }) => ({
-  content: css`
-    width: 100%;
-    max-width: 1080px;
-    margin-inline: auto;
-    padding-block: 32px 64px;
-    padding-inline: 32px;
-  `,
-  scroll: css`
-    overflow: hidden auto;
-    flex: 1;
-  `,
-}));
+const styles = stylex.create({
+  content: {
+    width: '100%',
+    maxWidth: '1080px',
+    marginInline: 'auto',
+    paddingBlockStart: '32px',
+    paddingBlockEnd: '64px',
+    paddingInline: '32px',
+  },
+  scroll: { overflowX: 'hidden', overflowY: 'auto', flex: '1' },
+});
 
 /**
  * The library-style landing page of /resource: libraries (once — the sidebar
@@ -41,8 +41,8 @@ const ResourceHomeDashboard = memo(() => {
         right={<AddButton />}
         style={{ borderBottom: `1px solid ${cssVar.colorBorderSecondary}` }}
       />
-      <div className={styles.scroll}>
-        <Flexbox className={styles.content} gap={40}>
+      <div {...stylex.props(styles.scroll)}>
+        <Flexbox className={stylex.props(styles.content).className} gap={40}>
           <Libraries />
           <RecentWorks />
           <RecentPages />

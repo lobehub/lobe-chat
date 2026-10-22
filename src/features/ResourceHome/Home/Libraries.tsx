@@ -1,6 +1,8 @@
 'use client';
 
-import { createStaticStyles, Flexbox, Icon } from '@lobehub/ui';
+import { Flexbox, Icon } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { PlusIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -20,75 +22,56 @@ import { knowledgeBaseSelectors, useKnowledgeBaseStore } from '@/store/library';
 import { getLibraryListAsyncState } from '../Layout/Body/LibraryList/state';
 import SectionTitle from './SectionTitle';
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  chip: css`
-    cursor: pointer;
-
-    display: flex;
-    gap: 10px;
-    align-items: center;
-
-    min-width: 0;
-    padding-block: 14px;
-    padding-inline: 16px;
-    border: 1px solid ${cssVar.colorBorderSecondary};
-    border-radius: ${cssVar.borderRadiusLG};
-
-    text-align: start;
-
-    background: ${cssVar.colorFillQuaternary};
-
-    transition: all 0.2s ${cssVar.motionEaseInOut};
-
-    &:hover {
-      border-color: ${cssVar.colorBorder};
-      background: ${cssVar.colorFillTertiary};
-    }
-  `,
-  createChip: css`
-    cursor: pointer;
-
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    justify-content: center;
-
-    padding-block: 14px;
-    padding-inline: 16px;
-    border: 1px dashed ${cssVar.colorBorder};
-    border-radius: ${cssVar.borderRadiusLG};
-
-    color: ${cssVar.colorTextSecondary};
-
-    background: transparent;
-
-    transition: all 0.2s ${cssVar.motionEaseInOut};
-
-    &:hover {
-      border-color: ${cssVar.colorTextQuaternary};
-      color: ${cssVar.colorText};
-    }
-
-    &:disabled {
-      cursor: not-allowed;
-      opacity: 0.5;
-    }
-  `,
-  grid: css`
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 12px;
-  `,
-  name: css`
-    overflow: hidden;
-
-    font-size: 13px;
-    font-weight: 500;
-    color: ${cssVar.colorText};
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  `,
-}));
+const styles = stylex.create({
+  chip: {
+    cursor: 'pointer',
+    display: 'flex',
+    gap: '10px',
+    alignItems: 'center',
+    minWidth: '0',
+    paddingBlock: '14px',
+    paddingInline: '16px',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: { 'default': cssVar.colorBorderSecondary, ':hover': cssVar.colorBorder },
+    borderRadius: cssVar.borderRadiusLG,
+    textAlign: 'start',
+    backgroundColor: { 'default': cssVar.colorFillQuaternary, ':hover': cssVar.colorFillTertiary },
+    backgroundImage: { 'default': 'none', ':hover': 'none' },
+    transition: `all 0.2s ${cssVar.motionEaseInOut}`,
+  },
+  createChip: {
+    cursor: { 'default': 'pointer', ':disabled': 'not-allowed' },
+    display: 'flex',
+    gap: '8px',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBlock: '14px',
+    paddingInline: '16px',
+    borderWidth: '1px',
+    borderStyle: 'dashed',
+    borderColor: { 'default': cssVar.colorBorder, ':hover': cssVar.colorTextQuaternary },
+    borderRadius: cssVar.borderRadiusLG,
+    color: { 'default': cssVar.colorTextSecondary, ':hover': cssVar.colorText },
+    backgroundColor: 'transparent',
+    backgroundImage: 'none',
+    transition: `all 0.2s ${cssVar.motionEaseInOut}`,
+    opacity: { 'default': null, ':disabled': 0.5 },
+  },
+  grid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+    gap: '12px',
+  },
+  name: {
+    overflow: 'hidden',
+    fontSize: '13px',
+    fontWeight: 500,
+    color: cssVar.colorText,
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+});
 
 /**
  * How many libraries the quick-access row shows. The list is ordered by last
@@ -141,10 +124,10 @@ const Libraries = memo(() => {
       ) : showSkeleton ? (
         <ResourceSectionSkeleton {...RESOURCE_HOME_SECTIONS.libraries} />
       ) : (
-        <div className={styles.grid}>
+        <div {...stylex.props(styles.grid)}>
           {data?.slice(0, MAX_LIBRARIES).map((item) => (
             <button
-              className={styles.chip}
+              {...stylex.props(styles.chip)}
               key={item.id}
               type={'button'}
               onClick={() => {
@@ -157,11 +140,11 @@ const Libraries = memo(() => {
                 size={18}
                 visibility={item.visibility}
               />
-              <span className={styles.name}>{item.name}</span>
+              <span {...stylex.props(styles.name)}>{item.name}</span>
             </button>
           ))}
           <button
-            className={styles.createChip}
+            {...stylex.props(styles.createChip)}
             disabled={!canCreate}
             type={'button'}
             onClick={handleCreate}

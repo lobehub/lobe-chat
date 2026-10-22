@@ -1,5 +1,7 @@
 import { CUSTOM_FOLDER_FILE_TYPE } from '@lobechat/const';
-import { Button, createStaticStyles, cx, Flexbox, stopPropagation, Tooltip } from '@lobehub/ui';
+import { Button, cx, Flexbox, stopPropagation, Tooltip } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { isNull } from 'es-toolkit/compat';
 import { FileBoxIcon, Folder } from 'lucide-react';
 import { memo } from 'react';
@@ -13,34 +15,30 @@ import { formatSize } from '@/utils/format';
 
 import ChunksBadge from '../../ListView/ListItem/ChunkTag';
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  floatingChunkBadge: css`
-    position: absolute;
-    z-index: 3;
-    inset-block-end: 8px;
-    inset-inline-end: 8px;
-
-    border-radius: ${cssVar.borderRadius};
-
-    opacity: 0;
-    background: ${cssVar.colorBgContainer};
-    box-shadow: ${cssVar.boxShadow};
-
-    transition: opacity ${cssVar.motionDurationMid};
-  `,
-  name: css`
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-
-    margin-block-end: 12px;
-
-    font-weight: ${cssVar.fontWeightStrong};
-    color: ${cssVar.colorText};
-    word-break: break-word;
-  `,
-}));
+const styles = stylex.create({
+  floatingChunkBadge: {
+    position: 'absolute',
+    zIndex: 3,
+    insetBlockEnd: '8px',
+    insetInlineEnd: '8px',
+    borderRadius: cssVar.borderRadius,
+    opacity: 0,
+    backgroundColor: cssVar.colorBgContainer,
+    backgroundImage: 'none',
+    boxShadow: cssVar.boxShadow,
+    transition: `opacity ${cssVar.motionDurationMid}`,
+  },
+  name: {
+    overflow: 'hidden',
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: '2',
+    marginBlockEnd: '12px',
+    fontWeight: cssVar.fontWeightStrong,
+    color: cssVar.colorText,
+    wordBreak: 'break-word',
+  },
+});
 
 interface DefaultFileItemProps {
   chunkCount?: number | null;
@@ -92,7 +90,7 @@ const DefaultFileItem = memo<DefaultFileItemProps>(
           ) : (
             <FileIcon fileName={name} fileType={fileType} size={64} />
           )}
-          <div className={styles.name} style={{ textAlign: 'center' }}>
+          <div className={stylex.props(styles.name).className} style={{ textAlign: 'center' }}>
             {name}
           </div>
           {!isFolder && (
@@ -111,7 +109,10 @@ const DefaultFileItem = memo<DefaultFileItemProps>(
         {!isFolder &&
           (!isNull(chunkingStatus) && chunkingStatus ? (
             <div
-              className={cx('floatingChunkBadge', styles.floatingChunkBadge)}
+              className={cx(
+                stylex.props(styles.floatingChunkBadge).className,
+                'floatingChunkBadge',
+              )}
               onClick={stopPropagation}
             >
               <ChunksBadge
@@ -128,8 +129,11 @@ const DefaultFileItem = memo<DefaultFileItemProps>(
             isSupportedForChunking && (
               <Tooltip title={t('FileManager.actions.chunkingTooltip')}>
                 <div
-                  className={cx('floatingChunkBadge', styles.floatingChunkBadge)}
                   style={{ cursor: 'pointer' }}
+                  className={cx(
+                    stylex.props(styles.floatingChunkBadge).className,
+                    'floatingChunkBadge',
+                  )}
                   onClick={(e) => {
                     e.stopPropagation();
                     if (!isCreatingFileParseTask) {

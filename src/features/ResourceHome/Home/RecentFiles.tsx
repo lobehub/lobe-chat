@@ -1,6 +1,8 @@
 'use client';
 
-import { createStaticStyles, Flexbox } from '@lobehub/ui';
+import { Flexbox } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import dayjs from 'dayjs';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -21,64 +23,51 @@ import { FilesTabs } from '@/types/files';
 
 import SectionTitle from './SectionTitle';
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  card: css`
-    cursor: pointer;
-
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-
-    padding: 0;
-    border: 1px solid ${cssVar.colorBorderSecondary};
-    border-radius: ${cssVar.borderRadiusLG};
-
-    text-align: start;
-
-    background: ${cssVar.colorBgContainer};
-
-    transition: all 0.2s ${cssVar.motionEaseInOut};
-
-    &:hover {
-      border-color: ${cssVar.colorBorder};
-      box-shadow: ${cssVar.boxShadowTertiary};
-    }
-  `,
-  grid: css`
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 12px;
-  `,
-  meta: css`
-    font-size: 12px;
-    color: ${cssVar.colorTextQuaternary};
-  `,
-  name: css`
-    overflow: hidden;
-
-    font-size: 13px;
-    font-weight: 500;
-    color: ${cssVar.colorText};
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  `,
-  preview: css`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    aspect-ratio: 16 / 10;
-    width: 100%;
-    border-block-end: 1px solid ${cssVar.colorBorderSecondary};
-
-    background: ${cssVar.colorFillQuaternary};
-  `,
-  thumbnail: css`
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  `,
-}));
+const styles = stylex.create({
+  card: {
+    cursor: 'pointer',
+    overflow: 'hidden',
+    display: 'flex',
+    flexDirection: 'column',
+    padding: '0',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: { 'default': cssVar.colorBorderSecondary, ':hover': cssVar.colorBorder },
+    borderRadius: cssVar.borderRadiusLG,
+    textAlign: 'start',
+    backgroundColor: cssVar.colorBgContainer,
+    backgroundImage: 'none',
+    transition: `all 0.2s ${cssVar.motionEaseInOut}`,
+    boxShadow: { 'default': null, ':hover': cssVar.boxShadowTertiary },
+  },
+  grid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
+    gap: '12px',
+  },
+  meta: { fontSize: '12px', color: cssVar.colorTextQuaternary },
+  name: {
+    overflow: 'hidden',
+    fontSize: '13px',
+    fontWeight: 500,
+    color: cssVar.colorText,
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  preview: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    aspectRatio: '16 / 10',
+    width: '100%',
+    borderBlockEndWidth: '1px',
+    borderBlockEndStyle: 'solid',
+    borderBlockEndColor: cssVar.colorBorderSecondary,
+    backgroundColor: cssVar.colorFillQuaternary,
+    backgroundImage: 'none',
+  },
+  thumbnail: { width: '100%', height: '100%', objectFit: 'cover' },
+});
 
 const formatTime = (date: Date | string) =>
   dayjs().diff(dayjs(date), 'd') < 7 ? dayjs(date).fromNow() : dayjs(date).format('YYYY-MM-DD');
@@ -114,26 +103,26 @@ const RecentFiles = memo(() => {
       ) : isLoading ? (
         <ResourceSectionSkeleton {...RESOURCE_HOME_SECTIONS.files} />
       ) : (
-        <div className={styles.grid}>
+        <div {...stylex.props(styles.grid)}>
           {data?.map((item) => {
             const isImage = item.fileType?.startsWith('image');
             return (
               <button
-                className={styles.card}
+                {...stylex.props(styles.card)}
                 key={item.id}
                 type={'button'}
                 onClick={() => navigate(`/resource?file=${item.id}`)}
               >
-                <div className={styles.preview}>
+                <div {...stylex.props(styles.preview)}>
                   {isImage && item.url ? (
-                    <img alt={item.name} className={styles.thumbnail} src={item.url} />
+                    <img alt={item.name} {...stylex.props(styles.thumbnail)} src={item.url} />
                   ) : (
                     <FileIcon fileName={item.name} fileType={item.fileType} size={40} />
                   )}
                 </div>
                 <Flexbox gap={4} padding={12}>
-                  <span className={styles.name}>{item.name}</span>
-                  <span className={styles.meta}>{formatTime(item.createdAt)}</span>
+                  <span {...stylex.props(styles.name)}>{item.name}</span>
+                  <span {...stylex.props(styles.meta)}>{formatTime(item.createdAt)}</span>
                 </Flexbox>
               </button>
             );

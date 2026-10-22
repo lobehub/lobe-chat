@@ -1,6 +1,8 @@
 'use client';
 
-import { Button, Center, Checkbox, createStaticStyles, cssVar, Flexbox } from '@lobehub/ui';
+import { Button, Center, Checkbox, Flexbox } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { VirtuosoMasonry } from '@virtuoso.dev/masonry';
 import { type UIEvent } from 'react';
 import { memo, useCallback, useMemo, useState } from 'react';
@@ -23,33 +25,34 @@ import MasonryItemWrapper from './MasonryItem/MasonryItemWrapper';
 import MasonryViewSkeleton from './Skeleton';
 import { useMasonryViewState } from './useMasonryViewState';
 
-const styles = createStaticStyles(({ css }) => ({
-  selectAllHint: css`
-    position: sticky;
-    z-index: 1;
-    inset-block-start: 53px;
-
-    padding-block: 8px;
-    padding-inline: 4px;
-    border-block-end: 1px solid ${cssVar.colorBorderSecondary};
-
-    font-size: 12px;
-    color: ${cssVar.colorTextDescription};
-
-    background: ${cssVar.colorFillTertiary};
-  `,
-  toolbar: css`
-    position: sticky;
-    z-index: 1;
-    inset-block-start: 0;
-
-    padding-block: 12px;
-    padding-inline: 4px;
-    border-block-end: 1px solid ${cssVar.colorBorderSecondary};
-
-    background: ${cssVar.colorBgContainer};
-  `,
-}));
+const styles = stylex.create({
+  selectAllHint: {
+    position: 'sticky',
+    zIndex: 1,
+    insetBlockStart: '53px',
+    paddingBlock: '8px',
+    paddingInline: '4px',
+    borderBlockEndWidth: '1px',
+    borderBlockEndStyle: 'solid',
+    borderBlockEndColor: cssVar.colorBorderSecondary,
+    fontSize: '12px',
+    color: cssVar.colorTextDescription,
+    backgroundColor: cssVar.colorFillTertiary,
+    backgroundImage: 'none',
+  },
+  toolbar: {
+    position: 'sticky',
+    zIndex: 1,
+    insetBlockStart: '0',
+    paddingBlock: '12px',
+    paddingInline: '4px',
+    borderBlockEndWidth: '1px',
+    borderBlockEndStyle: 'solid',
+    borderBlockEndColor: cssVar.colorBorderSecondary,
+    backgroundColor: cssVar.colorBgContainer,
+    backgroundImage: 'none',
+  },
+});
 
 interface MasonryViewProps {
   isLoading?: boolean;
@@ -217,7 +220,12 @@ const MasonryView = memo(function MasonryView({
         ref={setContainer}
         style={{ paddingBlockEnd: 24, paddingBlockStart: 12, paddingInline: 24 }}
       >
-        <Flexbox horizontal align={'center'} className={styles.toolbar} gap={8}>
+        <Flexbox
+          horizontal
+          align={'center'}
+          className={stylex.props(styles.toolbar).className}
+          gap={8}
+        >
           <Checkbox
             checked={allSelected}
             disabled={!hasSelectableItems}
@@ -251,7 +259,7 @@ const MasonryView = memo(function MasonryView({
           <Flexbox
             horizontal
             align={'center'}
-            className={styles.selectAllHint}
+            className={stylex.props(styles.selectAllHint).className}
             gap={6}
             paddingInline={4}
             wrap={'wrap'}

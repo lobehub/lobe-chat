@@ -1,6 +1,7 @@
 'use client';
 
-import { createStaticStyles, Flexbox } from '@lobehub/ui';
+import { Flexbox } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -15,13 +16,13 @@ import WorkPreviewCard from '@/features/WorkGallery/WorkPreviewCard';
 
 import SectionTitle from './SectionTitle';
 
-const styles = createStaticStyles(({ css }) => ({
-  grid: css`
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 12px;
-  `,
-}));
+const styles = stylex.create({
+  grid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+    gap: '12px',
+  },
+});
 
 /** The dashboard shows only the freshest works; the full gallery lives at /resource/works. */
 const MAX_RECENT_WORKS = 3;
@@ -43,7 +44,7 @@ const RecentWorks = memo(() => {
       ) : isLoadingInitial ? (
         <ResourceSectionSkeleton {...RESOURCE_HOME_SECTIONS.works} />
       ) : (
-        <div className={styles.grid}>
+        <div {...stylex.props(styles.grid)}>
           {recent.map((item) => (
             <WorkPreviewCard item={item} key={item.id} onOpen={openWork} />
           ))}
