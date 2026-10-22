@@ -80,6 +80,14 @@ describe('mainAreaMetaRoutes (Electron adapter)', () => {
     expect(matched.meta?.DynamicMeta).toBeUndefined();
   });
 
+  it('resolves a project acceptance record with the acceptance title runner', () => {
+    const matched = matchRouteMeta(mainAreaMetaRoutes, '/project/prj_1/acceptance/acc_1');
+
+    expect(matched.static.titleKey).toBe('verify:acceptance.titleFallback');
+    expect(matched.meta?.DynamicMeta).toBeDefined();
+    expect(matched.params.acceptanceId).toBe('acc_1');
+  });
+
   it('resolves project meta for workspace-scoped tab urls', () => {
     const matched = matchRouteMeta(mainAreaMetaRoutes, '/team-x/project/prj_1/conversation/tpc_1');
 
