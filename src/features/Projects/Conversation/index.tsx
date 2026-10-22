@@ -26,6 +26,7 @@ import {
 
 import { getProjectConversationPath } from '../Layout/navigation';
 import { freshProjectTopicAgentId } from './freshProjectTopicAgentId';
+import { useMarkProjectTopicRead } from './useMarkProjectTopicRead';
 import { useProjectDraftStaging } from './useProjectDraftStaging';
 import { useRevalidateWhileUnlisted } from './useRevalidateWhileUnlisted';
 
@@ -87,6 +88,7 @@ const ProjectConversation = memo(() => {
 
   const agent = useInitAgentConfig(conversationAgentId);
   const topicDetail = useChatStore((s) => s.useFetchTopicDetail)(selectedTopic?.id);
+  useMarkProjectTopicRead(detail?.project.id, selectedTopic);
 
   useLayoutEffect(() => {
     if (!conversationAgentId) return;

@@ -8,6 +8,7 @@ import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { topicMapKey } from '@/store/chat/utils/topicMapKey';
 import { getHomeStoreState } from '@/store/home';
 import { type StoreSetter } from '@/store/types';
+import { type ChatTopicStatus } from '@/types/topic';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { operationSelectors } from './selectors';
@@ -805,26 +806,35 @@ export class OperationActionsImpl {
    * Clear a topic's unread mark by flipping `status: 'unread'` back to 'active'.
    * Only touches topics currently in the unread state — never stomps a
    * running / paused / completed status. Invoked when the user opens the topic.
+   *
+   * `status` is the caller's own copy of the topic's status, for surfaces that
+   * list topics outside `topicDataMap` (the project sidebar); without it the
+   * status is read from the loaded topic buckets.
    */
-  markTopicRead = ({
+  markTopicRead = async ({
     agentId,
     groupId,
+    status,
     topicId,
   }: {
     agentId?: string;
     groupId?: string | null;
+    status?: ChatTopicStatus | null;
     topicId?: string | null;
-  }): void => {
+  }): Promise<void> => {
     if (!topicId) return;
 
     const key = topicMapKey({
       agentId: agentId ?? this.#get().activeAgentId,
       groupId: groupId ?? this.#get().activeGroupId,
     });
-    const topic = this.#get().topicDataMap[key]?.items?.find((t) => t.id === topicId);
-    if (topic?.status !== 'unread') return;
+    const knownStatus =
+      status === undefined
+        ? this.#get().topicDataMap[key]?.items?.find((t) => t.id === topicId)?.status
+        : status;
+    if (knownStatus !== 'unread') return;
 
-    void this.#get()
+    await this.#get()
       .updateTopicStatus?.({
         agentId,
         groupId: groupId ?? undefined,
