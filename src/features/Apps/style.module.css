@@ -1,0 +1,35 @@
+/* Theme-dependent rules: they key off the document's data-theme attribute, which
+   StyleX cannot express (no ancestor selector outside a marker element). */
+
+.stage {
+  background: #f3f0ea;
+}
+
+.mobileStage {
+  background: #f3f0ea;
+}
+
+.phone {
+  border-color: #1c1c1e;
+}
+
+.darkOnly {
+  display: none;
+}
+
+:global(html[data-theme='dark']) .stage,
+:global(html[data-theme='dark']) .mobileStage {
+  background: var(--lobe-color-fill-quaternary);
+}
+
+:global(html[data-theme='dark']) .phone {
+  border-color: #3a3a40;
+}
+
+:global(html[data-theme='dark']) .darkOnly {
+  display: block;
+}
+
+:global(html[data-theme='dark']) .lightOnly {
+  display: none;
+}
