@@ -63,6 +63,16 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     &:has([data-tab-close]:focus-visible) [data-tab-icon] {
       opacity: 0;
     }
+
+    /* keyboard focus on the select button outranks hover */
+    &:has([data-tab-key]:focus-visible) [data-tab-icon] {
+      opacity: 1;
+    }
+
+    &:has([data-tab-key]:focus-visible) [data-tab-close] {
+      pointer-events: none;
+      opacity: 0;
+    }
   `,
   containerActive: css`
     background: ${cssVar.colorFillTertiary};
