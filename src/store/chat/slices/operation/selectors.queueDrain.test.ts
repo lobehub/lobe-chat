@@ -90,13 +90,50 @@ describe('isQueueDrainedAtRunEnd', () => {
     expect(operationSelectors.isQueueDrainedAtRunEnd(context)(result.current)).toBe(false);
   });
 
-  it('ignores a CLI run that no longer holds the queue', () => {
+  // ROOT CAUSE:
+  //
+  // A Gateway CLI socket that closes without its terminal completes the local
+  // op but leaves the external producer and its queue alive until
+  // `heteroFinish`. Requiring a queue-blocking op flipped the still-visible
+  // queue back to "current step".
+  //
+  // Before: only a running queue-blocking op could promise run-end timing.
+  // After: with nothing running, the queue's idle host decides.
+  it('keeps waiting for a CLI run whose socket closed before its terminal', () => {
     const { result } = renderHook(() => useChatStore());
 
     act(() => {
       const { operationId } = result.current.startOperation({
         context,
-        type: 'execHeterogeneousAgent',
+        metadata: { heteroType: 'claude-code' },
+        type: 'execServerAgentRuntime',
+      });
+      result.current.enqueueMessage(messageMapKey(context), {
+        content: 'follow up',
+        createdAt: Date.now(),
+        id: 'q1',
+        interruptMode: 'soft',
+      });
+      result.current.completeOperation(operationId);
+    });
+
+    expect(operationSelectors.isQueueDrainedAtRunEnd(context)(result.current)).toBe(true);
+  });
+
+  it('does not let an idle native host promise run-end timing', () => {
+    const { result } = renderHook(() => useChatStore());
+
+    act(() => {
+      const { operationId } = result.current.startOperation({
+        context,
+        metadata: { heteroType: null },
+        type: 'execServerAgentRuntime',
+      });
+      result.current.enqueueMessage(messageMapKey(context), {
+        content: 'follow up',
+        createdAt: Date.now(),
+        id: 'q1',
+        interruptMode: 'soft',
       });
       result.current.completeOperation(operationId);
     });
