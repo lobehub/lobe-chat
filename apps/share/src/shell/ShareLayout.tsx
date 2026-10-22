@@ -1,13 +1,13 @@
 'use client';
 
 import { copyToClipboard, Flexbox } from '@lobehub/ui';
-import { ActionIcon, Text, toast } from '@lobehub/ui';
-import { createStaticStyles } from '@lobehub/ui';
+import { ActionIcon, Text, toast } from '@lobehub/ui/base-ui';
+import { createStaticStyles } from 'antd-style';
 import { LinkIcon } from 'lucide-react';
 import { type CSSProperties, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { ShareHeaderMenu, ShareLogoLink } from '@/business/client/features/ShareChrome';
+import { ShareHeaderActions, ShareLogoLink } from '@/business/client/features/ShareChrome';
 import { ProductLogo } from '@/components/Branding';
 import Loading from '@/components/Loading/BrandTextLoading';
 import { DESKTOP_HEADER_ICON_SMALL_SIZE } from '@/const/layoutTokens';
@@ -106,6 +106,7 @@ export interface ShareLayoutProps {
   actions?: ReactNode;
   aside?: ReactNode;
   children?: ReactNode;
+  compactActions?: { key: string; label: string; onClick: () => void }[];
   contentWidth?: number;
   error?: unknown;
   loading?: boolean;
@@ -133,6 +134,7 @@ const CopyLinkAction = () => {
 
 const ShareLayout = ({
   actions,
+  compactActions,
   aside,
   children,
   contentWidth,
@@ -174,9 +176,11 @@ const ShareLayout = ({
             )}
           </div>
           <Flexbox horizontal align={'center'} flex={'none'} gap={2}>
-            {!error && !loading && actions}
-            {!error && <CopyLinkAction />}
-            <ShareHeaderMenu />
+            <ShareHeaderActions
+              actions={!error && !loading ? actions : undefined}
+              compactActions={!error && !loading ? compactActions : undefined}
+              copyLink={!error ? <CopyLinkAction /> : undefined}
+            />
           </Flexbox>
         </header>
         <Flexbox className={styles.body} flex={1}>

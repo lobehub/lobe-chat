@@ -1,4 +1,9 @@
 export default {
+  'sharePage.app.open': 'Open app',
+  'sharePage.app.help': 'Trouble opening the app?',
+  'sharePage.app.helpDescription':
+    'If this browser prevents opening the app, use its menu to open this page in your system browser. You can also keep reading here.',
+
   'backgroundActivity.alertDesc': '{{name}} is using {{memory}} of memory and {{cpu}} CPU.',
   'backgroundActivity.cpu': 'CPU',
   'backgroundActivity.details': 'View details',
