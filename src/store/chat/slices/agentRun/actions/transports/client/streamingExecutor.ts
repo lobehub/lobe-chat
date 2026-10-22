@@ -9,6 +9,7 @@ import {
   AgentRuntime,
   computeStepContext,
   GeneralChatAgent,
+  getLlmCallCount,
   isParkedStatus,
 } from '@lobechat/agent-runtime';
 import { createDryRunAudit, DASHBOARD_DRY_RUN_AUDIT } from '@lobechat/builtin-tool-dashboard';
@@ -885,12 +886,8 @@ export class StreamingExecutorActionImpl {
 
       state = result.newState;
 
-      // Mirror the user-facing LLM-call total onto the operation. The local
-      // `stepCount` variable above is the execution index; they intentionally
-      // differ once a turn executes tools without calling the model.
-      this.#get().updateOperationMetadata(operationId, {
-        llmCalls: state.llmCalls ?? state.usage?.llm?.apiCalls ?? 0,
-      });
+      // User-facing LLM-call total; `stepCount` above remains the execution index.
+      this.#get().updateOperationMetadata(operationId, { llmCalls: getLlmCallCount(state) });
 
       // Check if operation was cancelled after step completion
       const operationAfterStep = this.#get().operations[operationId];
@@ -1156,8 +1153,6 @@ export class StreamingExecutorActionImpl {
         metadata: {
           totalCost,
           totalMessages: subTaskMessages.length,
-          // User-facing step metric: actual LLM calls, not execution rounds.
-          // `totalLlmCalls` is the versioned continuation baseline.
           totalLlmCalls: usage?.llm?.apiCalls,
           totalSteps: usage?.llm?.apiCalls,
           totalTokens,
