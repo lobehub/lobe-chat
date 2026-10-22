@@ -4,6 +4,7 @@ import { resolveAgentGatewayUrl } from '../../settings';
 import type { AgentRunOutcome } from '../../utils/agentRunOutcome';
 import { streamAgentEvents } from '../../utils/agentStream';
 import {
+  AgentGatewayUnavailableError,
   AgentJournalUnsupportedError,
   AgentStreamHistoryError,
 } from '../../utils/agentStreamTransport';
@@ -70,6 +71,11 @@ export const followAgentRun = async (
     // A missing journal is a compatibility gap, not a lost history: let the
     // caller degrade to polling instead of exiting with an unknown outcome.
     if (error instanceof AgentJournalUnsupportedError) throw error;
+    // The Gateway never came back while the run was quiet. The journal and the
+    // status endpoint may still be healthy, so this is not an unconfirmable
+    // history either — reject so the caller can keep polling instead of
+    // reporting `unknown` and skipping its fallback.
+    if (error instanceof AgentGatewayUnavailableError) throw error;
     if (!(error instanceof AgentStreamHistoryError)) throw error;
     log.error(error.message);
     return { kind: 'unknown' };

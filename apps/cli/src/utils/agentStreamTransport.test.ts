@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { streamAgentEvents } from './agentStream';
 import type { AgentHistoryPage } from './agentStreamTransport';
-import { AgentJournalUnsupportedError, consumeAgentStream } from './agentStreamTransport';
+import { AgentGatewayUnavailableError, AgentJournalUnsupportedError, consumeAgentStream } from './agentStreamTransport';
 
 let sockets: TestSocket[];
 class TestSocket {
@@ -288,11 +288,11 @@ describe('recoverable WebSocket transport', () => {
       },
     );
     const consumer = consumeAgentStream({ ...options(), maxRetries: 2 }, () => false);
-    const failure = expect(consumer.done).rejects.toMatchObject({
-      name: 'AgentStreamHistoryError',
-    });
+    // Reconnect exhaustion is a connectivity outage, not a lost history: the
+    // caller must be able to fall back to polling the run status.
+    const settled = consumer.done.catch((error: unknown) => error);
     await vi.advanceTimersByTimeAsync(20_000);
-    await failure;
+    expect(await settled).toBeInstanceOf(AgentGatewayUnavailableError);
     expect(vi.getTimerCount()).toBe(0);
   });
 });

@@ -51,6 +51,19 @@ export class AgentJournalUnsupportedError extends Error {
   }
 }
 
+/**
+ * The Gateway stayed unreachable through the whole reconnect budget. This is a
+ * connectivity outage, not a lost history: the journal may still be intact and
+ * the run may still be executing, so it must reach the caller untouched — the
+ * caller degrades to status polling instead of reporting an unconfirmable run.
+ */
+export class AgentGatewayUnavailableError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'AgentGatewayUnavailableError';
+  }
+}
+
 const DEFAULT_MAX_RETRIES = 6;
 const CONNECT_TIMEOUT_MS = 10_000;
 const HEARTBEAT_INTERVAL_MS = 30_000;
@@ -323,7 +336,9 @@ class GatewayWakeChannel {
     this.onWake(true);
     if (++this.retries > this.options.maxRetries) {
       this.onFatal(
-        new Error(`Reconnect attempts exhausted; complete history not confirmed: ${error.message}`),
+        new AgentGatewayUnavailableError(
+          `Reconnect attempts exhausted; complete history not confirmed: ${error.message}`,
+        ),
       );
       return;
     }
@@ -354,7 +369,9 @@ class GatewayWakeChannel {
  * live/replay races, and dependence on the Gateway's in-memory buffer.
  *
  * `done` resolves after the terminal event and rejects with
- * `AgentStreamHistoryError` when the output may be incomplete, or with
+ * `AgentStreamHistoryError` when the output may be incomplete, with
+ * `AgentGatewayUnavailableError` when the Gateway never came back (the run may
+ * still be healthy, so the caller can fall back to polling), or with
  * `AgentJournalUnsupportedError` when the server has no journal to read at all.
  * `abort` lets the consumer end the stream as incomplete (e.g. a stall check).
  */
@@ -437,7 +454,9 @@ export const consumeAgentStream = (
     if (stopped) return;
     close();
     rejectDone(
-      error instanceof AgentStreamHistoryError || error instanceof AgentJournalUnsupportedError
+      error instanceof AgentStreamHistoryError ||
+        error instanceof AgentJournalUnsupportedError ||
+        error instanceof AgentGatewayUnavailableError
         ? error
         : new AgentStreamHistoryError(error.message),
     );

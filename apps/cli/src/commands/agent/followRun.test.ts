@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { AgentStreamHistoryError } from '../../utils/agentStreamTransport';
+import { AgentGatewayUnavailableError, AgentStreamHistoryError } from '../../utils/agentStreamTransport';
 import { followAgentRun } from './followRun';
 
 const { getTrpcClient, historyQuery, streamAgentEvents } = vi.hoisted(() => {
@@ -56,6 +56,14 @@ describe('followAgentRun', () => {
     streamAgentEvents.mockRejectedValue(new Error('boom'));
 
     await expect(followAgentRun('op-1')).rejects.toThrow('boom');
+  });
+
+  it('rethrows an exhausted gateway so the caller keeps polling the run status', async () => {
+    streamAgentEvents.mockRejectedValue(
+      new AgentGatewayUnavailableError('Reconnect attempts exhausted'),
+    );
+
+    await expect(followAgentRun('op-1')).rejects.toBeInstanceOf(AgentGatewayUnavailableError);
   });
 
   it('surfaces a server without the journal as a compatibility failure, not a lost history', async () => {
