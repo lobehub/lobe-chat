@@ -30,6 +30,7 @@ import {
   type ReplicaPageResult,
   type ReplicaSyncResult,
 } from '@/libs/replica';
+import { subscribeCacheScope } from '@/libs/replica/cacheScopeEvents';
 import { mutate } from '@/libs/swr';
 import { cronKeys, topicKeys } from '@/libs/swr/keys';
 import { getCacheScope } from '@/libs/swr/useCacheScope';
@@ -271,6 +272,7 @@ export class ChatTopicActionImpl {
       this.#topicAgentView,
       this.#topicDetail,
     ]);
+    subscribeCacheScope((scope) => this.#topicList.ensureScope(scope));
   }
 
   #resolveTopicLinkedPullRequestRefreshParams = (
@@ -1382,9 +1384,8 @@ export class ChatTopicActionImpl {
    * projection, then revalidates; results land in `topicDataMap` — read them
    * through `topicSelectors`, never from this hook.
    */
-  useFetchTopics = (enable: boolean, params: Partial<TopicListParams> = {}): ReplicaSyncResult => {
-    return this.#topicList.useSync(normalizeTopicListParams(params), { enabled: enable });
-  };
+  useFetchTopics = (enable: boolean, params: Partial<TopicListParams> = {}): ReplicaSyncResult =>
+    this.#topicList.useSync(normalizeTopicListParams(params), { enabled: enable });
 
   /**
    * Seed the sidebar's persisted page for a session before its first paint.
@@ -1492,8 +1493,8 @@ export class ChatTopicActionImpl {
       groupId?: string;
       onlyMine?: boolean;
     } = {},
-  ): SWRResponse<ChatTopic[]> => {
-    return useSWR<ChatTopic[]>(
+  ): SWRResponse<ChatTopic[]> =>
+    useSWR<ChatTopic[]>(
       keywords ? topicKeys.search(keywords, agentId, groupId, onlyMine || undefined) : null,
       () => topicService.searchTopics(keywords ?? '', agentId, groupId, onlyMine),
       {
@@ -1512,7 +1513,6 @@ export class ChatTopicActionImpl {
         },
       },
     );
-  };
 
   switchTopic = async (id?: string | null, options?: SwitchTopicOptions): Promise<void> => {
     const opts = options ?? {};
