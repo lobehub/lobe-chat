@@ -14,6 +14,13 @@ interface RenameInputProps {
 }
 
 /**
+ * Window in which a blur is read as the menu handing focus back rather than the
+ * user leaving the field. `queueMicrotask` focus plus the menu's exit animation
+ * already cost ~250ms, and a slow main thread stretches that further.
+ */
+const FOCUS_CHURN_MS = 800;
+
+/**
  * Inline rename field for a page row, the same shape knowledge-base rows use.
  * It replaces the row title instead of opening a popover: the row is only a few
  * dozen pixels tall inside a scrollable sidebar, and a popover anchored to a
@@ -54,12 +61,15 @@ const RenameInput = memo<RenameInputProps>(({ id, title, onDone }) => {
   }, [id, onDone, title, value]);
 
   /**
-   * Dismissing the row menu hands focus back to the menu trigger a tick after
-   * this field mounts. Treat a blur inside that window as focus churn — commit
-   * only once the field has actually been the user's target.
+   * Dismissing the row menu hands focus back to its trigger a tick after this
+   * field mounts. The restore is not one frame: the menu host unmounts and then
+   * re-focuses the trigger, and on a busy main thread that lands well past the
+   * next paint. Treat a blur inside that window as focus churn — commit only
+   * once the field has actually been the user's target — otherwise choosing
+   * "Rename" closes the field before it can be typed into.
    */
   const handleBlur = useCallback(() => {
-    if (performance.now() - mountedAtRef.current < 250) {
+    if (performance.now() - mountedAtRef.current < FOCUS_CHURN_MS) {
       inputRef.current?.focus();
       return;
     }

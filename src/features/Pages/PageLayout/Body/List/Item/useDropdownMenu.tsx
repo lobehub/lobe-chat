@@ -44,6 +44,19 @@ const stopRowClick =
     run();
   };
 
+/**
+ * Business builds inject their own transfer entries (Move to a library, …).
+ * They arrive with the caller's plain `onClick`, so they have to go through the
+ * same wrapper — otherwise choosing one of them still reaches the row link and
+ * navigates away, which is the exact defect the local actions no longer have.
+ */
+const wrapMenuItems = (items: DropdownItem[] | undefined | null): DropdownItem[] =>
+  (items ?? []).map((item) =>
+    item && 'onClick' in item && typeof item.onClick === 'function'
+      ? ({ ...item, onClick: stopRowClick(item.onClick as () => void) } as DropdownItem)
+      : item,
+  );
+
 export const useDropdownMenu = ({ pageId, toggleEditing }: ActionProps): (() => DropdownItem[]) => {
   const { t } = useTranslation(['common', 'file']);
 
@@ -178,7 +191,7 @@ export const useDropdownMenu = ({ pageId, toggleEditing }: ActionProps): (() => 
           onClick: stopRowClick(handleDuplicate),
         },
         ...(transferMenuItems && transferMenuItems.length > 0
-          ? [{ type: 'divider' as const }, ...transferMenuItems]
+          ? [{ type: 'divider' as const }, ...wrapMenuItems(transferMenuItems)]
           : []),
         ...(canPublish
           ? [

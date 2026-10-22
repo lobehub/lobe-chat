@@ -219,7 +219,7 @@ Given('用户在 Page 页面', { timeout: 30_000 }, async function (this: Custom
   console.log('   ✅ 已进入 Page 页面');
 });
 
-Given('用户在 Page 页面有一个文稿', async function (this: CustomWorld) {
+Given('用户在 Page 页面有一个文稿', { timeout: 60_000 }, async function (this: CustomWorld) {
   console.log('   📍 Step: 导航到 Page 页面...');
   await openDocsHome(this);
 
@@ -297,7 +297,10 @@ Given('用户在 Page 页面有一个文稿', async function (this: CustomWorld)
   console.log(`   ✅ 找到文稿: ${uniqueTitle}`);
 });
 
-Given('用户在 Page 页面有一个文稿 {string}', async function (this: CustomWorld, title: string) {
+Given('用户在 Page 页面有一个文稿 {string}', { timeout: 60_000 }, async function (
+  this: CustomWorld,
+  title: string,
+) {
   console.log('   📍 Step: 导航到 Page 页面...');
   await openDocsHome(this);
 

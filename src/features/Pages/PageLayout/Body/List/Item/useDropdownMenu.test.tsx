@@ -150,6 +150,26 @@ describe('Page list item dropdown menu', () => {
     }
   });
 
+  it('keeps the row click from firing for injected transfer actions', () => {
+    // Business builds hand these entries over with a plain `onClick`; they run
+    // through the same wrapper so "Move" cannot navigate the row either.
+    const transfer = vi.fn();
+    useDocumentTransferMenuItemMock.mockReturnValueOnce([
+      { key: 'move', label: 'Move', onClick: transfer },
+    ] as never);
+
+    const { result } = renderHook(() =>
+      useDropdownMenu({ pageId: 'page-1', toggleEditing: vi.fn() }),
+    );
+    const move = getMenuItem(result.current(), 'move');
+    const domEvent = { stopPropagation: vi.fn() };
+
+    (move?.onClick as unknown as (info: { domEvent: typeof domEvent }) => void)({ domEvent });
+
+    expect(domEvent.stopPropagation).toHaveBeenCalledTimes(1);
+    expect(transfer).toHaveBeenCalledTimes(1);
+  });
+
   it('disables page management actions for workspace viewers', () => {
     permissionMock.create_content = false;
     permissionMock.edit_own_content = false;
