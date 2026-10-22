@@ -70,7 +70,9 @@ const PageRow = memo<PageRowProps>(({ depth, doc, isOpen, onOpen }) => {
       actions={<Actions dropdownMenu={dropdownMenu} />}
       active={isOpen}
       contextMenuItems={dropdownMenu}
-      href={docsPagePath(doc.id)}
+      // While the field is open the row is not a link: clicks there belong to
+      // the field, and an anchor would follow `href` and drop the edit.
+      href={editing ? undefined : docsPagePath(doc.id)}
       style={depth ? { paddingInlineStart: 8 + depth * INDENT_PER_LEVEL } : undefined}
       icon={
         emoji ? (

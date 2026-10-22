@@ -1,6 +1,6 @@
 'use client';
 
-import { Input, stopPropagation } from '@lobehub/ui';
+import { Input, preventDefaultAndStopPropagation, stopPropagation } from '@lobehub/ui';
 import { type KeyboardEvent, memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -24,6 +24,7 @@ const RenameInput = memo<RenameInputProps>(({ id, title, onDone }) => {
 
   const [value, setValue] = useState(title);
   const inputRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLSpanElement>(null);
   const submittingRef = useRef(false);
 
   useEffect(() => {
@@ -59,9 +60,11 @@ const RenameInput = memo<RenameInputProps>(({ id, title, onDone }) => {
    */
   useEffect(() => {
     const handlePointerDown = (event: PointerEvent) => {
-      const node = inputRef.current;
-      if (!node) return;
-      if (event.target instanceof Node && node.contains(event.target)) return;
+      const container = containerRef.current;
+      if (!container || !(event.target instanceof Node)) return;
+      // A pointer inside the field belongs to the field, not to the dismissal:
+      // clicking the field to place the caret must not end the edit.
+      if (container.contains(event.target)) return;
 
       void handleUpdate();
     };
@@ -84,21 +87,30 @@ const RenameInput = memo<RenameInputProps>(({ id, title, onDone }) => {
   );
 
   return (
-    <Input
-      autoFocus
-      data-testid={'page-rename-input'}
-      maxLength={64}
-      placeholder={t('pageEditor.titlePlaceholder')}
-      ref={inputRef}
-      size={'small'}
-      style={{ width: '100%' }}
-      value={value}
-      onChange={(e) => setValue(e.target.value)}
-      onClick={stopPropagation}
-      onKeyDown={handleKeyDown}
-      onMouseDown={stopPropagation}
-      onPressEnter={() => void handleUpdate()}
-    />
+    <span ref={containerRef} style={{ display: 'block', width: '100%' }}>
+      <Input
+        autoFocus
+        data-testid={'page-rename-input'}
+        maxLength={64}
+        placeholder={t('pageEditor.titlePlaceholder')}
+        ref={inputRef}
+        size={'small'}
+        style={{ width: '100%' }}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        // The field can sit inside the row's link, so the click that places the
+        // caret has to cancel the anchor's default action too. Stopping the
+        // React event alone still lets the browser follow `href`, and the
+        // resulting navigation unmounts the field mid-edit.
+        onClick={preventDefaultAndStopPropagation}
+        onKeyDown={handleKeyDown}
+        // No `preventDefault` here: the anchor's navigation is the click's
+        // default action, while a mousedown default is the focus move that
+        // puts the caret in the field.
+        onMouseDown={stopPropagation}
+        onPressEnter={() => void handleUpdate()}
+      />
+    </span>
   );
 });
 
