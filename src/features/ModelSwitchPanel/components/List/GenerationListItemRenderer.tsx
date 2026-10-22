@@ -133,9 +133,7 @@ const GenerationListItemRenderer = memo<GenerationListItemRendererProps>(
                 style={{ paddingBlock: 8, paddingInline: 8 }}
                 className={cx(
                   menuSharedStyles.item,
-                  isActive &&
-                    stylex.props(stylex.props(modelSwitchPanelStyles.menuItemActive).className)
-                      .className,
+                  isActive && stylex.props(modelSwitchPanelStyles.menuItemActive).className,
                 )}
                 onClick={() => {
                   setDetailOpen(false);
@@ -179,9 +177,7 @@ const GenerationListItemRenderer = memo<GenerationListItemRendererProps>(
                 style={{ paddingBlock: 8, paddingInline: 8 }}
                 className={cx(
                   menuSharedStyles.item,
-                  isActive &&
-                    stylex.props(stylex.props(modelSwitchPanelStyles.menuItemActive).className)
-                      .className,
+                  isActive && stylex.props(modelSwitchPanelStyles.menuItemActive).className,
                 )}
                 onClick={() => {
                   setDetailOpen(false);

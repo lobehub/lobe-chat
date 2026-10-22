@@ -263,11 +263,11 @@ const CredentialExtras = memo(() => {
 
       {/* Middle: the credential fields the operator fills in. */}
       <Form.Field
+        minWidth={'max(50%, 360px)'}
+        variant="outlined"
         avatar={
           <Icon className={stylex.props(styles.fieldIcon).className} icon={Link2} size={20} />
         }
-        minWidth={'max(50%, 360px)'}
-        variant="outlined"
         label={
           <Flexbox horizontal align="center" gap={8}>
             {t('channel.imessage.blueBubblesServerUrl')}
@@ -290,11 +290,11 @@ const CredentialExtras = memo(() => {
       </Form.Field>
       <Form.Field
         divider
+        minWidth={'max(50%, 360px)'}
+        variant="outlined"
         avatar={
           <Icon className={stylex.props(styles.fieldIcon).className} icon={KeyRound} size={20} />
         }
-        minWidth={'max(50%, 360px)'}
-        variant="outlined"
         label={
           <Flexbox horizontal align="center" gap={8}>
             {t('channel.imessage.blueBubblesPassword')}

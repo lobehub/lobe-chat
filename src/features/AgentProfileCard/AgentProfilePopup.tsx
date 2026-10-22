@@ -269,14 +269,14 @@ const AgentProfilePopup = memo<AgentProfilePopupProps>(
 
     return (
       <Popover
-        classNames={
-          trigger === 'click' ? { trigger: stylex.props(styles.trigger).className } : undefined
-        }
         content={content}
         nativeButton={false}
         open={open}
         placement={trigger === 'hover' ? 'top' : 'right'}
         trigger={trigger}
+        classNames={
+          trigger === 'click' ? { trigger: stylex.props(styles.trigger).className } : undefined
+        }
         styles={{
           content: { borderRadius: 12, overflow: 'hidden', padding: 0 },
         }}

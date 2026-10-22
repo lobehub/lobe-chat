@@ -171,7 +171,12 @@ interface ScoreCellProps {
 }
 
 const ScoreCell: FC<ScoreCellProps> = ({ best, color, score }) => {
-  if (!score) return <span {...stylex.props(styles.cell, styles.cellMissing)}>-</span>;
+  if (!score)
+    return (
+      <span data-testid={'cell-missing'} {...stylex.props(styles.cell, styles.cellMissing)}>
+        -
+      </span>
+    );
 
   const tooltip = [
     RATING_SOURCE_NAMES[score.source],
@@ -186,7 +191,10 @@ const ScoreCell: FC<ScoreCellProps> = ({ best, color, score }) => {
       <span {...stylex.props(styles.cell)}>
         {best ? (
           // series color + '26' alpha suffix ≈ 15% tint background
-          <span {...sx([styles.bestPill], undefined, { background: `${color}26`, color })}>
+          <span
+            data-testid={'best-pill'}
+            {...sx([styles.bestPill], undefined, { background: `${color}26`, color })}
+          >
             {score.score}
           </span>
         ) : (
@@ -272,6 +280,7 @@ const BenchmarkModalContent: FC<BenchmarkModalContentProps> = memo(({ modelId, p
             <span {...stylex.props(styles.chipName)}>{model.displayName}</span>
             {selected.length > 1 && (
               <span
+                data-testid={'chip-remove'}
                 {...stylex.props(styles.chipRemove)}
                 role={'button'}
                 onClick={() => setSelectedIds((prev) => prev.filter((id) => id !== model.id))}
@@ -364,13 +373,18 @@ const BenchmarkModalContent: FC<BenchmarkModalContentProps> = memo(({ modelId, p
               if (!score)
                 return [
                   <span
+                    data-testid={'cell-missing'}
                     {...stylex.props(styles.tableRowLabel, styles.cellMissing)}
                     key={`${key}-label`}
                   >
                     {dimensions[dimensionIndex].label}
                   </span>,
                   ...Array.from({ length: 4 }, (_, i) => (
-                    <span {...stylex.props(styles.cell, styles.cellMissing)} key={`${key}-${i}`}>
+                    <span
+                      data-testid={'cell-missing'}
+                      {...stylex.props(styles.cell, styles.cellMissing)}
+                      key={`${key}-${i}`}
+                    >
                       -
                     </span>
                   )),

@@ -162,11 +162,11 @@ export const ListItemRenderer = memo<ListItemRendererProps>(
           <Flexbox style={{ marginBlock: 1, marginInline: 4 }}>
             <DropdownMenuSubmenuRoot open={detailOpen} onOpenChange={setDetailOpen}>
               <DropdownMenuSubmenuTrigger
+                style={{ paddingBlock: 8, paddingInline: 8 }}
                 className={cx(
                   menuSharedStyles.item,
                   isActive && stylex.props(styles.menuItemActive).className,
                 )}
-                style={{ paddingBlock: 8, paddingInline: 8 }}
                 onClick={(e) => {
                   e.preventDefault();
                   setDetailOpen(false);
@@ -209,11 +209,11 @@ export const ListItemRenderer = memo<ListItemRendererProps>(
           <Flexbox style={{ marginBlock: 1, marginInline: 4 }}>
             <DropdownMenuSubmenuRoot open={detailOpen} onOpenChange={setDetailOpen}>
               <DropdownMenuSubmenuTrigger
+                style={{ paddingBlock: 8, paddingInline: 8 }}
                 className={cx(
                   menuSharedStyles.item,
                   isActive && stylex.props(styles.menuItemActive).className,
                 )}
-                style={{ paddingBlock: 8, paddingInline: 8 }}
                 onClick={(e) => {
                   e.preventDefault();
                   setDetailOpen(false);

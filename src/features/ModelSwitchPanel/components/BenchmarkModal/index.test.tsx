@@ -195,7 +195,7 @@ describe('BenchmarkModalContent', () => {
     );
 
     // model-e only has intelligence — the other five dimension rows are dashed
-    expect(container.querySelectorAll('.cellMissing').length).toBeGreaterThan(0);
+    expect(container.querySelectorAll('[data-testid="cell-missing"]').length).toBeGreaterThan(0);
     // radar vertex label + table row label
     expect(screen.getAllByText('Intelligence').length).toBe(2);
   });
@@ -213,7 +213,7 @@ describe('BenchmarkModalContent', () => {
     // detail-only columns disappear in compare mode
     expect(screen.queryByText('Raw value')).not.toBeInTheDocument();
     // best-in-row highlighting: model-a wins every dimension, pill tinted with its series color
-    expect(container.querySelectorAll('.bestPill').length).toBe(6);
+    expect(container.querySelectorAll('[data-testid="best-pill"]').length).toBe(6);
   });
 
   it('caps the selection at four models', () => {
@@ -234,9 +234,7 @@ describe('BenchmarkModalContent', () => {
     fireEvent.click(screen.getByText('MODEL-B'));
     expect(screen.queryByText('Raw value')).not.toBeInTheDocument();
 
-    const removeButtons = screen
-      .getAllByRole('button')
-      .filter((el) => el.classList.contains('chipRemove'));
+    const removeButtons = screen.getAllByTestId('chip-remove');
     fireEvent.click(removeButtons[1]);
 
     // back to single-model detail view

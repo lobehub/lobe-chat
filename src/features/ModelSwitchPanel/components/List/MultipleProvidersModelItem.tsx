@@ -88,11 +88,11 @@ export const MultipleProvidersModelItem = memo<MultipleProvidersModelItemProps>(
         }}
       >
         <DropdownMenuSubmenuTrigger
+          style={{ paddingBlock: 8, paddingInline: 8 }}
           className={cx(
             menuSharedStyles.item,
             isActive && stylex.props(styles.menuItemActive).className,
           )}
-          style={{ paddingBlock: 8, paddingInline: 8 }}
           onClick={() => {
             if (defaultProviderRestricted) {
               onRestrictedModelClick?.();

@@ -330,11 +330,11 @@ const HabitList = memo<HabitListProps>(
                   gap={8}
                 >
                   <Text
+                    fontSize={12.5}
+                    weight={600}
                     className={
                       tier === 'recurring' ? stylex.props(styles.accent).className : undefined
                     }
-                    fontSize={12.5}
-                    weight={600}
                   >
                     {t(`tier.${tier}`)} {rows.length}
                   </Text>

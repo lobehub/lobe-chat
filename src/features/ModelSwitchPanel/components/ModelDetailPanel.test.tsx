@@ -186,7 +186,7 @@ describe('ModelDetailPanel pricing', () => {
       />,
     );
 
-    expect(container.querySelector('.description')).toHaveTextContent(
+    expect(container.querySelector('[data-testid="model-description"]')).toHaveTextContent(
       'Localized LobeHub model description.',
     );
   });
@@ -202,7 +202,7 @@ describe('ModelDetailPanel pricing', () => {
       />,
     );
 
-    expect(container.querySelector('.description')).toHaveTextContent(
+    expect(container.querySelector('[data-testid="model-description"]')).toHaveTextContent(
       'Localized model description.',
     );
   });
@@ -219,7 +219,7 @@ describe('ModelDetailPanel pricing', () => {
       />,
     );
 
-    expect(container.querySelector('.description')).toHaveTextContent(
+    expect(container.querySelector('[data-testid="model-description"]')).toHaveTextContent(
       'Fallback model description.',
     );
   });
@@ -236,7 +236,7 @@ describe('ModelDetailPanel pricing', () => {
       />,
     );
 
-    expect(container.querySelector('.description')).toHaveTextContent(
+    expect(container.querySelector('[data-testid="model-description"]')).toHaveTextContent(
       'Localized LobeHub colon-id model description.',
     );
   });
@@ -264,7 +264,7 @@ describe('ModelDetailPanel pricing', () => {
       />,
     );
 
-    const originalPrice = container.querySelector('.originalPriceText');
+    const originalPrice = container.querySelector('[data-testid="original-price"]');
 
     expect(originalPrice).toHaveTextContent('5M');
     expect(originalPrice).not.toHaveTextContent('credits/M tokens');

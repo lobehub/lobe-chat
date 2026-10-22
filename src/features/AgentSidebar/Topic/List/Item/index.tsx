@@ -515,12 +515,12 @@ const TopicItemRow = memo<TopicItemRowProps>(
               {showCiBadge && (
                 <span {...stylex.props(styles.ciBadge)}>
                   <Icon
-                    className={
-                      ciStatus === 'pending' ? stylex.props(styles.ciPending).className : undefined
-                    }
                     icon={ciVisual.icon}
                     size={9}
                     style={{ color: ciVisual.color }}
+                    className={
+                      ciStatus === 'pending' ? stylex.props(styles.ciPending).className : undefined
+                    }
                   />
                 </span>
               )}

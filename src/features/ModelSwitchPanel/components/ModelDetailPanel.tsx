@@ -95,7 +95,7 @@ interface PriceValueProps {
 const PriceValue: FC<PriceValueProps> = ({ price, prefix = '', suffix = '' }) => (
   <span {...stylex.props(styles.priceValue)}>
     {price.original && (
-      <span {...stylex.props(styles.originalPriceText)}>
+      <span data-testid={'original-price'} {...stylex.props(styles.originalPriceText)}>
         {prefix}
         {price.original}
       </span>
@@ -187,6 +187,7 @@ const ModelDetailPanel: FC<ModelDetailPanelProps> = memo(
           <Text
             as={'p'}
             className={stylex.props(styles.description).className}
+            data-testid={'model-description'}
             fontSize={12}
             type={'secondary'}
           >

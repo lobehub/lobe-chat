@@ -38,6 +38,7 @@ import { useTranslation } from 'react-i18next';
 import GeneratingBorder from '@/components/GeneratingBorder';
 import { expertiseService, type RuleDraft, type RuleGroup } from '@/services/expertise';
 import { shinyTextStyles } from '@/styles';
+import { sx } from '@/styles/sx';
 
 import { DIRECTION_ICON } from './DirectionToggle';
 import { composeStyles, type CreatedGroup, createGroupModal } from './GroupModal';
