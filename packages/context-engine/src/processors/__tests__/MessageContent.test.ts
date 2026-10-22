@@ -1,11 +1,11 @@
-import { createMediaFileRef } from '@lobechat/const/mediaRef';
+import { createMediaFileRef } from '../../const/mediaRef';
 import type { ChatAudioItem, ChatImageItem, ChatVideoItem, UIChatMessage } from '@lobechat/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import type { PipelineContext } from '../../types';
 import { MessageContentProcessor, VISION_DOWNGRADE_PLACEHOLDER } from '../MessageContent';
 
-vi.mock('@lobechat/utils/imageToBase64', async (importOriginal) => {
+vi.mock('../../utils/imageToBase64', async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>();
   return {
     ...actual,

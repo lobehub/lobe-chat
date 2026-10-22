@@ -1,6 +1,6 @@
 import type { ModelUsage } from '@lobechat/types';
 import { AgentRuntimeErrorType } from '@lobechat/types';
-import { isRecord } from '@lobechat/utils/object';
+import { isRecord } from '../../../utils/object';
 import createDebug from 'debug';
 import { DECISION_MODEL_SUFFIX } from 'model-bank';
 import type OpenAI from 'openai';

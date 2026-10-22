@@ -6,8 +6,8 @@ import type {
   ModelReasoning,
   ModelUsage,
 } from '@lobechat/types';
-import { serializePartsForStorage } from '@lobechat/utils/multimodalContent';
-import { sanitizeToolCallArguments } from '@lobechat/utils/sanitizeToolCallArguments';
+import { serializePartsForStorage } from '../utils/multimodalContent';
+import { sanitizeToolCallArguments } from '../utils/sanitizeToolCallArguments';
 
 import { UsageCounter } from '../core/UsageCounter';
 import type { AgentRuntimeHost, LLMAttemptOutput } from '../transport';

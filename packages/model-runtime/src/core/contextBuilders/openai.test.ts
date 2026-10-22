@@ -1,4 +1,4 @@
-import { imageUrlToBase64, videoUrlToBase64 } from '@lobechat/utils';
+import { imageUrlToBase64, videoUrlToBase64 } from '../../utils/imageToBase64';
 import type OpenAI from 'openai';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -15,7 +15,7 @@ import {
 } from './openai';
 
 // 模拟依赖
-vi.mock('@lobechat/utils', () => ({
+vi.mock('../../utils/imageToBase64', () => ({
   imageUrlToBase64: vi.fn(),
   videoUrlToBase64: vi.fn(),
 }));
