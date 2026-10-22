@@ -5,6 +5,7 @@ import { type ReplicaSyncResult } from '@/libs/replica';
 import { documentService } from '@/services/document';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
+import { useHomeStore } from '@/store/home';
 import type { StoreSetter } from '@/store/types';
 import { DocumentSourceType, type LobeDocument } from '@/types/document';
 import { standardizeIdentifier } from '@/utils/identifier';
@@ -22,6 +23,17 @@ import { listSelectors } from './slices/list/selectors';
 import { usePageStore } from './store';
 
 const n = setNamespace('page');
+
+/**
+ * The Docs home tabs live in the home store, on their own replica — a page
+ * mutation refreshes the sidebar sections through the shared entity, but not
+ * those tabs. The dashboard stays mounted underneath the editor overlay, so
+ * without this a rename or delete leaves the old row on it until an unrelated
+ * refetch.
+ */
+const syncDocsHome = (): void => {
+  void useHomeStore.getState().refreshDocsHome();
+};
 
 export interface PageUpdateParams {
   emoji?: string;
@@ -69,6 +81,7 @@ export class PageActionImpl {
 
   refreshDocuments = async (): Promise<void> => {
     await this.#private.revalidateList();
+    syncDocsHome();
   };
 
   publishPageToWorkspace = async (pageId: string): Promise<{ documentIds: string[] }> => {
@@ -242,6 +255,7 @@ export class PageActionImpl {
     });
 
     this.#private.insertListRow(documentItemToLobeDocument(newPage));
+    syncDocsHome();
 
     return newPage;
   };
@@ -260,6 +274,7 @@ export class PageActionImpl {
       await this.#private.entity.optimistic(pageId, 'remove', () =>
         documentService.deleteDocument(pageId),
       );
+      syncDocsHome();
     } catch (error) {
       console.error('Failed to delete page:', error);
       if (selectedPageId === pageId) {
@@ -281,6 +296,7 @@ export class PageActionImpl {
   renamePage = async (pageId: string, title: string, emoji?: string): Promise<void> => {
     try {
       await this.updatePageOptimistically(pageId, { emoji, title });
+      syncDocsHome();
     } catch (error) {
       console.error('Failed to rename page:', error);
     } finally {
