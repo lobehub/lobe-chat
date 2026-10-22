@@ -288,6 +288,15 @@ describe('ProjectDirectoryRepository.bind', () => {
         userId: otherUserId,
         workspaceId,
       },
+      // A share visitor's conversation is hidden from members and must not be filed.
+      {
+        id: 'visitor-topic',
+        agentId: 'ws-shared-agent',
+        metadata: { workingDirectory: '/ws/repo' },
+        senderId: userId,
+        userId,
+        workspaceId,
+      },
     ]);
     const memberRepo = new ProjectDirectoryRepository(db, otherUserId, workspaceId);
     const directory = await memberRepo.bind({
@@ -296,9 +305,9 @@ describe('ProjectDirectoryRepository.bind', () => {
       name: 'Repo',
       path: '/ws/repo',
       projectId: 'ws-bind-project',
-      topicIds: ['creator-topic', 'member-topic'],
+      topicIds: ['creator-topic', 'member-topic', 'visitor-topic'],
     });
-    expect(directory.skippedTopics).toEqual([]);
+    expect(directory.skippedTopics).toEqual([{ id: 'visitor-topic', reason: 'notFound' }]);
     const filed = await db.select().from(topics).where(eq(topics.projectId, 'ws-bind-project'));
     expect(filed.map((t) => [t.id, t.userId]).sort()).toEqual([
       ['creator-topic', userId],
@@ -410,6 +419,36 @@ describe('ProjectDirectoryRepository.associateTopic in a workspace', () => {
     );
     const [topic] = await db.select().from(topics).where(eq(topics.id, 'ws-assoc-topic'));
     expect(topic).toMatchObject({ projectId: 'ws-assoc-project', userId });
+  });
+
+  it('does not file a share visitor’s topic', async () => {
+    const workspaceId = 'associate-visitor-ws';
+    await db.insert(workspaces).values({
+      id: workspaceId,
+      name: 'Associate visitor workspace',
+      primaryOwnerId: userId,
+      slug: workspaceId,
+    });
+    await db.insert(agents).values({ id: 'ws-visitor-coordinator', userId, workspaceId });
+    await db.insert(projects).values({
+      coordinatorAgentId: 'ws-visitor-coordinator',
+      id: 'ws-visitor-project',
+      identifier: 'WSV',
+      name: 'Workspace visitor project',
+      userId: otherUserId,
+      workspaceId,
+    });
+    await db
+      .insert(topics)
+      .values({ id: 'ws-visitor-topic', senderId: userId, userId, workspaceId });
+    await expect(
+      new ProjectDirectoryRepository(db, otherUserId, workspaceId).associateTopic(
+        'ws-visitor-project',
+        'ws-visitor-topic',
+      ),
+    ).rejects.toThrow('not found');
+    const [topic] = await db.select().from(topics).where(eq(topics.id, 'ws-visitor-topic'));
+    expect(topic.projectId).toBeNull();
   });
 });
 

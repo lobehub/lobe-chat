@@ -195,12 +195,15 @@ export class ProjectDirectoryRepository {
             // Workspace-scoped, not creator-scoped: a shared agent's directory
             // holds every member's conversations, and `topics.userId` only
             // records who started one. The router already authorized the
-            // caller to use them.
+            // caller to use them. Share-visitor topics (`senderId`) stay out:
+            // they are hidden from members, and filing one into a project
+            // would list it there.
             and(
               inArray(topics.id, topicIds),
               eq(topics.agentId, input.agentId),
               buildWorkspaceWhere(this.scope(), topics),
               isNull(topics.deletedAt),
+              isNull(topics.senderId),
             ),
           )
           .for('update');
@@ -258,11 +261,13 @@ export class ProjectDirectoryRepository {
         .select()
         .from(topics)
         .where(
-          // Workspace-scoped, not creator-scoped — see `bind`.
+          // Workspace-scoped, not creator-scoped, without share-visitor
+          // topics — see `bind`.
           and(
             eq(topics.id, topicId),
             buildWorkspaceWhere(this.scope(), topics),
             isNull(topics.deletedAt),
+            isNull(topics.senderId),
           ),
         )
         .for('update');
