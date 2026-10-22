@@ -111,7 +111,7 @@ const GpuStatusPanel = memo(() => {
   const features = Object.entries(status.featureStatus).sort(([a], [b]) => a.localeCompare(b));
 
   return (
-    <Flexbox className={stylex.props(stylex.props(devDockPanelStyles.root).className).className}>
+    <Flexbox className={stylex.props(devDockPanelStyles.root).className}>
       <div {...stylex.props(styles.device)}>
         {DEVICE_LABELS.map(([label, key]) => (
           <Fragment key={key}>
