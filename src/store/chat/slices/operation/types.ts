@@ -157,6 +157,14 @@ export interface OperationMetadata {
    */
   heteroAutoRetryAvailable?: boolean;
 
+  /**
+   * External heterogeneous producer (e.g. `claude-code`) the server dispatched
+   * this Gateway run to. `null` denotes the native AgentRuntime; `undefined`
+   * means an older server or topic marker did not report it.
+   * @default undefined
+   */
+  heteroType?: string | null;
+
   // UI state (for sendMessage operation)
   inputEditorTempState?: any | null; // Editor state snapshot for cancel restoration
   inputSendErrorMsg?: string; // Error message to display in UI

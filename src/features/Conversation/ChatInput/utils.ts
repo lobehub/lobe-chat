@@ -69,9 +69,10 @@ export const createQueueSendNowGate = (): QueueSendNowGate => {
  *
  * Expects:
  * - `count` is the number of queued items; more than one is merged into a single send.
- * - `waitsForRunEnd` is true for heterogeneous agents (Claude Code, Codex, …). Their CLI turn
- *   cannot be handed back at a step boundary, so the queue only drains once the whole run ends,
- *   whereas the built-in runtime hands the turn back after the current tool step.
+ * - `waitsForRunEnd` is true when the queue waits behind a heterogeneous CLI run (Claude Code,
+ *   Codex, …; see `operationSelectors.isQueueDrainedAtRunEnd`). That run cannot hand the turn
+ *   back at a step boundary, so the queue only drains once the whole run ends, whereas the
+ *   built-in runtime hands the turn back after the current tool step.
  *
  * Returns:
  * - A `chat` namespace key under `inputQueue`.

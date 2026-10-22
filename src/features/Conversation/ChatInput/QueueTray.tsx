@@ -7,8 +7,6 @@ import { useTranslation } from 'react-i18next';
 
 import FileIcon from '@/components/FileIcon';
 import { useSingleton } from '@/hooks/useSingleton';
-import { useAgentStore } from '@/store/agent';
-import { agentByIdSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { operationSelectors } from '@/store/chat/selectors';
 import {
@@ -208,9 +206,7 @@ const QueueTray = memo(() => {
   );
 
   const queuedMessages = useChatStore((s) => operationSelectors.getQueuedMessages(context)(s));
-  const waitsForRunEnd = useAgentStore(
-    agentByIdSelectors.isAgentHeterogeneousById(context.agentId),
-  );
+  const waitsForRunEnd = useChatStore(operationSelectors.isQueueDrainedAtRunEnd(context));
   const withdrawQueuedMessage = useChatStore((s) => s.withdrawQueuedMessage);
   const dispatchChatUploadFileList = useFileStore((s) => s.dispatchChatUploadFileList);
   const editor = useConversationStore((s) => s.editor);
@@ -277,8 +273,8 @@ const QueueTray = memo(() => {
   if (!canUseResource) return null;
 
   // The queue drains as one take-all and is merged into a single send, so a
-  // multi-item queue has to say "merges" instead of "sends". Heterogeneous
-  // agents only drain once the whole run ends, not after the current step.
+  // multi-item queue has to say "merges" instead of "sends". A heterogeneous
+  // CLI run only drains once the whole run ends, not after the current step.
   const hintText = t(getQueuedHintKey({ count: queuedMessages.length, waitsForRunEnd }));
 
   return (

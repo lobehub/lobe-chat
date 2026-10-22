@@ -329,6 +329,30 @@ const getRunningQueueBlockingOperationIds =
       .map((op) => op.id);
   };
 
+/**
+ * Whether the run a context's queue waits behind sends it only once the whole
+ * run ends, instead of at the next step boundary.
+ *
+ * Heterogeneous CLI runs (Claude Code, Codex, …) cannot hand the turn back
+ * mid-run: a local `execHeterogeneousAgent` drains the queue after the CLI
+ * exits, and a Gateway run the server dispatched to an external producer
+ * (`heteroType`) drains it in `heteroFinish`. Read from the running operation,
+ * not the conversation's agent config, which can differ from what actually
+ * runs (an `@Agent` route, a legacy CLI agent recovered from its model id).
+ */
+const isQueueDrainedAtRunEnd =
+  (context: MessageMapKeyInput) =>
+  (s: ChatStoreState): boolean => {
+    if (!context.agentId) return false;
+    const hasQueuedMessages = getQueuedMessages(context)(s).length > 0;
+    return getOperationsByContext(context)(s).some(
+      (op) =>
+        isQueueBlockingOperation(op, { hasQueuedMessages }) &&
+        (op.type === 'execHeterogeneousAgent' ||
+          (op.type === 'execServerAgentRuntime' && !!op.metadata.heteroType)),
+    );
+  };
+
 const getOperationTurnStartTime = (op: Operation) =>
   op.metadata.turnStartTime ?? op.metadata.startTime;
 
@@ -1056,6 +1080,7 @@ export const operationSelectors = {
   isMessageProcessing,
   isMessageRegenerating,
   isRegenerating,
+  isQueueDrainedAtRunEnd,
   isQueueDrainPending,
   isSendingMessage,
   isSteerHandoffPending,
