@@ -5,7 +5,12 @@ import createDebug from 'debug';
 import { DECISION_MODEL_SUFFIX } from 'model-bank';
 import type OpenAI from 'openai';
 
-import type { DecisionOptions, DecisionPayload, DecisionResponse } from '../../../types';
+import type {
+  DecisionOptions,
+  DecisionPayload,
+  DecisionQuestions,
+  DecisionResponse,
+} from '../../../types';
 import { AgentRuntimeError } from '../../../utils/createError';
 import { getModelPricing } from '../../../utils/getModelPricing';
 import type { ModelIdMappingOptions } from '../../../utils/modelIdMapping';
@@ -55,12 +60,12 @@ interface RequestDecisionParams extends DecideConfig {
   requestModel: string;
 }
 
-const requestDecision = async (
+const requestDecision = async <Q extends DecisionQuestions>(
   client: OpenAI,
-  payload: DecisionPayload,
+  payload: DecisionPayload<Q>,
   options: DecisionOptions | undefined,
   { includeUser = true, path, protocol, provider, requestModel }: RequestDecisionParams,
-): Promise<DecisionResponse> => {
+): Promise<DecisionResponse<Q>> => {
   const adapter = adapters[protocol];
   const questionEntries = Object.entries(payload.questions);
   if (questionEntries.length === 0) {
@@ -99,7 +104,9 @@ const requestDecision = async (
     });
   }
 
-  const response: DecisionResponse = parsed.response;
+  // The adapters validate every requested name and answer type at runtime. Object.entries erases
+  // the payload's mapped-key relationship, so restore it only after that validation boundary.
+  const response = parsed.response as DecisionResponse<Q>;
   const usage = parsed.usage;
   if (usage) {
     const outputTokens = usage.outputTokens ?? 0;
@@ -132,12 +139,12 @@ interface CreateDecisionParams extends DecideConfig {
   provider: string;
 }
 
-export const createDecision = async (
+export const createDecision = async <Q extends DecisionQuestions>(
   client: OpenAI,
-  payload: DecisionPayload,
+  payload: DecisionPayload<Q>,
   options: DecisionOptions | undefined,
   { handleError, modelIdMappingOptions, ...params }: CreateDecisionParams,
-): Promise<DecisionResponse> => {
+): Promise<DecisionResponse<Q>> => {
   try {
     return await requestDecision(client, payload, options, {
       ...params,
