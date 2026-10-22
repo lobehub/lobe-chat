@@ -2,6 +2,7 @@
 
 import { useWatchBroadcast } from '@lobechat/electron-client-ipc';
 import { ActionIcon, cx, type DropdownItem, DropdownMenu, Flexbox } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import { ChevronDown, Plus } from 'lucide-react';
 import { useMotionValue, useSpring } from 'motion/react';
 import * as m from 'motion/react-m';
@@ -25,7 +26,7 @@ import { useTabDrag } from './hooks/useTabDrag';
 import { TAB_SPRING } from './motion';
 import { resolveCloseShortcut } from './resolveCloseShortcut';
 import { resolveTabScope } from './scope';
-import { useStyles } from './styles';
+import { styles } from './styles';
 import TabItem from './TabItem';
 import {
   layoutStrip,
@@ -38,7 +39,6 @@ import {
 const NEW_TAB_URL = '/';
 
 const TabBar = () => {
-  const styles = useStyles;
   const location = useActiveLocation();
   useRegisterDesktopTabHotkeys();
   const { t } = useTranslation('electron');
@@ -253,7 +253,7 @@ const TabBar = () => {
     <Flexbox
       horizontal
       align={'center'}
-      className={cx(electronStylish.draggable, styles.container)}
+      className={cx(electronStylish.draggable, stylex.props(styles.container).className)}
       gap={TAB_GAP}
       ref={stripRef}
       onPointerEnter={captureVisibleTabPreviews}
@@ -264,7 +264,11 @@ const TabBar = () => {
           sibling arrays scoped their keys separately, so pinning unmounted the tab
           from one and mounted a fresh one in the other — losing its springs, which
           is why the tab used to pop rather than travel. */}
-          <m.div className={styles.strip} ref={innerStripRef} style={{ width: springTotal }}>
+          <m.div
+            className={stylex.props(styles.strip).className}
+            ref={innerStripRef}
+            style={{ width: springTotal }}
+          >
             {placements.map((placement) => {
               const tab = tabsById.get(placement.id);
               if (!tab) return null;
@@ -302,12 +306,12 @@ const TabBar = () => {
               );
             })}
             <m.span
-              className={styles.pinnedDivider}
+              className={stylex.props(styles.pinnedDivider).className}
               style={{ opacity: stripPinnedCount > 0 ? 1 : 0, x: springDividerX }}
             />
           </m.div>
           <ActionIcon
-            className={cx(electronStylish.nodrag, styles.newTabButton)}
+            className={cx(electronStylish.nodrag, stylex.props(styles.newTabButton).className)}
             disabled={!canCreate}
             icon={Plus}
             size="small"
@@ -319,10 +323,13 @@ const TabBar = () => {
               <Flexbox
                 horizontal
                 align={'center'}
-                className={cx(electronStylish.nodrag, styles.overflowButton)}
                 gap={2}
                 style={{ width: OVERFLOW_CONTROL_WIDTH }}
                 title={t('tab.overflow', { count: hiddenCount })}
+                className={cx(
+                  electronStylish.nodrag,
+                  stylex.props(styles.overflowButton).className,
+                )}
               >
                 <ChevronDown size={12} />
                 {hiddenCount}

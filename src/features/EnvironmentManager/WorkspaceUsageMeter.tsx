@@ -1,6 +1,8 @@
 'use client';
 
-import { createStaticStyles, cssVar, Flexbox, Text, Tooltip } from '@lobehub/ui';
+import { Flexbox, Text, Tooltip } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -8,21 +10,17 @@ import { formatSize } from '@/utils/format';
 
 import { useWorkspaceUsage } from './useEnvironmentData';
 
-const styles = createStaticStyles(({ css }) => ({
-  bar: css`
-    overflow: hidden;
-
-    width: 64px;
-    height: 4px;
-    border-radius: 2px;
-
-    background: ${cssVar.colorFillSecondary};
-  `,
-  fill: css`
-    height: 100%;
-    border-radius: 2px;
-  `,
-}));
+const styles = stylex.create({
+  bar: {
+    overflow: 'hidden',
+    width: '64px',
+    height: '4px',
+    borderRadius: '2px',
+    backgroundColor: cssVar.colorFillSecondary,
+    backgroundImage: 'none',
+  },
+  fill: { height: '100%', borderRadius: '2px' },
+});
 
 /**
  * How much of the workspace's storage the instances on this page occupy.
@@ -60,9 +58,9 @@ const WorkspaceUsageMeter = memo(() => {
 
   const label = (
     <Flexbox horizontal align={'center'} gap={6} style={{ flex: 'none' }}>
-      <div className={styles.bar}>
+      <div {...stylex.props(styles.bar)}>
         <div
-          className={styles.fill}
+          className={stylex.props(styles.fill).className}
           style={{
             background: over ? cssVar.colorError : cssVar.colorTextTertiary,
             // Capped, so an over-quota workspace still draws a full bar rather

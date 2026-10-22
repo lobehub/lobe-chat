@@ -6,8 +6,6 @@ import {
   Button,
   Center,
   confirmModal,
-  createStaticStyles,
-  cssVar,
   Empty,
   Flexbox,
   Icon,
@@ -16,6 +14,8 @@ import {
   toast,
   Tooltip,
 } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import {
   CircleAlertIcon,
   CircleDashedIcon,
@@ -49,54 +49,53 @@ import { openInstanceFileBrowser } from './InstanceFileBrowser';
 import type { SandboxInstance } from './useEnvironmentData';
 import { useBuildStarting, useInstanceBuild, useInstances } from './useEnvironmentData';
 
-const styles = createStaticStyles(({ css }) => ({
+const styles = stylex.create({
   /**
    * One framed block with rules between its rows, rather than rows floating on
    * the panel. Loose rows read as a list of unrelated lines; a frame says where
    * the set begins and ends, which is what makes the "new instance" button
    * below it read as an addition to that set.
    */
-  list: css`
-    overflow: hidden;
-    border: 1px solid ${cssVar.colorBorderSecondary};
-    border-radius: ${cssVar.borderRadiusLG};
-  `,
+  list: {
+    overflow: 'hidden',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: cssVar.colorBorderSecondary,
+    borderRadius: cssVar.borderRadiusLG,
+  },
   /** A build's output, when someone opens it — usually because it failed. */
-  log: css`
-    overflow: auto;
-
-    max-height: 220px;
-    margin: 0;
-    padding: 8px;
-    border-radius: ${cssVar.borderRadius};
-
-    font-family: ${cssVar.fontFamilyCode};
-    font-size: 11px;
-    line-height: 1.5;
-    color: ${cssVar.colorTextSecondary};
-    word-break: break-all;
-    white-space: pre-wrap;
-
-    background: ${cssVar.colorFillQuaternary};
-  `,
+  log: {
+    overflow: 'auto',
+    maxHeight: '220px',
+    margin: 0,
+    padding: '8px',
+    borderRadius: cssVar.borderRadius,
+    fontFamily: cssVar.fontFamilyCode,
+    fontSize: '11px',
+    lineHeight: 1.5,
+    color: cssVar.colorTextSecondary,
+    wordBreak: 'break-all',
+    whiteSpace: 'pre-wrap',
+    backgroundColor: cssVar.colorFillQuaternary,
+    backgroundImage: 'none',
+  },
   /**
    * A delete in flight. The row is still here because it is still there — the
    * archive is being removed and the call can still be refused — so it is
    * dimmed rather than taken away, and its own actions stop responding.
    */
-  removing: css`
-    pointer-events: none;
-    opacity: 0.5;
-  `,
-  row: css`
-    padding-block: 12px;
-    padding-inline: 16px;
-
-    & + & {
-      border-block-start: 1px solid ${cssVar.colorBorderSecondary};
-    }
-  `,
-}));
+  removing: { pointerEvents: 'none', opacity: 0.5 },
+  row: {
+    paddingBlock: '12px',
+    paddingInline: '16px',
+    borderBlockStartWidth: { default: null, [stylex.when.siblingBefore(':is(*)')]: '1px' },
+    borderBlockStartStyle: { default: null, [stylex.when.siblingBefore(':is(*)')]: 'solid' },
+    borderBlockStartColor: {
+      default: null,
+      [stylex.when.siblingBefore(':is(*)')]: cssVar.colorBorderSecondary,
+    },
+  },
+});
 
 interface InstanceListProps {
   /**
@@ -208,7 +207,7 @@ const BuildLine = memo<{
           </Button>
         )}
       </Flexbox>
-      {open && text && <pre className={styles.log}>{text}</pre>}
+      {open && text && <pre {...stylex.props(styles.log)}>{text}</pre>}
     </Flexbox>
   );
 });
@@ -355,7 +354,12 @@ const InstanceRow = memo<InstanceRowProps>(
       });
 
     return (
-      <Flexbox className={removing ? `${styles.row} ${styles.removing}` : styles.row} gap={6}>
+      <Flexbox
+        gap={6}
+        className={
+          stylex.props(styles.row, stylex.defaultMarker(), removing && styles.removing).className
+        }
+      >
         <Flexbox horizontal align={'center'} gap={8}>
           {/* One line: the folder after the name, the way the environment row
             carries its description. It yields first when the row is narrow,
@@ -665,7 +669,7 @@ const InstanceList = memo<InstanceListProps>(
         )}
 
         {instances.length > 0 && (
-          <Flexbox className={styles.list}>
+          <Flexbox className={stylex.props(styles.list).className}>
             {instances.map((instance) => (
               <InstanceRow
                 editable={editable}

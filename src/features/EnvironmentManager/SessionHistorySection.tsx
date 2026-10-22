@@ -1,17 +1,8 @@
 'use client';
 
-import {
-  Button,
-  Center,
-  createStaticStyles,
-  cssVar,
-  Empty,
-  Flexbox,
-  Icon,
-  Tag,
-  Text,
-  Tooltip,
-} from '@lobehub/ui';
+import { Button, Center, Empty, Flexbox, Icon, Tag, Text, Tooltip } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import dayjs from 'dayjs';
 import {
   ActivityIcon,
@@ -30,21 +21,7 @@ import { formatSize } from '@/utils/format';
 
 import { type SandboxSessionRecord, useInstances, useInstanceSessions } from './useEnvironmentData';
 
-const styles = createStaticStyles(({ css }) => ({
-  /** The same frame the instance list uses, so the two tabs read as one panel. */
-  list: css`
-    overflow: hidden;
-    border: 1px solid ${cssVar.colorBorderSecondary};
-    border-radius: ${cssVar.borderRadiusLG};
-  `,
-  row: css`
-    padding-block: 12px;
-    padding-inline: 16px;
-
-    & + & {
-      border-block-start: 1px solid ${cssVar.colorBorderSecondary};
-    }
-  `,
+const styles = stylex.create({
   /**
    * The run that is going on now, framed apart from the trail below it the way
    * Railway frames the active deployment, with a footer line that says what is
@@ -52,38 +29,55 @@ const styles = createStaticStyles(({ css }) => ({
    * info tint reads as a heavy navy block in dark mode — and only the footer's
    * status line carries the info color.
    */
-  active: css`
-    overflow: hidden;
-    border: 1px solid ${cssVar.colorBorder};
-    border-radius: ${cssVar.borderRadiusLG};
-    background: ${cssVar.colorFillQuaternary};
-  `,
-  activeFooter: css`
-    padding-block: 8px;
-    padding-inline: 16px;
-    border-block-start: 1px solid ${cssVar.colorBorderSecondary};
-    color: ${cssVar.colorInfo};
-  `,
-  historyLabel: css`
-    font-size: 12px;
-    font-weight: 600;
-    color: ${cssVar.colorTextTertiary};
-  `,
-  kindIcon: css`
-    display: flex;
-    flex: none;
-    align-items: center;
-    justify-content: center;
-
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-
-    color: ${cssVar.colorTextSecondary};
-
-    background: ${cssVar.colorFillTertiary};
-  `,
-}));
+  active: {
+    overflow: 'hidden',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: cssVar.colorBorder,
+    borderRadius: cssVar.borderRadiusLG,
+    backgroundColor: cssVar.colorFillQuaternary,
+    backgroundImage: 'none',
+  },
+  activeFooter: {
+    paddingBlock: '8px',
+    paddingInline: '16px',
+    borderBlockStartWidth: '1px',
+    borderBlockStartStyle: 'solid',
+    borderBlockStartColor: cssVar.colorBorderSecondary,
+    color: cssVar.colorInfo,
+  },
+  historyLabel: { fontSize: '12px', fontWeight: 600, color: cssVar.colorTextTertiary },
+  kindIcon: {
+    display: 'flex',
+    flex: 'none',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '28px',
+    height: '28px',
+    borderRadius: '50%',
+    color: cssVar.colorTextSecondary,
+    backgroundColor: cssVar.colorFillTertiary,
+    backgroundImage: 'none',
+  },
+  /** The same frame the instance list uses, so the two tabs read as one panel. */
+  list: {
+    overflow: 'hidden',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: cssVar.colorBorderSecondary,
+    borderRadius: cssVar.borderRadiusLG,
+  },
+  row: {
+    paddingBlock: '12px',
+    paddingInline: '16px',
+    borderBlockStartWidth: { default: null, [stylex.when.siblingBefore(':is(*)')]: '1px' },
+    borderBlockStartStyle: { default: null, [stylex.when.siblingBefore(':is(*)')]: 'solid' },
+    borderBlockStartColor: {
+      default: null,
+      [stylex.when.siblingBefore(':is(*)')]: cssVar.colorBorderSecondary,
+    },
+  },
+});
 
 /**
  * How long the run lasted, or how long it has been running — and nothing at
@@ -166,8 +160,13 @@ const SessionRow = memo<{ running: boolean; session: SandboxSessionRecord }>(
     );
 
     return (
-      <Flexbox horizontal align={'center'} className={styles.row} gap={12}>
-        <span className={styles.kindIcon}>
+      <Flexbox
+        horizontal
+        align={'center'}
+        className={stylex.props(styles.row, stylex.defaultMarker()).className}
+        gap={12}
+      >
+        <span {...stylex.props(styles.kindIcon)}>
           <Icon icon={icon} size={14} />
         </span>
         <Flexbox flex={1} gap={2} style={{ minWidth: 0 }}>
@@ -334,9 +333,14 @@ const SessionHistorySection = memo<{ environmentId: string }>(({ environmentId }
       {active.length > 0 && (
         <Flexbox gap={8}>
           {active.map((session) => (
-            <div className={styles.active} key={`${session.kind}-${session.id}`}>
+            <div {...stylex.props(styles.active)} key={`${session.kind}-${session.id}`}>
               <SessionRow running session={session} />
-              <Flexbox horizontal align={'center'} className={styles.activeFooter} gap={8}>
+              <Flexbox
+                horizontal
+                align={'center'}
+                className={stylex.props(styles.activeFooter).className}
+                gap={8}
+              >
                 <Icon icon={ActivityIcon} size={14} />
                 <Text fontSize={12} style={{ color: 'inherit' }}>
                   {t(
@@ -367,14 +371,14 @@ const SessionHistorySection = memo<{ environmentId: string }>(({ environmentId }
           {/* Labelled only once there is something above it to be "history"
               relative to; alone, the list is the whole tab. */}
           {active.length > 0 && (
-            <span className={styles.historyLabel}>{t('environments.sessions.history')}</span>
+            <span {...stylex.props(styles.historyLabel)}>{t('environments.sessions.history')}</span>
           )}
           {history.length === 0 ? (
             <Text fontSize={12} type={'secondary'}>
               {t('environments.sessions.historyEmpty')}
             </Text>
           ) : (
-            <div className={styles.list}>
+            <div {...stylex.props(styles.list)}>
               {history.map((session) => (
                 <SessionRow
                   key={`${session.kind}-${session.id}`}

@@ -16,11 +16,6 @@ vi.mock('@lobechat/electron-client-ipc', () => ({
   useWatchBroadcast: (event: string, handler: () => void) => mocks.handlers.set(event, handler),
 }));
 
-vi.mock('@lobehub/ui', async (importOriginal) => ({
-  ...(await importOriginal<object>()),
-  createStaticStyles: () => ({ clock: 'clock', root: 'root' }),
-}));
-
 vi.mock('@/features/NavPanel/ToggleLeftPanelButton', () => ({ default: () => null }));
 vi.mock('@/features/Workspace/useWorkspaceAwareNavigate', () => ({
   useWorkspaceAwareNavigate: () => mocks.navigate,
@@ -87,7 +82,7 @@ describe('NavigationBar tray broadcasts', () => {
 
   it('keeps titlebar navigation width animatable when the sidebar is collapsed', () => {
     const { container, unmount } = render(<NavigationBar />);
-    const navigationBar = container.querySelector('.root') as HTMLElement;
+    const navigationBar = container.querySelector('[data-width]') as HTMLElement;
 
     expect(navigationBar).toHaveStyle({ width: '150px' });
     unmount();
@@ -96,7 +91,7 @@ describe('NavigationBar tray broadcasts', () => {
     mocks.leftPanelWidth = 280;
     const expanded = render(<NavigationBar />);
 
-    expect(expanded.container.querySelector('.root')).toHaveStyle({ width: '268px' });
+    expect(expanded.container.querySelector('[data-width]')).toHaveStyle({ width: '268px' });
   });
 
   it('reserves the traffic light inset on macOS when the sidebar is collapsed', async () => {
@@ -106,6 +101,6 @@ describe('NavigationBar tray broadcasts', () => {
 
     const { container } = render(<MacNavigationBar />);
 
-    expect(container.querySelector('.root')).toHaveStyle({ width: '184px' });
+    expect(container.querySelector('[data-width]')).toHaveStyle({ width: '184px' });
   });
 });

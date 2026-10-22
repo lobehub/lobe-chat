@@ -3,14 +3,14 @@ import { useWatchBroadcast } from '@lobechat/electron-client-ipc';
 import {
   Button as BaseButton,
   createModal,
-  createStaticStyles,
-  cssVar,
   Flexbox,
   Icon,
   Markdown,
   toast,
   useModalContext,
 } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { t } from 'i18next';
 import { X } from 'lucide-react';
 import React, { memo, useEffect, useRef, useState } from 'react';
@@ -25,66 +25,53 @@ import { applyCoreUpdate } from './applyCoreUpdate';
 import { formatCoreVersion } from './coreVersion';
 import { selectUpdateInfo } from './selectUpdateInfo';
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  installLaterCloseButton: css`
-    all: unset;
-
-    cursor: pointer;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    inline-size: 24px;
-    block-size: 24px;
-    border-radius: 6px;
-
-    color: ${cssVar.colorTextTertiary};
-
-    &:hover {
-      color: ${cssVar.colorText};
-      background: ${cssVar.colorFillTertiary};
-    }
-
-    &:focus-visible {
-      outline: 2px solid ${cssVar.colorPrimary};
-      outline-offset: 2px;
-    }
-  `,
-
-  installLaterToast: css`
-    position: fixed;
-    z-index: 1000;
-    inset-block-end: 20px;
-    inset-inline-start: 16px;
-
-    display: flex;
-    gap: 8px;
-    align-items: center;
-
-    max-inline-size: calc(100vw - 32px);
-    padding-block: 8px;
-    padding-inline: 12px 8px;
-    border-radius: ${cssVar.borderRadiusLG};
-
-    font-size: ${cssVar.fontSizeSM};
-    line-height: 1.25;
-    color: ${cssVar.colorText};
-
-    background: ${cssVar.colorBgElevated};
-    box-shadow: ${cssVar.boxShadow};
-  `,
-
-  releaseNote: css`
-    overflow: scroll;
-
-    max-height: 300px;
-    padding: 8px;
-    border-radius: 8px;
-
-    background: ${cssVar.colorFillQuaternary};
-  `,
-}));
+const styles = stylex.create({
+  installLaterCloseButton: {
+    all: 'unset',
+    cursor: 'pointer',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    inlineSize: '24px',
+    blockSize: '24px',
+    borderRadius: '6px',
+    color: { 'default': cssVar.colorTextTertiary, ':hover': cssVar.colorText },
+    backgroundColor: { 'default': null, ':hover': cssVar.colorFillTertiary },
+    backgroundImage: { 'default': null, ':hover': 'none' },
+    outlineWidth: { 'default': null, ':focus-visible': '2px' },
+    outlineStyle: { 'default': null, ':focus-visible': 'solid' },
+    outlineColor: { 'default': null, ':focus-visible': cssVar.colorPrimary },
+    outlineOffset: { 'default': null, ':focus-visible': '2px' },
+  },
+  installLaterToast: {
+    position: 'fixed',
+    zIndex: 1000,
+    insetBlockEnd: '20px',
+    insetInlineStart: '16px',
+    display: 'flex',
+    gap: '8px',
+    alignItems: 'center',
+    maxInlineSize: 'calc(100vw - 32px)',
+    paddingBlock: '8px',
+    paddingInlineStart: '12px',
+    paddingInlineEnd: '8px',
+    borderRadius: cssVar.borderRadiusLG,
+    fontSize: cssVar.fontSizeSM,
+    lineHeight: 1.25,
+    color: cssVar.colorText,
+    backgroundColor: cssVar.colorBgElevated,
+    backgroundImage: 'none',
+    boxShadow: cssVar.boxShadow,
+  },
+  releaseNote: {
+    overflow: 'scroll',
+    maxHeight: '300px',
+    padding: '8px',
+    borderRadius: '8px',
+    backgroundColor: cssVar.colorFillQuaternary,
+    backgroundImage: 'none',
+  },
+});
 
 interface UpdateDetailContentProps {
   updateInfo: UpdateInfo;
@@ -100,11 +87,11 @@ const UpdateDetailContent = memo<UpdateDetailContentProps>(({ updateInfo }) => {
       <div style={{ color: cssVar.colorTextSecondary, fontSize: 12 }}>{updateInfo.version}</div>
       {updateInfo.releaseNotes &&
         (typeof updateInfo.releaseNotes === 'string' ? (
-          <div className={styles.releaseNote}>
+          <div {...stylex.props(styles.releaseNote)}>
             <Markdown>{updateInfo.releaseNotes}</Markdown>
           </div>
         ) : (
-          <div className={styles.releaseNote}>
+          <div {...stylex.props(styles.releaseNote)}>
             {updateInfo.releaseNotes.map((note) => (
               <Markdown key={note.version}>{note.note ?? ''}</Markdown>
             ))}
@@ -212,7 +199,7 @@ export const UpdateNotification: React.FC = () => {
 
   if (updateInfo?.kind === 'renderer' || updateInfo?.kind === 'core-reload') {
     return (
-      <div className={styles.installLaterToast}>
+      <div {...stylex.props(styles.installLaterToast)}>
         <span>
           {tElectron('updater.rendererReady', { version: formatCoreVersion(updateInfo.version) })}
         </span>
@@ -233,7 +220,7 @@ export const UpdateNotification: React.FC = () => {
 
   if (updateInfo?.kind === 'core-relaunch') {
     return (
-      <div className={styles.installLaterToast}>
+      <div {...stylex.props(styles.installLaterToast)}>
         <span>
           {tElectron('updater.updateReady')}
           {isDevMode ? ` · ${formatCoreVersion(updateInfo.version)}` : ''}
@@ -255,7 +242,7 @@ export const UpdateNotification: React.FC = () => {
 
   if (!updateInfo)
     return appliedVersion ? (
-      <div className={styles.installLaterToast}>
+      <div {...stylex.props(styles.installLaterToast)}>
         <span>
           {tElectron('updater.rendererUpdated', { version: formatCoreVersion(appliedVersion) })}
         </span>
@@ -267,11 +254,11 @@ export const UpdateNotification: React.FC = () => {
 
   if (installConfirmMode === 'installLater') {
     return (
-      <div className={styles.installLaterToast}>
+      <div {...stylex.props(styles.installLaterToast)}>
         {tElectron('updater.willInstallLater')}
         <button
           aria-label="Close"
-          className={styles.installLaterCloseButton}
+          {...stylex.props(styles.installLaterCloseButton)}
           type="button"
           onClick={() => setInstallConfirmMode(null)}
         >
@@ -283,7 +270,7 @@ export const UpdateNotification: React.FC = () => {
 
   if (installConfirmMode === 'unconfirm')
     return (
-      <div className={styles.installLaterToast}>
+      <div {...stylex.props(styles.installLaterToast)}>
         <span style={{ cursor: 'pointer' }} onClick={() => openUpdateDetailModal(updateInfo)}>
           {tElectron('updater.updateReady')}
           {isDevMode && updateInfo?.version ? ` · ${updateInfo.version}` : ''}
