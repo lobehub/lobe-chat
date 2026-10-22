@@ -5,6 +5,7 @@ import { memo, type ReactNode } from 'react';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
   close: css`
+    pointer-events: none;
     cursor: pointer;
 
     position: absolute;
@@ -48,15 +49,18 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
       background: ${cssVar.colorFillSecondary};
     }
 
+    /* the close button takes over the leading icon's slot instead of reserving
+       its own trailing space; while hidden it must not swallow taps on the icon */
     &:hover [data-tab-close],
-    &:focus-within [data-tab-close] {
+    & [data-tab-close]:focus-visible {
+      pointer-events: auto;
       opacity: 1;
     }
 
-    /* the close button takes over the leading icon's slot instead of reserving
-       its own trailing space */
+    /* keyboard focus on the select button keeps the icon, so the visible glyph
+       always matches the action Enter/Space would run */
     &:hover [data-tab-icon],
-    &:focus-within [data-tab-icon] {
+    &:has([data-tab-close]:focus-visible) [data-tab-icon] {
       opacity: 0;
     }
   `,
