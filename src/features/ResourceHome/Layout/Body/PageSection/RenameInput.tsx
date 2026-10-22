@@ -25,16 +25,20 @@ const RenameInput = memo<RenameInputProps>(({ id, title, onDone }) => {
   const [value, setValue] = useState(title);
   const inputRef = useRef<HTMLInputElement>(null);
   const submittingRef = useRef(false);
+  /** When the field last (re)mounted, in `performance.now()` time. */
+  const mountedAtRef = useRef(0);
 
   useEffect(() => {
     setValue(title);
     submittingRef.current = false;
+    mountedAtRef.current = performance.now();
 
     queueMicrotask(() => {
       inputRef.current?.focus();
       inputRef.current?.select();
     });
   }, [title]);
+
 
   const handleUpdate = useCallback(async () => {
     if (submittingRef.current) return;
@@ -48,6 +52,20 @@ const RenameInput = memo<RenameInputProps>(({ id, title, onDone }) => {
 
     onDone();
   }, [id, onDone, title, value]);
+
+  /**
+   * Dismissing the row menu hands focus back to the menu trigger a tick after
+   * this field mounts. Treat a blur inside that window as focus churn — commit
+   * only once the field has actually been the user's target.
+   */
+  const handleBlur = useCallback(() => {
+    if (performance.now() - mountedAtRef.current < 250) {
+      inputRef.current?.focus();
+      return;
+    }
+
+    void handleUpdate();
+  }, [handleUpdate]);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
@@ -70,7 +88,7 @@ const RenameInput = memo<RenameInputProps>(({ id, title, onDone }) => {
       size={'small'}
       style={{ width: '100%' }}
       value={value}
-      onBlur={() => void handleUpdate()}
+      onBlur={handleBlur}
       onChange={(e) => setValue(e.target.value)}
       onClick={stopPropagation}
       onKeyDown={handleKeyDown}

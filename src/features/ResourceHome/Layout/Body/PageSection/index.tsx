@@ -90,7 +90,12 @@ const PageRow = memo<PageRowProps>(({ depth, doc, isOpen, onOpen }) => {
           title
         )
       }
-      onClick={() => onOpen(doc.id)}
+      onClick={() => {
+        // While the inline field is open a click belongs to the input, not to
+        // navigation — opening the page here would drop the edit.
+        if (editing) return;
+        onOpen(doc.id);
+      }}
     />
   );
 });

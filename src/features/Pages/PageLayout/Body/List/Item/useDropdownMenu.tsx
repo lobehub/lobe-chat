@@ -22,6 +22,28 @@ interface ActionProps {
   toggleEditing: (visible?: boolean) => void;
 }
 
+/**
+ * `DropdownMenu` / `ContextMenu` hand each item an `info` object carrying the
+ * originating DOM event (the published `DropdownItem.onClick` type says
+ * `MouseEventHandler`, the runtime contract does not).
+ */
+interface MenuClickInfo {
+  domEvent?: { stopPropagation: () => void };
+}
+
+/**
+ * A page row is itself a link, so a menu click that keeps bubbling runs the
+ * row's own `onClick` and navigates away. That unmounts the row — and the inline
+ * rename field with it — before anything can be typed, which is why "Rename"
+ * appeared to do nothing. Close the handler over the row and stop the event.
+ */
+const stopRowClick =
+  (run: () => void) =>
+  (info?: MenuClickInfo) => {
+    info?.domEvent?.stopPropagation();
+    run();
+  };
+
 export const useDropdownMenu = ({ pageId, toggleEditing }: ActionProps): (() => DropdownItem[]) => {
   const { t } = useTranslation(['common', 'file']);
 
@@ -129,11 +151,11 @@ export const useDropdownMenu = ({ pageId, toggleEditing }: ActionProps): (() => 
                 icon: <Icon icon={PanelTop} />,
                 key: 'openInNewTab',
                 label: t('pageList.actions.openInNewTab', { ns: 'file' }),
-                onClick: () => {
+                onClick: stopRowClick(() => {
                   const url = buildWorkspaceAwarePath(`/page/${pageId}`, activeWorkspaceSlug);
                   addTab(url);
                   navigate(url, { escape: true });
-                },
+                }),
               },
               { type: 'divider' as const },
             ]
@@ -143,17 +165,17 @@ export const useDropdownMenu = ({ pageId, toggleEditing }: ActionProps): (() => 
           icon: <Icon icon={Pencil} />,
           key: 'rename',
           label: t('rename'),
-          onClick: () => {
+          onClick: stopRowClick(() => {
             if (!canEditPage) return;
             toggleEditing(true);
-          },
+          }),
         },
         {
           disabled: !canCreatePage,
           icon: <Icon icon={CopyPlus} />,
           key: 'duplicate',
           label: t('pageList.duplicate', { ns: 'file' }),
-          onClick: handleDuplicate,
+          onClick: stopRowClick(handleDuplicate),
         },
         ...(transferMenuItems && transferMenuItems.length > 0
           ? [{ type: 'divider' as const }, ...transferMenuItems]
@@ -165,7 +187,7 @@ export const useDropdownMenu = ({ pageId, toggleEditing }: ActionProps): (() => 
                 icon: <Icon icon={UsersIcon} />,
                 key: 'publishToWorkspace',
                 label: t('pageList.publishToWorkspace', { ns: 'file' }),
-                onClick: handlePublish,
+                onClick: stopRowClick(handlePublish),
               },
             ]
           : []),
@@ -176,7 +198,7 @@ export const useDropdownMenu = ({ pageId, toggleEditing }: ActionProps): (() => 
                 icon: <Icon icon={EyeOffIcon} />,
                 key: 'makePrivate',
                 label: t('makePrivate'),
-                onClick: handleMakePrivate,
+                onClick: stopRowClick(handleMakePrivate),
               },
             ]
           : []),
@@ -187,7 +209,7 @@ export const useDropdownMenu = ({ pageId, toggleEditing }: ActionProps): (() => 
           icon: <Icon icon={Trash2} />,
           key: 'delete',
           label: t('delete'),
-          onClick: handleDelete,
+          onClick: stopRowClick(handleDelete),
         },
       ].filter(Boolean) as DropdownItem[],
     [
