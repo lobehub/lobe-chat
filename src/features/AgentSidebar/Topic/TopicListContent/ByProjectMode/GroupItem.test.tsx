@@ -440,10 +440,12 @@ describe('Project topic group item', () => {
       </AccordionRoot>,
     );
 
-    // Only the Linux section gets a "+" — the unknown section has no directory
-    // to start in (and the group header has no path, so it renders none).
+    // Both device sections get a "+" — the MacBook one is listed empty so a
+    // topic can start there — while the unknown section has no directory to
+    // start in (and the group header has no path, so it renders none). The
+    // Linux section comes first because it has the newest topic.
     const starts = screen.getAllByRole('button', { name: 'directories.start' });
-    expect(starts).toHaveLength(1);
+    expect(starts).toHaveLength(2);
     fireEvent.click(starts[0]);
 
     expect(commitAgentDefaultMock).not.toHaveBeenCalled();
