@@ -308,18 +308,12 @@ export const channelSessions = pgTable(
     /** Runtime-side session id used to resume (CLI session or native transcript key). */
     nativeSessionId: text('native_session_id'),
     /**
-     * Every message of this branch at or below this sequence has been accepted by the
-     * runtime, so incremental input starts after it.
+     * Every visible message of this branch at or below this sequence has been accepted by the
+     * runtime, so incremental input starts after it. Exact without an exception list: a run's
+     * manifest carries every unaccepted visible message up to its cutoff, and sequences only
+     * grow, so acceptance moves the cursor to that cutoff with no gaps behind it.
      */
     acceptedSequence: integer('accepted_sequence').notNull().default(0),
-    /**
-     * Messages above `acceptedSequence` the session already holds, e.g. its own published
-     * replies. Pruned once the cursor passes them.
-     */
-    acceptedAheadMessageIds: jsonb('accepted_ahead_message_ids')
-      .$type<string[]>()
-      .notNull()
-      .default([]),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },

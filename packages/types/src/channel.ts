@@ -19,6 +19,16 @@ export type ChannelRuntime = (typeof CHANNEL_RUNTIMES)[number];
 export const isChannelRuntime = (runtime: string): runtime is ChannelRuntime =>
   (CHANNEL_RUNTIMES as readonly string[]).includes(runtime);
 
+export const CHANNEL_LIMITS = {
+  /** Files attached to one message. */
+  attachments: 20,
+  /** Characters in one message. */
+  contentLength: 100_000,
+} as const;
+
+/** Display name for a person whose account was deleted; their member row stays. */
+export const CHANNEL_DELETED_USER_NAME = 'Deleted user';
+
 /** Discoverability inside a workspace. Ignored for personal channels (`workspace_id IS NULL`). */
 export type ChannelVisibility = 'private' | 'public';
 
@@ -62,6 +72,12 @@ export type ChannelMessageRoutingStatus =
  * - `fallback`: no decision model is configured, so every available Agent was picked.
  */
 export type ChannelMessageRoutingSource = 'explicit' | 'fallback' | 'jev';
+
+/**
+ * How a human message without @mentions is routed: `jev` when a decision model is
+ * configured, otherwise `fallback` to every candidate Agent.
+ */
+export type ChannelRoutingMode = 'fallback' | 'jev';
 
 export type ChannelJobStatus = 'cancelled' | 'completed' | 'failed' | 'queued' | 'running';
 

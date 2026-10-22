@@ -2,11 +2,11 @@
 import { eq, inArray, sql } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { getTestDB } from '../../core/getTestDB';
-import { channelMembers, channels, users, workspaces } from '../../schemas';
-import type { LobeChatDatabase } from '../../type';
-import { ChannelError, ChannelModel } from '../channel';
-import { UserModel } from '../user';
+import { getTestDB } from '../../../core/getTestDB';
+import { channelMembers, channels, users, workspaces } from '../../../schemas';
+import type { LobeChatDatabase } from '../../../type';
+import { UserModel } from '../../user';
+import { ChannelError, ChannelModel } from '..';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 // Two concurrent transactions need separate connections; PGlite runs them one after another.

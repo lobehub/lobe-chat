@@ -1,34 +1,32 @@
 import type { ChannelMemberRole, ChannelVisibility } from '@lobechat/types';
-import { and, desc, eq, isNull, sql } from 'drizzle-orm';
+import { and, desc, eq, isNull } from 'drizzle-orm';
 
-import type { ChannelItem, ChannelMemberItem } from '../../schemas';
-import { channelMembers, channels } from '../../schemas';
+import type { ChannelItem, ChannelMessageItem, ChannelRunItem } from '../../schemas';
+import { channelMembers, channelMessages, channelRuns, channels } from '../../schemas';
 import type { LobeChatDatabase, Transaction } from '../../type';
 import { normalizeWorkspaceId } from '../../utils/workspace';
+import { ChannelError } from './error';
+import { retryRouting } from './routing';
+import type { ChannelSendInput } from './send';
+import { sendMessage } from './send';
+import type { ChannelStopScope } from './stop';
+import { stopScope } from './stop';
+import { bumpRevision, lockChannel } from './transaction';
+import type { ChannelAccess, ChannelWriteOptions } from './types';
+
+export type { ChannelClaim, ChannelClaimOptions } from './claim';
+export type { ChannelErrorCode } from './error';
+export { ChannelError } from './error';
+export { ChannelExecutionModel } from './execution';
+export type { ChannelRoutingDecision } from './routing';
+export type { ChannelSendInput } from './send';
+export type { ChannelStopScope } from './stop';
+export type { ChannelAccess, ChannelWriteOptions } from './types';
 
 const ROLE_RANK: Record<ChannelMemberRole, number> = { admin: 1, member: 0, owner: 2 };
 
-export class ChannelError extends Error {
-  constructor(
-    readonly code: 'CONFLICT' | 'FORBIDDEN' | 'NOT_FOUND',
-    message: string,
-  ) {
-    super(message);
-    this.name = 'ChannelError';
-  }
-}
-
-export interface ChannelAccess {
-  channel: ChannelItem;
-  /** The caller's own human member row. */
-  member: ChannelMemberItem;
-}
-
-export interface ChannelWriteOptions {
-  /** Lets owners and admins un-archive or clean up an archived channel. */
-  allowArchived?: boolean;
-  minRole?: ChannelMemberRole;
-}
+const hasRole = (role: ChannelMemberRole | null, minRole: ChannelMemberRole) =>
+  ROLE_RANK[role ?? 'member'] >= ROLE_RANK[minRole];
 
 /**
  * Membership-scoped access to channels (LOBE-15104 §4).
@@ -109,12 +107,7 @@ export class ChannelModel {
     options: ChannelWriteOptions = {},
   ): Promise<T> =>
     this.db.transaction(async (tx) => {
-      const [locked] = await tx
-        .select({ id: channels.id })
-        .from(channels)
-        .where(eq(channels.id, channelId))
-        .for('update');
-      if (!locked) throw new ChannelError('NOT_FOUND', 'Channel not found');
+      await lockChannel(tx, channelId);
 
       // Read membership only after the lock: a removal or demotion committed by the previous
       // lock holder must be visible here, not the snapshot from before the wait.
@@ -127,19 +120,54 @@ export class ChannelModel {
       if (!access) throw new ChannelError('NOT_FOUND', 'Channel not found');
 
       const minRole = options.minRole ?? 'member';
-      const role = access.member.role ?? 'member';
-      if (ROLE_RANK[role] < ROLE_RANK[minRole])
+      if (!hasRole(access.member.role, minRole))
         throw new ChannelError('FORBIDDEN', `Requires the ${minRole} role in this channel`);
       if (access.channel.archived && !options.allowArchived)
         throw new ChannelError('CONFLICT', 'Channel is archived');
 
       const result = await fn(tx, access);
-      await tx
-        .update(channels)
-        .set({ revision: sql`${channels.revision} + 1` })
-        .where(eq(channels.id, channelId));
+      await bumpRevision(tx, channelId);
 
       return result;
+    });
+
+  /** Posts a message as the caller. See {@link sendMessage} for routing. */
+  send = async (channelId: string, input: ChannelSendInput): Promise<ChannelMessageItem> =>
+    this.write(channelId, (tx, access) => sendMessage(tx, access, input));
+
+  /**
+   * Stops one run (its requester or an admin) or a whole branch (admins). Returns the runs
+   * whose writer is still held; the caller must stop them physically.
+   */
+  stop = async (channelId: string, scope: ChannelStopScope): Promise<ChannelRunItem[]> =>
+    this.write(
+      channelId,
+      async (tx, { member }) => {
+        if ('runId' in scope && !hasRole(member.role, 'admin')) {
+          const [run] = await tx
+            .select({ requesterMemberId: channelRuns.requesterMemberId })
+            .from(channelRuns)
+            .where(and(eq(channelRuns.channelId, channelId), eq(channelRuns.id, scope.runId)));
+          if (run && run.requesterMemberId !== member.id)
+            throw new ChannelError('FORBIDDEN', 'Only the requester or an admin can stop this run');
+        }
+        return stopScope(tx, channelId, scope);
+      },
+      { allowArchived: true, minRole: 'threadId' in scope ? 'admin' : 'member' },
+    );
+
+  /** Sends an unassigned message back to Jev. Its author or an admin may retry. */
+  retryRouting = async (channelId: string, messageId: string): Promise<ChannelMessageItem> =>
+    this.write(channelId, async (tx, { member }) => {
+      if (!hasRole(member.role, 'admin')) {
+        const [message] = await tx
+          .select({ authorMemberId: channelMessages.authorMemberId })
+          .from(channelMessages)
+          .where(and(eq(channelMessages.channelId, channelId), eq(channelMessages.id, messageId)));
+        if (message && message.authorMemberId !== member.id)
+          throw new ChannelError('FORBIDDEN', 'Only the author or an admin can retry routing');
+      }
+      return retryRouting(tx, channelId, messageId);
     });
 
   private membershipWhere() {

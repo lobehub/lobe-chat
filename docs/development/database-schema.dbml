@@ -1323,7 +1323,6 @@ table channel_sessions {
   generation integer [not null, default: 1]
   native_session_id text
   accepted_sequence integer [not null, default: 0]
-  accepted_ahead_message_ids jsonb [not null, default: `[]`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
 

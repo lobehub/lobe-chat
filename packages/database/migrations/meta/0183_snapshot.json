@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "ef641912-ec44-46ae-b9e5-841150598b65",
+  "id": "e7e8757f-4458-435d-bf44-af92ab860cfb",
   "policies": {},
   "prevId": "c99e72d2-93e1-4bcf-95c6-0ed39a86c5b8",
   "roles": {},
@@ -11077,13 +11077,6 @@
           "primaryKey": false,
           "notNull": true,
           "default": 0
-        },
-        "accepted_ahead_message_ids": {
-          "name": "accepted_ahead_message_ids",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'[]'::jsonb"
         },
         "created_at": {
           "name": "created_at",

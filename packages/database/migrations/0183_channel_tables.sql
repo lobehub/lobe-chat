@@ -142,7 +142,6 @@ CREATE TABLE IF NOT EXISTS "channel_sessions" (
 	"generation" integer DEFAULT 1 NOT NULL,
 	"native_session_id" text,
 	"accepted_sequence" integer DEFAULT 0 NOT NULL,
-	"accepted_ahead_message_ids" jsonb DEFAULT '[]'::jsonb NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
