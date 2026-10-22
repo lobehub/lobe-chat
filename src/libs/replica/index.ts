@@ -15,14 +15,11 @@ import {
   createSWRDriver,
 } from '@lobechat/replica/zustand';
 
-import {
-  IndexedDBQueryProjectionStorage,
-  LocalStorageQueryProjectionStorage,
-} from '@/libs/queryProjectionStorage';
 import { mutate, useClientDataSWR } from '@/libs/swr';
 import { getCacheScope, isScopeTrusted, useCacheScope } from '@/libs/swr/useCacheScope';
 
 import { notifyReplicaDevtools, registerReplicaDevtools } from './devtools';
+import { AppIndexedDBStorage, AppLocalStorage } from './storage';
 
 /**
  * LobeHub wiring of `@lobechat/replica`: replicas are partitioned like the SWR
@@ -96,9 +93,8 @@ const resolveStorage =
   (namespace: string): ReplicaStorage<TData> | undefined => {
     if (typeof storage === 'function') return storage(namespace);
     if (typeof storage === 'object') return storage;
-    if (storage === 'indexedDB') return new IndexedDBQueryProjectionStorage<TData>({ namespace });
-    if (storage === 'localStorage')
-      return new LocalStorageQueryProjectionStorage<TData>({ namespace });
+    if (storage === 'indexedDB') return new AppIndexedDBStorage<TData>({ namespace });
+    if (storage === 'localStorage') return new AppLocalStorage<TData>({ namespace });
     return undefined;
   };
 
@@ -171,6 +167,7 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
   return slice;
 };
 
+export { AppIndexedDBStorage, AppLocalStorage } from './storage';
 export * from '@lobechat/replica';
 export {
   recordLens,
