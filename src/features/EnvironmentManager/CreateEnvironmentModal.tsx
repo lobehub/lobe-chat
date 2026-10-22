@@ -5,9 +5,6 @@ import {
   Button,
   confirmModal,
   createModal,
-  createStaticStyles,
-  cssVar,
-  cx,
   Flexbox,
   Icon,
   Input,
@@ -15,6 +12,8 @@ import {
   Text,
   useModalContext,
 } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { t as translate } from 'i18next';
 import { CodeXmlIcon, FolderIcon, type LucideIcon } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -26,36 +25,26 @@ import { useIMECompositionEvent } from '@/hooks/useIMECompositionEvent';
 import GithubRepositoryPicker, { type GithubRepositorySelection } from './GithubRepositoryPicker';
 import { type CreatedEnvironment, useEnvironmentActions } from './useEnvironmentData';
 
-const styles = createStaticStyles(({ css }) => ({
-  kind: css`
-    cursor: pointer;
-
-    flex: 1;
-
-    min-width: 0;
-    padding: 12px;
-    border: 1px solid ${cssVar.colorBorder};
-    border-radius: ${cssVar.borderRadiusLG};
-
-    background: ${cssVar.colorFillQuaternary};
-
-    transition:
-      border-color 0.2s,
-      background 0.2s;
-
-    &:hover {
-      border-color: ${cssVar.colorTextQuaternary};
-    }
-  `,
-  kindActive: css`
-    border-color: ${cssVar.colorPrimary};
-    background: ${cssVar.colorPrimaryBg};
-
-    &:hover {
-      border-color: ${cssVar.colorPrimary};
-    }
-  `,
-}));
+const styles = stylex.create({
+  kind: {
+    cursor: 'pointer',
+    flex: '1',
+    minWidth: '0',
+    padding: '12px',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: { 'default': cssVar.colorBorder, ':hover': cssVar.colorTextQuaternary },
+    borderRadius: cssVar.borderRadiusLG,
+    backgroundColor: cssVar.colorFillQuaternary,
+    backgroundImage: 'none',
+    transition: 'border-color 0.2s,\n      background 0.2s',
+  },
+  kindActive: {
+    borderColor: { 'default': cssVar.colorPrimary, ':hover': cssVar.colorPrimary },
+    backgroundColor: cssVar.colorPrimaryBg,
+    backgroundImage: 'none',
+  },
+});
 
 const KINDS: { icon: LucideIcon; kind: EnvironmentKind }[] = [
   { icon: FolderIcon, kind: 'files' },
@@ -192,11 +181,13 @@ const CreateEnvironmentContent = memo<CreateEnvironmentContentProps>(
               {KINDS.map((option) => (
                 <Flexbox
                   aria-checked={kind === option.kind}
-                  className={cx(styles.kind, kind === option.kind && styles.kindActive)}
                   gap={4}
                   key={option.kind}
                   role={'radio'}
                   tabIndex={0}
+                  className={
+                    stylex.props(styles.kind, kind === option.kind && styles.kindActive).className
+                  }
                   onClick={() => setKind(option.kind)}
                   onKeyDown={(event) => {
                     if (event.key === 'Enter' || event.key === ' ') {

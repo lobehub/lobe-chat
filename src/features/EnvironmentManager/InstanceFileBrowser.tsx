@@ -1,15 +1,8 @@
 'use client';
 
-import {
-  ActionIcon,
-  createModal,
-  createStaticStyles,
-  cssVar,
-  Flexbox,
-  Icon,
-  Skeleton,
-  Text,
-} from '@lobehub/ui';
+import { ActionIcon, createModal, Flexbox, Icon, Skeleton, Text } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import dayjs from 'dayjs';
 import {
   ChevronLeftIcon,
@@ -25,83 +18,58 @@ import useSWR from 'swr';
 import { sandboxStorageService } from '@/services/sandboxStorage';
 import { formatSize } from '@/utils/format';
 
-const styles = createStaticStyles(({ css }) => ({
-  body: css`
-    overflow: hidden;
-
-    /* Fixed, so the window does not resize under the pointer as folders open.
-       A browser whose height follows its contents moves the row you were about
-       to click. */
-    height: 420px;
-    border-block: 1px solid ${cssVar.colorBorderSecondary};
-  `,
-  crumb: css`
-    cursor: pointer;
-
-    flex: none;
-
-    font-family: ${cssVar.fontFamilyCode};
-    font-size: ${cssVar.fontSizeSM};
-    color: ${cssVar.colorTextSecondary};
-
-    &:hover {
-      color: ${cssVar.colorText};
-    }
-  `,
-  crumbCurrent: css`
-    cursor: default;
-    color: ${cssVar.colorText};
-  `,
-  viewer: css`
-    overflow: auto;
-    flex: 1;
-
-    margin: 0;
-
-    font-family: ${cssVar.fontFamilyCode};
-    font-size: ${cssVar.fontSizeSM};
-    line-height: 1.6;
-    color: ${cssVar.colorText};
-    white-space: pre;
-  `,
-  meta: css`
-    flex: none;
-
-    width: 92px;
-
-    font-size: ${cssVar.fontSizeSM};
-    color: ${cssVar.colorTextTertiary};
-    text-align: end;
-  `,
-  name: css`
-    overflow: hidden;
-    flex: 1;
-
-    min-width: 0;
-
-    font-size: ${cssVar.fontSizeSM};
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  `,
-  row: css`
-    cursor: default;
-    user-select: none;
-    padding-block: 7px;
-    padding-inline: 16px;
-
-    &:hover {
-      background: ${cssVar.colorFillTertiary};
-    }
-  `,
-  scroll: css`
-    overflow-y: auto;
-    height: 100%;
-  `,
-  toolbar: css`
-    padding-block: 10px;
-    padding-inline: 16px;
-  `,
-}));
+const styles = stylex.create({
+  body: {
+    overflow: 'hidden',
+    height: '420px',
+    borderBlockWidth: '1px',
+    borderBlockStyle: 'solid',
+    borderBlockColor: cssVar.colorBorderSecondary,
+  },
+  crumb: {
+    cursor: 'pointer',
+    flex: 'none',
+    fontFamily: cssVar.fontFamilyCode,
+    fontSize: cssVar.fontSizeSM,
+    color: { 'default': cssVar.colorTextSecondary, ':hover': cssVar.colorText },
+  },
+  crumbCurrent: { cursor: 'default', color: cssVar.colorText },
+  viewer: {
+    overflow: 'auto',
+    flex: '1',
+    margin: '0',
+    fontFamily: cssVar.fontFamilyCode,
+    fontSize: cssVar.fontSizeSM,
+    lineHeight: 1.6,
+    color: cssVar.colorText,
+    whiteSpace: 'pre',
+  },
+  meta: {
+    flex: 'none',
+    width: '92px',
+    fontSize: cssVar.fontSizeSM,
+    color: cssVar.colorTextTertiary,
+    textAlign: 'end',
+  },
+  name: {
+    overflow: 'hidden',
+    flex: '1',
+    minWidth: '0',
+    fontSize: cssVar.fontSizeSM,
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  row: {
+    cursor: 'default',
+    userSelect: 'none',
+    paddingBlock: '7px',
+    paddingInline: '16px',
+    backgroundColor: { 'default': null, ':hover': cssVar.colorFillTertiary },
+    backgroundImage: { 'default': null, ':hover': 'none' },
+  },
+  scroll: { overflowY: 'auto', height: '100%' },
+  toolbar: { paddingBlock: '10px', paddingInline: '16px' },
+});
 
 /**
  * A NUL byte in what came back as text is the reliable tell that it is not.
@@ -193,19 +161,24 @@ const InstanceFileBrowser = memo<InstanceFileBrowserProps>(({ instanceId, root }
   if (openFile)
     return (
       <Flexbox>
-        <Flexbox horizontal align={'center'} className={styles.toolbar} gap={8}>
+        <Flexbox
+          horizontal
+          align={'center'}
+          className={stylex.props(styles.toolbar).className}
+          gap={8}
+        >
           <ActionIcon
             icon={ChevronLeftIcon}
             size={'small'}
             title={t('environments.files.back')}
             onClick={() => setOpenFile(undefined)}
           />
-          <Text className={styles.name} title={openFile}>
+          <Text className={stylex.props(styles.name).className} title={openFile}>
             {openFile.slice(cwd.length + 1)}
           </Text>
         </Flexbox>
 
-        <Flexbox className={styles.body} padding={16}>
+        <Flexbox className={stylex.props(styles.body).className} padding={16}>
           {file.isLoading ? (
             <Skeleton.Text rows={8} />
           ) : file.error ? (
@@ -219,7 +192,7 @@ const InstanceFileBrowser = memo<InstanceFileBrowserProps>(({ instanceId, root }
               {t('environments.files.binary')}
             </Text>
           ) : (
-            <pre className={styles.viewer}>{content}</pre>
+            <pre {...stylex.props(styles.viewer)}>{content}</pre>
           )}
         </Flexbox>
       </Flexbox>
@@ -227,7 +200,12 @@ const InstanceFileBrowser = memo<InstanceFileBrowserProps>(({ instanceId, root }
 
   return (
     <Flexbox>
-      <Flexbox horizontal align={'center'} className={styles.toolbar} gap={8}>
+      <Flexbox
+        horizontal
+        align={'center'}
+        className={stylex.props(styles.toolbar).className}
+        gap={8}
+      >
         <ActionIcon
           disabled={cwd === root}
           icon={CornerLeftUpIcon}
@@ -240,7 +218,11 @@ const InstanceFileBrowser = memo<InstanceFileBrowserProps>(({ instanceId, root }
             work and this window is about one instance. */}
         <Flexbox horizontal align={'center'} flex={1} gap={6} style={{ minWidth: 0 }}>
           <span
-            className={cwd === root ? `${styles.crumb} ${styles.crumbCurrent}` : styles.crumb}
+            className={
+              cwd === root
+                ? stylex.props(styles.crumb, styles.crumbCurrent).className
+                : stylex.props(styles.crumb).className
+            }
             onClick={() => openDirectory(root)}
           >
             {root}
@@ -257,7 +239,11 @@ const InstanceFileBrowser = memo<InstanceFileBrowserProps>(({ instanceId, root }
                   style={{ color: cssVar.colorTextQuaternary }}
                 />
                 <span
-                  className={current ? `${styles.crumb} ${styles.crumbCurrent}` : styles.crumb}
+                  className={
+                    current
+                      ? stylex.props(styles.crumb, styles.crumbCurrent).className
+                      : stylex.props(styles.crumb).className
+                  }
                   onClick={() => !current && openDirectory(path)}
                 >
                   {crumb}
@@ -268,8 +254,8 @@ const InstanceFileBrowser = memo<InstanceFileBrowserProps>(({ instanceId, root }
         </Flexbox>
       </Flexbox>
 
-      <Flexbox className={styles.body}>
-        <Flexbox className={styles.scroll}>
+      <Flexbox className={stylex.props(styles.body).className}>
+        <Flexbox className={stylex.props(styles.scroll).className}>
           {listing.isLoading ? (
             <Flexbox gap={8} padding={16}>
               <Skeleton.Text rows={5} />
@@ -295,7 +281,7 @@ const InstanceFileBrowser = memo<InstanceFileBrowserProps>(({ instanceId, root }
               <Flexbox
                 horizontal
                 align={'center'}
-                className={styles.row}
+                className={stylex.props(styles.row).className}
                 gap={8}
                 key={entry.path}
                 // Double-click to open, the way a file manager does. A single
@@ -309,11 +295,11 @@ const InstanceFileBrowser = memo<InstanceFileBrowserProps>(({ instanceId, root }
                   size={14}
                   style={{ color: cssVar.colorTextTertiary, flex: 'none' }}
                 />
-                <span className={styles.name}>{entry.name}</span>
-                <span className={styles.meta}>
+                <span {...stylex.props(styles.name)}>{entry.name}</span>
+                <span {...stylex.props(styles.meta)}>
                   {entry.isDirectory || entry.size === undefined ? '' : formatSize(entry.size)}
                 </span>
-                <span className={styles.meta}>
+                <span {...stylex.props(styles.meta)}>
                   {entry.modifiedAt ? dayjs(entry.modifiedAt).format('MM-DD HH:mm') : ''}
                 </span>
               </Flexbox>
@@ -322,7 +308,7 @@ const InstanceFileBrowser = memo<InstanceFileBrowserProps>(({ instanceId, root }
         </Flexbox>
       </Flexbox>
 
-      <Flexbox className={styles.toolbar} gap={2}>
+      <Flexbox className={stylex.props(styles.toolbar).className} gap={2}>
         <Text fontSize={12} type={'secondary'}>
           {t('environments.files.openHint')}
         </Text>
