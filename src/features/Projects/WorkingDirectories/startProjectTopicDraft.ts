@@ -2,6 +2,21 @@ import { useChatStore } from '@/store/chat';
 
 import { getProjectConversationPath } from '../Layout/navigation';
 
+interface RunnableDirectoryLike {
+  environmentId?: string | null;
+  instanceId?: string | null;
+  permission?: string | null;
+}
+
+/**
+ * Whether a blank conversation may be staged on this directory: it needs a
+ * linked environment instance and write access — the same rule the send
+ * preflight and the composer's device switcher apply. A blank draft has no
+ * topic for that preflight to check, so a "+" must only pick such a directory.
+ */
+export const isRunnableProjectDirectory = (directory: RunnableDirectoryLike) =>
+  !!directory.instanceId && !!directory.environmentId && directory.permission === 'readWrite';
+
 /**
  * Open a blank project conversation on one directory, the same habit as an
  * agent's "+": no topic row is created here. The staged directory pins the
@@ -20,7 +35,12 @@ export const startProjectTopicDraft = ({
   projectId: string;
 }) => {
   const chat = useChatStore.getState();
-  chat.switchTopic(null, { skipRefreshMessage: true });
+  // Clean the target agent's blank bucket, not the view the "+" was clicked
+  // from — the draft is that agent's conversation.
+  chat.switchTopic(null, {
+    clearNewKeyContext: { agentId, groupId: null },
+    skipRefreshMessage: true,
+  });
   chat.setPendingNewTopicDirectory({ agentId, projectWorkingDirectoryId: directoryId });
   navigate(getProjectConversationPath(projectId));
 };

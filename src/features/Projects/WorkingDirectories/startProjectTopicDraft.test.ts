@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { startProjectTopicDraft } from './startProjectTopicDraft';
+import { isRunnableProjectDirectory, startProjectTopicDraft } from './startProjectTopicDraft';
 
 const { chat } = vi.hoisted(() => ({
   chat: { setPendingNewTopicDirectory: vi.fn(), switchTopic: vi.fn() },
@@ -9,6 +9,17 @@ const { chat } = vi.hoisted(() => ({
 vi.mock('@/store/chat', () => ({
   useChatStore: { getState: () => chat },
 }));
+
+describe('isRunnableProjectDirectory', () => {
+  it('requires a linked environment instance and write access', () => {
+    const runnable = { environmentId: 'env', instanceId: 'ins', permission: 'readWrite' };
+
+    expect(isRunnableProjectDirectory(runnable)).toBe(true);
+    expect(isRunnableProjectDirectory({ ...runnable, permission: 'read' })).toBe(false);
+    expect(isRunnableProjectDirectory({ ...runnable, environmentId: null })).toBe(false);
+    expect(isRunnableProjectDirectory({ ...runnable, instanceId: undefined })).toBe(false);
+  });
+});
 
 describe('startProjectTopicDraft', () => {
   beforeEach(() => vi.clearAllMocks());
@@ -23,7 +34,12 @@ describe('startProjectTopicDraft', () => {
       projectId: 'prj_1',
     });
 
-    expect(chat.switchTopic).toHaveBeenCalledWith(null, { skipRefreshMessage: true });
+    // The draft belongs to the target agent, so its blank bucket is the one
+    // cleaned — not whichever conversation the "+" was clicked from.
+    expect(chat.switchTopic).toHaveBeenCalledWith(null, {
+      clearNewKeyContext: { agentId: 'agt_1', groupId: null },
+      skipRefreshMessage: true,
+    });
     expect(chat.setPendingNewTopicDirectory).toHaveBeenCalledWith({
       agentId: 'agt_1',
       projectWorkingDirectoryId: 'pwd_1',

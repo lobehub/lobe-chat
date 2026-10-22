@@ -26,7 +26,10 @@ import { useTranslation } from 'react-i18next';
 
 import Avatar from '@/components/Avatar';
 import { openProjectTopicModal } from '@/features/Projects/WorkingDirectories/StartDirectoryModal';
-import { startProjectTopicDraft } from '@/features/Projects/WorkingDirectories/startProjectTopicDraft';
+import {
+  isRunnableProjectDirectory,
+  startProjectTopicDraft,
+} from '@/features/Projects/WorkingDirectories/startProjectTopicDraft';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
@@ -97,11 +100,10 @@ const GroupItem = memo<GroupItemComponentProps>(({ group }) => {
   // Only an attributed bucket in a project-scoped list can start a topic with
   // its agent preselected; the `no-agent` bucket has no agent to preselect.
   const canAddTopic = !!scope && !!agentId;
-  // Only an instance-bound directory can run work; a device section offering
-  // any other directory would stage one the run can't reach, so its "+" only
-  // considers instance-bound ones.
+  // A device section offering a directory that can't run work would stage a
+  // draft whose first send is refused, so its "+" only considers runnable ones.
   const startDirectories = useMemo(
-    () => (canAddTopic ? directories.filter((directory) => directory.instanceId) : undefined),
+    () => (canAddTopic ? directories.filter(isRunnableProjectDirectory) : undefined),
     [canAddTopic, directories],
   );
 

@@ -25,6 +25,7 @@ import {
 } from '@/store/projectWorkingDirectory';
 
 import { getProjectConversationPath } from '../Layout/navigation';
+import { isFreshProjectTopic } from './isFreshProjectTopic';
 
 const ProjectConversation = memo(() => {
   const { t } = useTranslation('project');
@@ -55,10 +56,14 @@ const ProjectConversation = memo(() => {
       ? pendingDirectory.agentId
       : undefined;
   const chatAgentId = useChatStore((s) => s.activeAgentId);
-  // The first send moves the route to the new topic before the project list has
-  // it; the chat store already does, so the conversation stays on its agent
-  // instead of flashing "not found" while the list catches up.
-  const isFreshTopic = !!topicId && !selectedTopic && !!storedTopic;
+  // Keep the conversation on its agent instead of flashing "not found" while
+  // the project list catches up with a topic the first send just created.
+  const isFreshTopic = isFreshProjectTopic({
+    listed: !!selectedTopic,
+    projectId: detail?.project.id,
+    storedTopic,
+    topicId,
+  });
   const conversationAgentId = topicId
     ? (selectedTopic?.agentId ?? (isFreshTopic ? chatAgentId : undefined))
     : draftAgentId;

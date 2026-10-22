@@ -33,7 +33,18 @@ vi.mock('@/store/global/selectors', () => ({
   },
 }));
 
-const directories: { deviceId: string; id: string; instanceId?: string }[] = [];
+const directories: {
+  deviceId: string;
+  environmentId?: string;
+  id: string;
+  instanceId?: string;
+  permission?: string;
+}[] = [];
+const runnable = (instanceId: string) => ({
+  environmentId: 'env-1',
+  instanceId,
+  permission: 'readWrite',
+});
 
 vi.mock('@/store/projectWorkingDirectory', () => ({
   useProjectDirectories: () => directories,
@@ -48,9 +59,13 @@ const { navigate, openProjectTopicModal, startProjectTopicDraft } = vi.hoisted((
 vi.mock('@/features/Projects/WorkingDirectories/StartDirectoryModal', () => ({
   openProjectTopicModal,
 }));
-vi.mock('@/features/Projects/WorkingDirectories/startProjectTopicDraft', () => ({
-  startProjectTopicDraft,
-}));
+vi.mock(
+  '@/features/Projects/WorkingDirectories/startProjectTopicDraft',
+  async (importOriginal) => ({
+    ...(await importOriginal<object>()),
+    startProjectTopicDraft,
+  }),
+);
 vi.mock('@/features/Workspace/useWorkspaceAwareNavigate', () => ({
   useWorkspaceAwareNavigate: () => navigate,
 }));
@@ -192,7 +207,7 @@ describe('TopicByAgentGroupItem', () => {
     // device, but the new-topic modal only lists instance-bound directories,
     // so a legacy directory opened with an unselectable raw id.
     subGroupModes[GROUP_ID] = 'byDevice';
-    directories[0] = { ...directories[0], instanceId: 'ins-mac' };
+    directories[0] = { ...directories[0], ...runnable('ins-mac') };
     renderGroup();
 
     expect(screen.getAllByRole('button', { name: 'directories.start' })).toHaveLength(1);
@@ -204,7 +219,7 @@ describe('TopicByAgentGroupItem', () => {
     // modal and created the topic row up front, unlike an agent's "+", which
     // only opens the composer and lets the first message create the topic.
     subGroupModes[GROUP_ID] = 'byDevice';
-    directories[1] = { ...directories[1], instanceId: 'ins-linux' };
+    directories[1] = { ...directories[1], ...runnable('ins-linux') };
     renderGroup();
 
     fireEvent.click(screen.getByRole('button', { name: 'directories.start' }));
@@ -216,6 +231,19 @@ describe('TopicByAgentGroupItem', () => {
       projectId: 'project-1',
     });
     expect(openProjectTopicModal).not.toHaveBeenCalled();
+  });
+
+  /** @example Review: the agent "+" staged a read-only directory, so the first send was refused. */
+  it('skips a directory that cannot run when the agent "+" picks the default', () => {
+    directories[0] = { ...directories[0], ...runnable('ins-mac'), permission: 'read' };
+    directories[1] = { ...directories[1], ...runnable('ins-linux') };
+    renderGroup();
+
+    fireEvent.click(screen.getByRole('button', { name: 'sidebar.newConversation' }));
+
+    expect(startProjectTopicDraft).toHaveBeenCalledWith(
+      expect.objectContaining({ directoryId: 'binding-linux' }),
+    );
   });
 
   it('keeps the modal for a project with no runnable directory, so one can be added', () => {

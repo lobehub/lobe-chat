@@ -30,7 +30,7 @@ import {
 import { filterTopics, type TopicListFilter } from '@/utils/client/topic';
 
 import { openProjectTopicModal } from './StartDirectoryModal';
-import { startProjectTopicDraft } from './startProjectTopicDraft';
+import { isRunnableProjectDirectory, startProjectTopicDraft } from './startProjectTopicDraft';
 import { useProjectTopicReveal } from './useProjectTopicReveal';
 
 export function ProjectDirectoryTopics(props: { projectId: string; coordinatorAgentId: string }) {
@@ -101,7 +101,7 @@ function ProjectTopicList({
               // Same habit as an agent's "+": a blank conversation on the first
               // runnable directory, switchable in the composer before the first
               // send. The modal only remains for a project with none yet.
-              const directory = directories.find((d) => d.instanceId);
+              const directory = directories.find(isRunnableProjectDirectory);
               if (directory) {
                 startProjectTopicDraft({
                   agentId: coordinatorAgentId,

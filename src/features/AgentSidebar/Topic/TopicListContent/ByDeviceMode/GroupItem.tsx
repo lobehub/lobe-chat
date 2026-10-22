@@ -63,7 +63,7 @@ const GroupItem = memo<GroupItemComponentProps>(({ group }) => {
   });
 
   // Stage a directory on this device so the blank conversation runs where the
-  // group points; only an instance-bound directory can run work, so without
+  // group points; only a runnable directory can take the run, so without
   // one on this device the + would silently start work on another.
   const navigate = useWorkspaceAwareNavigate();
   const fallbackAgentId = scope?.coordinatorAgentId ?? activeAgentId;
