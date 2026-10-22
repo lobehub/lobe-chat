@@ -16,55 +16,54 @@ vi.mock('@/store/page', () => ({
   pageActions: { renamePage },
 }));
 
-const now = { value: 1000 };
-
 describe('Docs page rename field', () => {
   beforeEach(() => {
     renamePage.mockClear();
-    vi.spyOn(performance, 'now').mockImplementation(() => now.value);
   });
 
-  it('keeps the field when the row menu hands focus back right after mount', () => {
+  it('stays open when focus is taken away from the row', () => {
+    // The row menu hands focus back to its trigger after the field mounts. A
+    // blur-commit closed the field here, which is what made "Rename" look dead.
     const onDone = vi.fn();
-    now.value = 1000;
     render(<RenameInput id={'page-1'} title={'Weekly report'} onDone={onDone} />);
 
-    const input = screen.getByTestId('page-rename-input');
-
-    // The menu unmounts and re-focuses its trigger ~300ms later. Committing here
-    // would close the field before the user can type into it.
-    now.value = 1300;
-    fireEvent.blur(input);
+    fireEvent.blur(screen.getByTestId('page-rename-input'));
 
     expect(onDone).not.toHaveBeenCalled();
     expect(renamePage).not.toHaveBeenCalled();
-    expect(document.activeElement).toBe(input);
+    expect(screen.getByTestId('page-rename-input')).toBeTruthy();
   });
 
-  it('commits the typed title once the field has actually been used', async () => {
+  it('commits the typed title when the pointer lands outside the row', async () => {
     const onDone = vi.fn();
-    now.value = 1000;
     render(<RenameInput id={'page-1'} title={'Weekly report'} onDone={onDone} />);
 
-    const input = screen.getByTestId('page-rename-input');
-    fireEvent.change(input, { target: { value: 'Renamed report' } });
-
-    now.value = 2000;
-    fireEvent.blur(input);
+    fireEvent.change(screen.getByTestId('page-rename-input'), {
+      target: { value: 'Renamed report' },
+    });
+    fireEvent.pointerDown(document.body);
 
     expect(renamePage).toHaveBeenCalledWith('page-1', 'Renamed report');
     await vi.waitFor(() => expect(onDone).toHaveBeenCalled());
   });
 
-  it('does not write when the title is unchanged', async () => {
+  it('keeps the field open for a pointer landing inside it', () => {
     const onDone = vi.fn();
-    now.value = 1000;
     render(<RenameInput id={'page-1'} title={'Weekly report'} onDone={onDone} />);
 
-    now.value = 2000;
-    fireEvent.blur(screen.getByTestId('page-rename-input'));
+    const input = screen.getByTestId('page-rename-input');
+    fireEvent.pointerDown(input);
+
+    expect(onDone).not.toHaveBeenCalled();
+  });
+
+  it('does not write when the title is unchanged', async () => {
+    const onDone = vi.fn();
+    render(<RenameInput id={'page-1'} title={'Weekly report'} onDone={onDone} />);
+
+    fireEvent.pointerDown(document.body);
 
     expect(renamePage).not.toHaveBeenCalled();
-    expect(onDone).toHaveBeenCalled();
+    await vi.waitFor(() => expect(onDone).toHaveBeenCalled());
   });
 });
