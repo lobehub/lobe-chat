@@ -448,15 +448,39 @@ export const consumeAgentStream = (
     gateway.resetRetries();
     return onEvent(event);
   });
-  const runCatchUp = async (): Promise<boolean> => {
-    try {
-      const terminal = await journal.catchUp();
-      if (terminal) finish();
-      return terminal;
-    } catch (error) {
-      fail(error as Error);
-      return false;
-    }
+  // A catch-up pass is started without awaiting it, so a mirrored member frame
+  // arriving mid-read would print ahead of supervisor history the server had
+  // already published — an out-of-order transcript, most likely on resume, when
+  // buffered member frames land while the first read is still pending. Hold
+  // mirrored deliveries behind the in-flight pass, keeping their own order.
+  let catchUpInFlight: Promise<boolean> | undefined;
+  let mirroredDelivery: Promise<void> = Promise.resolve();
+  const deliverMirrored = (event: AgentStreamEvent) => {
+    const inFlight = catchUpInFlight;
+    mirroredDelivery = mirroredDelivery
+      .then(() => inFlight)
+      .then(() => {
+        if (!stopped) resolved.onMirroredEvent?.(event);
+      })
+      .catch((error) => fail(toError(error)));
+  };
+
+  const runCatchUp = (): Promise<boolean> => {
+    const pass = (async () => {
+      try {
+        const terminal = await journal.catchUp();
+        if (terminal) finish();
+        return terminal;
+      } catch (error) {
+        fail(error as Error);
+        return false;
+      }
+    })();
+    catchUpInFlight = pass;
+    void pass.then(() => {
+      if (catchUpInFlight === pass) catchUpInFlight = undefined;
+    });
+    return pass;
   };
   // Chunk wakes are coalesced: the first one reads immediately and opens a
   // window, further chunks inside it collapse into a single trailing read.
@@ -484,7 +508,11 @@ export const consumeAgentStream = (
       wake();
     }, WAKE_COALESCE_WINDOW_MS);
   };
-  const gateway = new GatewayWakeChannel(resolved, wake, (error) => fail(error));
+  const gateway = new GatewayWakeChannel(
+    { ...resolved, onMirroredEvent: resolved.onMirroredEvent ? deliverMirrored : undefined },
+    wake,
+    (error) => fail(error),
+  );
   const poll = setInterval(() => void runCatchUp(), HISTORY_POLL_INTERVAL_MS);
 
   const close = () => {

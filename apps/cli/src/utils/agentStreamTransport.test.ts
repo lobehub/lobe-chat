@@ -137,6 +137,44 @@ describe('recoverable WebSocket transport', () => {
     expect(printed.at(-1)?.type).toBe('agent_runtime_end');
   });
 
+  it('holds a mirrored member frame behind an in-flight journal catch-up so the transcript stays ordered', async () => {
+    let release: (page: AgentHistoryPage) => void = () => {};
+    const pending = new Promise<AgentHistoryPage>((resolve) => {
+      release = resolve;
+    });
+    readHistory = vi.fn(() => pending);
+
+    const printed: AgentStreamEvent[] = [];
+    const stream = consumeAgentStream(
+      { ...options(), onMirroredEvent: (event) => printed.push(event) },
+      (event) => {
+        printed.push(event);
+        return false;
+      },
+    );
+    await flush();
+
+    // The frame lands while the first catch-up read is still in flight.
+    const memberChunk = { ...event(3, 'stream_chunk', 'member'), operationId: 'op-member-2' };
+    sockets[0].message({ event: memberChunk, id: 'gateway-1', type: 'agent_event' });
+    await flush();
+    expect(printed).toHaveLength(0);
+
+    release({
+      available: true,
+      events: [event(2, 'stream_chunk', 'supervisor')],
+      hasMore: false,
+      nextCursor: '2-0',
+    });
+    await flush();
+
+    expect(printed.map((item) => (item.data as { content?: string }).content)).toEqual([
+      'supervisor',
+      'member',
+    ]);
+    stream.close();
+  });
+
   it('reconnects with backoff and recovers missed output exactly once', async () => {
     journal.push(event(2, 'stream_chunk', 'before'));
     const done = streamAgentEvents(options());
