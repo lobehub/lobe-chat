@@ -9,6 +9,7 @@ import {
   getProjectGoalsPath,
   getProjectLibraryPath,
   getProjectTasksPath,
+  isProjectSectionActive,
 } from './navigation';
 
 describe('project workspace navigation', () => {
@@ -31,5 +32,22 @@ describe('project workspace navigation', () => {
     expect(getProjectConversationStartPath('prj_1', 'Plan Q3 & ship')).toBe(
       '/project/prj_1/conversation?message=Plan%20Q3%20%26%20ship',
     );
+  });
+});
+
+describe('isProjectSectionActive', () => {
+  /** @example Acceptance: opening a record un-highlighted the Acceptance nav item. */
+  it('keeps a section active on its own record pages', () => {
+    const section = getProjectAcceptancePath('prj_1');
+
+    expect(isProjectSectionActive(section, section)).toBe(true);
+    expect(isProjectSectionActive(`${section}/acc_1`, section)).toBe(true);
+    expect(isProjectSectionActive(`${section}/acc_1/check/chk_1`, section)).toBe(true);
+  });
+
+  it('does not match a sibling path that only shares the prefix', () => {
+    expect(
+      isProjectSectionActive('/project/prj_1/acceptance-old', '/project/prj_1/acceptance'),
+    ).toBe(false);
   });
 });

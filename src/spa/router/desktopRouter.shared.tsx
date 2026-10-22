@@ -47,7 +47,6 @@ import { agentsRouteMeta } from '@/features/AgentViewAll/routeMeta';
 import { dashboardRouteMeta, dashboardsRouteMeta } from '@/features/Dashboard/routeMeta';
 import { pageRouteMeta } from '@/features/Pages/routeMeta';
 import {
-  projectAcceptanceRouteMeta,
   projectConversationRouteMeta,
   projectDirectoriesRouteMeta,
   projectsRouteMeta,
@@ -83,6 +82,7 @@ import { identitiesListLoader } from '@/spa/router/identitiesListLoader';
 import { libraryTreeLoader } from '@/spa/router/libraryTreeLoader';
 import { pageListLoader } from '@/spa/router/pageListLoader';
 import { preferenceListLoader } from '@/spa/router/preferenceListLoader';
+import { projectAcceptanceRoute } from '@/spa/router/projectAcceptanceRoutes';
 import { agentAccessLoader, agentGroupAccessLoader } from '@/spa/router/resourceAccessLoader';
 import { NoRouteSkeleton, routeMeta } from '@/spa/router/routeMeta';
 import { scheduledTaskListLoader } from '@/spa/router/scheduledTaskListLoader';
@@ -1133,23 +1133,7 @@ export const sharedMainAreaChildren: RouteObject[] = [
         ),
         path: 'dashboard',
       },
-      {
-        children: [
-          {
-            element: dynamicElement(
-              () => import('@/routes/(main)/acceptance/empty'),
-              'Desktop > Project Acceptance > Empty',
-            ),
-            index: true,
-          },
-        ],
-        element: dynamicLayout(
-          () => import('@/routes/(main)/project/[projectId]/acceptance'),
-          'Desktop > Project Acceptance',
-        ),
-        handle: { meta: projectAcceptanceRouteMeta },
-        path: 'acceptance',
-      },
+      projectAcceptanceRoute,
     ],
     element: dynamicLayout(
       () => import('@/routes/(main)/project/_layout'),

@@ -19,3 +19,7 @@ export const getProjectDashboardPath = (projectId: string, dashboardId?: string)
     : `/project/${projectId}/dashboard`;
 
 export const getProjectAcceptancePath = (projectId: string) => `/project/${projectId}/acceptance`;
+
+/** A section stays active on its own pages too — a board, an acceptance record. */
+export const isProjectSectionActive = (pathname: string, sectionPath: string) =>
+  pathname === sectionPath || pathname.startsWith(`${sectionPath}/`);

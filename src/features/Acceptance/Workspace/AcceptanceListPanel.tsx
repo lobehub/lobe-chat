@@ -46,7 +46,7 @@ import { systemStatusSelectors } from '@/store/global/selectors';
 import { useVerifyStore } from '@/store/verify';
 
 import { useAcceptanceList, useAcceptanceListInfinite } from '../hooks';
-import { acceptanceHomePath } from '../Viewer/routes';
+import { acceptanceHomePath, useAcceptanceRouteBase } from '../Viewer/routes';
 import type { AcceptanceStatusAction } from '../Viewer/statusActions';
 import AcceptanceBatchBar from './AcceptanceBatchBar';
 import { openAcceptanceDeleteConfirm } from './AcceptanceDeleteConfirm';
@@ -81,7 +81,7 @@ import {
   expandedAcceptanceGroupKeys,
   groupAcceptanceList,
   nextCollapsedGroupKeys,
-  normalizeAcceptanceGroupMode,
+  resolveAcceptanceGroupMode,
   shouldRenderAcceptanceGroups,
 } from './groupAcceptanceList';
 import { useAcceptanceListFilterMenu } from './useAcceptanceListFilterMenu';
@@ -304,6 +304,7 @@ const AcceptanceListPanel = memo<AcceptanceListPanelProps>(
   ({ expand, headerLeading, hosted, isNarrow, projectActionItems, projectId, setExpand }) => {
     const { t } = useTranslation('verify');
     const navigate = useNavigate();
+    const routeBase = useAcceptanceRouteBase();
     const { acceptanceId } = useParams<{ acceptanceId: string }>();
 
     const [query, setQuery] = useState('');
@@ -336,7 +337,7 @@ const AcceptanceListPanel = memo<AcceptanceListPanelProps>(
       source,
     } = effectiveAcceptanceListFacets(facets, projectId);
     const listQuery = { projectId: listProjectId, scope, source };
-    const groupMode = normalizeAcceptanceGroupMode(storedGroupMode);
+    const groupMode = resolveAcceptanceGroupMode(storedGroupMode, projectId);
     const debouncedQuery = useDebounce(query.trim(), { wait: 300 });
     const trimmedQuery = query.trim();
     const searching = Boolean(debouncedQuery);
@@ -605,7 +606,12 @@ const AcceptanceListPanel = memo<AcceptanceListPanelProps>(
 
             // The open acceptance just stopped existing — leave its dead route
             // rather than letting the detail pane render a 404.
-            const redirect = acceptanceRedirectAfterDelete(acceptanceId, targets, failedIds);
+            const redirect = acceptanceRedirectAfterDelete(
+              acceptanceId,
+              targets,
+              failedIds,
+              routeBase,
+            );
             if (redirect) navigate(redirect, { replace: true });
             await settleBatch(targets, [], failedIds);
             reportBatch(deleted, targets.length, 'acceptance.workspace.batch.deleteSuccess');
@@ -618,7 +624,8 @@ const AcceptanceListPanel = memo<AcceptanceListPanelProps>(
 
     // Grouping by project already names it in the header; every other mode has
     // to carry it on the row or the affiliation is simply not on screen.
-    const showRowProject = groupMode !== 'project';
+    // Inside a project every row belongs to it, so naming the project again is noise.
+    const showRowProject = !projectId && groupMode !== 'project';
 
     const orderedIds = (showGroups ? groups.flatMap((group) => group.items) : items)
       .filter((item) => item.canManage)
