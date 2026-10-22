@@ -18,8 +18,9 @@ import {
   TopicListScopeContext,
   useTopicListFilter,
 } from '@/features/AgentSidebar/Topic/TopicListScope';
-import { useScopedTopics } from '@/features/AgentSidebar/Topic/useScopedTopics';
+import { useOnlyMineTopics, useScopedTopics } from '@/features/AgentSidebar/Topic/useScopedTopics';
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';
+import { useWorkspacePreferenceReady } from '@/hooks/useWorkspacePreferenceReady';
 import {
   useProjectDirectories,
   useProjectDirectoryStore,
@@ -62,7 +63,8 @@ function ProjectTopicList({
   const filterState = useTopicListFilter();
   const request = useProjectDirectoryStore((s) => s.useFetchProjectTopics)(projectId);
   const directoriesRequest = useProjectDirectoryStore((s) => s.useFetchDirectories)(projectId);
-  const topics = useProjectTopics(projectId);
+  // The empty state must follow what the list shows, "only mine" included.
+  const topics = useOnlyMineTopics(useProjectTopics(projectId));
   const directories = useProjectDirectories(projectId);
   const { topics: scopedTopics } = useScopedTopics();
   const filter = filterState?.filter;
@@ -73,6 +75,10 @@ function ProjectTopicList({
       filterTopics(scopedTopics, filter, { directories }).length === 0,
     [filter, scopedTopics, directories],
   );
+  // The rows are filtered client-side by the workspace "only mine" choice, and
+  // nothing else on a project route syncs that preference. Hold the list until
+  // it is known so the unfiltered rows never paint.
+  const isPreferenceLoading = !useWorkspacePreferenceReady();
   return (
     <Flexbox gap={1} paddingBlock={12}>
       <Flexbox horizontal align="center" justify="space-between" paddingInline={8}>
@@ -105,7 +111,7 @@ function ProjectTopicList({
           onRetry={() => Promise.all([request.revalidate(), directoriesRequest.revalidate()])}
         />
       ) : null}
-      {!request.hasData ? (
+      {!request.hasData || isPreferenceLoading ? (
         <SkeletonList />
       ) : !topics.length && !request.error ? (
         <Text style={{ paddingInline: 8 }} type="secondary">
@@ -119,7 +125,7 @@ function ProjectTopicList({
           </Button>
         </Flexbox>
       ) : null}
-      {topicGroupMode === 'flat' ? (
+      {isPreferenceLoading ? null : topicGroupMode === 'flat' ? (
         <FlatMode />
       ) : topicGroupMode === 'byStatus' ? (
         <ByStatusMode />

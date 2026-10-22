@@ -838,6 +838,11 @@ export interface QueryTopicParams {
    * When true, also includes legacy inbox topics (sessionId IS NULL AND groupId IS NULL AND agentId IS NULL)
    */
   isInbox?: boolean;
+  /**
+   * Only topics the caller created (`topics.userId`). Meaningful in a
+   * workspace, where the list otherwise shows every member's topics.
+   */
+  onlyMine?: boolean;
   pageSize?: number;
   /**
    * Server-side ordering. Defaults to `updatedAt`. Use `status` to back the
