@@ -9,6 +9,7 @@ import {
   useTopicMigrationPending,
 } from '@/features/AgentTransferMigration';
 import ChatMiniMap from '@/features/ChatMiniMap';
+import MinimapGutter from '@/features/ChatMiniMap/MinimapGutter';
 import { ChatList, ConversationProvider } from '@/features/Conversation';
 import { useMessageDeepLink } from '@/features/Conversation/ChatList/hooks/useMessageDeepLink';
 import {
@@ -63,7 +64,8 @@ const Conversation = memo<ConversationAreaProps>(({ mobile = false }) => {
       context={context}
       operationState={operationState}
     >
-      <Flexbox
+      <MinimapGutter
+        enabled={!mobile}
         flex={1}
         width={'100%'}
         style={{
@@ -77,7 +79,7 @@ const Conversation = memo<ConversationAreaProps>(({ mobile = false }) => {
         ) : (
           <ChatList messageDeepLink={messageDeepLink} welcome={<WelcomeChatItem />} />
         )}
-      </Flexbox>
+      </MinimapGutter>
       {topicPending ? (
         <Flexbox horizontal align={'center'} justify={'center'} paddingBlock={6} paddingInline={16}>
           <span style={{ color: cssVar.colorTextDescription, fontSize: 12, textAlign: 'center' }}>

@@ -24,3 +24,13 @@ export const getPreviewText = (content: string | undefined): string => {
 };
 
 export const MIN_MESSAGES_THRESHOLD = 3;
+
+/**
+ * Width reserved at the inline end of the message list while the rail is
+ * shown. The rail sits 8px from the edge and its widest dash is MAX_WIDTH,
+ * so 24px keeps it in its own lane instead of covering wide content.
+ */
+export const MINIMAP_GUTTER_WIDTH = 24;
+
+export const shouldShowMinimap = (userMessageCount: number): boolean =>
+  userMessageCount > MIN_MESSAGES_THRESHOLD;

@@ -7,7 +7,7 @@ import { MinimapIndicator } from './MinimapIndicator';
 import { MinimapPreview } from './MinimapPreview';
 import { minimapStyles } from './styles';
 import { useMinimapData } from './useMinimapData';
-import { MIN_MESSAGES_THRESHOLD } from './utils';
+import { shouldShowMinimap } from './utils';
 
 const CLOSE_DELAY_MS = 120;
 
@@ -18,7 +18,7 @@ const ChatMinimap = memo(() => {
 
   const { indicators, activeIndicatorPosition, handleJump } = useMinimapData();
 
-  if (indicators.length <= MIN_MESSAGES_THRESHOLD) return null;
+  if (!shouldShowMinimap(indicators.length)) return null;
 
   const handleEnter = () => {
     if (closeTimerRef.current) {

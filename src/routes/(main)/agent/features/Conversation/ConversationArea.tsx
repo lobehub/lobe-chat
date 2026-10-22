@@ -12,6 +12,7 @@ import {
   useTopicMigrationPending,
 } from '@/features/AgentTransferMigration';
 import ChatMiniMap from '@/features/ChatMiniMap';
+import MinimapGutter from '@/features/ChatMiniMap/MinimapGutter';
 import { ChatList, ConversationProvider } from '@/features/Conversation';
 import { useMessageDeepLink } from '@/features/Conversation/ChatList/hooks/useMessageDeepLink';
 import ComposerDraftReceiver from '@/features/Conversation/ComposerDraftReceiver';
@@ -137,7 +138,7 @@ const Conversation = memo(() => {
       operationState={operationState}
     >
       <SplitDropZone>
-        <Flexbox
+        <MinimapGutter
           flex={1}
           width={'100%'}
           style={{
@@ -176,7 +177,7 @@ const Conversation = memo(() => {
               }
             />
           )}
-        </Flexbox>
+        </MinimapGutter>
       </SplitDropZone>
       {!isSubagentThread && !topicPending && (
         <MessageForwardFooter>
