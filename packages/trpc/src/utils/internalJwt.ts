@@ -1,8 +1,15 @@
 import { randomUUID } from 'node:crypto';
 
 import debug from 'debug';
-import type { JSONWebKeySet, JWK, JWK_RSA_Public } from 'jose';
-import { calculateJwkThumbprint, createLocalJWKSet, importJWK, jwtVerify, SignJWT } from 'jose';
+import type { JSONWebKeySet, JWK, JWK_RSA_Public, JWTVerifyOptions } from 'jose';
+import {
+  calculateJwkThumbprint,
+  createLocalJWKSet,
+  decodeProtectedHeader,
+  importJWK,
+  jwtVerify,
+  SignJWT,
+} from 'jose';
 
 import { authEnv } from '@/envs/auth';
 
@@ -88,8 +95,34 @@ const getSigningKey = async () => {
 /**
  * Get RSA public key for verification
  */
-const getVerificationKeySet = async () =>
-  createLocalJWKSet({ keys: await Promise.all(getJwksKeys().map(toPublicRsaKey)) });
+const isSignatureVerificationError = (error: unknown) =>
+  typeof error === 'object' &&
+  error !== null &&
+  'code' in error &&
+  error.code === 'ERR_JWS_SIGNATURE_VERIFICATION_FAILED';
+
+const verifyJwt = async (token: string, options: JWTVerifyOptions) => {
+  const publicKeys = await Promise.all(getJwksKeys().map(toPublicRsaKey));
+
+  if (decodeProtectedHeader(token).kid) {
+    return jwtVerify(token, createLocalJWKSet({ keys: publicKeys }), options);
+  }
+
+  // Tokens issued before this rotation support landed did not include `kid`.
+  // Try each retained key only for those in-flight tokens; newly issued tokens
+  // keep the exact-key lookup above and avoid ambiguous JWKS selection.
+  let signatureError: unknown;
+  for (const publicKey of publicKeys) {
+    try {
+      return await jwtVerify(token, await importJWK(publicKey, 'RS256'), options);
+    } catch (error) {
+      if (!isSignatureVerificationError(error)) throw error;
+      signatureError = error;
+    }
+  }
+
+  throw signatureError ?? new Error('No RSA key available for JWT verification');
+};
 
 /**
  * Sign JWT for internal lambda → async calls
@@ -212,8 +245,7 @@ export const validateHeteroOperationJWT = async (
   token: string,
 ): Promise<HeteroOperationJwtClaims | null> => {
   try {
-    const publicKeySet = await getVerificationKeySet();
-    const { payload } = await jwtVerify(token, publicKeySet, {
+    const { payload } = await verifyJwt(token, {
       algorithms: ['RS256'],
       audience: HETERO_OPERATION_JWT_AUDIENCE,
       issuer: HETERO_OPERATION_JWT_ISSUER,
@@ -303,9 +335,7 @@ export const validateInternalJWT = async (token: string): Promise<boolean> => {
   try {
     log('Validating internal JWT token');
 
-    const publicKeySet = await getVerificationKeySet();
-
-    const { payload } = await jwtVerify(token, publicKeySet, {
+    const { payload } = await verifyJwt(token, {
       algorithms: ['RS256'],
     });
 

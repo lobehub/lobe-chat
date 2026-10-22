@@ -68,7 +68,7 @@ const toPublicRsaKey = async (key: JWK_RSA_Public): Promise<JWK_RSA_Public> => (
   ...(key.use ? { use: key.use } : {}),
 });
 
-const getVerificationKeySet = async () => {
+const getVerificationKeys = async () => {
   try {
     const jwksString = getJwksKeyString();
 
@@ -87,20 +87,49 @@ const getVerificationKeySet = async () => {
       throw new Error('No RSA key with RS256 algorithm found in JWKS');
     }
 
-    const publicJwks = { keys: publicKeys };
-    const { createLocalJWKSet, importJWK } = await import('jose');
+    const { importJWK } = await import('jose');
 
     // Validate configuration before token verification so a malformed JWK remains an
     // infrastructure error (500) instead of being misreported as invalid user auth (401).
     await Promise.all(publicKeys.map((key) => importJWK(key, 'RS256')));
 
-    return createLocalJWKSet(publicJwks);
+    return publicKeys;
   } catch (error) {
     log('Failed to get JWKS public key: %O', error);
     throw new Error(`JWKS_KEY public key retrieval failed: ${(error as Error).message}`, {
       cause: error,
     });
   }
+};
+
+const isSignatureVerificationError = (error: unknown) =>
+  typeof error === 'object' &&
+  error !== null &&
+  'code' in error &&
+  error.code === 'ERR_JWS_SIGNATURE_VERIFICATION_FAILED';
+
+const verifyJwt = async (token: string, publicKeys: JWK_RSA_Public[]) => {
+  const { createLocalJWKSet, decodeProtectedHeader, importJWK, jwtVerify } = await import('jose');
+  const options = { algorithms: ['RS256'] };
+
+  if (decodeProtectedHeader(token).kid) {
+    return jwtVerify(token, createLocalJWKSet({ keys: publicKeys }), options);
+  }
+
+  // Tokens issued before this rotation support landed did not include `kid`.
+  // Try each retained key only for those in-flight tokens; newly issued tokens
+  // keep the exact-key lookup above and avoid ambiguous JWKS selection.
+  let signatureError: unknown;
+  for (const publicKey of publicKeys) {
+    try {
+      return await jwtVerify(token, await importJWK(publicKey, 'RS256'), options);
+    } catch (error) {
+      if (!isSignatureVerificationError(error)) throw error;
+      signatureError = error;
+    }
+  }
+
+  throw signatureError ?? new Error('No RSA key available for JWT verification');
 };
 
 /**
@@ -116,13 +145,10 @@ export const validateOIDCJWT = async (token: string) => {
   // plain Error so upstream middleware maps them to 500 and triggers ops
   // alerts — treating them as 401 would incorrectly ask clients to re-auth
   // while the real problem is server-side.
-  const publicKeySet = await getVerificationKeySet();
+  const publicKeys = await getVerificationKeys();
 
   try {
-    const { jwtVerify } = await import('jose');
-    const { payload } = await jwtVerify(token, publicKeySet, {
-      algorithms: ['RS256'],
-    });
+    const { payload } = await verifyJwt(token, publicKeys);
 
     log('JWT validation successful, payload: %O', payload);
 
@@ -178,9 +204,8 @@ export const validateOIDCJWT = async (token: string) => {
 };
 
 export const verifyAcceptanceReviewJWT = async (token: string) => {
-  const publicKeySet = await getVerificationKeySet();
-  const { jwtVerify } = await import('jose');
-  const { payload } = await jwtVerify(token, publicKeySet, { algorithms: ['RS256'] });
+  const publicKeys = await getVerificationKeys();
+  const { payload } = await verifyJwt(token, publicKeys);
   const acceptanceId = acceptanceIdFromReviewResource(payload.aud);
   if (!isAcceptanceReviewClient(payload.client_id as string) || !acceptanceId || !payload.sub)
     throw new Error('Not an acceptance review token');
