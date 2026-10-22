@@ -78,11 +78,9 @@ const SharedTopicView = memo<SharedTopicViewProps>(({ messageReadMode }) => {
       actions={id && data?.visibility === 'link' ? <ExplainTopic action={explain} /> : undefined}
       aside={<SharedTopicAside />}
       contentWidth={wideScreen ? undefined : CONVERSATION_MIN_WIDTH}
+      error={error}
       loading={isLoading && !data}
       title={data?.title}
-      error={error}
-      // The SSR document already carries the hero, and SWR revalidates on mount
-      // with that data in cache — gating on `isLoading` alone would blank it.
       compactActions={
         id && data?.visibility === 'link'
           ? [
