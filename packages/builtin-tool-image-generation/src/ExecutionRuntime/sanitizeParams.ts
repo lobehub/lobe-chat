@@ -68,10 +68,17 @@ export const sanitizeImageParams = (
   const referenceUrls = collectReferenceUrls(imageUrl, imageUrls);
   if (referenceUrls.length > 0) {
     if (supported.has('imageUrls')) {
-      result.imageUrls = referenceUrls;
+      const maxCount = schema.imageUrls?.maxCount;
+      const accepted = maxCount ? referenceUrls.slice(0, maxCount) : referenceUrls;
+      result.imageUrls = accepted;
       if (typeof imageUrl === 'string' && imageUrl.trim()) {
         adjustments.push(
           'Merged imageUrl into imageUrls because this model only accepts imageUrls.',
+        );
+      }
+      if (accepted.length < referenceUrls.length) {
+        adjustments.push(
+          `This model accepts at most ${maxCount} reference image${maxCount === 1 ? '' : 's'}; ignored ${referenceUrls.slice(accepted.length).join(', ')}.`,
         );
       }
     } else if (supported.has('imageUrl')) {

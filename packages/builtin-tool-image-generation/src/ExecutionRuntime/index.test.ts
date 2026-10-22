@@ -457,6 +457,28 @@ describe('ImageGenerationExecutionRuntime', () => {
       expect(result.content).toContain('Merged imageUrl into imageUrls');
     });
 
+    it('caps merged references at the schema imageUrls maxCount', async () => {
+      const service = createServiceWithParameters({
+        imageUrls: { default: [], maxCount: 1 },
+        prompt: { default: '' },
+      });
+      const runtime = new ImageGenerationExecutionRuntime(service);
+
+      const result = await runtime.generateImage({
+        imageUrl: 'https://cdn.example.com/a.png',
+        imageUrls: ['https://cdn.example.com/b.png'],
+        prompt: 'Edit the image',
+      });
+
+      expect(getCreateImageParams(service)).toEqual({
+        imageUrls: ['https://cdn.example.com/a.png'],
+        prompt: 'Edit the image',
+      });
+      expect(result.content).toContain(
+        'This model accepts at most 1 reference image; ignored https://cdn.example.com/b.png.',
+      );
+    });
+
     it('uses the first reference image when the model only accepts imageUrl', async () => {
       const service = createServiceWithParameters({
         imageUrl: { default: null },
