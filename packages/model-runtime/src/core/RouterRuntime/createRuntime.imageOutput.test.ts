@@ -20,7 +20,7 @@ const quotaError = {
  */
 const createImageModelResponse = (
   options: ChatMethodOptions | undefined,
-  config: { finalImage?: boolean; label: string },
+  config: { ending?: 'error' | 'image' | 'max-tokens'; label: string },
 ) =>
   new Response(
     new ReadableStream({
@@ -37,7 +37,7 @@ const createImageModelResponse = (
         });
         controller.enqueue(encoder.encode(`${config.label}:thought-image;`));
 
-        if (config.finalImage) {
+        if (config.ending === 'image') {
           await options?.callback?.onContentPart?.({
             content: 'AA==',
             mimeType: 'image/png',
@@ -45,6 +45,14 @@ const createImageModelResponse = (
           });
           controller.enqueue(encoder.encode(`${config.label}:image;`));
           const final = { finishReason: 'STOP', text: '', thinking: `${config.label} thinking` };
+          await options?.callback?.onCompletion?.(final);
+          await options?.callback?.onFinal?.(final);
+        } else if (config.ending === 'max-tokens') {
+          const final = {
+            finishReason: 'MAX_TOKENS',
+            text: '',
+            thinking: `${config.label} thinking`,
+          };
           await options?.callback?.onCompletion?.(final);
           await options?.callback?.onFinal?.(final);
         } else {
@@ -69,14 +77,17 @@ const readStreamError = async (response: Response) => {
   }
 };
 
-const createRuntime = (isImageOutputModel: (model: string) => boolean | Promise<boolean>) => {
+const createRuntime = (
+  isImageOutputModel: (model: string) => boolean | Promise<boolean>,
+  firstEnding: 'error' | 'max-tokens' = 'error',
+) => {
   let calls = 0;
 
   class MockRuntime implements LobeRuntimeAI {
     chat = async (_payload: unknown, options?: ChatMethodOptions) => {
       calls += 1;
       return createImageModelResponse(options, {
-        finalImage: calls > 1,
+        ending: calls > 1 ? 'image' : firstEnding,
         label: `attempt-${calls}`,
       });
     };
@@ -144,6 +155,26 @@ describe('createRouterRuntime image-output stream fallback', () => {
       error: { type: AgentRuntimeErrorType.QuotaLimitReached },
       success: false,
     });
+  });
+
+  it('falls back when an image-output attempt ends cleanly with only reasoning', async () => {
+    const { finished, getCalls, runtime } = createRuntime(() => true, 'max-tokens');
+    const onReasoningPart = vi.fn();
+
+    const response = await runtime.chat(
+      { messages: [], model: 'gemini-nano-banana-2.1' },
+      { callback: { onReasoningPart }, metadata: { trigger: RequestTrigger.Chat } },
+    );
+
+    expect(await response.text()).toBe(
+      'attempt-2:thinking;attempt-2:thought-image;attempt-2:image;',
+    );
+    expect(getCalls()).toBe(2);
+    expect(onReasoningPart.mock.calls.map(([part]) => part.content)).toEqual([
+      'attempt-2 thinking',
+      'AA==',
+    ]);
+    expect(finished.mock.calls.map(([result]) => result.outcome)).toEqual(['empty', 'completed']);
   });
 
   it('keeps reasoning committing output for models without image output', async () => {

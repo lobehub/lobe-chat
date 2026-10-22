@@ -88,6 +88,8 @@ export const observeChatAttempt = async (
   let streamError: unknown;
   let visibleOutput = false;
   let imageCount = 0;
+  /** Images in response content, excluding interim thought images streamed as reasoning. */
+  let deliverableImageCount = 0;
   let toolCallCount = 0;
   let grounding: unknown;
   let content = '';
@@ -232,12 +234,16 @@ export const observeChatAttempt = async (
      * Provider-internal reasoning alone must not turn a blank refusal into a success.
      */
     const isRefusal = isModelRefusalFinishReason(latestFinishData.finishReason);
+    /**
+     * Held reasoning is provisional, so a clean finish with only thinking and thought images
+     * (e.g. `MAX_TOKENS` before the final image) is empty and can still fall back.
+     */
     const empty = isEmptyModelCompletion({
       content: finalContent,
       hasGrounding: Boolean(latestFinishData.grounding ?? grounding),
-      imageCount,
+      imageCount: reasoningIsVisible ? imageCount : deliverableImageCount,
       outputTokens: latestFinishData.usage?.totalOutputTokens ?? observedUsage?.totalOutputTokens,
-      reasoning: isRefusal ? '' : finalReasoning,
+      reasoning: isRefusal || !reasoningIsVisible ? '' : finalReasoning,
       toolCallCount: finalToolCallCount,
     });
 
@@ -296,6 +302,7 @@ export const observeChatAttempt = async (
     ...callback,
     onBase64Image: async (data) => {
       imageCount = Math.max(imageCount, data.images.length);
+      deliverableImageCount = Math.max(deliverableImageCount, data.images.length);
       visibleOutput = true;
       await runOrBuffer(async () => {
         await callback?.onBase64Image?.(data);
@@ -305,8 +312,10 @@ export const observeChatAttempt = async (
       terminalCallback(callback?.onCompletion, data);
     },
     onContentPart: async (data) => {
-      if (data.partType === 'image') imageCount += 1;
-      else content += data.content;
+      if (data.partType === 'image') {
+        imageCount += 1;
+        deliverableImageCount += 1;
+      } else content += data.content;
       if (data.partType === 'image' || data.content.trim()) visibleOutput = true;
       await runOrBuffer(async () => {
         await callback?.onContentPart?.(data);
