@@ -75,7 +75,7 @@ describe('SandboxMiddlewareService', () => {
     const serviceWith = async (stdout: string) => {
       const { SandboxMiddlewareService: TestSandboxMiddlewareService } = await import('../service');
       const callTool = vi.fn(async (name: string, params: Record<string, unknown>) =>
-        String(params.command).includes('.lobe-environment')
+        String(params.command).includes('__lobe_environment_ran')
           ? { result: { exitCode: 0, stderr: '', stdout }, success: true }
           : { result: { exitCode: 0, stderr: '', stdout: `ran ${name}` }, success: true },
       );
@@ -104,7 +104,9 @@ describe('SandboxMiddlewareService', () => {
       await service.callTool('runCommand', { command: 'pwd' });
 
       const commands = callTool.mock.calls.map(([, params]) => String(params.command));
-      expect(commands.filter((command) => command.includes('.lobe-environment'))).toHaveLength(1);
+      expect(commands.filter((command) => command.includes('__lobe_environment_ran'))).toHaveLength(
+        1,
+      );
       expect(commands[0]).toContain('git clone');
       expect((first.result as { stdout: string }).stdout).toBe(
         '[environment] Initialized from the environment Hello.\n\nran runCommand',

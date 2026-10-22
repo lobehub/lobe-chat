@@ -1,5 +1,13 @@
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -9,7 +17,6 @@ import {
   buildSandboxEnvironmentInitCommand,
   environmentInitRan,
   environmentInitReport,
-  SANDBOX_ENVIRONMENT_MARKER,
   type SandboxInitialization,
   toSandboxInitialization,
 } from '../environmentInit';
@@ -97,7 +104,7 @@ describe('buildSandboxEnvironmentInitCommand', () => {
     ...overrides,
   });
 
-  it('clones the repository with its history, runs setup with the variables, and leaves the marker', () => {
+  it('clones the repository with its history and runs setup with the variables, leaving nothing of its own', () => {
     const result = run(buildSandboxEnvironmentInitCommand(init()), work);
 
     expect(result.status).toBe(0);
@@ -108,10 +115,14 @@ describe('buildSandboxEnvironmentInitCommand', () => {
     expect(readFileSync(join(work, 'README.md'), 'utf8')).toBe('hello');
     expect(existsSync(join(work, '.git'))).toBe(true);
     expect(readFileSync(join(work, 'setup.txt'), 'utf8').trim()).toBe('eu');
-    expect(readFileSync(join(work, SANDBOX_ENVIRONMENT_MARKER), 'utf8').trim()).toBe('env_1');
+    // Only what the repository and setup put there: no marker beside them.
+    expect(readdirSync(work).sort()).toEqual(['.git', 'README.md', 'setup.txt']);
+    expect(execFileSync('git', ['status', '--porcelain'], { cwd: work, encoding: 'utf8' })).toBe(
+      '?? setup.txt\n',
+    );
   });
 
-  it('does nothing and prints nothing once the folder has been initialized', () => {
+  it('does nothing and prints nothing once the folder holds the checkout', () => {
     const command = buildSandboxEnvironmentInitCommand(init());
     run(command, work);
     rmSync(join(work, 'setup.txt'));
@@ -122,25 +133,28 @@ describe('buildSandboxEnvironmentInitCommand', () => {
     expect(existsSync(join(work, 'setup.txt'))).toBe(false);
   });
 
-  it('leaves a folder that already holds files alone, and says so once', () => {
+  it('leaves a folder that already holds files alone, silently', () => {
     writeFileSync(join(work, 'mine.txt'), 'work');
-    const command = buildSandboxEnvironmentInitCommand(init());
 
-    const result = run(command, work);
+    const result = run(buildSandboxEnvironmentInitCommand(init()), work);
 
-    expect(environmentInitReport(result.stdout)).toContain('already has files');
+    expect(result).toEqual({ status: 0, stdout: '' });
     expect(existsSync(join(work, 'README.md'))).toBe(false);
-    expect(run(command, work).stdout).toBe('');
   });
 
-  it('reports a failed setup without rerunning it on the next call', () => {
-    const command = buildSandboxEnvironmentInitCommand(init({ bootstrapCommand: 'exit 7' }));
+  it('reports a failed setup, and tries again only while the folder is still empty', () => {
+    const failing = buildSandboxEnvironmentInitCommand(
+      init({ bootstrapCommand: 'exit 7', sources: [] }),
+    );
 
-    const result = run(command, work);
+    expect(environmentInitReport(run(failing, work).stdout)).toContain('failed (exit 7)');
+    expect(readdirSync(work)).toEqual([]);
+    expect(environmentInitRan(run(failing, work).stdout)).toBe(true);
 
-    expect(environmentInitReport(result.stdout)).toContain('failed (exit 7)');
-    expect(readFileSync(join(work, SANDBOX_ENVIRONMENT_MARKER), 'utf8')).toContain('failed');
-    expect(run(command, work).stdout).toBe('');
+    // A failure after the clone leaves the checkout, which counts as initialized.
+    const afterClone = buildSandboxEnvironmentInitCommand(init({ bootstrapCommand: 'exit 3' }));
+    expect(environmentInitReport(run(afterClone, work).stdout)).toContain('failed (exit 3)');
+    expect(run(afterClone, work).stdout).toBe('');
   });
 
   it('keeps the variables out of the shell that runs afterwards', () => {
