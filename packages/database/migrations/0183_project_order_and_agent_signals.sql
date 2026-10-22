@@ -1,8 +1,3 @@
-ALTER TABLE "projects" DROP CONSTRAINT IF EXISTS "projects_coordinator_agent_id_agents_id_fk";--> statement-breakpoint
-DROP INDEX IF EXISTS "projects_coordinator_agent_id_unique";--> statement-breakpoint
-ALTER TABLE "projects" ALTER COLUMN "coordinator_agent_id" DROP NOT NULL;--> statement-breakpoint
-ALTER TABLE "projects" ADD CONSTRAINT "projects_coordinator_agent_id_agents_id_fk" FOREIGN KEY ("coordinator_agent_id") REFERENCES "public"."agents"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "projects_coordinator_agent_id_idx" ON "projects" USING btree ("coordinator_agent_id");--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "agent_inbox_messages" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"agent_id" text NOT NULL,
@@ -71,61 +66,77 @@ CREATE TABLE IF NOT EXISTS "signals" (
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );--> statement-breakpoint
+ALTER TABLE "projects" ALTER COLUMN "identifier" DROP NOT NULL;--> statement-breakpoint
+ALTER TABLE "projects" ADD COLUMN IF NOT EXISTS "sort_order" integer;--> statement-breakpoint
 DO $$ BEGIN
   ALTER TABLE "agent_inbox_messages" ADD CONSTRAINT "agent_inbox_messages_agent_id_agents_id_fk" FOREIGN KEY ("agent_id") REFERENCES "public"."agents"("id") ON DELETE cascade ON UPDATE no action;
-EXCEPTION WHEN duplicate_object THEN NULL;
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
 END $$;--> statement-breakpoint
 DO $$ BEGIN
   ALTER TABLE "agent_inbox_messages" ADD CONSTRAINT "agent_inbox_messages_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
-EXCEPTION WHEN duplicate_object THEN NULL;
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
 END $$;--> statement-breakpoint
 DO $$ BEGIN
   ALTER TABLE "agent_inbox_messages" ADD CONSTRAINT "agent_inbox_messages_workspace_id_workspaces_id_fk" FOREIGN KEY ("workspace_id") REFERENCES "public"."workspaces"("id") ON DELETE cascade ON UPDATE no action;
-EXCEPTION WHEN duplicate_object THEN NULL;
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
 END $$;--> statement-breakpoint
 DO $$ BEGIN
   ALTER TABLE "agent_inbox_messages" ADD CONSTRAINT "agent_inbox_messages_account_id_agent_accounts_id_fk" FOREIGN KEY ("account_id") REFERENCES "public"."agent_accounts"("id") ON DELETE cascade ON UPDATE no action;
-EXCEPTION WHEN duplicate_object THEN NULL;
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
 END $$;--> statement-breakpoint
 DO $$ BEGIN
   ALTER TABLE "agent_inbox_messages" ADD CONSTRAINT "agent_inbox_messages_topic_id_topics_id_fk" FOREIGN KEY ("topic_id") REFERENCES "public"."topics"("id") ON DELETE set null ON UPDATE no action;
-EXCEPTION WHEN duplicate_object THEN NULL;
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
 END $$;--> statement-breakpoint
 DO $$ BEGIN
   ALTER TABLE "agent_mails" ADD CONSTRAINT "agent_mails_agent_id_agents_id_fk" FOREIGN KEY ("agent_id") REFERENCES "public"."agents"("id") ON DELETE cascade ON UPDATE no action;
-EXCEPTION WHEN duplicate_object THEN NULL;
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
 END $$;--> statement-breakpoint
 DO $$ BEGIN
   ALTER TABLE "agent_mails" ADD CONSTRAINT "agent_mails_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
-EXCEPTION WHEN duplicate_object THEN NULL;
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
 END $$;--> statement-breakpoint
 DO $$ BEGIN
   ALTER TABLE "agent_mails" ADD CONSTRAINT "agent_mails_workspace_id_workspaces_id_fk" FOREIGN KEY ("workspace_id") REFERENCES "public"."workspaces"("id") ON DELETE cascade ON UPDATE no action;
-EXCEPTION WHEN duplicate_object THEN NULL;
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
 END $$;--> statement-breakpoint
 DO $$ BEGIN
   ALTER TABLE "agent_mails" ADD CONSTRAINT "agent_mails_account_id_agent_accounts_id_fk" FOREIGN KEY ("account_id") REFERENCES "public"."agent_accounts"("id") ON DELETE cascade ON UPDATE no action;
-EXCEPTION WHEN duplicate_object THEN NULL;
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
 END $$;--> statement-breakpoint
 DO $$ BEGIN
   ALTER TABLE "agent_mails" ADD CONSTRAINT "agent_mails_signal_id_signals_id_fk" FOREIGN KEY ("signal_id") REFERENCES "public"."signals"("id") ON DELETE set null ON UPDATE no action;
-EXCEPTION WHEN duplicate_object THEN NULL;
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
 END $$;--> statement-breakpoint
 DO $$ BEGIN
   ALTER TABLE "signals" ADD CONSTRAINT "signals_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
-EXCEPTION WHEN duplicate_object THEN NULL;
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
 END $$;--> statement-breakpoint
 DO $$ BEGIN
   ALTER TABLE "signals" ADD CONSTRAINT "signals_workspace_id_workspaces_id_fk" FOREIGN KEY ("workspace_id") REFERENCES "public"."workspaces"("id") ON DELETE cascade ON UPDATE no action;
-EXCEPTION WHEN duplicate_object THEN NULL;
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
 END $$;--> statement-breakpoint
 DO $$ BEGIN
   ALTER TABLE "signals" ADD CONSTRAINT "signals_account_id_agent_accounts_id_fk" FOREIGN KEY ("account_id") REFERENCES "public"."agent_accounts"("id") ON DELETE set null ON UPDATE no action;
-EXCEPTION WHEN duplicate_object THEN NULL;
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
 END $$;--> statement-breakpoint
 DO $$ BEGIN
   ALTER TABLE "signals" ADD CONSTRAINT "signals_agent_id_agents_id_fk" FOREIGN KEY ("agent_id") REFERENCES "public"."agents"("id") ON DELETE set null ON UPDATE no action;
-EXCEPTION WHEN duplicate_object THEN NULL;
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
 END $$;--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "agent_inbox_messages_source_unique" ON "agent_inbox_messages" USING btree ("source_type","source_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "agent_inbox_messages_agent_received_at_idx" ON "agent_inbox_messages" USING btree ("agent_id","received_at");--> statement-breakpoint
@@ -142,4 +153,6 @@ CREATE INDEX IF NOT EXISTS "agent_mails_user_id_idx" ON "agent_mails" USING btre
 CREATE UNIQUE INDEX IF NOT EXISTS "signals_source_external_id_unique" ON "signals" USING btree ("source","external_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "signals_status_created_at_idx" ON "signals" USING btree ("status","created_at");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "signals_account_created_at_idx" ON "signals" USING btree ("account_id","created_at");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "signals_user_id_idx" ON "signals" USING btree ("user_id");
+CREATE INDEX IF NOT EXISTS "signals_user_id_idx" ON "signals" USING btree ("user_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "projects_user_id_sort_order_idx" ON "projects" USING btree ("user_id","sort_order");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "projects_workspace_id_sort_order_idx" ON "projects" USING btree ("workspace_id","sort_order");

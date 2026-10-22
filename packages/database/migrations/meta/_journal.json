@@ -1278,8 +1278,15 @@
     {
       "idx": 182,
       "version": "7",
-      "when": 1792257686899,
-      "tag": "0182_project_main_agent_and_agent_signals",
+      "when": 1792246871224,
+      "tag": "0182_project_coordinator_nullable",
+      "breakpoints": true
+    },
+    {
+      "idx": 183,
+      "version": "7",
+      "when": 1792606514901,
+      "tag": "0183_project_order_and_agent_signals",
       "breakpoints": true
     }
   ],

@@ -135,10 +135,10 @@ describe('agent_mails and agent_inbox_messages', () => {
   });
 });
 
-describe('migration 0182', () => {
+describe('migration 0183', () => {
   it('converges when re-run on a database that already has it', async () => {
     const statements = readFileSync(
-      path.join(migrationsFolder, '0182_project_main_agent_and_agent_signals.sql'),
+      path.join(migrationsFolder, '0183_project_order_and_agent_signals.sql'),
       'utf8',
     )
       .split('--> statement-breakpoint')
@@ -148,5 +148,21 @@ describe('migration 0182', () => {
     for (const statement of statements) {
       await serverDB.execute(sql.raw(statement));
     }
+  });
+
+  it('adds the manual project order and makes the identifier optional', async () => {
+    const columns = await serverDB.execute<{
+      column_name: string;
+      is_nullable: string;
+    }>(sql`
+      SELECT column_name, is_nullable FROM information_schema.columns
+      WHERE table_name = 'projects' AND column_name IN ('identifier', 'sort_order')
+      ORDER BY column_name
+    `);
+
+    expect(columns.rows).toEqual([
+      { column_name: 'identifier', is_nullable: 'YES' },
+      { column_name: 'sort_order', is_nullable: 'YES' },
+    ]);
   });
 });

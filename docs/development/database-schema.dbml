@@ -3005,12 +3005,13 @@ table project_working_directories {
 table projects {
   id text [pk, not null]
   slug varchar(100)
-  identifier varchar(6) [not null]
+  identifier varchar(6)
   name varchar(255) [not null]
   description text
   avatar text
   coordinator_agent_id text
   status text [not null, default: 'backlog']
+  sort_order integer
   user_id text [not null]
   workspace_id text
   visibility text [not null, default: 'public']
@@ -3031,6 +3032,8 @@ table projects {
     (workspace_id, identifier) [name: 'projects_identifier_workspace_id_unique', unique]
     user_id [name: 'projects_user_id_idx']
     workspace_id [name: 'projects_workspace_id_idx']
+    (user_id, sort_order) [name: 'projects_user_id_sort_order_idx']
+    (workspace_id, sort_order) [name: 'projects_workspace_id_sort_order_idx']
     (workspace_id, visibility, user_id) [name: 'projects_workspace_visibility_idx']
     (status, updated_at) [name: 'projects_status_updated_at_idx']
     coordinator_agent_id [name: 'projects_coordinator_agent_id_idx']
