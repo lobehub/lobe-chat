@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { sx } from '@/styles/sx';
 
 import { MIN_RAIL_ANCHORS } from './resultAnchors';
-import { RAIL_ROW, RAIL_TOP, useResultAnchorRail } from './useResultAnchorRail';
+import { useResultAnchorRail } from './useResultAnchorRail';
 
 /**
  * A scroll rail for the long 结果交付 page. At rest it is a column of ticks in
