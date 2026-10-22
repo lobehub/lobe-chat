@@ -3814,7 +3814,6 @@ export default {
     'Some expanded folders are too large to list fully — only the first entries are shown',
   'workingPanel.files.views.changes': 'Git Changes',
   'workingPanel.files.views.project': 'Project',
-  'workingPanel.files.views.title': 'File View',
   'workingPanel.pr.action.arming': 'Arming auto-merge…',
   'workingPanel.pr.action.autoMerge': 'Auto-merge when ready',
   'workingPanel.pr.action.bypassSuffix': 'bypass rules',

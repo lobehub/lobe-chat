@@ -77,7 +77,7 @@ describe('Files — reveal request integration', () => {
   it('switches from the project view to a Git changes view', () => {
     render(<Files workingDirectory="/repo" />);
 
-    fireEvent.click(screen.getByText('workingPanel.files.views.changes'));
+    fireEvent.click(screen.getByTitle('workingPanel.files.views.changes'));
 
     expect((explorerTreeProps.current?.nodes as { id: string }[]).map((node) => node.id)).toEqual([
       '\0project-root',
@@ -92,7 +92,7 @@ describe('Files — reveal request integration', () => {
   it('sends active Git and ignore filters to the file host before search truncation', async () => {
     render(<Files workingDirectory="/repo" />);
 
-    fireEvent.click(screen.getByText('workingPanel.files.views.changes'));
+    fireEvent.click(screen.getByTitle('workingPanel.files.views.changes'));
     fireEvent.click(screen.getByText('workingPanel.files.filters.hideIgnored'));
     expandSearch();
     fireEvent.change(screen.getByPlaceholderText('workingPanel.files.searchPlaceholder'), {
@@ -114,7 +114,7 @@ describe('Files — reveal request integration', () => {
   it('resets the Git changes view when the workspace changes or is not Git-backed', async () => {
     const { rerender } = render(<Files workingDirectory="/repo" />);
 
-    fireEvent.click(screen.getByText('workingPanel.files.views.changes'));
+    fireEvent.click(screen.getByTitle('workingPanel.files.views.changes'));
     expect(
       (explorerTreeProps.current?.nodes as { id: string }[]).map((node) => node.id),
     ).not.toContain('.env.local');
@@ -126,7 +126,7 @@ describe('Files — reveal request integration', () => {
       ).toContain('.env.local');
     });
 
-    fireEvent.click(screen.getByText('workingPanel.files.views.changes'));
+    fireEvent.click(screen.getByTitle('workingPanel.files.views.changes'));
     rerender(<Files workingDirectory="/non-git" />);
     await waitFor(() => {
       expect(

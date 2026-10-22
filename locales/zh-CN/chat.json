@@ -3206,7 +3206,6 @@
   "workingPanel.files.validation.whitespace": "名称首尾不能有空格",
   "workingPanel.files.views.changes": "Git 变更",
   "workingPanel.files.views.project": "项目",
-  "workingPanel.files.views.title": "文件视图",
   "workingPanel.goal.collapse": "收起",
   "workingPanel.goal.decision": "{{count}} 个决策待处理",
   "workingPanel.goal.more": "还有 {{count}} 个",
