@@ -1,6 +1,8 @@
 import { EMPTY_ARRAY } from '@lobechat/const';
 import type { DeviceClaudeCodeMemoryFile } from '@lobechat/types';
-import { ActionIcon, Center, createStaticStyles, Empty, Flexbox, Icon, Text } from '@lobehub/ui';
+import { ActionIcon, Center, Empty, Flexbox, Icon, Text } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { BrainIcon, FileTextIcon, RefreshCwIcon } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,48 +14,47 @@ import { useChatStore } from '@/store/chat';
 import { groupMemoryFiles, memoryFilePortalTarget } from './memoryView';
 import { useClaudeCodeMemory } from './useClaudeCodeMemory';
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  description: css`
-    padding-inline-start: 20px;
-    font-size: 12px;
-    line-height: 1.5;
-    color: ${cssVar.colorTextTertiary};
-  `,
-  item: css`
-    cursor: pointer;
-
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-
-    width: 100%;
-    padding-block: 6px;
-    padding-inline: 4px 8px;
-    border: none;
-    border-radius: 6px;
-
-    font-size: 13px;
-    color: ${cssVar.colorTextSecondary};
-    text-align: start;
-
-    background: transparent;
-
-    &:hover,
-    &:focus-visible {
-      color: ${cssVar.colorText};
-      background: ${cssVar.colorFillTertiary};
-    }
-  `,
-  itemIcon: css`
-    flex-shrink: 0;
-    color: ${cssVar.colorTextTertiary};
-  `,
-  location: css`
-    flex: 1;
-    min-width: 0;
-    font-size: 12px;
-  `,
-}));
+const styles = stylex.create({
+  description: {
+    color: cssVar.colorTextTertiary,
+    fontSize: 12,
+    lineHeight: 1.5,
+    paddingInlineStart: 20,
+  },
+  item: {
+    backgroundColor: {
+      ':focus-visible': cssVar.colorFillTertiary,
+      ':hover': cssVar.colorFillTertiary,
+      'default': 'transparent',
+    },
+    borderRadius: 6,
+    borderStyle: 'none',
+    color: {
+      ':focus-visible': cssVar.colorText,
+      ':hover': cssVar.colorText,
+      'default': cssVar.colorTextSecondary,
+    },
+    cursor: 'pointer',
+    display: 'flex',
+    flexDirection: 'column',
+    fontSize: 13,
+    gap: 2,
+    paddingBlock: 6,
+    paddingInlineEnd: 8,
+    paddingInlineStart: 4,
+    textAlign: 'start',
+    width: '100%',
+  },
+  itemIcon: {
+    color: cssVar.colorTextTertiary,
+    flexShrink: 0,
+  },
+  location: {
+    flex: '1',
+    fontSize: 12,
+    minWidth: 0,
+  },
+});
 
 interface MemoryRowProps {
   file: DeviceClaudeCodeMemoryFile;
@@ -66,19 +67,19 @@ const MemoryRow = memo<MemoryRowProps>(({ file, indexHint, onOpen }) => {
 
   return (
     <button
-      className={styles.item}
+      {...stylex.props(styles.item)}
       title={file.relativePath}
       type="button"
       onClick={() => onOpen(file)}
     >
       <Flexbox horizontal align={'center'} gap={6} width={'100%'}>
-        <Icon className={styles.itemIcon} icon={FileTextIcon} size={14} />
+        <Icon {...stylex.props(styles.itemIcon)} icon={FileTextIcon} size={14} />
         <Text ellipsis style={{ color: 'inherit', flex: 1, minWidth: 0 }}>
           {file.isIndex ? file.relativePath : file.name}
         </Text>
       </Flexbox>
       {description && (
-        <Text className={styles.description} ellipsis={{ rows: 2 }}>
+        <Text {...stylex.props(styles.description)} ellipsis={{ rows: 2 }}>
           {description}
         </Text>
       )}
@@ -136,24 +137,24 @@ export const MemoryPane = memo<MemoryPaneProps>(({ deviceId, workingDirectory })
         empty={
           <Center flex={1} paddingBlock={24}>
             <Empty
-              description={t('workingPanel.memory.empty.description')}
+              description={t('workingPanel.claudeMemory.empty.description')}
               icon={BrainIcon}
-              title={t('workingPanel.memory.empty.title')}
+              title={t('workingPanel.claudeMemory.empty.title')}
             />
           </Center>
         }
         onRetry={refresh}
       >
         <Flexbox horizontal align={'center'} gap={4} paddingInline={4}>
-          <Text ellipsis className={styles.location} title={memoryDir} type={'secondary'}>
-            {t('workingPanel.memory.location', { path: memoryDir })}
+          <Text ellipsis {...stylex.props(styles.location)} title={memoryDir} type={'secondary'}>
+            {t('workingPanel.claudeMemory.location', { path: memoryDir })}
           </Text>
           <ActionIcon
-            aria-label={t('workingPanel.memory.refresh')}
+            aria-label={t('workingPanel.claudeMemory.refresh')}
             icon={RefreshCwIcon}
             loading={isValidating}
             size={'small'}
-            title={t('workingPanel.memory.refresh')}
+            title={t('workingPanel.claudeMemory.refresh')}
             onClick={refresh}
           />
         </Flexbox>
@@ -162,13 +163,13 @@ export const MemoryPane = memo<MemoryPaneProps>(({ deviceId, workingDirectory })
             key={group.key}
             sectionHeader={{
               count: group.files.length,
-              title: t(`workingPanel.memory.group.${group.key}`),
+              title: t(`workingPanel.claudeMemory.group.${group.key}`),
             }}
           >
             {group.files.map((file) => (
               <MemoryRow
                 file={file}
-                indexHint={t('workingPanel.memory.indexHint')}
+                indexHint={t('workingPanel.claudeMemory.indexHint')}
                 key={file.path}
                 onOpen={openMemory}
               />

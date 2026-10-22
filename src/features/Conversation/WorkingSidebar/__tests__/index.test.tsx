@@ -728,12 +728,12 @@ describe('AgentWorkingSidebar — tab strip', () => {
     effectiveConfig.agencyConfig = { executionTarget: 'local' };
     reviewState.workingDirectory = '/repo';
     localStorageState.openTabsByContext = {};
-    globalStore.status.workingSidebarTab = 'memory';
+    globalStore.status.workingSidebarTab = 'claudeMemory';
 
     render(<AgentWorkingSidebar />);
 
     const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('button[data-tab-key]'));
-    expect(tabs.map((tab) => tab.dataset.tabKey)).toEqual(['files', 'skills', 'memory']);
+    expect(tabs.map((tab) => tab.dataset.tabKey)).toEqual(['files', 'skills', 'claudeMemory']);
     expect(screen.getByTestId('memory-pane')).toHaveTextContent('/repo');
   });
 
@@ -755,7 +755,7 @@ describe('AgentWorkingSidebar — tab strip', () => {
       render(<AgentWorkingSidebar />);
 
       const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('button[data-tab-key]'));
-      expect(tabs.map((tab) => tab.dataset.tabKey)).not.toContain('memory');
+      expect(tabs.map((tab) => tab.dataset.tabKey)).not.toContain('claudeMemory');
       expect(screen.queryByTestId('memory-pane')).toBeNull();
     },
   );

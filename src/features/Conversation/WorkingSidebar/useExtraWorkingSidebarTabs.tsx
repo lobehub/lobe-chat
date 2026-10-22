@@ -13,7 +13,7 @@ import { agentSelectors } from '@/store/agent/selectors';
 
 import { MemoryPane } from './Memory/MemoryPane';
 
-const MEMORY_TAB_KEY = 'memory';
+const CLAUDE_MEMORY_TAB_KEY = 'claudeMemory';
 
 export interface ExtraWorkingSidebarTab extends BusinessWorkingSidebarTab {
   icon: IconProps['icon'];
@@ -59,8 +59,8 @@ export const useExtraWorkingSidebarTabs = ({
         ? [
             {
               icon: BrainIcon,
-              key: MEMORY_TAB_KEY,
-              label: t('workingPanel.memory.title'),
+              key: CLAUDE_MEMORY_TAB_KEY,
+              label: t('workingPanel.claudeMemory.title'),
               pane: (
                 <MemoryPane
                   deviceId={remoteDeviceId}
