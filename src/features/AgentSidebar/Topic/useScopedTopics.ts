@@ -11,8 +11,9 @@ import {
   useProjectTopics,
 } from '@/store/projectWorkingDirectory';
 import type { ChatTopic, GroupedTopic, TopicGroupMode, TopicSortBy } from '@/types/topic';
+import { filterTopics } from '@/utils/client/topic';
 
-import { useTopicListReveal, useTopicListScope } from './TopicListScope';
+import { useTopicListFilter, useTopicListReveal, useTopicListScope } from './TopicListScope';
 
 export const useScopedTopics = () => {
   const scope = useTopicListScope();
@@ -62,29 +63,41 @@ export const useScopedSidebarTopics = (
   const visibleLimit = pageSize + (reveal?.extraRows ?? 0);
   const running = useChatStore(operationSelectors.visiblyRunningTopicIds);
   const directories = useProjectDirectories(scope?.projectId);
-  const visible = useMemo(() => {
+  const filter = useTopicListFilter()?.filter;
+  const filtering = !!(filter?.status || filter?.device);
+  // The status / device filter is an explicit ask, so it narrows the list
+  // strictly — unlike the archived toggle, which keeps the open topic in view.
+  const candidates = useMemo(() => {
     const list: ChatTopic[] = (topics ?? []).filter(
       (topic) => !topic.trigger || !MAIN_SIDEBAR_EXCLUDE_TRIGGERS.includes(topic.trigger),
     );
-    return selectSidebarTopics(
-      list,
-      visibleLimit,
-      sortBy,
-      includeCompleted,
-      list.find((topic) => topic.id === topicId),
-    );
-  }, [topics, topicId, visibleLimit, sortBy, includeCompleted]);
+    return {
+      active: filtering ? undefined : list.find((topic) => topic.id === topicId),
+      filtered:
+        filter && filtering
+          ? filterTopics(list, filter, { directories, loadingTopicIds: running })
+          : list,
+    };
+  }, [topics, topicId, filter, filtering, directories, running]);
+  const visible = useMemo(
+    () =>
+      selectSidebarTopics(
+        candidates.filtered,
+        visibleLimit,
+        sortBy,
+        includeCompleted,
+        candidates.active,
+      ),
+    [candidates, visibleLimit, sortBy, includeCompleted],
+  );
   const coordinatorAgentId = scope?.coordinatorAgentId;
   const groups = useMemo(() => {
     const grouped = groupSidebarTopics(visible, groupMode, sortBy, running, directories);
     return groupMode === 'byAgent' ? pinCoordinatorGroup(grouped, coordinatorAgentId) : grouped;
   }, [visible, groupMode, sortBy, running, directories, coordinatorAgentId]);
   const hasMore =
-    (topics ?? []).filter(
-      (topic) =>
-        (!topic.trigger || !MAIN_SIDEBAR_EXCLUDE_TRIGGERS.includes(topic.trigger)) &&
-        (includeCompleted || topic.status !== 'completed'),
-    ).length > visibleLimit;
+    candidates.filtered.filter((topic) => includeCompleted || topic.status !== 'completed').length >
+    visibleLimit;
   return {
     scope,
     topics: visible,

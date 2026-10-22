@@ -10,11 +10,13 @@ import type { TopicGroupMode, TopicSortBy } from '@/types/topic';
 
 import { useAgentTopicGroupMode } from './hooks/useAgentTopicGroupMode';
 import { useTopicListScope } from './TopicListScope';
+import { useProjectTopicFilterItems } from './useProjectTopicFilterItems';
 
 export const useTopicFilterDropdownMenu = (): (() => DropdownItem[]) => {
   const { t } = useTranslation('topic');
   const { topicGroupMode, updateTopicGroupMode } = useAgentTopicGroupMode();
   const scope = useTopicListScope();
+  const projectFilterItems = useProjectTopicFilterItems();
 
   const [topicSortBy, topicIncludeCompleted, updatePreference] = useUserStore((s) => [
     preferenceSelectors.topicSortBy(s),
@@ -63,6 +65,8 @@ export const useTopicFilterDropdownMenu = (): (() => DropdownItem[]) => {
       { type: 'divider' as const },
       {
         children: [
+          // A project spans agents and devices; narrow its topics by either.
+          ...projectFilterItems(),
           {
             icon: topicIncludeCompleted ? <Icon icon={LucideCheck} /> : <div />,
             key: 'showCompleted',
@@ -83,6 +87,7 @@ export const useTopicFilterDropdownMenu = (): (() => DropdownItem[]) => {
     topicIncludeCompleted,
     updatePreference,
     updateTopicGroupMode,
+    projectFilterItems,
     scope,
     t,
   ]);

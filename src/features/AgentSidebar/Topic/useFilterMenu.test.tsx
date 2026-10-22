@@ -19,6 +19,16 @@ vi.mock('./TopicListScope', () => ({
   useTopicListScope: () => scopeMock.scope,
 }));
 
+vi.mock('./useProjectTopicFilterItems', () => ({
+  useProjectTopicFilterItems: () => () =>
+    scopeMock.scope
+      ? [
+          { key: 'filter-status', type: 'submenu' },
+          { key: 'filter-device', type: 'submenu' },
+        ]
+      : [],
+}));
+
 vi.mock('./hooks/useAgentTopicGroupMode', () => ({
   useAgentTopicGroupMode: () => ({
     topicGroupMode: groupModeMock.mode,
@@ -77,5 +87,25 @@ describe('useTopicFilterDropdownMenu group modes', () => {
       'filter.groupMode.byDevice',
       'filter.groupMode.flat',
     ]);
+  });
+
+  it('puts the status and device filters ahead of the archived toggle inside a project', () => {
+    scopeMock.scope = { projectId: 'prj-1' };
+
+    const { result } = renderHook(() => useTopicFilterDropdownMenu());
+    const filter = result.current().find((item: any) => item.key === 'filter') as any;
+
+    expect(filter.children.map((child: any) => child.key)).toEqual([
+      'filter-status',
+      'filter-device',
+      'showCompleted',
+    ]);
+  });
+
+  it('keeps only the archived toggle in an agent sidebar', () => {
+    const { result } = renderHook(() => useTopicFilterDropdownMenu());
+    const filter = result.current().find((item: any) => item.key === 'filter') as any;
+
+    expect(filter.children.map((child: any) => child.key)).toEqual(['showCompleted']);
   });
 });
