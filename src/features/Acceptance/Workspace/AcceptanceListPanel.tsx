@@ -724,7 +724,7 @@ const AcceptanceListPanel = memo<AcceptanceListPanelProps>(
                 <Text ellipsis strong style={{ fontSize: 15, minWidth: 0 }}>
                   {t('acceptance.workspace.title')}
                 </Text>
-                <AcceptanceScopeSwitcher />
+                {!projectId && <AcceptanceScopeSwitcher />}
               </Flexbox>
               <button
                 aria-label={t('workspace.collapse')}

@@ -17,6 +17,7 @@ import { acceptanceHomePath } from '../Viewer/routes';
 import AcceptanceListPanel from './AcceptanceListPanel';
 import AcceptanceOnboarding from './AcceptanceOnboarding';
 import { useAcceptanceProjectActionItems } from './AcceptanceProjectActions';
+import AcceptanceScopeSwitcher from './AcceptanceScopeSwitcher';
 import { useReportPanelExpand } from './useReportPanelExpand';
 
 const styles = createStaticStyles(({ css }) => ({
@@ -132,6 +133,7 @@ const AcceptanceWorkspace = memo<AcceptanceWorkspaceProps>(({ projectId }) => {
       titleExtra={
         isSignedIn && (
           <>
+            <AcceptanceScopeSwitcher />
             <ActionIcon
               icon={Menu}
               size={'small'}
