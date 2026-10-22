@@ -9,7 +9,7 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
 
     position: absolute;
     inset-block-start: 50%;
-    inset-inline-end: 4px;
+    inset-inline-start: 7px;
     transform: translateY(-50%);
 
     display: grid;
@@ -52,6 +52,13 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     &:focus-within [data-tab-close] {
       opacity: 1;
     }
+
+    /* the close button takes over the leading icon's slot instead of reserving
+       its own trailing space */
+    &:hover [data-tab-icon],
+    &:focus-within [data-tab-icon] {
+      opacity: 0;
+    }
   `,
   containerActive: css`
     background: ${cssVar.colorFillTertiary};
@@ -68,6 +75,10 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     place-items: center;
 
     color: ${cssVar.colorTextSecondary};
+  `,
+  icon: css`
+    display: flex;
+    transition: opacity 0.15s;
   `,
   label: css`
     overflow: hidden;
@@ -100,7 +111,7 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
       color: ${cssVar.colorText};
     }
   `,
-  tabClosable: css`
+  tabPinned: css`
     padding-inline-end: 30px;
   `,
   trigger: css`
@@ -145,13 +156,15 @@ const WorkspaceTab = memo<WorkspaceTabProps>(
       >
         <button
           aria-pressed={active}
-          className={`${styles.tab} ${onClose || pinned ? styles.tabClosable : ''}`}
+          className={`${styles.tab} ${pinned ? styles.tabPinned : ''}`}
           data-tab-key={tabKey}
           type="button"
           onClick={onSelect}
         >
           <span className={styles.trigger}>
-            {iconNode ?? <Icon icon={icon} size={14} />}
+            <span className={styles.icon} data-tab-icon={onClose && !pinned ? '' : undefined}>
+              {iconNode ?? <Icon icon={icon} size={14} />}
+            </span>
             <span className={styles.label}>{label}</span>
           </span>
         </button>
