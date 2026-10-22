@@ -69,6 +69,47 @@ describe('createOpenAICompatibleImage', () => {
       ]);
     });
 
+    it('downloads remote references concurrently and keeps their order', async () => {
+      vi.spyOn(uriParserModule, 'parseDataUri').mockReturnValue({
+        base64: null,
+        mimeType: null,
+        type: 'url',
+      });
+      const resolvers: Record<string, () => void> = {};
+      vi.spyOn(imageToBase64Module, 'imageUrlToBase64').mockImplementation(
+        (url: string) =>
+          new Promise((resolve) => {
+            resolvers[url] = () => resolve({ base64: url.slice(-1), mimeType: 'image/png' });
+          }),
+      );
+      vi.mocked(mockClient.chat.completions.create).mockResolvedValue({
+        choices: [{ message: { images: [{ image_url: { url: 'data:image/png;base64,out' } }] } }],
+      } as any);
+
+      const pending = createOpenAICompatibleImage(
+        mockClient,
+        {
+          model: 'gemini-3.1-flash-image:image',
+          params: {
+            imageUrls: ['https://cdn.example.com/a', 'https://cdn.example.com/b'],
+            prompt: 'Combine these',
+          },
+        },
+        'openrouter',
+      );
+
+      await vi.waitFor(() => expect(Object.keys(resolvers)).toHaveLength(2));
+      resolvers['https://cdn.example.com/b']();
+      resolvers['https://cdn.example.com/a']();
+      await pending;
+
+      const [request] = vi.mocked(mockClient.chat.completions.create).mock.calls[0];
+      expect((request as any).messages[0].content.slice(1)).toEqual([
+        { image_url: { url: 'data:image/png;base64,a' }, type: 'image_url' },
+        { image_url: { url: 'data:image/png;base64,b' }, type: 'image_url' },
+      ]);
+    });
+
     describe('processImageUrlForChat function', () => {
       it('should process base64 data URI correctly', async () => {
         const mockImageUrl =

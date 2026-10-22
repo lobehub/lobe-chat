@@ -203,20 +203,20 @@ async function generateByChatModel(
     ),
   ];
 
-  for (const imageUrl of referenceUrls) {
-    log('Processing image URL for editing mode: %s', imageUrl);
-    try {
-      const processedImageUrl = await processImageUrlForChat(imageUrl);
-      content.push({
-        image_url: {
-          url: processedImageUrl,
-        },
-        type: 'image_url',
-      });
-      log('Successfully processed image URL for chat input');
-    } catch (error) {
-      throw new Error(`Failed to process image URL: ${error}`, { cause: error });
-    }
+  // Download references concurrently; Promise.all keeps their order for the message content.
+  const processedImageUrls = await Promise.all(
+    referenceUrls.map(async (imageUrl) => {
+      log('Processing image URL for editing mode: %s', imageUrl);
+      try {
+        return await processImageUrlForChat(imageUrl);
+      } catch (error) {
+        throw new Error(`Failed to process image URL: ${error}`, { cause: error });
+      }
+    }),
+  );
+
+  for (const url of processedImageUrls) {
+    content.push({ image_url: { url }, type: 'image_url' });
   }
 
   // Call chat completion API
