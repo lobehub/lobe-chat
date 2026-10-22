@@ -2,7 +2,14 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
-import { documents, knowledgeBases, users, workspaces } from '../../schemas';
+import {
+  documents,
+  files,
+  knowledgeBaseFiles,
+  knowledgeBases,
+  users,
+  workspaces,
+} from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
 import { DocumentModel } from '../document';
 
@@ -108,6 +115,89 @@ describe('DocumentModel.query — creator / standaloneOnly filters', () => {
     expect(await queryIds(userA, { standaloneOnly: true })).toEqual({
       ids: ['a-private', 'a-standalone', 'b-standalone'],
       total: 3,
+    });
+  });
+});
+
+describe('DocumentModel.query — standaloneOnly vs library-backed parsed files', () => {
+  beforeEach(async () => {
+    // A file that lives inside a library, and one that never joined a library.
+    await serverDB.insert(files).values([
+      {
+        fileType: 'application/pdf',
+        id: 'file-in-library',
+        name: 'in-library.pdf',
+        size: 1,
+        url: 'https://example.com/in-library.pdf',
+        userId: userA,
+        workspaceId,
+      },
+      {
+        fileType: 'application/pdf',
+        id: 'file-standalone',
+        name: 'standalone.pdf',
+        size: 1,
+        url: 'https://example.com/standalone.pdf',
+        userId: userA,
+        workspaceId,
+      },
+    ]);
+
+    await serverDB.insert(knowledgeBaseFiles).values({
+      fileId: 'file-in-library',
+      knowledgeBaseId: 'kb-query-filters',
+      userId: userA,
+      workspaceId,
+    });
+
+    // Parsing a library file yields a document with `fileId` but no `knowledgeBaseId`.
+    await serverDB.insert(documents).values([
+      {
+        fileId: 'file-in-library',
+        fileType: 'application/pdf',
+        id: 'a-parsed-from-library',
+        knowledgeBaseId: null,
+        source: 'document',
+        sourceType: 'file',
+        title: 'a-parsed-from-library',
+        totalCharCount: 0,
+        totalLineCount: 0,
+        userId: userA,
+        visibility: 'public',
+        workspaceId,
+      },
+      {
+        fileId: 'file-standalone',
+        fileType: 'application/pdf',
+        id: 'a-own-file',
+        knowledgeBaseId: null,
+        source: 'document',
+        sourceType: 'file',
+        title: 'a-own-file',
+        totalCharCount: 0,
+        totalLineCount: 0,
+        userId: userA,
+        visibility: 'public',
+        workspaceId,
+      },
+    ]);
+  });
+
+  afterEach(async () => {
+    await serverDB.delete(knowledgeBaseFiles);
+  });
+
+  it('leaves out a parsed file whose backing file belongs to a library', async () => {
+    expect(await queryIds(userA, { creator: 'self', standaloneOnly: true })).toEqual({
+      ids: ['a-own-file'],
+      total: 1,
+    });
+  });
+
+  it('keeps the library-backed parsed file when standaloneOnly is not set', async () => {
+    expect(await queryIds(userA, { creator: 'self' })).toEqual({
+      ids: ['a-own-file', 'a-parsed-from-library'],
+      total: 2,
     });
   });
 });

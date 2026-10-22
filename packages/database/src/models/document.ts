@@ -206,7 +206,21 @@ export class DocumentModel {
     if (creator === 'self') conditions.push(eq(documents.userId, this.userId));
     if (creator === 'others') conditions.push(ne(documents.userId, this.userId));
 
-    if (standaloneOnly) conditions.push(isNull(documents.knowledgeBaseId));
+    if (standaloneOnly) {
+      conditions.push(
+        isNull(documents.knowledgeBaseId),
+        // Parsed files taken from a library keep `knowledgeBaseId` null, so the
+        // `knowledgeBaseId` check alone still lets them through. A document that
+        // is backed by a file living in a library is not standalone either.
+        or(
+          isNull(documents.fileId),
+          notInArray(
+            documents.fileId,
+            this.db.select({ fileId: knowledgeBaseFiles.fileId }).from(knowledgeBaseFiles),
+          ),
+        )!,
+      );
+    }
 
     if (excludeKnowledgeBaseIds?.length) {
       conditions.push(
