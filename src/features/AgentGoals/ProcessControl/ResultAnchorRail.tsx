@@ -23,8 +23,10 @@ import { RAIL_ROW, RAIL_TOP, useResultAnchorRail } from './useResultAnchorRail';
 // Hover, or keyboard focus: a click leaves focus behind, and an open panel
 // that outlives the gesture would cover the page it just navigated.
 const RAIL_OPEN = ':is(:hover, :has(:focus-visible))';
+// StyleX cannot read constants imported from regular modules, so RAIL_TOP (96) and RAIL_ROW (22)
+// are written out below; `stylexConstants.test.ts` keeps them in step with useResultAnchorRail.
 const styles = stylex.create({
-  host: { position: 'sticky', zIndex: 10, insetBlockStart: `${RAIL_TOP}px`, height: 0 },
+  host: { position: 'sticky', zIndex: 10, insetBlockStart: '96px', height: 0 },
   item: {
     cursor: 'pointer',
     display: 'flex',
@@ -34,7 +36,7 @@ const styles = stylex.create({
     width: '100%',
     // Fixed, not a minimum: a row that grows taller when the labels open slides
     // every tick below it out from under the pointer between hover and click.
-    height: `${RAIL_ROW}px`,
+    height: '22px',
     padding: 0,
     borderStyle: 'none',
     color: cssVar.colorTextTertiary,
@@ -54,7 +56,7 @@ const styles = stylex.create({
     maxWidth: '240px',
     fontSize: '12px',
     // Matches the row height, so opening the labels changes nothing vertically.
-    lineHeight: `${RAIL_ROW}px`,
+    lineHeight: '22px',
     textAlign: 'start',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
@@ -69,7 +71,7 @@ const styles = stylex.create({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-end',
-    maxHeight: `calc(100vh - ${RAIL_TOP * 2}px)`,
+    maxHeight: 'calc(100vh - 192px)',
     paddingBlock: '6px',
     // The end padding must not change when the labels open: the ticks are
     // anchored to this edge, and a tick that moves out from under the pointer

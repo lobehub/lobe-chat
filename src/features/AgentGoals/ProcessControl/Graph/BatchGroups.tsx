@@ -193,7 +193,8 @@ const styles = stylex.create({
   frameHead: {
     display: 'flex',
     alignItems: 'center',
-    height: `${BATCH_FRAME_HEAD}px`,
+    // BATCH_FRAME_HEAD (38), see stylexConstants.test.ts
+    height: '38px',
     paddingInline: '14px',
     fontSize: '13px',
     fontWeight: 600,
