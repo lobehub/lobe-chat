@@ -621,14 +621,14 @@ const AgentViewAllPage = memo(() => {
                       onToggle={() => toggleGroupCollapsed(group.key)}
                     />
                     {!collapsed && (
-                      <div className={cardStyles.grid}>{group.items.map(renderCard)}</div>
+                      <div {...stylex.props(cardStyles.grid)}>{group.items.map(renderCard)}</div>
                     )}
                   </Flexbox>
                 );
               })}
             </Flexbox>
           ) : (
-            <div className={cardStyles.grid}>{filteredItems.map(renderCard)}</div>
+            <div {...stylex.props(cardStyles.grid)}>{filteredItems.map(renderCard)}</div>
           )
         ) : (
           // Grouped list shares the card branch's wrapper rhythm (outer gap 8,

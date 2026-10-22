@@ -7,14 +7,15 @@ import {
   Avatar,
   Block,
   ContextMenuTrigger,
-  createStaticStyles,
   type DropdownItem,
   Flexbox,
-  responsive,
   Tag,
   Text,
   Tooltip,
 } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import { media } from '@lobehub/ui/stylex/media.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { memo, useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -28,76 +29,62 @@ import LabelTags from './LabelTags';
 // Card layout mirrors the agent channel platform cards
 // (src/features/AgentChannel/PlatformGrid.tsx): icon + title + trailing state on
 // one row, a two-line description below, hover lift on the whole card.
-export const cardStyles = createStaticStyles(({ css, cssVar }) => ({
-  card: css`
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    align-items: stretch;
-
-    min-height: 104px;
-    padding-block: 12px;
-    padding-inline: 12px;
-
-    transition:
-      transform 0.18s,
-      box-shadow 0.18s,
-      border-color 0.18s;
-
-    &:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgb(0 0 0 / 6%);
-    }
-  `,
-  description: css`
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-
-    line-height: 1.5;
-  `,
-  grid: css`
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
-
-    width: 100%;
-    min-width: 0;
-
-    ${responsive.md} {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    ${responsive.sm} {
-      grid-template-columns: minmax(0, 1fr);
-    }
-  `,
-  /* Top-right "…" slot, a SIBLING of the card link (absolutely positioned
-     over it) — nesting an interactive menu trigger inside the <a> would put
-     a button inside a link in the accessibility tree. Aligned with the
-     card's 12px padding so it sits where the header row used to hold it. */
-  actions: css`
-    position: absolute;
-    inset-block-start: 12px;
-    inset-inline-end: 12px;
-  `,
-  link: css`
-    display: block;
-    min-width: 0;
-    height: 100%;
-    color: inherit;
-  `,
-  wrapper: css`
-    position: relative;
-    min-width: 0;
-    height: 100%;
-  `,
-  updatedAt: css`
-    flex: none;
-    color: ${cssVar.colorTextQuaternary};
-  `,
-}));
+export const cardStyles = stylex.create({
+  card: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
+    alignItems: 'stretch',
+    minHeight: '104px',
+    paddingBlock: '12px',
+    paddingInline: '12px',
+    transition: 'transform 0.18s, box-shadow 0.18s, border-color 0.18s',
+    transform: { 'default': null, ':hover': 'translateY(-1px)' },
+    boxShadow: { 'default': null, ':hover': '0 4px 12px rgb(0 0 0 / 6%)' },
+  },
+  description: {
+    overflow: 'hidden',
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: 2,
+    lineHeight: 1.5,
+  },
+  grid: {
+    display: 'grid',
+    gridTemplateColumns: {
+      default: 'repeat(3, minmax(0, 1fr))',
+      [media.md]: 'repeat(2, minmax(0, 1fr))',
+      [media.sm]: 'minmax(0, 1fr)',
+    },
+    gap: '12px',
+    width: '100%',
+    minWidth: '0',
+  },
+  // Top-right "…" slot, a SIBLING of the card link (absolutely positioned
+  // over it) — nesting an interactive menu trigger inside the <a> would put
+  // a button inside a link in the accessibility tree. Aligned with the
+  // card's 12px padding so it sits where the header row used to hold it.
+  actions: {
+    position: 'absolute',
+    insetBlockStart: '12px',
+    insetInlineEnd: '12px',
+  },
+  link: {
+    display: 'block',
+    minWidth: '0',
+    height: '100%',
+    color: 'inherit',
+  },
+  wrapper: {
+    position: 'relative',
+    minWidth: '0',
+    height: '100%',
+  },
+  updatedAt: {
+    flex: 'none',
+    color: cssVar.colorTextQuaternary,
+  },
+});
 
 interface AgentCardProps {
   /** Creator profile; rendered only when `showAuthor` is set. */
@@ -132,15 +119,20 @@ const AgentCard = memo<AgentCardProps>(
 
     return (
       <ContextMenuTrigger items={getContextMenuItems}>
-        <div className={cardStyles.wrapper}>
+        <div {...stylex.props(cardStyles.wrapper)}>
           <WorkspaceLink
             aria-label={displayTitle}
-            className={cardStyles.link}
+            className={stylex.props(cardStyles.link).className}
             ref={setAnchor}
             to={type === 'group' ? GROUP_CHAT_URL(id) : AGENT_CHAT_URL(id, false)}
             onPointerEnter={activateMenu}
           >
-            <Block clickable className={cardStyles.card} height={'100%'} variant={'outlined'}>
+            <Block
+              clickable
+              className={stylex.props(cardStyles.card).className}
+              height={'100%'}
+              variant={'outlined'}
+            >
               {/* Right padding reserves the header slot the absolutely
                   positioned "…" sibling overlays. */}
               <Flexbox
@@ -161,7 +153,11 @@ const AgentCard = memo<AgentCardProps>(
                   ) : null}
                 </Flexbox>
               </Flexbox>
-              <Text className={cardStyles.description} fontSize={12} type={'secondary'}>
+              <Text
+                className={stylex.props(cardStyles.description).className}
+                fontSize={12}
+                type={'secondary'}
+              >
                 {description}
               </Text>
               {item.labels?.length ? (
@@ -191,13 +187,13 @@ const AgentCard = memo<AgentCardProps>(
                 ) : (
                   <div />
                 )}
-                <Text className={cardStyles.updatedAt} fontSize={12}>
+                <Text className={stylex.props(cardStyles.updatedAt).className} fontSize={12}>
                   {updatedAt ? formatUpdatedAt(updatedAt) : '–'}
                 </Text>
               </Flexbox>
             </Block>
           </WorkspaceLink>
-          <span className={cardStyles.actions}>
+          <span {...stylex.props(cardStyles.actions)}>
             {/* Visible "…" trigger AND right-click open the same menu — the
                 context menu alone proved undiscoverable (the sidebar toggle
                 folds into it via includeSidebarToggle). Rendered as a SIBLING
