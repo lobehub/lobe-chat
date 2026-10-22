@@ -17,6 +17,20 @@ export default {
   'backgroundActivity.topic': 'Conversation',
   'backgroundActivity.unavailable':
     'Resource data is unavailable. Displayed values may be out of date.',
+  'heteroAgent.claudeQuota.accountNotSignedIn':
+    "The Claude Code account {{account}} isn't signed in on this device. Sign in to it from Manage accounts, or switch to another account.",
+  'heteroAgent.claudeQuota.accountResolveFailed':
+    "Couldn't look up this Claude Code account's login on this device. Try again, or switch to another account.",
+  'heteroAgent.claudeQuota.manage.add': 'Add account',
+  'heteroAgent.claudeQuota.manage.addHintDesktop':
+    'Each account signs in on this device; runs use the account you pick.',
+  'heteroAgent.claudeQuota.manage.loginFailed': "Sign-in didn't finish. Try again.",
+  'heteroAgent.claudeQuota.manage.loginSuccess': 'Signed in as {{account}}',
+  'heteroAgent.claudeQuota.manage.loginWaiting': 'Finish signing in in your browser…',
+  'heteroAgent.claudeQuota.manage.notSignedIn': 'Not signed in on this device',
+  'heteroAgent.claudeQuota.manage.signIn': 'Sign in',
+  'heteroAgent.claudeQuota.noRunnableAccount':
+    "None of the Claude Code accounts in this agent's rotation are signed in on this device. Sign one in from Manage accounts, or add a signed-in account to the rotation.",
   'processExplorer.copyPid': 'Copy PID',
   'processExplorer.filter': 'Filter',
   'processExplorer.live': 'Live · updates every 2 s',
@@ -50,6 +64,9 @@ export default {
   'goalBatch.planPanel.latest': 'v{{revision}} · latest',
   'goalBatch.planPanel.same': 'Same as v{{base}}',
   'goalBatch.planPanel.unfoldFiles': 'Show files',
+  'goalBatch.probes.attemptNext': 'Next run',
+  'goalBatch.probes.attemptOf': 'Run {{current}} / {{total}}',
+  'goalBatch.probes.attemptPrevious': 'Previous run',
   'goalBatch.probes.cell.backlog': 'Not started',
   'goalBatch.probes.cell.done': 'Done',
   'goalBatch.probes.cell.human': 'Needs you',
@@ -60,6 +77,32 @@ export default {
   'goalBatch.gateCheck.no_open_decision': 'No decision in the batch is waiting on a person',
   'goalBatch.gateCheck.plan_written': 'The batch plan is written',
   'goalBatch.gateCheck.uncovered': 'Not covered: {{values}}',
+  'goalBatch.gateCheck.interventions_accounted': 'Every person’s intervention was accounted for',
+  'goalBatch.gateCheck.reverified': 'The delivered units passed the retro’s criteria',
+  'goalBatch.retro.added': '{{count}} new',
+  'goalBatch.retro.changes': '{{count}} steps changed',
+  'goalBatch.retro.criteria': '{{block}} blocking · {{warn}} advisory',
+  'goalBatch.retro.hint':
+    'What the execution ran into, kept in two layers: experience goes into the plan skill every unit loads, criteria go into the verifier every unit is judged on. The gate opens only after the retro.',
+  'goalBatch.retro.interventionsShort': '{{accounted}}/{{total}} accounted',
+  'goalBatch.retro.loosened': '{{count}} loosened, needs you',
+  'goalBatch.retro.mark.blocked': 'Unaccounted',
+  'goalBatch.retro.mark.done': 'Exp v{{skill}} · Crit v{{verifier}}',
+  'goalBatch.retro.mark.pending': 'Retro owed',
+  'goalBatch.retro.mark.pendingHint': 'This wave finished; its retro has not run yet',
+  'goalBatch.retro.mark.running': 'In retro',
+  'goalBatch.retro.skill': 'Experience · plan skill v{{version}}',
+  'goalBatch.retro.status.blocked': 'Interventions not accounted for',
+  'goalBatch.retro.status.done': 'Retro done',
+  'goalBatch.retro.status.running': 'In retro',
+  'goalBatch.retro.summary.interventions': '{{accounted}}/{{total}} interventions accounted for',
+  'goalBatch.retro.summary.reverify': 'Re-verified {{passed}}/{{total}}',
+  'goalBatch.retro.summary.skill': 'Plan skill v{{version}}: {{count}} steps changed',
+  'goalBatch.retro.summary.verifier':
+    'Verifier v{{version}}: {{added}} added, {{loosened}} loosened',
+  'goalBatch.retro.title': 'Retro · cold start',
+  'goalBatch.retro.titleWave': 'Retro · wave {{wave}} sent back',
+  'goalBatch.retro.verifier': 'Criteria · verifier v{{version}}',
   'goalBatch.gateCheck.units_settled': 'Every unit this round finished',
   'goalBatch.gateCheck.units_succeeded':
     'Every unit this round ran through on its own — none failed or was sent back',
@@ -91,10 +134,14 @@ export default {
   'goalBatch.gatePanel.next.passed':
     'Released wave {{wave}} ({{count}} units) — judged again once it finishes',
   'goalBatch.gatePanel.next.passedDone': 'The whole roster is released',
+  'goalBatch.gatePanel.next.distilling':
+    'The main Agent is updating the plan from what the probes ran into — judged once it is done',
   'goalBatch.gatePanel.next.revising': 'The main Agent is rewriting the plan from your correction',
   'goalBatch.gatePanel.next.rejected': 'Reopened as v{{revision}} on your decision',
   'goalBatch.gatePanel.verdict': 'Verdict',
   'goalBatch.gate.checkCount': '{{count}} checks',
+  'goalBatch.gate.hintSection.execution': 'Execution',
+  'goalBatch.gate.hintSection.retro': 'Retro & criteria',
   'goalBatch.gate.hintTitle': 'Checked before the rest are released:',
   'goalBatch.gate.status.checking': 'Judging',
   'goalBatch.gate.status.human': 'Needs your decision',
@@ -279,6 +326,7 @@ export default {
   'builtinCopilot': 'Built-in Copilot',
   'chatList.earlierHistoryError': "Couldn't load earlier messages",
   'chatList.expandMessage': 'Expand Message',
+  'chatList.laterHistoryError': "Couldn't load later messages",
   'chatList.longMessageDetail': 'View Details',
   'chatList.refreshError': "Couldn't refresh messages",
   'chatList.refreshing': 'Fetching latest messages…',
@@ -287,6 +335,8 @@ export default {
   'compression.cancel': 'Uncompress',
   'compression.cancelConfirm':
     'Are you sure you want to uncompress? This will restore the original messages.',
+  'compression.collapsed': 'Compressed {{turns}} earlier turns · View summary',
+  'compression.collapsedUnknown': 'Compressed earlier history · View summary',
   'compression.history': 'Original conversation',
   'compression.summary': 'History summary',
   'confirmClearCurrentMessages':
@@ -297,16 +347,21 @@ export default {
     'You are about to delete this category. After deletion, its agents will be moved to the default list. Please confirm your action.',
   'confirmRemoveGroupSuccess': 'Group deleted successfully',
   'confirmRemoveSessionItemAlert':
-    'You are about to delete this agent and its conversations. They will be moved to the trash and can be restored within 30 days.',
+    'You are about to delete this agent and its topics. They will be moved to the trash and can be restored within 30 days.',
   'confirmRemoveSessionSuccess': 'Agent removed successfully',
   'defaultAgent': 'Default Agent',
   'defaultGroupChat': 'Group',
   'defaultList': 'Default List',
   'defaultSession': 'Default Agent',
+  'desktopNotification.agentFailed.body': 'Open the conversation for details',
+  'desktopNotification.agentFailed.title': '{{name}} ran into a problem',
   'desktopNotification.aiReplyCompleted.body': 'Agent reply is ready',
   'desktopNotification.aiReplyCompleted.title': 'Reply completed',
   'desktopNotification.humanApprovalRequired.body': 'An Agent needs your approval to continue',
   'desktopNotification.humanApprovalRequired.title': 'Approval required',
+  'desktopNotification.workingDirectoryUnavailable.body': 'Working directory unavailable: {{path}}',
+  'desktopNotification.workingDirectoryUnavailable.bodyWithoutPath':
+    'Working directory unavailable: the folder saved for this conversation no longer exists',
   'cliDetectionTimeoutGuide.actions.openSystemTools': 'Open System Tools',
   'cliDetectionTimeoutGuide.actions.retry': 'Detect again',
   'cliDetectionTimeoutGuide.desc':
@@ -467,6 +522,7 @@ export default {
   'editedFiles.title_one': 'Edited {{count}} file',
   'editedFiles.title_other': 'Edited {{count}} files',
   'editedFiles.hideChanges': 'Hide changes',
+  'editedFiles.previewUnavailable': 'Preview unavailable',
   'editedFiles.showLess': 'Show fewer files',
   'editedFiles.showMore_one': 'Show {{count}} more file',
   'editedFiles.showMore_other': 'Show {{count}} more files',
@@ -819,6 +875,7 @@ export default {
   'heteroAgent.executionTarget.gateway': 'Gateway',
   'heteroAgent.executionTarget.gatewayDesc':
     'Run through the device gateway so other clients can follow progress',
+  'heteroAgent.executionTarget.loadFailed': 'Couldn’t load devices.',
   'heteroAgent.executionTarget.loading': 'Loading devices…',
   'heteroAgent.executionTarget.local': 'Local device',
   'heteroAgent.executionTarget.localDesc': 'Run as a local process on this desktop app',
@@ -842,6 +899,7 @@ export default {
   'heteroAgent.executionTarget.online': 'Online',
   'heteroAgent.executionTarget.onlineConnections_one': 'Online · {{count}} connection',
   'heteroAgent.executionTarget.onlineConnections_other': 'Online · {{count}} connections',
+  'heteroAgent.executionTarget.presenceChecking': 'Checking status…',
   'heteroAgent.executionTarget.projectDevicesHint':
     "Only devices with this project's working directory are listed. Add a directory for another device in the project settings.",
   'heteroAgent.executionTarget.switchProjectTopic.content':
@@ -877,6 +935,10 @@ export default {
   'input.addUser': 'Add a user message',
   'input.agentModeUnsupportedModel':
     'The current model doesn’t support agentic tool calling. Switch to a model with agent capability for the best experience.',
+  'input.agentSlugMoved':
+    'This link now opens a different agent. Switching to it — try again once it opens. Your draft is kept.',
+  'input.agentSlugUnconfirmed':
+    'Couldn’t confirm which agent this link opens. Check your connection, then try again.',
   'input.costEstimate.creditsPerMillionTokens': '{{credits}} credits/M tokens',
   'input.costEstimate.hint': 'Estimated cost: ~{{credits}} credits',
   'input.costEstimate.inputLabel': 'Input',
@@ -927,6 +989,8 @@ export default {
   'inputQueue.queuedHint': 'Sends when the current step finishes',
   'inputQueue.queuedMergeHint': 'Merged and sent when the current step finishes',
   'inputQueue.sendNow': 'Send now (interrupts current run)',
+  'inputQueue.alreadyDelivered': 'Already sent to the agent',
+  'inputQueue.withdrawFailed': 'Couldn’t take the message back. Try again.',
   'intentUnderstanding.title': 'Understanding your intent...',
   'inviteMembers': 'Invite members',
   'knowledgeBase.all': 'All Content',
@@ -1261,12 +1325,17 @@ export default {
   'grokBuildInstallGuide.menuNotification.title': 'Grok Build CLI not found',
   'grokBuildInstallGuide.reason': 'LobeHub could not start Grok Build: {{message}}',
   'grokBuildInstallGuide.title': 'Install Grok Build CLI',
+  'workingDirectoryGuide.actions.resetToSource': 'Switch back to {{name}} and retry',
   'workingDirectoryGuide.actions.retry': 'Retry',
   'workingDirectoryGuide.desc':
     'The working directory saved for this conversation no longer exists.',
   'workingDirectoryGuide.hint':
     'Choose an existing folder from the working directory selector, then retry this message.',
+  'workingDirectoryGuide.resetFailed':
+    'Could not switch back to the main directory. Please try again.',
   'workingDirectoryGuide.title': 'Working directory unavailable',
+  'workingDirectoryGuide.worktreeHint':
+    'This conversation was still in a worktree that has since been removed. Switch back to the main directory to keep working.',
   'opencodeInstallGuide.actions.openDocs': 'Open Install Guide',
   'opencodeInstallGuide.actions.openSystemTools': 'Open System Tools',
   'opencodeInstallGuide.afterInstall':
@@ -1649,6 +1718,11 @@ export default {
   'sessionGroup.manageCategory': 'Manage Category',
   'sessionGroup.confirmRemoveGroupAlert':
     'This category is about to be deleted. After deletion, the agents in this category will be moved to the default list. Please confirm your operation.',
+  'sessionGroup.createAgentFailed': "Couldn't create the agent. Please try again.",
+  'sessionGroup.createAgentPinFailed':
+    'Agent created, but pinning failed. You can pin it from the list.',
+  'sessionGroup.createAgentRefreshFailed':
+    "Agent created, but the list couldn't refresh. Refresh the list to see it.",
   'sessionGroup.createAgentSuccess': 'Agent created successfully',
   'sessionGroup.createGroup': 'Add New Category',
   'sessionGroup.createGroupFailed': 'Failed to create category',
@@ -1732,7 +1806,7 @@ export default {
   'shareModal.popover.loadError': 'Failed to load sharing settings, please try again later',
   'shareModal.popover.privacyWarning.confirm': 'Share & copy link',
   'shareModal.popover.privacyWarning.content':
-    "Anyone with the link can open this whole conversation, so take a moment to make sure there's nothing here you'd rather keep private. A shared topic may include:",
+    "Anyone with the link can open this whole topic, so take a moment to make sure there's nothing here you'd rather keep private. A shared topic may include:",
   'shareModal.popover.privacyWarning.doNotShowAgain': "Don't show this again",
   'shareModal.popover.privacyWarning.items.credentials': 'Credentials',
   'shareModal.popover.privacyWarning.items.files': 'Uploaded files',
@@ -1774,7 +1848,7 @@ export default {
   'sharePage.menu.report': 'Report',
   'sharePage.meta.artifactDescription': 'An artifact shared from {{appName}}.',
   'sharePage.meta.pageDescription': 'A page shared from {{appName}}.',
-  'sharePage.meta.topicDescription': 'A conversation shared from {{appName}}.',
+  'sharePage.meta.topicDescription': 'A topic shared from {{appName}}.',
   'sharePage.pill.edit': 'Edit',
   'sharePage.pill.openInApp': 'Open in {{appName}}',
   'sharePage.pill.sharedVia': 'Shared via {{appName}}',
@@ -2102,6 +2176,9 @@ export default {
   'createGoal.costBudgetPlaceholder': 'No cap',
   'createGoal.createFailed': 'Failed to create goal',
   'createGoal.back': 'Back',
+  'createGoal.agentsHint':
+    'The main agent plans and supervises the goal; tasks go to the executor, or to the main agent when none is chosen.',
+  'createGoal.agentsTitle': 'Agents',
   'createGoal.budgetTitle': 'Budget',
   'createGoal.contextLabel': 'Context for the Agent',
   'createGoal.contextHint': 'Add constraints, source material, or anything the Agent should know',
@@ -2146,6 +2223,7 @@ export default {
   'createTask.expandToInline': 'Dock to page',
   'createTask.instructionPlaceholder': 'Add task instruction...',
   'createTask.submit': 'Create task',
+  'createTask.submitScheduled': 'Create scheduled task',
   'createTask.titlePlaceholder': 'Task title',
   'createTask.visibility.changeFailed': 'Failed to change task visibility',
   'createTask.visibility.helperPrivate': 'Only you can see this task.',
@@ -2253,6 +2331,8 @@ export default {
   'goalTask.step.queued': 'Not started',
   'goalList.title': 'Goals',
   'goalDetail.acceptance': 'Acceptance checks',
+  'goalDetail.agentManagedByOwner':
+    "Only the goal's creator or a Workspace admin can change its agents",
   'goalAcceptance.add': 'Add criterion',
   'goalAcceptance.edit': 'Edit',
   'goalAcceptance.empty': 'No criteria yet — add the outcomes the final acceptance should check.',
@@ -2267,8 +2347,9 @@ export default {
     '"{{title}}" will no longer gate this goal’s final acceptance.',
   'goalAcceptance.removeConfirm.title': 'Remove this criterion?',
   'goalAcceptance.title': 'Acceptance standard',
-  'goalChat.newTopic': 'New conversation',
-  'goalChat.noTopics': 'No conversations yet',
+  'goalChat.newTopic': 'New topic',
+  'goalChat.noTopics': 'No topics yet',
+  'goalChat.openTopic': 'Go to original topic',
   'goalChat.title': 'Ask about progress',
   'goalChat.welcome':
     "Ask the agent about this goal — how it's going, what's blocking, or what happens next.",
@@ -2282,6 +2363,9 @@ export default {
     'The complete task tree and latest runs for this goal.',
   'goalDetail.instruction': 'Goal instruction',
   'goalDetail.latestRuns': 'Recent executions',
+  'goalDetail.mainAgent': 'Main agent · plans and supervises this goal',
+  'goalDetail.mainAgentLabel': 'Plan',
+  'goalDetail.mainAgentUnassigned': 'Choose main agent',
   'goalDetail.closeConfirm.achieved.content':
     'Runs still in progress will be stopped and no new tasks will start. You can reopen the goal from this menu.',
   'goalDetail.closeConfirm.achieved.ok': 'Mark achieved',
@@ -2295,6 +2379,13 @@ export default {
   'goalDetail.deleteConfirm.ok': 'Delete goal',
   'goalDetail.deleteConfirm.title': 'Delete this goal?',
   'goalDetail.moreActions': 'More goal actions',
+  'goalDetail.modelFixed':
+    "This Agent's author fixed its model; only they or an admin can pick another for this goal",
+  'goalDetail.planningModel': 'Planning model · used by the main agent for planning turns',
+  'goalDetail.taskAgent': 'Executor · does the tasks under this goal',
+  'goalDetail.taskAgentFollowsMain': 'Same as main agent',
+  'goalDetail.taskAgentLabel': 'Execute',
+  'goalDetail.taskModel': "Task model · used by the goal's tasks, including unfinished ones",
   'goalDetail.metrics.planItems': 'Plan items',
   'goalDetail.metrics.progress': 'Progress',
   'goalDetail.metrics.agentRuns': 'Agent runs',
@@ -2371,6 +2462,22 @@ export default {
   'goalProcess.northStar.record.valueLabel': 'Current value of {{key}}',
   'goalProcess.northStar.record.submit': 'Record',
   'goalProcess.northStar.record.failed': 'Failed to record the observation',
+  'goalProcess.northStar.detail.history': 'Observations ({{count}})',
+  'goalProcess.northStar.detail.removed': 'This metric is no longer declared on the goal',
+  'goalProcess.northStar.detail.source.agent': 'Recorded by agent',
+  'goalProcess.northStar.detail.source.api': 'Written via API',
+  'goalProcess.northStar.detail.source.manual': 'Recorded manually',
+  'goalProcess.northStar.detail.source.probe': 'Collected',
+  'goalProcess.northStar.detail.target': 'Target',
+  'goalProcess.northStar.detail.title': 'Metric',
+  'goalProcess.northStar.detail.trend': 'Trend',
+  'goalProcess.northStar.detail.trendEmpty': 'The trend appears after a second observation',
+  'goalProcess.northStar.edit.submit': 'Save',
+  'goalProcess.northStar.edit.title': 'Adjust target',
+  'goalProcess.northStar.remove.confirm':
+    'Remove "{{name}}"? It will no longer gate this goal\'s acceptance. Recorded observations are kept.',
+  'goalProcess.northStar.remove.failed': 'Failed to remove the metric',
+  'goalProcess.northStar.remove.title': 'Remove metric',
   'goalProcess.frontier.add': 'Add task',
   'goalProcess.frontier.needsYou': '{{count}} need you',
   'goalProcess.frontier.advanceable': '{{count}} can advance',
@@ -2499,6 +2606,10 @@ export default {
   'goalProcess.decision.attempts_other': '{{count}} attempts',
   'goalProcess.decision.effect.retry':
     'Send the task back for another attempt. Your note is written into its instructions.',
+  'goalProcess.decision.effect.alsoRetires': 'Also drops the tasks that depend on it: {{tasks}}.',
+  'goalProcess.decision.effect.quotedTask': '"{{title}}"',
+  'goalProcess.decision.effect.retireWithDependents':
+    'Drop this task and the tasks that depend on it ({{tasks}}). The goal moves on without them.',
   'goalProcess.decision.effect.retire': 'Drop this task. The goal moves on without it.',
   'goalProcess.decision.effect.fail': 'End the goal and record it as failed.',
   'goalProcess.decision.effect.retryAcceptance': 'Run the goal-level acceptance again.',
@@ -2603,6 +2714,7 @@ export default {
   'goalProcess.result.nav.document': 'Final document',
   'goalProcess.result.nav.label': 'Jump to section',
   'goalProcess.result.nav.overview': 'Overview',
+  'goalProcess.result.nav.report': 'Report',
   'goalProcess.result.requirement': 'Original requirement',
   'goalProcess.result.scale.cost': 'Spent {{cost}}',
   'goalProcess.result.scale.criteria': '{{met}}/{{total}} criteria met',
@@ -2638,6 +2750,7 @@ export default {
   'goalProcess.result.unfinished.nextSteps': 'Suggested next steps',
   'goalProcess.result.unfinished.title': 'Not done / next steps',
   'goalProcess.result.unfinished.unmetCriteria': 'Unmet criteria',
+  'goalProcess.result.report.expand': 'View full screen',
   'goalProcess.result.story.chapterMissing':
     'This chapter is no longer in the report — it may have been rewritten.',
   'goalProcess.result.story.detourKind.dead_end': 'Dead end',
@@ -2728,7 +2841,6 @@ export default {
   'goalProcess.metricDetail.budget.perTaskEmpty': 'No run has been billed yet.',
   'goalProcess.metricDetail.budget.perTaskTitle': 'Where it went',
   'goalProcess.metricDetail.budget.runsValue': '{{count}} runs',
-  'goalProcess.metricDetail.budget.tokensValue': '{{value}} tokens',
   'goalProcess.metricDetail.budget.raiseNote':
     'Raising a cap is what restarts a goal the coordinator parked on its budget \u2014 it starts moving again on its own, no Resume needed. Leave a field empty to run uncapped.',
   'goalProcess.metricDetail.budget.rounds': 'Rounds',
@@ -2807,6 +2919,8 @@ export default {
   'goalProcess.start': 'Start',
   'goalPage.allGoals': 'All goals',
   'goalPage.activeGoals': 'Open goals',
+  'goalPage.agentFilter.all': 'All agents',
+  'goalPage.agentFilter.title': 'Filter by agent',
   'goalPage.description':
     'Track what this agent is pursuing and how close each goal is to acceptance.',
   'goalPage.create': 'Create goal',
@@ -2902,6 +3016,8 @@ export default {
     'This task is part of an active goal. Finish or close the goal before archiving it.',
   'taskList.contextMenu.archiveFailed':
     "Couldn't update the archive state. Refresh the task and try again.",
+  'taskList.contextMenu.archiveDenied.noEditPermission':
+    "You don't have permission to edit tasks in this workspace. Ask a workspace admin for access.",
   'taskList.contextMenu.archiveBlocked':
     'Stop the running task or its schedule/heartbeat before archiving it',
   'taskList.contextMenu.archiveSuccess': 'Task archived',
@@ -2909,6 +3025,8 @@ export default {
   'taskList.contextMenu.copyDescription':
     'Clone this task (and all its subtasks) into another workspace. Status resets to backlog.',
   'taskList.contextMenu.copyFailed': 'Failed to copy task',
+  'taskList.contextMenu.copyContent': 'Copy Content',
+  'taskList.contextMenu.copyContentSuccess': 'Content copied',
   'taskList.contextMenu.copyId': 'Copy ID',
   'taskList.contextMenu.copyIdSuccess': 'ID copied',
   'taskList.contextMenu.copyLink': 'Copy Link',
@@ -2957,17 +3075,17 @@ export default {
   'thread.subagentMetrics.toolsShort_one': '{{count}} tool',
   'thread.subagentMetrics.toolsShort_other': '{{count}} tools',
   'transferMigration.agentBanner.desc':
-    'New conversations are unaffected; older ones light up one by one as they finish. Opening a pending conversation moves it to the front.',
+    'New topics are unaffected; older ones light up one by one as they finish. Opening a pending topic moves it to the front.',
   'transferMigration.agentBadge': 'Migrating history · {{completed}}/{{total}}',
   'transferMigration.agentBadgeCopy': 'Copying history · {{completed}}/{{total}}',
-  'transferMigration.topicPending.title': 'This conversation is migrating',
-  'transferMigration.topicPendingCopy.title': 'This conversation is copying',
+  'transferMigration.topicPending.title': 'This topic is migrating',
+  'transferMigration.topicPendingCopy.title': 'This topic is copying',
   'transferMigration.topicPending.desc':
     'We are prioritizing it — its history will appear here in a few seconds, no action needed.',
   'transferMigration.inputDisabledHint':
-    'You can continue this conversation once its history finishes migrating',
+    'You can continue chatting in this topic once its history finishes migrating',
   'transferMigration.inputDisabledHintCopy':
-    'You can continue this conversation once its history finishes copying',
+    'You can continue chatting in this topic once its history finishes copying',
   'thread.subagentReadOnlyHint':
     'SubAgent conversations are read-only — execution is driven by the parent agent.',
   'terminalPanel.close': 'Close terminal panel',
@@ -3368,6 +3486,7 @@ export default {
   'workingPanel.overview.ports.copy': 'Copy link',
   'workingPanel.overview.ports.createFailed': 'Could not expose the port',
   'workingPanel.overview.ports.detected.available': '{{count}} to open',
+  'workingPanel.overview.ports.detected.checking': 'Checking which ports are running…',
   'workingPanel.overview.ports.detected.expose': 'Open',
   'workingPanel.overview.ports.detected.heading': 'Detected',
   'workingPanel.overview.ports.detected.hideOthers': 'Hide other ports',
@@ -3456,6 +3575,8 @@ export default {
   'workingPanel.works.emptyVersions': 'No versions yet',
   'workingPanel.works.error': 'Failed to load works',
   'workingPanel.works.documentLoadError': 'Failed to load document',
+  'workingPanel.works.canvasPublished': 'Published',
+  'workingPanel.works.canvasUntitled': 'Untitled canvas',
   'workingPanel.works.changeType.created': 'Created',
   'workingPanel.works.changeType.updated': 'Updated',
   'workingPanel.works.documentDeleted': 'This document has been deleted',
@@ -3671,6 +3792,9 @@ export default {
   'workingPanel.files.filters.title': 'Filter Files',
   'workingPanel.files.noSearchResults': 'No matching files',
   'workingPanel.files.open': 'Open File',
+  'workingPanel.files.partialIndexNotice':
+    'Only part of this large project is shown — refresh to load every file',
+  'workingPanel.files.refreshFailed': "Couldn't refresh this view — showing the last saved files",
   'workingPanel.files.search': 'Search Files',
   'workingPanel.files.searchPlaceholder': 'Filter files...',
   'workingPanel.files.showInReview': 'Show in Review',

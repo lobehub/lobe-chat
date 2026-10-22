@@ -1,4 +1,94 @@
 export default {
+  'channel.quickSetup.needsApplicationId': 'Fill in the Application ID to get this link.',
+  'channel.quickSetup.link.createSlackApp': 'Create Slack app',
+  'channel.quickSetup.link.inviteBot': 'Invite bot to server',
+  'channel.quickSetup.link.openBotFather': 'Open BotFather',
+  'channel.quickSetup.link.openBotSettings': 'Open bot settings',
+  'channel.quickSetup.link.openConsole': 'Open developer console',
+  'channel.quickSetup.link.createLineAccount': 'Create Official Account',
+  'channel.quickSetup.link.openLineAccountManager': 'Open Official Account Manager',
+  'channel.quickSetup.link.openSlackApp': 'Open app settings',
+  'channel.quickSetup.manualToggle': 'Already have an app? Enter credentials manually',
+  'channel.quickSetup.scanToggle': 'Scan to create instead',
+  'channel.quickSetup.guideTitle': 'Setup steps',
+  'channel.quickSetup.feishu.scan.brandMismatch.lark':
+    'This app was created with a Lark account. Connect it from the Lark channel instead.',
+  'channel.quickSetup.feishu.scan.brandMismatch.feishu':
+    'This app was created with a Feishu account. Connect it from the Feishu channel instead.',
+  'channel.quickSetup.feishu.scan.regenerate': 'Generate a new code',
+  'channel.quickSetup.feishu.scan.title': 'Scan with Feishu to create the bot',
+  'channel.quickSetup.feishu.scan.does.app': 'Creates the app with the bot capability turned on',
+  'channel.quickSetup.feishu.scan.does.permissions':
+    'Grants messaging permissions and subscribes to incoming messages',
+  'channel.quickSetup.feishu.scan.does.credentials':
+    'Fills in the credentials and connects — nothing to copy',
+  'channel.quickSetup.feishu.scan.waiting': 'Waiting for you to confirm in Feishu…',
+  'channel.quickSetup.feishu.scan.openInBrowser': 'Open in browser instead',
+  'channel.quickSetup.feishu.scan.created': 'App created. Connecting…',
+  'channel.quickSetup.feishu.scan.expired': 'The QR code expired.',
+  'channel.quickSetup.feishu.scan.denied': 'Creation was declined in Feishu.',
+  'channel.quickSetup.feishu.scan.error': "Couldn't create the app. Try a new code.",
+  'channel.quickSetup.feishu.scan.saveFailed':
+    "The app was created but couldn't be saved. Keep these credentials and save again.",
+  'channel.quickSetup.feishu.scan.saveAgain': 'Save again',
+  'channel.quickSetup.feishu.scan.lark.title': 'Scan with Lark to create the bot',
+  'channel.quickSetup.feishu.scan.lark.waiting': 'Waiting for you to confirm in Lark…',
+  'channel.quickSetup.feishu.scan.lark.denied': 'Creation was declined in Lark.',
+  'channel.quickSetup.feishu.create.title': 'Create a custom app',
+  'channel.quickSetup.feishu.create.desc':
+    'Copy the App ID and App Secret from Credentials & Basic Info.',
+  'channel.quickSetup.feishu.bot.title': 'Turn on the bot',
+  'channel.quickSetup.feishu.bot.desc': 'Under App Capabilities, add Bot.',
+  'channel.quickSetup.feishu.events.title': 'Subscribe to messages',
+  'channel.quickSetup.feishu.events.desc':
+    'Choose long connection, add im.message.receive_v1 and grant im:message.',
+  'channel.quickSetup.feishu.publish.title': 'Publish a version',
+  'channel.quickSetup.feishu.publish.desc': 'Permission changes take effect once published.',
+  'channel.quickSetup.slack.create.title': 'Create the app in one click',
+  'channel.quickSetup.slack.create.desc':
+    'Scopes, events and Socket Mode are pre-filled; pick a workspace and create.',
+  'channel.quickSetup.slack.install.title': 'Install it and copy the Bot Token',
+  'channel.quickSetup.slack.install.desc':
+    'Install it from OAuth & Permissions, then copy the Bot User OAuth Token.',
+  'channel.quickSetup.slack.tokens.title': 'Copy the App ID, Signing Secret and App Token',
+  'channel.quickSetup.slack.tokens.desc':
+    'All on Basic Information; the App Token needs connections:write.',
+  'channel.quickSetup.discord.create.title': 'Create an application',
+  'channel.quickSetup.discord.create.desc':
+    'In the Developer Portal, click New Application and name it.',
+  'channel.quickSetup.discord.credentials.title': 'Copy the Application ID and Public Key',
+  'channel.quickSetup.discord.credentials.desc': 'Both are on General Information.',
+  'channel.quickSetup.discord.bot.title': 'Get the bot token and allow message content',
+  'channel.quickSetup.discord.bot.desc':
+    'On the Bot page, Reset Token and copy it, then turn on Message Content Intent.',
+  'channel.quickSetup.discord.invite.title': 'Invite the bot to your server',
+  'channel.quickSetup.discord.invite.desc':
+    'The invite link already carries the permissions the bot needs.',
+  'channel.quickSetup.telegram.botfather.title': 'Create a bot with BotFather',
+  'channel.quickSetup.telegram.botfather.desc': 'Send /newbot and pick a name and username.',
+  'channel.quickSetup.telegram.token.title': 'Copy the token',
+  'channel.quickSetup.telegram.token.desc':
+    'BotFather replies with a token like 1234567890:ABC… — paste it here.',
+  'channel.quickSetup.telegram.privacy.title': 'Let it read group messages (optional)',
+  'channel.quickSetup.telegram.privacy.desc':
+    'Send /setprivacy, pick the bot and choose Disable, then add it to your group.',
+  'channel.quickSetup.qq.create.title': 'Create a bot',
+  'channel.quickSetup.qq.create.desc':
+    'On the QQ Open Platform, create a bot and finish its basic setup.',
+  'channel.quickSetup.qq.credentials.title': 'Copy the App ID and App Secret',
+  'channel.quickSetup.qq.credentials.desc': "Find them in the bot's Development settings.",
+  'channel.quickSetup.line.account.title': 'Create a LINE Official Account',
+  'channel.quickSetup.line.account.desc':
+    'Sign in with your LINE Business ID and create the account the bot speaks as.',
+  'channel.quickSetup.line.messagingApi.title': 'Turn on the Messaging API',
+  'channel.quickSetup.line.messagingApi.desc':
+    'In Official Account Manager, open Settings → Messaging API and enable it. The channel then appears in the Developers Console.',
+  'channel.quickSetup.line.credentials.title': 'Copy the channel secret and access token',
+  'channel.quickSetup.line.credentials.desc':
+    'The secret is on Basic settings; issue a long-lived access token on Messaging API.',
+  'channel.quickSetup.line.webhook.title': 'Turn on the webhook',
+  'channel.quickSetup.line.webhook.desc':
+    'After saving, paste the webhook URL shown below into Messaging API settings, turn on Use webhook, and click Verify.',
   'channel.applicationId': 'Application ID / Bot Username',
   'channel.applicationIdHint': 'Unique identifier for your bot application.',
   'channel.applicationIdInvalid.discord':
@@ -544,6 +634,8 @@ export default {
     'This tool can never be used in a shared run — visitor runs are blocked from your knowledge base and Agent files.',
   'share.settings.tools.onDemandDesc':
     'Not enabled on this Agent. Once granted, the model turns it on in a visitor run only when needed.',
+  'share.settings.tools.ownerCredentials':
+    'Visitors use MCP servers, connections and plugins with your accounts and credentials.',
   'share.settings.tools.showOnDemand': 'Show on-demand tools',
   'share.settings.tools.title': 'Tools visitors can use',
   'share.settings.updateError': 'Could not save the change. Please try again.',
@@ -579,9 +671,13 @@ export default {
   'share.visitor.input.send': 'Send',
   'share.visitor.input.stop': 'Stop',
   'share.visitor.privacyNotice':
-    'This topic runs on the owner’s account and may be visible to them. Avoid sharing sensitive information.',
+    'This topic runs on the creator’s account. Only you can see its messages.',
+  'share.visitor.privacyNoticeCreatorVisible':
+    'This topic runs on the creator’s account. The creator has turned on topic access and may read its messages, so avoid sharing sensitive information.',
   'share.visitor.privacyNoticeWorkspace':
-    'This topic is paid for by the Workspace and may be visible to the Agent creator. Avoid sharing sensitive information.',
+    'This topic runs in the owner Workspace. Only you can see its messages.',
+  'share.visitor.privacyNoticeWorkspaceCreatorVisible':
+    'This topic runs in the owner Workspace. The Agent creator has turned on topic access and may read its messages, so avoid sharing sensitive information.',
   'share.visitor.profile.about': 'About',
   'share.visitor.profile.createdBy': 'Created by {{creator}}',
   'share.visitor.profile.cta': 'Start a topic',
@@ -615,7 +711,7 @@ export default {
     'You can attach files; this Agent has {{size}} of file storage for visitors.',
   'share.visitor.profile.terms.uploadsOff': 'Attachments are turned off.',
   'share.visitor.profile.terms.visibilityCreator':
-    'The creator has enabled topic access, so they can read the messages in this topic.',
+    'The creator has turned on topic access and may read the messages in your topics.',
   'share.visitor.profile.terms.visibilityPrivate': 'Only you can see your topics.',
   'share.visitor.topBar.home': 'Go to my LobeHub',
   'share.visitor.topics.empty': 'No topics yet',

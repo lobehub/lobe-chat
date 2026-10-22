@@ -37,6 +37,7 @@ import NavHeader from '@/features/NavHeader';
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import { openCreateProjectModal } from '@/features/Projects/CreateProjectModal';
 import ProjectDisabled from '@/features/Projects/ProjectDisabled';
+import { useCanManageProject } from '@/features/Projects/useCanManageProject';
 import TopicCreatorAvatar from '@/features/TopicCreatorAvatar';
 import UserAvatar from '@/features/User/UserAvatar';
 import WideScreenContainer from '@/features/WideScreenContainer';
@@ -44,7 +45,7 @@ import WorkspaceLink from '@/features/Workspace/WorkspaceLink';
 import { useLoadedProjectList, useProjectStore } from '@/store/project';
 import type { ProjectListItem } from '@/store/project/store';
 import { useUserStore } from '@/store/user';
-import { labPreferSelectors, userProfileSelectors } from '@/store/user/selectors';
+import { labPreferSelectors } from '@/store/user/selectors';
 
 import { resolveProjectListState } from '../projectListState';
 
@@ -123,8 +124,7 @@ const ProjectRow = memo<{ project: ProjectListItem }>(({ project }) => {
   const { t } = useTranslation(['project', 'common']);
   const [deleting, setDeleting] = useState(false);
   const deleteProject = useProjectStore((s) => s.deleteProject);
-  const currentUserId = useUserStore(userProfileSelectors.userId);
-  const canDelete = currentUserId === project.userId;
+  const canDelete = useCanManageProject();
   const status = resolveProjectStatus(project.status);
   const statusVisual = PROJECT_STATUS_VISUALS[status];
 

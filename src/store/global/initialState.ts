@@ -9,6 +9,7 @@ export enum SidebarTabKey {
   Chat = 'chat',
   Community = 'community',
   Dashboard = 'dashboard',
+  Goals = 'goals',
   Home = 'home',
   Image = 'image',
   Knowledge = 'knowledge',
@@ -47,6 +48,11 @@ export type WorkingSidebarTab =
   | 'skills'
   | 'web'
   | (string & {});
+
+export const CANVAS_TAB_PREFIX = 'canvas:';
+export const canvasTabKey = (canvasId: string) => `${CANVAS_TAB_PREFIX}${canvasId}`;
+export const canvasIdOfTab = (tab: string) =>
+  tab.startsWith(CANVAS_TAB_PREFIX) ? tab.slice(CANVAS_TAB_PREFIX.length) : undefined;
 
 export const DEFAULT_RESOURCE_MANAGER_COLUMN_WIDTHS = {
   date: 160,

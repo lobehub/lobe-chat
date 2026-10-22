@@ -1,25 +1,35 @@
 import { isDesktop } from '@lobechat/const';
-import type {
-  GitWorkingTreePatch,
-  SubmoduleWorkingTreePatches,
-} from '@lobechat/electron-client-ipc';
 import type { ReplicaOptimisticToken } from '@lobechat/replica';
 import type { ReplicaSlice, ReplicaSyncSchedule } from '@lobechat/replica/zustand';
 import type {
   DeviceGitAheadBehind,
+  DeviceGitBranchListItem,
   DeviceGitPullRequestActivity,
   DeviceGitPullRequestDetail,
   DeviceGitPullRequestDetailResult,
   DeviceGitPullRequestMergeContext,
+  DeviceGitRemoteBranchListItem,
   DeviceGitWorkingTreeStatus,
   DeviceGitWorktreeListItem,
 } from '@lobechat/types';
 import { useCallback, useMemo, useRef } from 'react';
 
-import { mutate, useClientDataSWR } from '@/libs/swr';
+import { mutate } from '@/libs/swr';
 import { deviceKeys, localFileKeys } from '@/libs/swr/keys';
-import { type GitBranchSummary, type GitLinkedPRSummary, gitService } from '@/services/git';
+import type { GitBranchSummary, GitLinkedPRSummary } from '@/services/git';
 
+import {
+  gitLinkedPRKey,
+  gitPullRequestKey,
+  gitPullRequestMergeContextKey,
+  type GitPullRequestMergeContextParams,
+  type GitPullRequestParams,
+  gitReviewPatchesKey,
+  type GitReviewRead,
+  type ReviewMode,
+  type ReviewPatchesData,
+} from './gitReview/projection';
+import { type GitReviewStore, useGitReviewStore, warmPullRequestReplicas } from './gitReview/store';
 import {
   type GitDiffStats,
   gitStatusKey,
@@ -28,23 +38,12 @@ import {
 } from './gitStatus/projection';
 import { type GitStatusStore, useGitStatusStore } from './gitStatus/store';
 
-export type ReviewMode = 'unstaged' | 'branch';
+export type { ReviewMode, ReviewPatchesData } from './gitReview/projection';
+export { getReviewSummaryState, toReviewPatchesSummary } from './gitReview/projection';
 
 const UNSTAGED_REVIEW_REFRESH_INTERVAL = 10 * 1000;
 const BRANCH_REVIEW_REFRESH_INTERVAL = 30 * 1000;
 const PULL_REQUEST_DETAIL_REFRESH_INTERVAL = 30 * 1000;
-
-export interface ReviewPatchesData {
-  baseRef?: string;
-  headRef?: string;
-  mode: ReviewMode;
-  patches: GitWorkingTreePatch[];
-  /**
-   * Per-submodule patch groups. Undefined when the parent has no dirty
-   * submodules (unstaged) or no submodule pointer differences (branch).
-   */
-  submodules?: SubmoduleWorkingTreePatches[];
-}
 
 /**
  * Git read hooks for a working directory, transport-agnostic: the fetcher goes
@@ -55,29 +54,6 @@ export interface ReviewPatchesData {
  */
 const isEnabled = (deviceId: string | undefined, path: string | undefined): path is string =>
   !!path && (!!deviceId || isDesktop);
-
-const fetchUnstagedReviewPatches = async (
-  dirPath: string,
-  deviceId: string | undefined,
-): Promise<ReviewPatchesData> => {
-  const result = await gitService.getGitWorkingTreePatches({ deviceId, path: dirPath });
-  return { mode: 'unstaged', patches: result?.patches ?? [], submodules: result?.submodules };
-};
-
-const fetchBranchReviewPatches = async (
-  dirPath: string,
-  baseRef: string | undefined,
-  deviceId: string | undefined,
-): Promise<ReviewPatchesData> => {
-  const result = await gitService.getGitBranchDiff({ baseRef, deviceId, path: dirPath });
-  return {
-    baseRef: result?.baseRef,
-    headRef: result?.headRef,
-    mode: 'branch',
-    patches: result?.patches ?? [],
-    submodules: result?.submodules,
-  };
-};
 
 export const getReviewRefreshInterval = (mode: ReviewMode, active: boolean) => {
   if (!active) return 0;
@@ -109,6 +85,7 @@ export const invalidateGitReviewCaches = async ({
 
   const cacheDeviceId = deviceId ?? 'local';
   await Promise.all([
+    // The review replica syncs under this key, so this re-runs its read.
     mutate(deviceKeys.gitReviewPatches(cacheDeviceId, dirPath, mode, baseRef ?? '')),
     useGitStatusStore
       .getState()
@@ -117,31 +94,127 @@ export const invalidateGitReviewCaches = async ({
   ]);
 };
 
+export interface GitReplicaReadResult<T> {
+  data: T | undefined;
+  error: unknown;
+  /**
+   * The device answered this session. A row hydrated from storage paints, but
+   * is not proof enough to act on (e.g. mutate the PR it names).
+   */
+  isConfirmed: boolean;
+  /** Nothing to paint yet (no persisted row, no response) and a read is pending. */
+  isLoading: boolean;
+  isValidating: boolean;
+  /** Re-run the read (SWR-shaped, for the existing refresh callers). */
+  mutate: () => Promise<unknown>;
+}
+
+type GitReplicaSyncOptions<TStored> = ReplicaSyncSchedule & {
+  onHydrated?: (data: TStored) => void;
+  onSuccess?: (data: TStored) => void;
+};
+
+interface ReplicaReadSlice<TParams, TStored> {
+  useSync: (
+    params: TParams | null | undefined,
+    options?: GitReplicaSyncOptions<TStored> & { shouldRetryOnError?: boolean },
+  ) => {
+    error: unknown;
+    isHydrated: boolean;
+    isValidating: boolean;
+    revalidate: () => Promise<unknown>;
+  };
+}
+
+/**
+ * Read one of the Review / PR replicas (see `./gitReview`): the persisted row
+ * paints first, the device read confirms it in the background. Returns the
+ * SWR-like shape the Review / PR tabs were written against.
+ */
+type ReplicaEntriesSelector = (
+  state: GitReviewStore,
+) => Record<string, { source?: string } | undefined>;
+
+const useGitReviewReplica = <TParams, TStored>(
+  pick: (slices: GitReviewStore['slices']) => ReplicaReadSlice<TParams, TStored>,
+  selectMap: (state: GitReviewStore) => Record<string, TStored>,
+  selectEntries: ReplicaEntriesSelector,
+  toKey: (params: TParams) => string,
+  params: TParams | null,
+  schedule: GitReplicaSyncOptions<TStored>,
+) => {
+  const key = params ? toKey(params) : undefined;
+  const stored = useGitReviewStore((s) => (key ? selectMap(s)[key] : undefined));
+  // Only a head response makes the row authoritative (`source: 'server'`).
+  const isConfirmed = useGitReviewStore((s) => !!key && selectEntries(s)[key]?.source === 'server');
+  // The driver forwards SWR options as given: a failed git read (dead path,
+  // unreachable device, missing `gh`) is not retried, like the SWR hooks these replaced.
+  const { error, isHydrated, isValidating, revalidate } = pick(
+    useGitReviewStore.getState().slices,
+  ).useSync(params, { ...schedule, shouldRetryOnError: false });
+
+  return {
+    error,
+    isConfirmed,
+    isLoading: !!params && stored === undefined && !error && (!isHydrated || isValidating),
+    isValidating,
+    mutate: revalidate,
+    stored,
+  };
+};
+
+/** A `GitReviewRead` replica, unwrapped into the SWR-shaped result. */
+const useGitReviewRead = <TParams, T>(
+  pick: (slices: GitReviewStore['slices']) => ReplicaReadSlice<TParams, GitReviewRead<T>>,
+  selectMap: (state: GitReviewStore) => Record<string, GitReviewRead<T>>,
+  selectEntries: ReplicaEntriesSelector,
+  toKey: (params: TParams) => string,
+  params: TParams | null,
+  schedule: GitReplicaSyncOptions<GitReviewRead<T>>,
+): GitReplicaReadResult<T> => {
+  const { stored, ...rest } = useGitReviewReplica(
+    pick,
+    selectMap,
+    selectEntries,
+    toKey,
+    params,
+    schedule,
+  );
+  return { ...rest, data: stored?.value };
+};
+
+/**
+ * Review tab diff. A replica: after a reload the persisted summary (paths +
+ * line counts, `summaryOnly`, no diff text) paints first, and the live read
+ * replaces it with the full diff.
+ */
 export const useReviewPatches = (
   dirPath: string | undefined,
   mode: ReviewMode,
   baseRef?: string,
   deviceId?: string,
   active = true,
-) => {
+): GitReplicaReadResult<ReviewPatchesData> => {
   const enabled = active && isEnabled(deviceId, dirPath);
-  const key = enabled ? getGitReviewPatchesKey({ baseRef, deviceId, dirPath, mode }) : null;
-
-  return useClientDataSWR<ReviewPatchesData>(
-    key,
-    () =>
-      mode === 'branch'
-        ? fetchBranchReviewPatches(dirPath!, baseRef, deviceId)
-        : fetchUnstagedReviewPatches(dirPath!, deviceId),
+  const params = useMemo(
+    () => (enabled ? { baseRef, deviceId, mode, path: dirPath! } : null),
+    [enabled, baseRef, deviceId, mode, dirPath],
+  );
+  const { stored, ...rest } = useGitReviewReplica(
+    (slices) => slices.reviewPatches,
+    (s) => s.gitReviewPatchesMap,
+    (s) => s.gitReviewPatchesReplica.entries,
+    gitReviewPatchesKey,
+    params,
     {
       focusThrottleInterval: mode === 'branch' ? 30 * 1000 : 5 * 1000,
       refreshInterval: getReviewRefreshInterval(mode, active),
       refreshWhenHidden: false,
       revalidateOnFocus: true,
       revalidateOnReconnect: true,
-      shouldRetryOnError: false,
     },
   );
+  return { ...rest, data: stored };
 };
 
 interface GitStatusReadResult<T> {
@@ -183,10 +256,11 @@ const useGitStatusRead = <T>(
   deviceId: string | undefined,
   path: string | undefined,
   schedule: ReplicaSyncSchedule,
+  enabled = true,
 ): GitStatusReadResult<T> => {
   const params = useMemo(
-    () => (isEnabled(deviceId, path) ? { deviceId, path } : null),
-    [deviceId, path],
+    () => (enabled && isEnabled(deviceId, path) ? { deviceId, path } : null),
+    [enabled, deviceId, path],
   );
   const key = params ? gitStatusKey(params) : undefined;
   const stored = useGitStatusStore((s) => (key ? selectMap(s)[key] : undefined));
@@ -270,6 +344,8 @@ const useGitStatusRead = <T>(
 };
 
 const selectBranchMap = (s: GitStatusStore) => s.gitBranchMap;
+const selectBranchListMap = (s: GitStatusStore) => s.gitBranchListMap;
+const selectRemoteBranchListMap = (s: GitStatusStore) => s.gitRemoteBranchListMap;
 const selectAheadBehindMap = (s: GitStatusStore) => s.gitAheadBehindMap;
 const selectWorkingTreeStatusMap = (s: GitStatusStore) => s.gitWorkingTreeStatusMap;
 const selectWorktreesMap = (s: GitStatusStore) => s.gitWorktreesMap;
@@ -277,6 +353,8 @@ const selectWorktreesMap = (s: GitStatusStore) => s.gitWorktreesMap;
 const selectDiffStatsMap = (s: GitStatusStore) => s.gitDiffStatsMap;
 
 const selectBranchEntries = (s: GitStatusStore) => s.gitBranchReplica.entries;
+const selectBranchListEntries = (s: GitStatusStore) => s.gitBranchListReplica.entries;
+const selectRemoteBranchListEntries = (s: GitStatusStore) => s.gitRemoteBranchListReplica.entries;
 const selectAheadBehindEntries = (s: GitStatusStore) => s.gitAheadBehindReplica.entries;
 const selectDiffStatsEntries = (s: GitStatusStore) => s.gitDiffStatsReplica.entries;
 const selectWorkingTreeStatusEntries = (s: GitStatusStore) => s.gitWorkingTreeStatusReplica.entries;
@@ -313,14 +391,36 @@ export const useFetchGitLinkedPR = (
   path: string | undefined,
   branch: string | undefined,
   isGithub = false,
-) =>
-  useClientDataSWR<GitLinkedPRSummary | undefined>(
-    isGithub && branch && isEnabled(deviceId, path)
-      ? deviceKeys.gitLinkedPR(deviceId ?? 'local', path, branch)
-      : null,
-    () => gitService.getLinkedPullRequest({ branch: branch!, deviceId, path: path! }),
-    { dedupingInterval: 60 * 1000, focusThrottleInterval: 60 * 1000, shouldRetryOnError: false },
+) => {
+  const enabled = isGithub && !!branch && isEnabled(deviceId, path);
+  const params = useMemo(
+    () => (enabled ? { branch: branch!, deviceId, path: path! } : null),
+    [enabled, branch, deviceId, path],
   );
+  // The PR tab mounts the moment the linked PR is known; start reading its
+  // persisted detail / activity then, so the tab body paints from storage on
+  // its first frame instead of a skeleton while its own hydration reads them.
+  const warm = useCallback(
+    (read: GitReviewRead<GitLinkedPRSummary>) => {
+      const number = read.value?.pullRequest?.number;
+      if (number !== undefined && path) warmPullRequestReplicas({ deviceId, number, path });
+    },
+    [deviceId, path],
+  );
+  return useGitReviewRead(
+    (slices) => slices.linkedPR,
+    (s) => s.gitLinkedPRMap,
+    (s) => s.gitLinkedPRReplica.entries,
+    gitLinkedPRKey,
+    params,
+    {
+      dedupingInterval: 60 * 1000,
+      focusThrottleInterval: 60 * 1000,
+      onHydrated: warm,
+      onSuccess: warm,
+    },
+  );
+};
 
 /**
  * Compact uncommitted-diff counts for the composer's `+N −M` chip. There is no
@@ -405,21 +505,27 @@ export const useFetchGitPullRequestDetail = (
   path: string | undefined,
   number: number | undefined,
   { active = true }: { active?: boolean } = {},
-) =>
-  useClientDataSWR<DeviceGitPullRequestDetailResult | undefined>(
-    number !== undefined && isEnabled(deviceId, path)
-      ? deviceKeys.gitPullRequestDetail(deviceId ?? 'local', path, number)
-      : null,
-    () =>
-      gitService.getPullRequestDetail({ coreOnly: true, deviceId, number: number!, path: path! }),
+) => {
+  const enabled = number !== undefined && isEnabled(deviceId, path);
+  const params = useMemo(
+    () => (enabled ? { deviceId, number: number!, path: path! } : null),
+    [enabled, deviceId, number, path],
+  );
+  return useGitReviewRead(
+    (slices) => slices.pullRequestDetail,
+    (s) => s.gitPullRequestDetailMap,
+    (s) => s.gitPullRequestDetailReplica.entries,
+    gitPullRequestKey,
+    params,
     {
       dedupingInterval: 30_000,
       focusThrottleInterval: 60 * 1000,
-      refreshInterval: (detail) => pullRequestDetailRefreshInterval(detail, active),
+      refreshInterval: (latest?: GitReviewRead<DeviceGitPullRequestDetailResult>) =>
+        pullRequestDetailRefreshInterval(latest?.value, active),
       revalidateOnFocus: true,
-      shouldRetryOnError: false,
     },
   );
+};
 
 /** Activity starts once core data can paint; its failure never hides the PR. */
 export const useFetchGitPullRequestActivity = (
@@ -427,19 +533,25 @@ export const useFetchGitPullRequestActivity = (
   path: string | undefined,
   number: number | undefined,
   active = true,
-) =>
-  useClientDataSWR<DeviceGitPullRequestActivity>(
-    number !== undefined && isEnabled(deviceId, path)
-      ? deviceKeys.gitPullRequestActivity(deviceId ?? 'local', path, number)
-      : null,
-    () => gitService.getPullRequestActivity({ deviceId, number: number!, path: path! }),
+) => {
+  const enabled = number !== undefined && isEnabled(deviceId, path);
+  const params = useMemo(
+    () => (enabled ? { deviceId, number: number!, path: path! } : null),
+    [enabled, deviceId, number, path],
+  );
+  return useGitReviewRead<GitPullRequestParams, DeviceGitPullRequestActivity>(
+    (slices) => slices.pullRequestActivity,
+    (s) => s.gitPullRequestActivityMap,
+    (s) => s.gitPullRequestActivityReplica.entries,
+    gitPullRequestKey,
+    params,
     {
       dedupingInterval: 30_000,
       focusThrottleInterval: 60_000,
       refreshInterval: active ? 30_000 : 0,
-      shouldRetryOnError: false,
     },
   );
+};
 
 /**
  * Slow merge context (permission, branch protection, base drift), keyed on the
@@ -450,51 +562,76 @@ export const useFetchGitPullRequestMergeContext = (
   path: string | undefined,
   detail:
     Pick<DeviceGitPullRequestDetail, 'baseRefName' | 'headRefOid' | 'number' | 'repo'> | undefined,
-) =>
-  useClientDataSWR<DeviceGitPullRequestMergeContext | null | undefined>(
-    detail && isEnabled(deviceId, path)
-      ? deviceKeys.gitPullRequestMergeContext(
-          deviceId ?? 'local',
-          path,
-          detail.number,
-          detail.headRefOid,
-          detail.baseRefName,
-        )
-      : null,
+) => {
+  const enabled = !!detail && isEnabled(deviceId, path);
+  const { baseRefName, headRefOid, number } = detail ?? {};
+  const repoName = detail?.repo.name;
+  const repoOwner = detail?.repo.owner;
+  const params = useMemo(
     () =>
-      gitService.getPullRequestMergeContext({
-        baseRefName: detail!.baseRefName,
-        deviceId,
-        headRefOid: detail!.headRefOid,
-        number: detail!.number,
-        path: path!,
-        repo: detail!.repo,
-      }),
-    {
-      dedupingInterval: 30_000,
-      focusThrottleInterval: 60 * 1000,
-      revalidateOnFocus: true,
-      shouldRetryOnError: false,
-    },
+      enabled
+        ? {
+            baseRefName: baseRefName!,
+            deviceId,
+            headRefOid: headRefOid!,
+            number: number!,
+            path: path!,
+            repo: { name: repoName!, owner: repoOwner! },
+          }
+        : null,
+    [enabled, baseRefName, deviceId, headRefOid, number, path, repoName, repoOwner],
+  );
+  return useGitReviewRead<
+    GitPullRequestMergeContextParams,
+    DeviceGitPullRequestMergeContext | null
+  >(
+    (slices) => slices.pullRequestMergeContext,
+    (s) => s.gitPullRequestMergeContextMap,
+    (s) => s.gitPullRequestMergeContextReplica.entries,
+    gitPullRequestMergeContextKey,
+    params,
+    { dedupingInterval: 30_000, focusThrottleInterval: 60 * 1000, revalidateOnFocus: true },
+  );
+};
+
+/**
+ * Local branches of a directory: the branch switcher's list and the names a new
+ * worktree branch must avoid. The persisted list paints the switcher the moment
+ * it opens; `isConfirmed` says whether this session's read has answered (a name
+ * drawn against a stale list could collide with a branch made since). The 10s
+ * dedupe lets the switcher and the worktree seed share one read; branch writes
+ * re-read through `refreshGitBranches`.
+ */
+export const useFetchGitBranches = (
+  deviceId: string | undefined,
+  path: string | undefined,
+  enabled = true,
+) =>
+  useGitStatusRead<DeviceGitBranchListItem[]>(
+    useGitStatusStore.getState().slices.branches,
+    selectBranchListMap,
+    selectBranchListEntries,
+    deviceId,
+    path,
+    { dedupingInterval: 10 * 1000, revalidateOnFocus: false },
+    enabled,
   );
 
 /**
- * Lazy-loaded list of remote branches under `refs/remotes/origin/*`.
- * Disabled until the Review base-ref picker opens.
+ * Remote branches under `refs/remotes/origin/*`, read once a base-ref picker
+ * opens. The persisted list paints the picker immediately; the read refreshes it.
  */
 export const useGitRemoteBranches = (
   dirPath: string | undefined,
   enabled: boolean,
   deviceId?: string,
-) => {
-  const key =
-    enabled && dirPath ? deviceKeys.gitRemoteBranches(deviceId ?? 'local', dirPath) : null;
-  return useClientDataSWR(
-    key,
-    () => gitService.listGitRemoteBranches({ deviceId, path: dirPath! }),
-    {
-      revalidateOnFocus: false,
-      shouldRetryOnError: false,
-    },
+) =>
+  useGitStatusRead<DeviceGitRemoteBranchListItem[]>(
+    useGitStatusStore.getState().slices.remoteBranches,
+    selectRemoteBranchListMap,
+    selectRemoteBranchListEntries,
+    deviceId,
+    dirPath,
+    { dedupingInterval: 10 * 1000, revalidateOnFocus: false },
+    enabled,
   );
-};

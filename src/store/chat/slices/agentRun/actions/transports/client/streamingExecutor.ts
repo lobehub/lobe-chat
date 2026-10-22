@@ -23,12 +23,7 @@ import {
   resolveSubAgentModel,
 } from '@lobechat/const';
 import { type ToolsEngine } from '@lobechat/context-engine';
-import {
-  buildTaskDetailPrompt,
-  buildTaskListPrompt,
-  FILE_PREVIEW_CHARS,
-  isOversizedFileContent,
-} from '@lobechat/prompts';
+import { FILE_PREVIEW_CHARS, isOversizedFileContent } from '@lobechat/prompts';
 import {
   buildGoalOverviewContext,
   type ConversationContext,
@@ -68,7 +63,7 @@ import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { getElectronStoreState } from '@/store/electron';
 import { getGoalStoreState } from '@/store/goal';
 import { getServerConfigStoreState, serverConfigSelectors } from '@/store/serverConfig';
-import { getTaskStoreState } from '@/store/task';
+import { getToolStoreState } from '@/store/tool';
 import { pageAgentRuntime } from '@/store/tool/slices/builtin/executors/pageAgentRuntime';
 import { type StoreSetter } from '@/store/types';
 import { toolInterventionSelectors } from '@/store/user/selectors';
@@ -76,6 +71,8 @@ import { getUserStoreState } from '@/store/user/store';
 
 import { buildRunLifecycle } from '../../lifecycle/buildRunLifecycle';
 import type { RunParkedReason, RunScope } from '../../lifecycle/types';
+import { buildViewedTaskPrompt } from '../viewedTaskPrompt';
+import { buildRunManifestMap } from './discoverableManifests';
 
 const log = debug('lobe-store:streaming-executor');
 
@@ -317,9 +314,9 @@ export class StreamingExecutorActionImpl {
     });
 
     // Use enabledManifests directly to avoid getEnabledPluginManifests adding default tools again
-    const toolManifestMap = Object.fromEntries(
-      enabledManifests.map((manifest) => [manifest.identifier, manifest]),
-    );
+    const toolManifestMap = disableTools
+      ? Object.fromEntries(enabledManifests.map((manifest) => [manifest.identifier, manifest]))
+      : buildRunManifestMap(getToolStoreState(), enabledManifests);
 
     // Merge tools generation result into agentConfig for chatService to use
     const agentConfigWithTools = {
@@ -433,28 +430,7 @@ export class StreamingExecutorActionImpl {
     const viewedTask = operation?.context.viewedTask;
     if (viewedTask) {
       try {
-        const taskState = getTaskStoreState();
-        let contextPrompt: string | undefined;
-
-        if (viewedTask.type === 'list') {
-          const viewedList = taskState.activeTaskListKey
-            ? taskState.taskListMap[taskState.activeTaskListKey]
-            : undefined;
-          const tasks = viewedList?.items ?? [];
-          contextPrompt = buildTaskListPrompt({
-            defaultAssigneeAgentId: operation.context.defaultTaskAssigneeAgentId,
-            tasks,
-            total: viewedList?.total || tasks.length,
-          });
-        } else {
-          const detail = taskState.taskDetailMap[viewedTask.taskId];
-          if (detail)
-            contextPrompt = buildTaskDetailPrompt({
-              defaultAssigneeAgentId: operation.context.defaultTaskAssigneeAgentId,
-              task: detail,
-            });
-        }
-
+        const contextPrompt = buildViewedTaskPrompt(operation.context);
         if (contextPrompt) {
           runtimeInitialContext = {
             ...runtimeInitialContext,
@@ -951,6 +927,7 @@ export class StreamingExecutorActionImpl {
     // Registered Works survive message folding; anchor them before refreshing
     // the message list so its summary query can attach them to the final reply.
     const finalAssistantId = state.metadata?.workAssistantMessageId;
+    let anchoredWork = false;
     if (state.status === 'done' && typeof finalAssistantId === 'string') {
       try {
         const works = await workService.listByRootOperation({
@@ -958,6 +935,7 @@ export class StreamingExecutorActionImpl {
           rootOperationId: operationId,
         });
         if (works.length > 0) {
+          anchoredWork = true;
           await messageService.updateMessageMetadata(
             finalAssistantId,
             {
@@ -1016,6 +994,10 @@ export class StreamingExecutorActionImpl {
     const { requeued } = await runLifecycle.completeRun(completeEvent);
     // A queued follow-up sendMessage was scheduled — skip the post-run notification.
     if (requeued) return;
+
+    // The run-end refresh above lands while this operation still counts as running, so
+    // the transcript keeps its streamed rows and drops the Work summaries the server attached.
+    if (anchoredWork) await this.#get().refreshMessages(context);
 
     await runLifecycle.afterRunComplete(completeEvent);
 

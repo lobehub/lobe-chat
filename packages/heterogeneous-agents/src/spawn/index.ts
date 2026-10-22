@@ -78,6 +78,16 @@ export {
   resolveCodexInitialModel,
 } from './codexModel';
 export {
+  buildCodexLobeHubContextArgs,
+  buildCodexShellEnvSetArgs,
+  CODEX_LOBEHUB_CONTEXT_ENV_KEYS,
+  type CodexJwtFile,
+  createCodexJwtFile,
+  LOBEHUB_JWT_FILE_ENV,
+  refreshCodexJwtFiles,
+  toTomlBasicString,
+} from './codexShellEnv';
+export {
   buildCursorAcpArgs,
   buildCursorAcpPrompt,
   CursorAcpSession,
@@ -170,8 +180,10 @@ export {
   ensureClaudeCodeResumeTranscript,
   type EnsureResumeTranscriptReason,
   type EnsureResumeTranscriptResult,
+  findClaudeCodeTranscriptPath,
   resolveClaudeCodeTranscriptPath,
 } from './ensureResumeTranscript';
+export { getHeterogeneousAgentPresetEnv } from './presetEnv';
 export {
   AMP_BASE_ARGS,
   buildQoderArgs,

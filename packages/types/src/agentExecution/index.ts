@@ -4,7 +4,7 @@ import type { LobeAgentChatConfig } from '../agent/chatConfig';
 import type { CreateThreadWithMessageParams } from '../aiChat';
 import type { DeviceUnavailableErrorData } from '../device';
 import { workingDirConfigSchema } from '../device';
-import type { TaskDetail, UIChatMessage } from '../message';
+import type { ComposerUserMessage, TaskDetail, UIChatMessage } from '../message';
 import type { ChatTopic } from '../topic';
 
 export * from './credentialFacts';
@@ -389,6 +389,13 @@ export interface ExecAgentParams {
    * input — derived from the request context.
    */
   userAgent?: string;
+  /**
+   * The composer-authored part of the user message this send creates: rich-text
+   * `editorData` and attached content (`metadata.contextSelections`, …). The
+   * same shape `aiChat.sendMessageInServer` persists, so a gateway send stores
+   * the row a client-runtime send would. See `ComposerUserMessageSchema`.
+   */
+  userMessage?: ComposerUserMessage;
 }
 
 /**

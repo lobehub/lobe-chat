@@ -9,7 +9,6 @@ import { useAgentTopicGroupMode } from '@/features/AgentSidebar/Topic/hooks/useA
 import ToggleGroups from '@/features/AgentSidebar/Topic/ToggleGroups';
 import ByAgentMode from '@/features/AgentSidebar/Topic/TopicListContent/ByAgentMode';
 import ByDeviceMode from '@/features/AgentSidebar/Topic/TopicListContent/ByDeviceMode';
-import ByProjectMode from '@/features/AgentSidebar/Topic/TopicListContent/ByProjectMode';
 import ByStatusMode from '@/features/AgentSidebar/Topic/TopicListContent/ByStatusMode';
 import ByTimeMode from '@/features/AgentSidebar/Topic/TopicListContent/ByTimeMode';
 import FlatMode from '@/features/AgentSidebar/Topic/TopicListContent/FlatMode';
@@ -96,8 +95,6 @@ function ProjectTopicList({
         <FlatMode />
       ) : topicGroupMode === 'byStatus' ? (
         <ByStatusMode />
-      ) : topicGroupMode === 'byProject' ? (
-        <ByProjectMode />
       ) : topicGroupMode === 'byAgent' ? (
         <ByAgentMode />
       ) : topicGroupMode === 'byDevice' ? (

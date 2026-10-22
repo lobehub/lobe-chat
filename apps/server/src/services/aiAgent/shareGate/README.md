@@ -114,7 +114,11 @@ absence of a known exploit.
   `agentShareVisitor` runs (`serverRuntimes/cloudSandbox.ts`), and
   `lobe-creds` stays denied above so nothing ever writes `~/.creds/env`
   into that session either. No creator credential or JWT is therefore
-  reachable from inside a visitor's sandbox command.
+  reachable from inside a visitor's sandbox command. The kept manifest's
+  `systemRole` also gets `shareVisitorSystemPrompt` appended
+  (`applyShareGateToCloudSandbox` in `toolSet.ts`), so the model knows `lh`
+  is refused before it plans a flow the agent prompt or a skill routes
+  through the CLI.
 
 - `lobe-activator`: widens the run's tool surface at runtime, so it is
   allowed only because every source it reads is already the gated set.
@@ -152,7 +156,7 @@ absence of a known exploit.
   4. Activations restored from history. `operationPrep` re-derives them into
      `activatableToolIds` (`apps/server/src/services/aiAgent/pipeline/operationPrep.ts:535`) before the share
      gate prunes that list, and `AgentRuntimeService` restores only ids still
-     in it (`apps/server/src/services/agentRuntime/AgentRuntimeService.ts:1350`).
+     in it (`apps/server/src/services/agentRuntime/AgentRuntimeService/createOperation.ts:182`).
   5. Its skill fallback. `activateTools` retries a non-tool id as a skill
      name. That lookup re-checks `shareConfig.skillGrants` on every source it
      opens (`apps/server/src/services/toolExecution/serverRuntimes/activator.ts:97`), the same rule the

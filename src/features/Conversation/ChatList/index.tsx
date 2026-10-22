@@ -35,10 +35,13 @@ import AgentSignalReceiptList from './components/AgentSignalReceiptList';
 import { RefreshError } from './components/RefreshError';
 import VirtualizedList from './components/VirtualizedList';
 import { useAgentSignalReceipts } from './hooks/useAgentSignalReceipts';
+import { useForwardPagingFallback } from './hooks/useForwardPagingFallback';
 import { useInitialRevalidation } from './hooks/useInitialRevalidation';
 import { useMessageRefreshError } from './hooks/useMessageRefreshError';
+import { type InitialScrollPosition } from './hooks/useTopicScrollPersist';
 import { resolveMessageListFeedback } from './resolveMessageListFeedback';
 import { buildChatRows } from './utils/chatRows';
+import { hoistCompressedGroups } from './utils/compressedGroupOrder';
 import type { MessageDeepLink } from './utils/messageDeepLink';
 import { resolveMessageDeepLink } from './utils/messageDeepLink';
 import { resolveRefreshingRowId } from './utils/refreshingRow';
@@ -93,11 +96,22 @@ export interface ChatListProps {
    */
   hideBackgroundRunHint?: boolean;
   /**
+   * Where the conversation opens: the saved position or the end (`bottom`,
+   * default), or always the first message (`top`, e.g. in share page).
+   */
+  initialScrollPosition?: InitialScrollPosition;
+  /**
    * Custom item renderer. If not provided, uses default ChatItem.
    */
   itemContent?: (index: number, id: string) => ReactNode;
   /** Message hash target to locate after the virtual list has rendered. */
   messageDeepLink?: MessageDeepLink;
+  /**
+   * The conversation reads forward (`messageReadMode: 'forward'`) but the
+   * server cannot page forward. The owner of the context should switch it back
+   * to the newest-first read.
+   */
+  onForwardPagingUnsupported?: () => void;
   /**
    * Force showing welcome component even when messages exist
    */
@@ -120,13 +134,16 @@ const ChatList = memo<ChatListProps>(
     footerSlot,
     headerSlot,
     hideBackgroundRunHint,
+    initialScrollPosition,
     welcome,
     itemContent,
     messageDeepLink,
+    onForwardPagingUnsupported,
     showWelcome,
   }) => {
     // The chat store owns the transcript; this view keeps its sync mounted.
     const context = useConversationStore((s) => s.context);
+    const paging = context.messageReadMode === 'forward' ? 'forward' : 'backward';
     const enableUserMemories = useUserStore(settingsSelectors.memoryEnabled);
     const skipFetch = useConversationStore(dataSelectors.skipFetch);
     const useFetchMessages = useChatStore((s) => s.useFetchMessages);
@@ -150,9 +167,15 @@ const ChatList = memo<ChatListProps>(
       skipFetch: skipFetch || isCreatingTopic,
       syncInterventions: true,
     });
+    const laterMessagesError = useConversationStore((s) => s.laterMessagesError);
+    const isFallingBack = useForwardPagingFallback({
+      errors: [messagesSWR.error, laterMessagesError],
+      onUnsupported: onForwardPagingUnsupported,
+      paging,
+    });
     const messageListIdentity = getMessageListCacheIdentity(context);
     const refreshError = useMessageRefreshError({
-      error: messagesSWR.error,
+      error: isFallingBack ? undefined : messagesSWR.error,
       identity: messageListIdentity,
       isValidating: messagesSWR.isValidating,
       mutate: messagesSWR.mutate,
@@ -164,9 +187,16 @@ const ChatList = memo<ChatListProps>(
       isValidating: messagesSWR.isValidating,
     });
     const allDisplayMessages = useConversationStore(dataSelectors.displayMessages);
+    // A compression group summarises the history before the turn that triggered
+    // it, so it belongs above that turn's question rather than between the
+    // question and its answer.
+    const orderedMessages = useMemo(
+      () => hoistCompressedGroups(allDisplayMessages),
+      [allDisplayMessages],
+    );
     const displayMessages = useMemo(
-      () => (filterItem ? allDisplayMessages.filter(filterItem) : allDisplayMessages),
-      [allDisplayMessages, filterItem],
+      () => (filterItem ? orderedMessages.filter(filterItem) : orderedMessages),
+      [orderedMessages, filterItem],
     );
     const displayMessageIds = useMemo(() => displayMessages.map((m) => m.id), [displayMessages]);
     // Steered follow-up turns fold into the turn they interrupted. Custom item
@@ -331,8 +361,10 @@ const ChatList = memo<ChatListProps>(
               dataSource={rowIds}
               footerSlot={footerSlot}
               headerSlot={headerSlot}
+              initialScrollPosition={initialScrollPosition}
               itemContent={itemContent ?? defaultItemContent}
               messageDeepLink={resolvedMessageDeepLink}
+              paging={paging}
             />
           </BackgroundRunHintContext>
         </MessageActionProvider>

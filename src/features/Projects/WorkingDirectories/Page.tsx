@@ -8,9 +8,8 @@ import { RouteLoading } from '@/components/Skeleton/RouteSegment';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useActiveRouteParams } from '@/hooks/useActiveRouteParams';
 import { useCurrentProjectDetail, useProjectStore } from '@/store/project';
-import { useUserStore } from '@/store/user';
-import { userProfileSelectors } from '@/store/user/selectors';
 
+import { useCanManageProject } from '../useCanManageProject';
 import { AdvancedSettings } from './AdvancedSettings';
 import { GeneralSettings } from './GeneralSettings';
 import { ProjectWorkingDirectories } from './index';
@@ -28,12 +27,11 @@ export function ProjectDirectoriesPage() {
   const navigate = useWorkspaceAwareNavigate();
   const { projectId } = useActiveRouteParams<{ projectId: string }>();
   const { error, revalidate } = useProjectStore((s) => s.useFetchProjectDetail)(projectId);
-  const currentUserId = useUserStore(userProfileSelectors.userId);
+  const canManage = useCanManageProject();
   const detail = useCurrentProjectDetail(projectId);
   if (error && !detail) return <AsyncError error={error} variant="page" onRetry={revalidate} />;
   if (!detail) return <RouteLoading />;
 
-  const canManage = currentUserId === detail.project.userId;
   const sections: SectionItem[] = [
     {
       key: 'general',
@@ -50,7 +48,7 @@ export function ProjectDirectoriesPage() {
       label: t('settings.workLocations'),
       render: () => <WorkingDirectorySettings projectId={detail.project.id} />,
     },
-    // Destructive settings are owner-only, so the tab is hidden for everyone else.
+    // Destructive settings need edit permission, so the tab is hidden from viewers.
     ...(canManage
       ? [
           {

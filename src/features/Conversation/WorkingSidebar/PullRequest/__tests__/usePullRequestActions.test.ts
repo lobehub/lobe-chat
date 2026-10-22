@@ -37,6 +37,50 @@ describe('usePullRequestActions', () => {
     toastError.mockReset();
   });
 
+  // Regression: the pane enabled close / merge / comment on a PR painted from
+  // persisted rows, so a click before the live reads settled could mutate a PR
+  // the branch had already moved off.
+  it('refuses every mutation while locked, and runs once unlocked', async () => {
+    runPullRequestAction.mockResolvedValue({ success: true });
+    pushGitBranch.mockResolvedValue({ success: true });
+    const mutateDetail = vi.fn().mockResolvedValue(undefined);
+    const { rerender, result } = renderHook(
+      ({ locked }) => usePullRequestActions({ ...params, locked, mutateDetail }),
+      { initialProps: { locked: true } },
+    );
+
+    await act(async () => {
+      expect(await result.current.run({ type: 'close' })).toBe(false);
+      expect(await result.current.push()).toBe(false);
+    });
+    expect(runPullRequestAction).not.toHaveBeenCalled();
+    expect(pushGitBranch).not.toHaveBeenCalled();
+    expect(result.current.busy).toBeUndefined();
+
+    rerender({ locked: false });
+    await act(async () => {
+      expect(await result.current.run({ type: 'close' })).toBe(true);
+    });
+    expect(runPullRequestAction).toHaveBeenCalledTimes(1);
+  });
+
+  it('lets comments through but refuses policy actions while the merge context is stale', async () => {
+    runPullRequestAction.mockResolvedValue({ success: true });
+    const mutateDetail = vi.fn().mockResolvedValue(undefined);
+    const { result } = renderHook(() =>
+      usePullRequestActions({ ...params, mutateDetail, policyLocked: true }),
+    );
+
+    await act(async () => {
+      expect(
+        await result.current.run({ headRefOid: 'a'.repeat(40), method: 'squash', type: 'merge' }),
+      ).toBe(false);
+      expect(await result.current.run({ body: 'hi', type: 'comment' })).toBe(true);
+    });
+    expect(runPullRequestAction).toHaveBeenCalledTimes(1);
+    expect(runPullRequestAction.mock.calls[0][0].action.type).toBe('comment');
+  });
+
   it('marks busy during the action and clears it afterwards', async () => {
     const pending = deferred<{ success: boolean }>();
     runPullRequestAction.mockReturnValue(pending.promise);

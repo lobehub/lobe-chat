@@ -7,6 +7,7 @@ import type { PluginOption, ViteDevServer } from 'vite';
 import { defineConfig, loadEnv } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
+import { canvasRuntimeEntries } from './plugins/vite/canvasRuntime';
 import { customBrandingLoadingScreen } from './plugins/vite/customBrandingLoadingScreen';
 import { viteEnvRestartKeys } from './plugins/vite/envRestartKeys';
 import {
@@ -118,7 +119,16 @@ export default defineConfig({
         __dirname,
         isAuth ? 'index.auth.html' : isMobile ? 'index.mobile.html' : 'index.html',
       ),
-      output: createSharedRolldownOutput({ strictExecutionOrder: true }),
+      output: createSharedRolldownOutput({
+        initialEntries: {
+          main: path.resolve(
+            __dirname,
+            isAuth ? 'index.auth.html' : isMobile ? 'index.mobile.html' : 'index.html',
+          ),
+          ...(!isAuth && canvasRuntimeEntries),
+        },
+        strictExecutionOrder: true,
+      }),
       preserveEntrySignatures: 'allow-extension',
     },
   },

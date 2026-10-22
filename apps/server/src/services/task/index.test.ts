@@ -68,7 +68,7 @@ const { resolveTaskAcceptance } = vi.hoisted(() => ({
   resolveTaskAcceptance: vi.fn(),
 }));
 
-vi.mock('@/server/services/verify/taskAcceptance', () => ({ resolveTaskAcceptance }));
+vi.mock('@/server/services/verify/taskAcceptanceResolution', () => ({ resolveTaskAcceptance }));
 
 // AiAgentService pulls in ~14 sub-dependencies in its constructor; mock it so
 // the running-status branch in updateStatus doesn't drag them in.

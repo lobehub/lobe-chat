@@ -39,11 +39,9 @@ import {
 import WorkSummaryCard from '@/features/Work/WorkSummaryCard';
 import { useOpenWork } from '@/features/WorkGallery/useOpenWork';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
-import { useClientDataSWR } from '@/libs/swr';
-import { workKeys } from '@/libs/swr/keys';
-import { workService } from '@/services/work';
 import { goalSelectors, useGoalStore } from '@/store/goal';
 import type { ProjectDetail } from '@/store/project';
+import { useWorkStore, workActions, workSelectors } from '@/store/work';
 
 const styles = createStaticStyles(({ css }) => ({
   attention: css`
@@ -117,6 +115,7 @@ const styles = createStaticStyles(({ css }) => ({
 }));
 
 const TERMINAL_STATUSES = new Set<TaskStatus | string>(['canceled', 'completed']);
+const EMPTY_WORKS: WorkSummaryItem[] = [];
 const ATTENTION_STATUSES = new Set<TaskStatus | string>(['failed', 'paused']);
 interface ProjectDashboardProps {
   detail: ProjectDetail;
@@ -155,23 +154,21 @@ const ProjectDashboard = memo<ProjectDashboardProps>(({ detail, projectId }) => 
   const goalSWR = useGoalStore((s) => s.useFetchGoals)(undefined, projectId);
   const coordinatorAgentId = detail.project.coordinatorAgentId;
   const projectReference = detail.project.slug ?? projectId;
-  const workSWR = useClientDataSWR(
-    coordinatorAgentId
-      ? workKeys.workspace(workspaceId, `project:${projectId}:${coordinatorAgentId}`)
-      : null,
-    () =>
-      workService.listByWorkspace({
-        limit: 4,
-        originAgentId: coordinatorAgentId,
-      }),
+  const agentWorksParams = useMemo(
+    () => (coordinatorAgentId ? { originAgentId: coordinatorAgentId, workspaceId } : null),
+    [coordinatorAgentId, workspaceId],
   );
+  const workSync = workActions.useFetchAgentWorks(agentWorksParams);
+  // `undefined` while nothing is painted yet; the stored copy paints first.
+  const storedWorks = useWorkStore(workSelectors.agentWorks(coordinatorAgentId));
 
   const tasks = detail.tasks ?? [];
   const activeTasks = tasks.filter((task) => !TERMINAL_STATUSES.has(task.status)).slice(0, 5);
   const attentionTasks = tasks.filter((task) => ATTENTION_STATUSES.has(task.status)).slice(0, 3);
   const completedGoals = goals.filter(({ goal }) => goal.status === 'achieved').length;
   const progress = goals.length ? Math.round((completedGoals / goals.length) * 100) : 0;
-  const works = workSWR.data?.items ?? [];
+  const works = storedWorks ?? EMPTY_WORKS;
+  const worksPending = !!coordinatorAgentId && storedWorks === undefined;
   const goalPreview = useMemo(() => goals.slice(0, 3), [goals]);
 
   return (
@@ -265,14 +262,16 @@ const ProjectDashboard = memo<ProjectDashboardProps>(({ detail, projectId }) => 
 
         <Flexbox className={styles.section} gap={12}>
           <SectionTitle count={works.length} title={t('overview.latestWorks')} />
-          {workSWR.error ? (
+          {workSync.error && worksPending ? (
             <AsyncError
-              error={workSWR.error}
+              error={workSync.error}
               variant={'inline'}
-              onRetry={() => void workSWR.mutate()}
+              onRetry={() => void workSync.revalidate()}
             />
-          ) : workSWR.isLoading ? (
-            <ArticleSkeleton rows={4} />
+          ) : worksPending ? (
+            // Before the stored copy is read, paint nothing rather than a
+            // skeleton that the cached cards replace a frame later.
+            workSync.isHydrated && <ArticleSkeleton rows={4} />
           ) : works.length === 0 ? (
             <Empty
               description={t('overview.worksEmptyDescription')}

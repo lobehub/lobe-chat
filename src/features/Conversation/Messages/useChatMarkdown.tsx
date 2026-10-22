@@ -67,6 +67,7 @@ export const useChatMarkdown = ({
         },
         components,
         enableCustomFootnotes: true,
+        // @deprecated Inline HTML preview and streaming are superseded by Canvas; kept for existing messages.
         enableHtmlPreview: true,
         enableStream,
         rehypePlugins,

@@ -1,4 +1,27 @@
 export default {
+  'acceptance.comments.evidenceUnavailable': 'This evidence is no longer available.',
+  'acceptance.comments.video.hintPaused': 'Drag to circle an area · frame {{frame}}',
+  'acceptance.comments.video.hintPlaying': 'Press to pause, then drag to circle',
+  'acceptance.comments.video.emptyBody':
+    'Pause on any frame and drag over the video. Each area you circle becomes its own comment, so you can mark several moments before sending.',
+  'acceptance.comments.video.showFrame': 'Show the frame at {{time}}',
+  'acceptance.comments.video.listTitle': '{{count}} comment(s) on this video',
+  'acceptance.comments.draftsTitle': 'New comments',
+  'acceptance.comments.draftEmptyTitle': 'Circle what you mean',
+  'acceptance.comments.draftPlaceholder': 'Write a comment about this area…',
+  'acceptance.comments.draftNumber': 'Comment {{index}}',
+  'acceptance.comments.draftRemove': 'Remove comment {{index}}',
+  'acceptance.comments.draftRemoved': 'Comment {{index}} removed',
+  'acceptance.comments.undo': 'Undo',
+  'acceptance.comments.draftSaved': 'Drafts are saved on this device',
+  'acceptance.comments.draftNeedsRegion': 'Circle an area to start a comment',
+  'acceptance.comments.draftNeedsText': 'Comment {{index}} needs text',
+  'acceptance.comments.draftsUnsent':
+    '{{count}} comment(s) not sent. Your text is kept — send again.',
+  'acceptance.comments.sendCount': 'Send {{count}} comments',
+  'acceptance.comments.evidenceDrafts': '{{count}} unsent',
+  'acceptance.comments.evidenceNumber': 'Evidence {{index}}',
+  'acceptance.comments.evidenceModalTitle': 'Comment on evidence',
   'acceptance.share.title': 'Share',
   'acceptance.share.makePublic': 'Allow access with the link',
   'acceptance.share.makePrivate': 'Restrict access',
@@ -189,6 +212,8 @@ export default {
     '{{done}} of {{total}} checks confirmed — {{rest}} awaiting your review',
   'acceptance.bar.progressDone': 'All {{total}} checks confirmed — ready to accept',
   'acceptance.bar.progressZero': '{{total}} checks awaiting your review',
+  'acceptance.bar.readOnlyReason':
+    'Only the creator, a workspace owner or an admin can accept or reject this delivery. You can still approve it or comment in Discussion.',
   'acceptance.bar.rejectComment': 'Reject delivery',
   'acceptance.bar.rerun': 'Fix',
   'acceptance.bar.rerunDrafted': 'Added to your composer — review and send it.',
@@ -253,7 +278,7 @@ export default {
   'acceptance.comments.checkRejectedRegions': '{{count}} marked region(s)',
   'acceptance.comments.regionOn': '{{name}} commented on',
   'acceptance.comments.roundRejected': 'Round {{round}} delivery sent back',
-  'acceptance.comments.commentThisEvidence': 'Comment on this screenshot',
+  'acceptance.comments.commentMedia': 'Comment on this evidence',
   'acceptance.comments.signIn': 'Sign in',
   'acceptance.comments.signInDescription': 'Sign in to comment, reply, and mark up screenshots.',
   'acceptance.comments.signInTitle': 'Join the discussion',
@@ -281,7 +306,7 @@ export default {
   'acceptance.comments.regionCount': '{{count}} region note(s)',
   'acceptance.comments.approve': 'Approve this delivery',
   'acceptance.comments.approveDescription':
-    'This records your approval. It doesn’t change the acceptance status — only the owner can accept the delivery.',
+    'This records your approval. It doesn’t change the acceptance status — only the creator, a workspace owner or an admin can accept the delivery.',
   'acceptance.comments.approveSummaryPlaceholder': 'One-line summary (optional)',
   'acceptance.comments.withdraw': 'Withdraw approval',
   'acceptance.comments.withdrawDescription':
@@ -493,12 +518,12 @@ export default {
   'acceptance.status.closed': 'Acceptance closed',
   'acceptance.status.delivered': 'Ready for your decision',
   'acceptance.gate.decidedRevise':
-    'Sent back. The main Agent is rewriting the plan from your correction; the new version comes back here for your review.',
+    'Sent back. The main Agent is rewriting the plan from your correction and re-running the affected units on it; their new results come back here for your review.',
   'acceptance.gate.decidedRelease': 'Started. Wave {{wave}} is running.',
   'acceptance.gate.cancel': 'Cancel',
   'acceptance.gate.reviseSubmit': 'Send back to revise',
   'acceptance.gate.reviseHint':
-    'Your correction goes to the main Agent, which writes a new version of the plan skill. The results above stand; you review the new version before anything is released.',
+    'Your correction goes to the main Agent, which writes a new version of the plan skill and re-runs the units it covers on that version. You review their new results before anything is released.',
   'acceptance.gate.revisePlaceholder':
     'Write the correction. The main Agent writes it into a new version of the plan.',
   'acceptance.gate.revise': 'Revise plan',
@@ -522,6 +547,7 @@ export default {
   'acceptance.gate.resultsProbes': 'Experiment results',
   'acceptance.gate.hideFiles': 'Hide files',
   'acceptance.gate.showFiles': 'Show the skill files',
+  'acceptance.gate.planFiles': '{{count}} files',
   'acceptance.gate.planTitle': 'Execution plan',
   'acceptance.gate.agentSays': 'Main Agent: {{reason}}',
   'acceptance.gate.unitBrief': 'What this unit does',

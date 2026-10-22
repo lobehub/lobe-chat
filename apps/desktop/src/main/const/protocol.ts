@@ -18,7 +18,18 @@ export const BACKEND_PATH_PREFIXES = [
   '/api/auth',
   '/api/agent/llm-relay',
   '/market',
+  '/canvas-preview',
+  '/canvas-runtime',
 ];
 
-export const isBackendPath = (pathname: string) =>
-  BACKEND_PATH_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
+const SANDBOXED_PATH_PREFIXES = ['/canvas-preview', '/canvas-runtime'];
+
+const matchesPrefix = (pathname: string, prefixes: string[]) =>
+  prefixes.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
+
+export const isBackendPath = (pathname: string) => matchesPrefix(pathname, BACKEND_PATH_PREFIXES);
+
+// Canvas previews run in an opaque-origin sandbox (Origin: null); the proxy would otherwise
+// attach the user's access token to whatever backend path their scripts fetch.
+export const isSandboxedBackendRequestAllowed = (pathname: string, origin: string | null) =>
+  origin !== 'null' || matchesPrefix(pathname, SANDBOXED_PATH_PREFIXES);

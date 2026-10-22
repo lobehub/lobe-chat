@@ -219,6 +219,11 @@ export const UserLabSchema = z.object({
   /** Capture a conversation turn as an eval test case (developer-facing). */
   enableEvalCapture: z.boolean().optional(),
   /**
+   * show "Report a problem" in the topic menu, which sends where the topic is
+   * (its ids and the client environment) to the support team
+   */
+  enableTopicBugReport: z.boolean().optional(),
+  /**
    * enable Goals: hand the agent a goal it plans into tasks, tracks and delivers
    */
   enableGoals: z.boolean().optional(),
@@ -239,6 +244,11 @@ export const UserLabSchema = z.object({
    * instead of being thrown away with the sandbox
    */
   enablePersistentSandbox: z.boolean().optional(),
+  /**
+   * show the redesigned onboarding flow when this user first enters a newly
+   * created workspace (the previous flow otherwise)
+   */
+  enableWorkspaceOnboardingV2: z.boolean().optional(),
 });
 
 export type UserLab = z.infer<typeof UserLabSchema>;

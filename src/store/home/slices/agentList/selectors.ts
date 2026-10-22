@@ -1,6 +1,8 @@
 import { type SidebarAgentItem, type SidebarGroup } from '@/database/repositories/home';
 import { type HomeStore } from '@/store/home/store';
 
+import { AGENT_LIST_KEY } from './projection';
+
 /**
  * Get all pinned agents
  */
@@ -73,6 +75,10 @@ const privateUngroupedAgentsCount = (s: HomeStore): number => s.privateUngrouped
  */
 const isAgentListInit = (s: HomeStore): boolean => s.isAgentListInit;
 
+/** The server confirmed the list in this session (not only the persisted copy). */
+const isAgentListConfirmed = (s: HomeStore): boolean =>
+  s.isAgentListInit && s.agentListReplica.entries[AGENT_LIST_KEY]?.source === 'server';
+
 /**
  * Get all agents (pinned + grouped + ungrouped + private)
  */
@@ -119,6 +125,7 @@ export const homeAgentListSelectors = {
   getAgentById,
   hasCustomAgents,
   hasPrivateAgents,
+  isAgentListConfirmed,
   isAgentListInit,
   pinnedAgents,
   privateAgentGroups,

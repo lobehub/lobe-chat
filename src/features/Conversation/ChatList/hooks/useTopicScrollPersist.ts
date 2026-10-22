@@ -32,6 +32,8 @@ interface PendingWrite {
   offset: number;
 }
 
+export type InitialScrollPosition = 'bottom' | 'top';
+
 interface UseTopicScrollPersistOptions {
   containerRef?: RefObject<HTMLDivElement | null>;
   contextKey: string;
@@ -50,6 +52,11 @@ interface UseTopicScrollPersistOptions {
    * so scrollToIndex lands on the right virtua row.
    */
   headerOffset?: number;
+  /**
+   * Where a topic opens when there is no deep link. `bottom` restores the saved
+   * position, or the end of the conversation; `top` always opens at the start.
+   */
+  initialPosition?: InitialScrollPosition;
   messageDeepLink?: ResolvedMessageDeepLink;
   virtuaRef: RefObject<VListHandle | null>;
 }
@@ -108,6 +115,7 @@ export const useTopicScrollPersist = ({
   dataSourceLength,
   getScroller,
   headerOffset = 0,
+  initialPosition = 'bottom',
   messageDeepLink,
   virtuaRef,
 }: UseTopicScrollPersistOptions) => {
@@ -316,6 +324,13 @@ export const useTopicScrollPersist = ({
       return;
     }
 
+    if (initialPosition === 'top') {
+      const scroller = getScroller();
+      if (scroller) scroller.scrollTop = 0;
+      finalize(false);
+      return;
+    }
+
     const snapshot = loadScrollSnapshot(contextKey);
     const targetOffset = snapshot && !snapshot.atBottom ? snapshot.offset : null;
 
@@ -410,6 +425,7 @@ export const useTopicScrollPersist = ({
     flushNow,
     getScroller,
     headerOffset,
+    initialPosition,
     messageDeepLink,
     virtuaRef,
   ]);

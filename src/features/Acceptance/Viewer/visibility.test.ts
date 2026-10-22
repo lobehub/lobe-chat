@@ -4,12 +4,13 @@ import {
   canCommentOnAcceptanceEvidence,
   canReviewAcceptance,
   canViewAcceptanceHistory,
+  isReadOnlyAcceptanceDecider,
   resolveAcceptanceHistoryNavigation,
 } from './visibility';
 
 describe('canCommentOnAcceptanceEvidence', () => {
-  it('hides standalone region comments from the acceptance author', () => {
-    expect(canCommentOnAcceptanceEvidence({ isOwner: true }, true)).toBe(false);
+  it('allows the acceptance author to comment without rejecting', () => {
+    expect(canCommentOnAcceptanceEvidence({ isOwner: true }, true)).toBe(true);
   });
 
   it('keeps region comments available to another viewer with comment access', () => {
@@ -54,5 +55,20 @@ describe('canReviewAcceptance', () => {
   it('treats a not-yet-loaded bundle as read-only', () => {
     expect(canReviewAcceptance(undefined)).toBe(false);
     expect(canReviewAcceptance(null)).toBe(false);
+  });
+});
+
+describe('isReadOnlyAcceptanceDecider', () => {
+  it('shows a disabled decision bar to a teammate who can approve but not decide', () => {
+    expect(isReadOnlyAcceptanceDecider({ canReview: false }, true)).toBe(true);
+  });
+
+  it('keeps the live bar for a decider', () => {
+    expect(isReadOnlyAcceptanceDecider({ canReview: true }, true)).toBe(false);
+  });
+
+  it('shows nothing to a viewer or link visitor who cannot weigh in', () => {
+    expect(isReadOnlyAcceptanceDecider({ canReview: false }, false)).toBe(false);
+    expect(isReadOnlyAcceptanceDecider(undefined, true)).toBe(false);
   });
 });

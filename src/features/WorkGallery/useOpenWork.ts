@@ -5,6 +5,7 @@ import { taskDetailPath } from '@/features/AgentTasks/shared/taskDetailPath';
 import { openDocumentModal } from '@/features/DocumentModal/loader';
 import { getWorkTypeDescriptor, isSafeExternalUrl } from '@/features/Work/descriptors';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
+import { canvasService } from '@/services/canvas';
 
 /**
  * Open a Work summary item at its canonical target (document modal, external
@@ -20,6 +21,14 @@ export const useOpenWork = () => {
       if (!openTarget) return;
 
       switch (openTarget.kind) {
+        case 'canvas': {
+          void canvasService
+            .getVersion(openTarget.canvasId, openTarget.version)
+            .then(
+              (detail) => detail && window.open(detail.previewUrl, '_blank', 'noopener,noreferrer'),
+            );
+          return;
+        }
         case 'document': {
           void openDocumentModal(openTarget.documentId);
           return;
