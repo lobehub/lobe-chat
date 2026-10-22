@@ -1,6 +1,7 @@
 'use client';
 
 import { Flexbox, Highlighter, Skeleton, Text } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -56,7 +57,7 @@ const DryRunReview = memo<DryRunReviewProps>(
           </Text>
         </Flexbox>
 
-        <Flexbox className={reviewStyles.section} gap={6}>
+        <Flexbox className={stylex.props(reviewStyles.section).className} gap={6}>
           <Fact label={t('dryRun.runtime')}>
             <Text fontSize={12}>{target.runtime}</Text>
           </Fact>

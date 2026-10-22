@@ -1,6 +1,7 @@
 import { DEFAULT_AVATAR, DEFAULT_INBOX_AVATAR } from '@lobechat/const';
 import { agentDisplayName } from '@lobechat/types';
 import { GroupBotSquareIcon } from '@lobehub/ui/icons';
+import * as stylex from '@stylexjs/stylex';
 import { Command } from 'cmdk';
 import { Bot, Image } from 'lucide-react';
 import { memo } from 'react';
@@ -62,26 +63,26 @@ const AskAIMenu = memo(() => {
     <Command.Group heading={heading}>
       <Command.Item value="lobe-ai" onSelect={handleAskLobeAI}>
         <Avatar emojiScaleWithBackground avatar={DEFAULT_INBOX_AVATAR} shape="square" size={18} />
-        <div className={styles.itemContent}>
-          <div className={styles.itemLabel}>Lobe AI</div>
+        <div {...stylex.props(styles.itemContent)}>
+          <div {...stylex.props(styles.itemLabel)}>Lobe AI</div>
         </div>
       </Command.Item>
       <Command.Item value="agent-builder" onSelect={handleAgentBuilder}>
-        <Bot className={styles.icon} />
-        <div className={styles.itemContent}>
-          <div className={styles.itemLabel}>{t('agentBuilder.title', { ns: 'chat' })}</div>
+        <Bot {...stylex.props(styles.icon)} />
+        <div {...stylex.props(styles.itemContent)}>
+          <div {...stylex.props(styles.itemLabel)}>{t('agentBuilder.title', { ns: 'chat' })}</div>
         </div>
       </Command.Item>
       <Command.Item value="group-builder" onSelect={handleGroupBuilder}>
-        <GroupBotSquareIcon className={styles.icon} />
-        <div className={styles.itemContent}>
-          <div className={styles.itemLabel}>{t('starter.createGroup', { ns: 'home' })}</div>
+        <GroupBotSquareIcon {...stylex.props(styles.icon)} />
+        <div {...stylex.props(styles.itemContent)}>
+          <div {...stylex.props(styles.itemLabel)}>{t('starter.createGroup', { ns: 'home' })}</div>
         </div>
       </Command.Item>
       <Command.Item value="ai-painting" onSelect={handleAIPainting}>
-        <Image className={styles.icon} />
-        <div className={styles.itemContent}>
-          <div className={styles.itemLabel}>{t('cmdk.aiPainting')}</div>
+        <Image {...stylex.props(styles.icon)} />
+        <div {...stylex.props(styles.itemContent)}>
+          <div {...stylex.props(styles.itemLabel)}>{t('cmdk.aiPainting')}</div>
         </div>
       </Command.Item>
 

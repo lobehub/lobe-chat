@@ -18,7 +18,8 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type { DashboardItemLayout } from '@lobechat/types';
-import { ActionIcon, Button, cx, Flexbox, Icon, toast } from '@lobehub/ui';
+import { ActionIcon, Button, Flexbox, Icon, toast } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import {
   ChevronDownIcon,
   ChevronLeftIcon,
@@ -31,6 +32,7 @@ import { useTranslation } from 'react-i18next';
 
 import type { DashboardBoardItem } from '@/services/dashboard';
 import { dashboardSelectors, useDashboardStore } from '@/store/dashboard';
+import { sx } from '@/styles/sx';
 
 import {
   DASHBOARD_MAX_H,
@@ -39,7 +41,7 @@ import {
   flowLayouts,
 } from '../utils/layout';
 import WidgetCard from '../WidgetCard';
-import { cellStyle, gridStyles } from './style';
+import { cellStyle, gridProps, gridStyles } from './style';
 
 type Size = { h: number; w: number };
 
@@ -100,22 +102,21 @@ const EditableCell = memo<EditableCellProps>(({ entry, layout, onResize }) => {
 
   return (
     <div
-      className={cx(gridStyles.cell, isDragging && gridStyles.cellDragging)}
-      data-layout-cell={entry.item.id}
-      ref={setNodeRef}
-      style={{
+      {...sx([gridStyles.cell, isDragging && gridStyles.cellDragging], undefined, {
         ...cellStyle(layout),
         transform: CSS.Translate.toString(transform),
         transition,
-      }}
+      })}
+      data-layout-cell={entry.item.id}
+      ref={setNodeRef}
     >
       <WidgetCard
         actions={resizeActions}
-        className={gridStyles.editCard}
+        className={stylex.props(gridStyles.editCard).className}
         widget={entry.widget}
         handle={
           <span
-            className={gridStyles.handle}
+            {...stylex.props(gridStyles.handle)}
             {...attributes}
             {...listeners}
             aria-label={t('layout.drag')}
@@ -201,7 +202,7 @@ const LayoutEditor = memo<LayoutEditorProps>(({ dashboardId, items, initialLayou
       </Flexbox>
       <DndContext collisionDetection={closestCenter} sensors={sensors} onDragEnd={handleDragEnd}>
         <SortableContext items={order} strategy={rectSortingStrategy}>
-          <div className={gridStyles.grid} data-dashboard-grid={'editing'}>
+          <div {...gridProps()} data-dashboard-grid={'editing'}>
             {order.map((id) => {
               const entry = byId.get(id);
               const layout = draftLayouts[id];

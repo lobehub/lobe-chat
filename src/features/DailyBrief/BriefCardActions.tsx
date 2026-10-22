@@ -1,5 +1,6 @@
 import { type BriefAction, DEFAULT_BRIEF_ACTIONS, type TaskStatus } from '@lobechat/types';
 import { Button, cssVar, Flexbox, Icon, Text, toast, Tooltip } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import { Check, SquarePen, Target, Workflow } from 'lucide-react';
 import { lazy, memo, Suspense, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -51,7 +52,7 @@ type CommentMode = { type: 'feedback' } | { key: string; type: 'comment' };
 const SuccessTag = memo<{ label: string }>(({ label }) => (
   <Flexbox horizontal align={'center'} gap={4}>
     <Icon color={cssVar.colorTextQuaternary} icon={Check} size={14} />
-    <Text className={styles.resolvedTag}>{label}</Text>
+    <Text className={stylex.props(styles.resolvedTag).className}>{label}</Text>
   </Flexbox>
 ));
 
@@ -100,7 +101,7 @@ const BriefCardActions = memo<BriefCardActionsProps>(
     }, [agentId, openTopicDrawer, setActiveTaskId, taskId, topicId, topicTitle]);
     const viewRunButton = showViewRun ? (
       <Button
-        className={'brief-view-run-btn'}
+        className={`brief-view-run-btn ${stylex.props(styles.revealOnCardHover).className}`}
         icon={Workflow}
         size={'small'}
         style={{ color: cssVar.colorTextSecondary }}
@@ -332,7 +333,7 @@ const BriefCardActions = memo<BriefCardActionsProps>(
             showEditButton && (
               <Tooltip title={editTooltip}>
                 <Button
-                  className={'brief-comment-btn'}
+                  className={`brief-comment-btn ${stylex.props(styles.revealOnCardHover).className}`}
                   icon={SquarePen}
                   shape={'round'}
                   style={{
@@ -354,7 +355,7 @@ const BriefCardActions = memo<BriefCardActionsProps>(
               return (
                 <BriefActionLink
                   agentId={agentId}
-                  className={styles.actionBtn}
+                  className={stylex.props(styles.actionBtn).className}
                   key={action.key}
                   taskId={taskId}
                   url={action.url}
@@ -366,7 +367,7 @@ const BriefCardActions = memo<BriefCardActionsProps>(
 
             return (
               <Button
-                className={styles.actionBtn}
+                className={stylex.props(styles.actionBtn).className}
                 disabled={loadingKey === action.key}
                 key={action.key}
                 {...answerButtonProps(action.key)}
@@ -378,7 +379,7 @@ const BriefCardActions = memo<BriefCardActionsProps>(
           })}
           {briefType === 'error' && (
             <Button
-              className={styles.actionBtn}
+              className={stylex.props(styles.actionBtn).className}
               disabled={loadingKey === 'ignore'}
               shape={'round'}
               onClick={() => handleResolve('ignore')}
@@ -394,7 +395,7 @@ const BriefCardActions = memo<BriefCardActionsProps>(
               <BriefActionLink
                 primary
                 agentId={agentId}
-                className={styles.actionBtnPrimary}
+                className={stylex.props(styles.actionBtnPrimary).className}
                 taskId={taskId}
                 url={primaryActions.url}
               >
@@ -402,7 +403,7 @@ const BriefCardActions = memo<BriefCardActionsProps>(
               </BriefActionLink>
             ) : (
               <Button
-                className={styles.actionBtnPrimary}
+                className={stylex.props(styles.actionBtnPrimary).className}
                 disabled={loadingKey === primaryActions.key}
                 {...answerButtonProps(primaryActions.key)}
                 onClick={() => handleResolve(primaryActions.key)}
