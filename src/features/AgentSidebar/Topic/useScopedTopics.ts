@@ -64,19 +64,21 @@ export const useScopedSidebarTopics = (
   const running = useChatStore(operationSelectors.visiblyRunningTopicIds);
   const directories = useProjectDirectories(scope?.projectId);
   const filter = useTopicListFilter()?.filter;
-  // The status / device filter narrows the list before paging; the open topic
-  // stays visible, the same way it survives the archived toggle.
+  const filtering = !!(filter?.status || filter?.device);
+  // The status / device filter is an explicit ask, so it narrows the list
+  // strictly — unlike the archived toggle, which keeps the open topic in view.
   const candidates = useMemo(() => {
     const list: ChatTopic[] = (topics ?? []).filter(
       (topic) => !topic.trigger || !MAIN_SIDEBAR_EXCLUDE_TRIGGERS.includes(topic.trigger),
     );
     return {
-      active: list.find((topic) => topic.id === topicId),
-      filtered: filter
-        ? filterTopics(list, filter, { directories, loadingTopicIds: running })
-        : list,
+      active: filtering ? undefined : list.find((topic) => topic.id === topicId),
+      filtered:
+        filter && filtering
+          ? filterTopics(list, filter, { directories, loadingTopicIds: running })
+          : list,
     };
-  }, [topics, topicId, filter, directories, running]);
+  }, [topics, topicId, filter, filtering, directories, running]);
   const visible = useMemo(
     () =>
       selectSidebarTopics(

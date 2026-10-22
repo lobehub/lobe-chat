@@ -1,6 +1,6 @@
 import type { DropdownItem } from '@lobehub/ui';
 import { Icon } from '@lobehub/ui';
-import { LucideCheck } from 'lucide-react';
+import { CircleDotIcon, LucideCheck, MonitorIcon } from 'lucide-react';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -91,6 +91,7 @@ export const useProjectTopicFilterItems = (): (() => DropdownItem[]) => {
             onClick: () => update({ status }),
           })),
         ],
+        icon: CircleDotIcon,
         key: 'filter-status',
         label: t('filter.byStatus', { value: statusLabel }),
         type: 'submenu' as const,
@@ -120,6 +121,7 @@ export const useProjectTopicFilterItems = (): (() => DropdownItem[]) => {
               ]
             : []),
         ],
+        icon: MonitorIcon,
         key: 'filter-device',
         label: t('filter.byDevice', { value: deviceLabel }),
         type: 'submenu' as const,

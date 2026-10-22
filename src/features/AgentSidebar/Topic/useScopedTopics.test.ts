@@ -211,12 +211,12 @@ describe('Project topic filters', () => {
     expect(result.current.topics.map((topic) => topic.id)).toEqual(['old']);
   });
 
-  it('keeps the open topic visible when the filter excludes it', () => {
+  it('narrows strictly, even past the open topic', () => {
     fixture.topicId = 'star';
     const { result } = renderHook(() => useScopedSidebarTopics(20, 'updatedAt', 'byAgent', false), {
       wrapper: filteredWrapper({ device: 'device-a' }),
     });
-    expect(result.current.topics.map((topic) => topic.id)).toEqual(['star', 'old']);
+    expect(result.current.topics.map((topic) => topic.id)).toEqual(['old']);
   });
 });
 
