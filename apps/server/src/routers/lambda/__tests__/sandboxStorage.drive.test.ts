@@ -257,6 +257,28 @@ describe('environment definitions', () => {
     expect(await environmentExists(environment.id)).toBe(true);
   });
 
+  it('loses no copy when a project still uses the environment', async () => {
+    // The project's reference refuses the delete; the copy's row and its
+    // snapshot must both still be there afterwards.
+    const { environment } = await initializeFolder(ownerId, 'atlas');
+    const [agent] = await serverDB.insert(agents).values({ userId: ownerId }).returning();
+    const [project] = await serverDB
+      .insert(projects)
+      .values({ coordinatorAgentId: agent.id, identifier: 'ATL', name: 'Atlas', userId: ownerId })
+      .returning();
+    await serverDB
+      .insert(projectEnvironments)
+      .values({ environmentId: environment.id, projectId: project.id });
+
+    await expect(drive().removeEnvironment({ id: environment.id })).rejects.toMatchObject({
+      message: 'ENVIRONMENT_IN_PROJECT',
+    });
+
+    expect(plane.deleteInstance).not.toHaveBeenCalled();
+    expect(await instancesOf(environment.id)).toHaveLength(1);
+    expect(await environmentExists(environment.id)).toBe(true);
+  });
+
   it('refuses an environment a project still uses', async () => {
     const created = await definitions().createEnvironment({ name: 'Bound' });
     const [agent] = await serverDB.insert(agents).values({ userId: ownerId }).returning();
@@ -269,7 +291,7 @@ describe('environment definitions', () => {
       .values({ environmentId: created.id, projectId: project.id });
 
     await expect(definitions().removeEnvironment({ id: created.id })).rejects.toMatchObject({
-      message: 'ENVIRONMENT_HAS_INSTANCES',
+      message: 'ENVIRONMENT_IN_PROJECT',
     });
   });
 });

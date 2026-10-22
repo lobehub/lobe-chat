@@ -4244,6 +4244,8 @@ When I am ___, I need ___
   'environments.storage.over':
     'Over the storage limit. Saving a file is refused until you delete something.',
   'environments.duplicateName': 'You already have an environment with this name',
+  'environments.inProject':
+    'A project still uses this environment — remove it from the project first',
   'environments.hasInstances': 'Remove its other copies first',
   'environments.loadFailed.title': 'Could not check your plan',
   'environments.loadFailed.desc':

@@ -141,6 +141,7 @@ export default {
   'workingDirectory.worktreesNoMatch': 'No matching worktrees',
   'workingDirectory.environment.label': 'Code environment',
   'workingDirectory.environment.none': 'No environment',
+  'workingDirectory.drive.pickFailed': 'Could not switch to this folder. Try again.',
   'workingDirectory.drive.title': 'Choose a folder on your drive',
   'workingDirectory.drive.rootNotAllowed': 'The drive’s root can’t be a working folder',
   'workingDirectory.drive.browseDescription': 'Choose a folder on your drive.',

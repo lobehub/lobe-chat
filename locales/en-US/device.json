@@ -60,6 +60,7 @@
   "workingDirectory.drive.initializeHint": "The folder is created at the drive root and set up from this environment: the repository is cloned and its setup runs.",
   "workingDirectory.drive.initializeWith": "Initialize with",
   "workingDirectory.drive.moreActions": "More actions",
+  "workingDirectory.drive.pickFailed": "Could not switch to this folder. Try again.",
   "workingDirectory.drive.pickFolderFirst": "Choose a folder first",
   "workingDirectory.drive.privateBlocked": "Private environment — a shared agent can’t use it",
   "workingDirectory.drive.readOnly": "Environment directories are read-only here.",

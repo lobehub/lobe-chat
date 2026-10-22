@@ -1,6 +1,6 @@
 'use client';
 
-import { cx, Flexbox, Icon, Popover, Skeleton, Text, Tooltip } from '@lobehub/ui';
+import { cx, Flexbox, Icon, Popover, Skeleton, Text, toast, Tooltip } from '@lobehub/ui';
 import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
 import * as stylex from '@stylexjs/stylex';
 import {
@@ -140,7 +140,12 @@ const SandboxDrivePicker = memo<SandboxDrivePickerProps>(
 
     const select = async (selection: Omit<SandboxSelection, 'environmentId'>) => {
       setOpen(false);
-      await pick(selection);
+      try {
+        await pick(selection);
+      } catch {
+        // The topic kept its old placement; said rather than left looking picked.
+        toast.error(t('workingDirectory.drive.pickFailed', { ns: 'device' }));
+      }
     };
 
     const openBrowser = () => {

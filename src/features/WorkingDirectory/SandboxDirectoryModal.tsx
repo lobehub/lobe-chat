@@ -9,6 +9,7 @@ import {
   type ModalInstance,
   Segmented,
   Spin,
+  toast,
   useModalContext,
 } from '@lobehub/ui';
 import { t } from 'i18next';
@@ -19,6 +20,7 @@ import { useTranslation } from 'react-i18next';
 import { SandboxStorageUpgradeGuide } from '@/business/client/features/SandboxStorageUpsell';
 import { useSandboxDriveEntitlement } from '@/hooks/useSandboxDriveEntitlement';
 
+import { confirmPick } from './confirmPick';
 import { DirectoryBrowser } from './DirectoryBrowser';
 import { useSandboxDirectorySource } from './sources/useSandboxDirectorySource';
 
@@ -46,6 +48,7 @@ const SandboxDirectoryContent = ({
   const { t: tDevice } = useTranslation('device');
   const { close } = useModalContext();
   const { entitled } = useSandboxDriveEntitlement();
+  const [saving, setSaving] = useState(false);
   const [drive, setDrive] = useState<SandboxDrive>(
     isWorkspace ? (initialDrive ?? 'public') : 'personal',
   );
@@ -93,14 +96,19 @@ const SandboxDirectoryContent = ({
         defaultPath={startPath}
         description={tDevice('workingDirectory.drive.browseDescription')}
         key={drive}
-        loading={false}
+        loading={saving}
         source={source}
         onCancel={close}
-        onSelect={(path) => {
-          close();
-          // The root is a choice of its own — `.` — distinct from "no folder",
-          // which is the temporary sandbox.
-          void onPick({ drive, workingDirectory: path || '.' });
+        onSelect={async (path) => {
+          setSaving(true);
+          await confirmPick({
+            // The root is a choice of its own — `.` — distinct from "no
+            // folder", which is the temporary sandbox.
+            apply: () => onPick({ drive, workingDirectory: path || '.' }),
+            close,
+            fail: () => toast.error(tDevice('workingDirectory.drive.pickFailed')),
+          });
+          setSaving(false);
         }}
       />
     </Flexbox>

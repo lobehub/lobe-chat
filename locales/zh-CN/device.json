@@ -60,6 +60,7 @@
   "workingDirectory.drive.initializeHint": "将在网盘根目录创建该文件夹，并用所选环境初始化：克隆仓库并运行安装命令。",
   "workingDirectory.drive.initializeWith": "用环境初始化",
   "workingDirectory.drive.moreActions": "更多操作",
+  "workingDirectory.drive.pickFailed": "无法切换到这个文件夹，请重试。",
   "workingDirectory.drive.pickFolderFirst": "先选择一个文件夹",
   "workingDirectory.drive.privateBlocked": "私有环境，共享助手无法使用",
   "workingDirectory.drive.readOnly": "环境目录在这里是只读的。",
