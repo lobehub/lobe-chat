@@ -774,4 +774,42 @@ export const mobileRoutes: RouteObject[] = [
     handle: { meta: acceptanceRouteMeta },
     path: '/acceptance/:acceptanceId/check/:checkId',
   },
+  // Workspace-scoped report links (`/:workspaceSlug/acceptance/...`) are what
+  // in-app navigation produces inside a workspace; mirror them like desktop.
+  {
+    children: [
+      {
+        children: [
+          {
+            element: dynamicElement(
+              () => import('@/routes/acceptance/[acceptanceId]'),
+              'Mobile > Workspace > AcceptanceReport',
+            ),
+            errorElement: <ErrorBoundary />,
+            handle: { meta: acceptanceRouteMeta },
+            path: 'acceptance/:acceptanceId',
+          },
+          {
+            element: dynamicElement(
+              () => import('@/routes/acceptance/[acceptanceId]'),
+              'Mobile > Workspace > AcceptanceCheck',
+            ),
+            errorElement: <ErrorBoundary />,
+            handle: { meta: acceptanceRouteMeta },
+            path: 'acceptance/:acceptanceId/check/:checkId',
+          },
+        ],
+        element: dynamicLayout(
+          () => import('@/routes/(main)/[workspaceSlug]/_layout'),
+          'Mobile > Workspace > Acceptance Layout',
+        ),
+        errorElement: <ErrorBoundary />,
+        path: ':workspaceSlug',
+      },
+    ],
+    element: dynamicLayout(
+      () => import('@/routes/(main)/acceptance/_layout'),
+      'Mobile > Acceptance Layout',
+    ),
+  },
 ];

@@ -26,13 +26,15 @@ describe('useVerifyReportUrl', () => {
     mocks.bundle = undefined;
   });
 
-  it('links a run in an acceptance to its round under the active workspace', () => {
+  // The workspace-prefixed route is gated on membership, so the copied link stays
+  // on the public route even inside a workspace.
+  it('links a run in an acceptance to its public round URL inside a workspace', () => {
     mocks.bundle = { run: { acceptanceId: 'acc_1', roundIndex: 2 } };
     const { result } = renderHook(() => useVerifyReportUrl());
 
     expect(result.current).toEqual({
-      externalUrl: 'https://app.lobehub.com/lobe-team/acceptance/acc_1?r=2',
-      reportUrl: 'https://app.lobehub.com/lobe-team/acceptance/acc_1?r=2',
+      externalUrl: 'https://app.lobehub.com/acceptance/acc_1?r=2',
+      reportUrl: 'https://app.lobehub.com/acceptance/acc_1?r=2',
       runId: 'run_1',
       standalone: false,
     });
