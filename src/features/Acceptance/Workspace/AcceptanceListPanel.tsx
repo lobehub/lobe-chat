@@ -81,7 +81,7 @@ import {
   expandedAcceptanceGroupKeys,
   groupAcceptanceList,
   nextCollapsedGroupKeys,
-  normalizeAcceptanceGroupMode,
+  resolveAcceptanceGroupMode,
   shouldRenderAcceptanceGroups,
 } from './groupAcceptanceList';
 import { useAcceptanceListFilterMenu } from './useAcceptanceListFilterMenu';
@@ -337,7 +337,7 @@ const AcceptanceListPanel = memo<AcceptanceListPanelProps>(
       source,
     } = effectiveAcceptanceListFacets(facets, projectId);
     const listQuery = { projectId: listProjectId, scope, source };
-    const groupMode = normalizeAcceptanceGroupMode(storedGroupMode);
+    const groupMode = resolveAcceptanceGroupMode(storedGroupMode, projectId);
     const debouncedQuery = useDebounce(query.trim(), { wait: 300 });
     const trimmedQuery = query.trim();
     const searching = Boolean(debouncedQuery);

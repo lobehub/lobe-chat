@@ -95,6 +95,14 @@ const GroupItem = memo<GroupItemComponentProps>(({ group }) => {
   // Only an attributed bucket in a project-scoped list can start a topic with
   // its agent preselected; the `no-agent` bucket has no agent to preselect.
   const canAddTopic = !!scope && !!agentId;
+  // The new-topic modal's picker only lists instance-bound directories; a
+  // device section offering any other directory would open with an unselectable
+  // work location, so its "+" only considers instance-bound ones.
+  const startDirectories = useMemo(
+    () => (canAddTopic ? directories.filter((directory) => directory.instanceId) : undefined),
+    [canAddTopic, directories],
+  );
+
   const handleAddTopic = (initialDirectoryId?: string) => {
     if (!scope || !agentId) return;
     openProjectTopicModal({
@@ -184,7 +192,7 @@ const GroupItem = memo<GroupItemComponentProps>(({ group }) => {
           // repeat the avatar at its leading position.
           suppressAgentAvatar
           mode={subGroupMode}
-          startDirectories={canAddTopic ? directories : undefined}
+          startDirectories={startDirectories}
           topics={children}
           onStartInDirectory={canAddTopic ? handleAddTopic : undefined}
         />

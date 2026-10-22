@@ -32,11 +32,14 @@ vi.mock('@/store/global/selectors', () => ({
   },
 }));
 
+const directories: { deviceId: string; id: string; instanceId?: string }[] = [];
+
 vi.mock('@/store/projectWorkingDirectory', () => ({
-  useProjectDirectories: () => [
-    { deviceId: 'device-1', id: 'binding-mac' },
-    { deviceId: 'device-2', id: 'binding-linux' },
-  ],
+  useProjectDirectories: () => directories,
+}));
+
+vi.mock('@/features/Projects/WorkingDirectories/StartDirectoryModal', () => ({
+  openProjectTopicModal: vi.fn(),
 }));
 
 vi.mock('@/store/device', () => ({
@@ -132,6 +135,12 @@ const renderGroup = () =>
 describe('TopicByAgentGroupItem', () => {
   beforeEach(() => {
     for (const key of Object.keys(subGroupModes)) delete subGroupModes[key];
+    directories.splice(
+      0,
+      directories.length,
+      { deviceId: 'device-1', id: 'binding-mac' },
+      { deviceId: 'device-2', id: 'binding-linux' },
+    );
   });
 
   /** @example Review feedback: rows under an agent-named bucket must not repeat the avatar. */
@@ -160,6 +169,18 @@ describe('TopicByAgentGroupItem', () => {
     expect(screen.getByRole('button', { name: 'MacBook' })).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Studio Linux' })).toBeTruthy();
     expect(screen.getByText('A1-目录A任务').getAttribute('data-suppress')).toBe('yes');
+  });
+
+  /** @example Acceptance: a device without an environment opened the modal on a raw directory id. */
+  it('offers a device section "+" only where that device has an instance-bound directory', () => {
+    // ROOT CAUSE: the section "+" preselected any project directory on the
+    // device, but the new-topic modal only lists instance-bound directories,
+    // so a legacy directory opened with an unselectable raw id.
+    subGroupModes[GROUP_ID] = 'byDevice';
+    directories[0] = { ...directories[0], instanceId: 'ins-mac' };
+    renderGroup();
+
+    expect(screen.getAllByRole('button', { name: 'directories.start' })).toHaveLength(1);
   });
 
   const renderInProject = (agentId: string) =>
