@@ -63,10 +63,11 @@ export const projectWorkingDirectoryRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await assertCanUseTopicTargets(
-        { db: ctx.serverDB, userId: ctx.userId, workspaceId: ctx.workspaceId },
-        [input.topicId],
-      );
+      const guardCtx = { db: ctx.serverDB, userId: ctx.userId, workspaceId: ctx.workspaceId };
+      await assertCanUseTopicTargets(guardCtx, [input.topicId]);
+      // Same visitor guard as `moveTopic`: a share-visitor topic is not the
+      // member's conversation to file into a project.
+      await assertCreatorTopicTargets(guardCtx, [input.topicId]);
       return {
         data: await ctx.directoryRepo.associateTopic(
           input.projectId,
