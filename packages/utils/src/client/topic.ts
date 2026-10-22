@@ -5,7 +5,11 @@ import type {
   GroupedTopic,
   TimeGroupId,
 } from '@lobechat/types';
-import { getWorkingDirEffectivePath, getWorkingDirSourcePath } from '@lobechat/types';
+import {
+  agentDisplayName,
+  getWorkingDirEffectivePath,
+  getWorkingDirSourcePath,
+} from '@lobechat/types';
 import dayjs from 'dayjs';
 import isToday from 'dayjs/plugin/isToday';
 import isYesterday from 'dayjs/plugin/isYesterday';
@@ -314,9 +318,10 @@ interface AgentAttributedTopic extends ChatTopic {
  *   multiple agents (e.g. the project topic list).
  *
  * Returns:
- * - `agent:{agentId}` groups sorted by most recent activity, titled from the
- *   first row's agent metadata, and a title-less `no-agent` bucket for rows
- *   without attribution (the renderer names those from its agent context).
+ * - `agent:{agentId}` groups sorted by most recent activity, titled with the
+ *   first row's agent display name (name, else title), and a title-less
+ *   `no-agent` bucket for rows without attribution (the renderer names those
+ *   from its agent context).
  */
 export const groupTopicsByAgent = (
   topics: AgentAttributedTopic[],
@@ -343,7 +348,10 @@ export const groupTopicsByAgent = (
     .map(([id, children]) => ({
       children,
       id,
-      title: children[0]?.agentTitle ?? children[0]?.agentName ?? undefined,
+      title: agentDisplayName({
+        name: children[0]?.agentName,
+        title: children[0]?.agentTitle,
+      }),
     }))
     .sort((a, b) => {
       const aTime = a.children[0] ? getTopicSortTime(a.children[0], field) : 0;
