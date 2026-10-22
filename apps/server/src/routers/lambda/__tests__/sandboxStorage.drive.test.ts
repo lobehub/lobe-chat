@@ -408,6 +408,21 @@ describe('the public drive', () => {
     expect(others.instances.map((entry) => entry.rebuildRequired)).toEqual([false]);
   });
 
+  it('refuses to move or delete a folder that holds one', async () => {
+    // Renaming `projects` would carry `projects/secret` out from under the
+    // path that keeps it hidden, into the open on the public drive.
+    await legacyPrivateFolder(ownerId, 'projects/secret');
+
+    await expect(
+      drive(memberId).renameFile({ newPath: 'projects-old', path: 'projects' }),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN', message: 'PATH_HOLDS_HIDDEN' });
+    await expect(
+      drive(ownerId).removeFile({ path: 'projects', recursive: true }),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN', message: 'PATH_HOLDS_HIDDEN' });
+    expect(plane.renameFile).not.toHaveBeenCalled();
+    expect(plane.deleteFile).not.toHaveBeenCalled();
+  });
+
   it('builds nothing more into a private environment directory left there', async () => {
     const legacy = await legacyPrivateFolder(ownerId, 'secret');
     await serverDB

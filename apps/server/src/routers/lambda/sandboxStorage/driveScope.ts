@@ -37,16 +37,12 @@ export const assertFolderFree = async (client: SandboxStorageClient, path: strin
  * kinds of folder are carved out of that, and both are environment
  * directories:
  *
- * - **Read-only** — every environment directory. It is the saved copy of a
- *   sandbox's work tree, written by its own sessions alone: a write from
- *   outside would be overwritten by the next save, or leave the folder
- *   disagreeing with the record the next restore reads it by. Moving or
- *   deleting a folder that holds one is the same write.
- * - **Hidden** — a private environment's directory on the public drive. New
- *   ones are made on their owner's personal drive; these are left over from
- *   before members had one, and their home directory can hold the owner's
- *   credentials. Until they are rebuilt they are left out of every listing
- *   and refused when named, for everyone, exactly as if they were not there.
+ * - **Hidden** — a private environment's directory on the public drive, left
+ *   over from before members had a personal drive; its home directory can
+ *   hold the owner's credentials. It is left out of every listing and refused
+ *   when named, for everyone, exactly as if it were not there — and so is a
+ *   write to any folder that holds one, since moving or deleting that folder
+ *   would carry the hidden one along and out into the open.
  *
  * With an instance the route is confined to that instance's directory, read
  * only, and goes to the drive the instance is on.
@@ -170,6 +166,11 @@ export const resolveWritableScope = async (
 
   const scope = await resolveDriveScope(ctx);
   assertReadable(path, scope);
+  // Refused without naming what is inside: the caller can see this folder,
+  // so "not found" would be false, and the hidden one stays unnamed.
+  if (scope.hidden.some((directory) => isPathWithin(directory, path))) {
+    throw new TRPCError({ code: 'FORBIDDEN', message: 'PATH_HOLDS_HIDDEN' });
+  }
 
   return scope;
 };
