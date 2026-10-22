@@ -35,6 +35,8 @@ export class SandboxMiddlewareService implements SandboxService {
   readonly kind: SandboxProviderKind;
 
   private environmentInitialized = false;
+  /** What applying the environment said, until a shell result carries it. */
+  private pendingEnvironmentReport: string | undefined;
   private filesInitialized = false;
 
   constructor(
@@ -49,25 +51,31 @@ export class SandboxMiddlewareService implements SandboxService {
     toolName: string,
     params: Record<string, unknown>,
   ): Promise<SandboxCallToolResult> {
-    const environmentReport = await this.ensureEnvironmentInitialized();
+    const report = await this.ensureEnvironmentInitialized();
+    if (report) this.pendingEnvironmentReport = report;
     await this.ensureFilesInitialized();
     const result = await this.provider.callTool(toolName, params);
 
-    return environmentReport ? withEnvironmentReport(toolName, result, environmentReport) : result;
+    // Held until a shell result can carry it: a first call that lists or
+    // reads files has no output to put it in, and dropping it would hide a
+    // failed setup from the rest of the conversation.
+    const pending = this.pendingEnvironmentReport;
+    if (!pending || !SHELL_TOOLS.has(toolName)) return result;
+    this.pendingEnvironmentReport = undefined;
+
+    return withEnvironmentReport(toolName, result, pending);
   }
 
   /**
    * Apply the topic's environment to the working directory the first time this
    * service instance is used: clone its repository and run its setup there.
    *
-   * Guarded by a marker the command leaves in the directory, like the file
-   * sync below, and for the same reason — it is the single source of truth.
-   * A temporary sandbox loses it with the sandbox, so the next one is
-   * initialized again; a folder on the drive keeps it, so the folder is
-   * initialized once. Best-effort: a failure is reported, never thrown, and
-   * the tool call it precedes still runs.
+   * The command itself decides whether to run: only an empty directory is
+   * initialized, so a temporary sandbox is initialized each time it starts
+   * empty and a folder on the drive once. Best-effort: a failure is reported,
+   * never thrown, and the tool call it precedes still runs.
    *
-   * Returns what the run printed when it did something, for the first shell
+   * Returns what the run printed when it did something, for the next shell
    * result to carry; nothing when the directory was already initialized.
    */
   private async ensureEnvironmentInitialized(): Promise<string | undefined> {

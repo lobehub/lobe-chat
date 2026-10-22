@@ -613,6 +613,35 @@ describe('resolveSandboxSessionConfig', () => {
       });
     });
 
+    it("keeps a member's private environment out of a workspace-public agent", async () => {
+      resolveSandboxStorageClaim.mockResolvedValue(null);
+      mocks.findEnvironmentById.mockResolvedValue({ ...environment, visibility: 'private' });
+      findById.mockResolvedValue({
+        agentId: 'agent-shared',
+        metadata: { sandboxEnvironmentId: 'env-1' },
+      });
+      getAgentVisibility.mockResolvedValue('public');
+
+      const config = await resolve({ workspaceId: 'ws-1' });
+
+      expect(getAgentVisibility).toHaveBeenCalledWith('agent-shared');
+      expect(config).not.toHaveProperty('initialization');
+    });
+
+    it('applies a published environment for a workspace-public agent', async () => {
+      resolveSandboxStorageClaim.mockResolvedValue(null);
+      mocks.findEnvironmentById.mockResolvedValue({ ...environment, visibility: 'public' });
+      findById.mockResolvedValue({
+        agentId: 'agent-shared',
+        metadata: { sandboxEnvironmentId: 'env-1' },
+      });
+      getAgentVisibility.mockResolvedValue('public');
+
+      await expect(resolve({ workspaceId: 'ws-1' })).resolves.toMatchObject({
+        initialization: { environmentId: 'env-1' },
+      });
+    });
+
     it('runs without one when the environment is no longer readable', async () => {
       resolveSandboxStorageClaim.mockResolvedValue(null);
       mocks.findEnvironmentById.mockResolvedValue(undefined);

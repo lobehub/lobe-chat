@@ -409,6 +409,26 @@ const resolveInitialization = async ({
       return undefined;
     }
 
+    // The same boundary legacy instances keep: a workspace-public agent runs
+    // on its caller's session, and a private environment's variables, setup
+    // and checkout are that caller's — so a shared agent applies published
+    // environments only.
+    if (workspaceId && topic.agentId && environment.visibility !== 'public') {
+      const agentVisibility = await new AgentModel(
+        serverDB,
+        userId,
+        workspaceId,
+      ).getAgentVisibility(topic.agentId);
+      if (agentVisibility === 'public') {
+        log(
+          'Not applying private environment %s for shared agent %s',
+          environmentId,
+          topic.agentId,
+        );
+        return undefined;
+      }
+    }
+
     return toSandboxInitialization(environment);
   } catch (error) {
     log('Failed to read the environment for topic %s: %O', topicId, error);

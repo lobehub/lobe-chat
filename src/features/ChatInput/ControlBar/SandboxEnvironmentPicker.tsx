@@ -11,8 +11,11 @@ import useSWR from 'swr';
 import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { environmentService } from '@/services/environment';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 
 import OptionRow from './OptionRow';
+import { pickableEnvironments } from './sandboxEnvironmentOptions';
 import type { SandboxSelection } from './useSandboxPlacement';
 import { workingDirectoryChipStyles } from './workingDirectoryChipStyles';
 
@@ -82,7 +85,10 @@ const SandboxEnvironmentPicker = memo<SandboxEnvironmentPickerProps>(({ onChange
   const { data } = useSWR(['sandbox-environment-chip', workspaceId ?? ''], () =>
     environmentService.listEnvironments(),
   );
-  const environments = data?.environments ?? [];
+  const sharedAgent = useAgentStore(
+    (s) => !!workspaceId && agentSelectors.currentAgentVisibility(s) === 'public',
+  );
+  const environments = pickableEnvironments(data?.environments ?? [], sharedAgent);
   const current = environments.find((environment) => environment.id === value.environmentId);
   // Picked once but no longer readable — deleted, or unpublished by its owner.
   // The run then starts without it, which the chip says rather than hides.

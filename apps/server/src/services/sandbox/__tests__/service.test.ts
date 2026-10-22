@@ -113,6 +113,22 @@ describe('SandboxMiddlewareService', () => {
       );
     });
 
+    it('keeps the report for the first shell result when an earlier call only read files', async () => {
+      const { service } = await serviceWith(
+        '__lobe_environment_ran\nInitializing from the environment Hello failed (exit 7).\n',
+      );
+
+      const read = await service.callTool('listFiles', { path: '.' });
+      const shell = await service.callTool('runCommand', { command: 'ls' });
+      const later = await service.callTool('runCommand', { command: 'pwd' });
+
+      expect(JSON.stringify(read.result)).not.toContain('[environment]');
+      expect((shell.result as { stdout: string }).stdout).toBe(
+        '[environment] Initializing from the environment Hello failed (exit 7).\n\nran runCommand',
+      );
+      expect((later.result as { stdout: string }).stdout).toBe('ran runCommand');
+    });
+
     it('adds nothing to the result when the directory was already initialized', async () => {
       const { service } = await serviceWith('');
 
