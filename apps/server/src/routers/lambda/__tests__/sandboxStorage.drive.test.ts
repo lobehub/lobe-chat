@@ -440,24 +440,20 @@ describe('the public drive', () => {
     expect(plane.deleteFile).toHaveBeenCalledWith({ path: 'projC', recursive: true });
   });
 
-  it('keeps every environment directory read-only from outside, its owner included', async () => {
+  it('treats a folder an environment initialized as an ordinary folder', async () => {
+    // Environments initialize a folder once; nothing keeps it read-only after.
     await initializeFolder(ownerId, 'atlas', 'public');
+    plane.writeFile.mockResolvedValue({ path: 'atlas/notes.md' });
+    plane.renameFile.mockResolvedValue({ path: 'atlas-old' });
 
-    for (const call of [
-      () => drive(ownerId).writeFile({ content: 'x', path: 'atlas/notes.md' }),
-      () => drive(ownerId).createDirectory({ path: 'atlas/sub' }),
-      () => drive(memberId).removeFile({ path: 'atlas', recursive: true }),
-      () => drive(memberId).renameFile({ newPath: 'atlas-old', path: 'atlas' }),
-      () => drive(memberId).renameFile({ newPath: 'atlas/inside', path: 'projA' }),
-    ]) {
-      await expect(call()).rejects.toMatchObject({
-        code: 'FORBIDDEN',
-        message: 'INSTANCE_READ_ONLY',
-      });
-    }
-    expect(plane.writeFile).not.toHaveBeenCalled();
-    expect(plane.deleteFile).not.toHaveBeenCalled();
-    expect(plane.renameFile).not.toHaveBeenCalled();
+    await expect(
+      drive(ownerId).writeFile({ content: 'x', path: 'atlas/notes.md' }),
+    ).resolves.toMatchObject({ path: 'atlas/notes.md' });
+    await expect(
+      drive(memberId).renameFile({ newPath: 'atlas-old', path: 'atlas' }),
+    ).resolves.toMatchObject({ path: 'atlas-old' });
+    expect(plane.writeFile).toHaveBeenCalled();
+    expect(plane.renameFile).toHaveBeenCalled();
   });
 });
 

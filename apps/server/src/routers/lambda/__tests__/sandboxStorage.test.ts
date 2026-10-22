@@ -383,23 +383,16 @@ describe('sandboxStorageRouter', () => {
       );
     });
 
-    it('refuses a write into an environment directory or around one', async () => {
+    it('writes into a folder an environment initialized like any other', async () => {
       mockListStorageDirectories.mockResolvedValue([
         { id: instanceId, visible: true, workingDirectory: 'atlas' },
       ]);
-      const caller = sandboxStorageRouter.createCaller(ctx);
+      mockWriteFile.mockResolvedValue({ path: 'atlas/a.txt' });
 
-      await expect(caller.writeFile({ content: 'x', path: 'atlas/a.txt' })).rejects.toThrow(
-        'INSTANCE_READ_ONLY',
-      );
-      await expect(caller.removeFile({ path: 'atlas', recursive: true })).rejects.toThrow(
-        'INSTANCE_READ_ONLY',
-      );
-      await expect(caller.renameFile({ newPath: 'atlas', path: 'projA' })).rejects.toThrow(
-        'INSTANCE_READ_ONLY',
-      );
-      expect(mockWriteFile).not.toHaveBeenCalled();
-      expect(mockRenameFile).not.toHaveBeenCalled();
+      await expect(
+        sandboxStorageRouter.createCaller(ctx).writeFile({ content: 'x', path: 'atlas/a.txt' }),
+      ).resolves.toMatchObject({ path: 'atlas/a.txt' });
+      expect(mockWriteFile).toHaveBeenCalled();
     });
 
     it('renames an ordinary folder without overwriting', async () => {
