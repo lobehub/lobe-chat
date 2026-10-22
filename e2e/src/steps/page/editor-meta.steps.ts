@@ -4,7 +4,7 @@
  * Step definitions for Page editor title and emoji editing E2E tests
  */
 import { Given, Then, When } from '@cucumber/cucumber';
-import { expect } from '@playwright/test';
+import { expect, type Locator } from '@playwright/test';
 
 import type { CustomWorld } from '../../support/world';
 import { WAIT_TIMEOUT } from '../../support/world';
@@ -234,11 +234,35 @@ When('用户选择一个 Emoji', async function (this: CustomWorld) {
 When('用户点击已有的 Emoji 图标', async function (this: CustomWorld) {
   console.log('   📍 Step: 点击已有的 Emoji 图标...');
 
-  // The emoji is displayed in an Avatar component with square shape
-  // Look for the emoji display element near the title
-  const emojiAvatar = this.page.locator('[class*="Avatar"]').first();
-  if ((await emojiAvatar.count()) > 0) {
-    await emojiAvatar.click();
+  // The setup step can leave the picker open over the title; a pointer aimed
+  // through it never lands on the emoji, so dismiss it first.
+  await this.page.keyboard.press('Escape');
+  await this.page.waitForTimeout(300);
+
+  // Docs lists every page in the sidebar with an Avatar for its emoji, so a
+  // bare `[class*="Avatar"]` matches a nav row instead of the editor's title.
+  // Take the first Avatar that is not inside a page link.
+  const avatars = this.page.locator('[class*="Avatar"]');
+  const avatarCount = await avatars.count();
+  let emojiAvatar: Locator | null = null;
+
+  for (let i = 0; i < avatarCount; i += 1) {
+    const candidate = avatars.nth(i);
+
+    const insideNavRow = await candidate.evaluate((node) =>
+      Boolean(node.closest('a[href*="/resource/page/"]')),
+    );
+
+    if (!insideNavRow) {
+      emojiAvatar = candidate;
+      break;
+    }
+  }
+
+  if (emojiAvatar) {
+    // Bounded: an unreachable target should fail the step fast instead of
+    // eating the whole 30s budget inside Playwright's default retry window.
+    await emojiAvatar.click({ timeout: 5000 });
   } else {
     // Fallback: look for span with emoji
     const emojiSpan = this.page
@@ -246,7 +270,7 @@ When('用户点击已有的 Emoji 图标', async function (this: CustomWorld) {
       .filter({ hasText: /^[\u{1F300}-\u{1F9FF}]$/u })
       .first();
     if ((await emojiSpan.count()) > 0) {
-      await emojiSpan.click();
+      await emojiSpan.click({ timeout: 5000 });
     }
   }
 
