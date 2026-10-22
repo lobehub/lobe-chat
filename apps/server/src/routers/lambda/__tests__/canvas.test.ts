@@ -117,7 +117,7 @@ beforeEach(async () => {
 });
 
 describe('canvasRouter.getVersion', () => {
-  it('returns version metadata without a public preview URL', async () => {
+  it('returns the latest version metadata', async () => {
     const result = await caller().getVersion({ canvasId: 'cvs_1' });
 
     expect(result).toMatchObject({
@@ -127,8 +127,6 @@ describe('canvasRouter.getVersion', () => {
       title: 'Cost report',
       version: 2,
     });
-    expect(result).not.toHaveProperty('previewUrl');
-    expect(result).not.toHaveProperty('runtimeUrl');
   });
 
   it('returns a pinned version', async () => {

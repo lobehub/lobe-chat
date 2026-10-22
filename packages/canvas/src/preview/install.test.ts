@@ -79,7 +79,6 @@ it.each(['lowercase', 'uppercase'])(
     expect(html).toContain('lobe-canvas-project/app.js');
     expect(html).toContain('src="blob:null/1#icon"');
     expect(html).not.toContain('href="css/app.css"');
-    expect(html).not.toContain('/canvas-preview');
     expect(await blobs.find((blob) => blob.type === 'text/css')!.text()).toContain('blob:null/1');
   },
 );

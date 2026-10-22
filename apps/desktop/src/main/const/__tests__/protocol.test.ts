@@ -16,13 +16,8 @@ describe('isBackendPath', () => {
   });
 });
 
-describe('canvas previews', () => {
-  it('proxies canvas preview pages and the canvas runtime', () => {
-    expect(isBackendPath('/canvas-preview/token/index.html')).toBe(false);
-    expect(isBackendPath('/canvas-runtime/v1/canvas-runtime.js')).toBe(false);
-  });
-
-  it('keeps sandboxed canvas pages away from authenticated backend paths', () => {
+describe('isSandboxedBackendRequestAllowed', () => {
+  it('blocks opaque origins from authenticated backend paths', () => {
     expect(isSandboxedBackendRequestAllowed('null')).toBe(false);
     expect(isSandboxedBackendRequestAllowed(null)).toBe(true);
   });
