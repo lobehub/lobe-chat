@@ -12,7 +12,11 @@ import {
   type ReplicaSyncResult,
   singleEntity,
 } from '@/libs/replica';
-import { projectService } from '@/services/project';
+import {
+  type ProjectAgentBindingPatch,
+  type ProjectKnowledgeBaseBindingPatch,
+  projectService,
+} from '@/services/project';
 import { createDevtools } from '@/store/middleware/createDevtools';
 import { expose } from '@/store/middleware/expose';
 
@@ -38,6 +42,9 @@ export interface ProjectStoreState {
 }
 
 interface ProjectStore extends ProjectStoreState {
+  /** Invite agents; one refetch after the batch so every loaded page shows them. */
+  addProjectAgents: (projectId: string, agentIds: string[]) => Promise<void>;
+  addProjectKnowledgeBases: (projectId: string, knowledgeBaseIds: string[]) => Promise<void>;
   createProject: (input: {
     identifier: string;
     name: string;
@@ -45,10 +52,22 @@ interface ProjectStore extends ProjectStoreState {
   }) => Promise<ProjectListItem>;
   deleteProject: (id: string) => Promise<void>;
   refreshProjectList: () => Promise<void>;
+  removeProjectAgent: (projectId: string, agentId: string) => Promise<void>;
+  removeProjectKnowledgeBase: (projectId: string, knowledgeBaseId: string) => Promise<void>;
   updateProject: (
     id: string,
     input: Parameters<typeof projectService.update>[1],
   ) => Promise<ProjectListItem>;
+  updateProjectAgent: (
+    projectId: string,
+    agentId: string,
+    patch: ProjectAgentBindingPatch,
+  ) => Promise<void>;
+  updateProjectKnowledgeBase: (
+    projectId: string,
+    knowledgeBaseId: string,
+    patch: ProjectKnowledgeBaseBindingPatch,
+  ) => Promise<void>;
   /** Fetch orchestration only; read the value with `useCurrentProjectDetail`. */
   useFetchProjectDetail: (idOrSlug?: string) => ReplicaSyncResult;
   /** Fetch orchestration only; read the rows with `useCurrentProjectList`. */
@@ -96,8 +115,45 @@ export const useProjectStore = createWithEqualityFn<ProjectStore>()(
 
     const refreshList = () => list.revalidate(PROJECT_LIST_KEY);
 
+    // A project page is keyed by its route param, so one project can sit under
+    // both its id and its slug.
+    const detailKeysOf = (projectId: string) =>
+      Object.entries(get().projectDetailMap)
+        .filter(([, value]) => value?.project.id === projectId)
+        .map(([key]) => key);
+    const refreshDetail = async (projectId: string) => {
+      await Promise.all(detailKeysOf(projectId).map((key) => detail.fetch(key, { fresh: true })));
+    };
+    /** Patch every loaded page now; the refetch afterwards reconciles server-owned fields. */
+    const patchDetail = (projectId: string, patch: (value: ProjectDetail) => ProjectDetail) => {
+      for (const key of detailKeysOf(projectId)) {
+        detail.update(key, (value) => (value ? patch(value) : value));
+      }
+    };
+    const mutateAndRefresh = async (projectId: string, mutation: () => Promise<unknown>) => {
+      try {
+        await mutation();
+      } finally {
+        await refreshDetail(projectId);
+      }
+    };
+
     return {
       ...initialProjectState,
+      addProjectAgents: async (projectId, agentIds) => {
+        await mutateAndRefresh(projectId, () =>
+          Promise.all(agentIds.map((agentId) => projectService.addAgent(projectId, agentId))),
+        );
+      },
+      addProjectKnowledgeBases: async (projectId, knowledgeBaseIds) => {
+        await mutateAndRefresh(projectId, () =>
+          Promise.all(
+            knowledgeBaseIds.map((knowledgeBaseId) =>
+              projectService.addKnowledgeBase(projectId, knowledgeBaseId),
+            ),
+          ),
+        );
+      },
       createProject: async (input) => {
         const response = await projectService.create(input, getActiveWorkspaceId());
         const project = response.data;
@@ -114,6 +170,53 @@ export const useProjectStore = createWithEqualityFn<ProjectStore>()(
       },
       refreshProjectList: async () => {
         await refreshList();
+      },
+      removeProjectAgent: async (projectId, agentId) => {
+        patchDetail(projectId, (value) => ({
+          ...value,
+          agents: value.agents?.filter(({ agent }) => agent.id !== agentId) ?? value.agents,
+        }));
+        await mutateAndRefresh(projectId, () => projectService.removeAgent(projectId, agentId));
+      },
+      removeProjectKnowledgeBase: async (projectId, knowledgeBaseId) => {
+        patchDetail(projectId, (value) => ({
+          ...value,
+          knowledgeBases:
+            value.knowledgeBases?.filter(
+              ({ knowledgeBase }) => knowledgeBase.id !== knowledgeBaseId,
+            ) ?? value.knowledgeBases,
+        }));
+        await mutateAndRefresh(projectId, () =>
+          projectService.removeKnowledgeBase(projectId, knowledgeBaseId),
+        );
+      },
+      updateProjectAgent: async (projectId, agentId, patch) => {
+        patchDetail(projectId, (value) => ({
+          ...value,
+          agents:
+            value.agents?.map((item) =>
+              item.agent.id === agentId
+                ? { ...item, binding: { ...item.binding, ...patch } }
+                : item,
+            ) ?? value.agents,
+        }));
+        await mutateAndRefresh(projectId, () =>
+          projectService.updateAgent(projectId, agentId, patch),
+        );
+      },
+      updateProjectKnowledgeBase: async (projectId, knowledgeBaseId, patch) => {
+        patchDetail(projectId, (value) => ({
+          ...value,
+          knowledgeBases:
+            value.knowledgeBases?.map((item) =>
+              item.knowledgeBase.id === knowledgeBaseId
+                ? { ...item, binding: { ...item.binding, ...patch } }
+                : item,
+            ) ?? value.knowledgeBases,
+        }));
+        await mutateAndRefresh(projectId, () =>
+          projectService.updateKnowledgeBase(projectId, knowledgeBaseId, patch),
+        );
       },
       updateProject: async (id, input) => {
         const response = await projectEntity.optimistic(

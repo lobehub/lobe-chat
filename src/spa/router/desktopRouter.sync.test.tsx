@@ -79,6 +79,8 @@ async function readRouterSources() {
       'desktopRouter.shared.tsx',
       'desktopRouter.config.tsx',
       'desktopRouter.config.desktop.tsx',
+      'taskWorkspaceRoutes.tsx',
+      'workspaceSettingsRoutes.tsx',
     ].map((filename) => readFile(path.join(process.cwd(), 'src/spa/router', filename), 'utf8')),
   );
 }
@@ -221,6 +223,23 @@ describe('desktop router shared definition', () => {
       expect(
         (projectIndexRoute?.element as ReactElement<{ to: string }> | undefined)?.props.to,
       ).toBe('conversation');
+    },
+  );
+
+  it.each(mainAreaVariants)(
+    '%s opens a project acceptance record inside the project section',
+    (_, factory) => {
+      const list = matchRoutes(createMainAreaRoutes(factory), '/project/prj_1/acceptance');
+      const record = matchRoutes(createMainAreaRoutes(factory), '/project/prj_1/acceptance/acc_1');
+      const check = matchRoutes(
+        createMainAreaRoutes(factory),
+        '/project/prj_1/acceptance/acc_1/check/chk_1',
+      );
+
+      expect(list?.at(-1)?.route.index).toBe(true);
+      expect(record?.at(-1)?.route.path).toBe(':acceptanceId');
+      expect(record?.at(-1)?.params.acceptanceId).toBe('acc_1');
+      expect(check?.at(-1)?.params.checkId).toBe('chk_1');
     },
   );
 

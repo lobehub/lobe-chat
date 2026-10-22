@@ -76,3 +76,11 @@ export const resolveClaudeCodeTokenStatus = ({
 
   return { status: 'missing' };
 };
+
+/**
+ * Whether the caller can remove the token from the agent settings. Only the
+ * caller's own personal credential can be deleted here; a workspace- or
+ * other-member-owned token is managed in Credentials.
+ */
+export const canRemoveClaudeCodeToken = (status: ClaudeCodeTokenStatus): boolean =>
+  status.status === 'personalNotShared' || (status.status === 'configured' && status.editable);

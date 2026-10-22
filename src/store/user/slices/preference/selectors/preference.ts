@@ -6,6 +6,8 @@ const useCmdEnterToSend = (s: UserStore): boolean => s.preference.useCmdEnterToS
 const defaultOpenInApp = (s: UserStore): string | undefined => s.preference.defaultOpenInApp;
 const topicGroupMode = (s: UserStore) =>
   s.preference.topicGroupMode || DEFAULT_PREFERENCE.topicGroupMode!;
+const projectTopicGroupMode = (s: UserStore) =>
+  s.preference.projectTopicGroupMode || DEFAULT_PREFERENCE.projectTopicGroupMode!;
 const topicSortBy = (s: UserStore) => s.preference.topicSortBy || DEFAULT_PREFERENCE.topicSortBy!;
 const topicIncludeCompleted = (s: UserStore): boolean =>
   s.preference.topicIncludeCompleted ?? false;
@@ -32,6 +34,7 @@ export const preferenceSelectors = {
   hideSettingsMoveGuide,
   hideSyncAlert,
   isPreferenceInit,
+  projectTopicGroupMode,
   shouldTriggerFileInKnowledgeBaseTip,
   showUploadFileInKnowledgeBaseTip,
   terminalFontFamily,

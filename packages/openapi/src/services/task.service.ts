@@ -110,13 +110,10 @@ export class TaskRestService extends BaseService {
   }
 
   async deleteTask(id: string): ServiceResult<unknown> {
-    // `TaskModel` resolves any public task for a workspace, so `agent:update`
-    // alone would let a member delete a colleague's task and interrupt its live
-    // runs; the tRPC delete path gates this on the row's creator, and this one
-    // must not be the way around it.
+    // Same scope as the tRPC delete: the route's `agent:update` gate plus the
+    // model's visibility-aware `resolve`, whoever created the task.
     const task = await this.taskModel.resolve(id);
     if (!task) throw this.createNotFoundError('Task not found');
-    await this.assertRowManageable(task.createdByUserId, 'AGENT_UPDATE', 'task');
     return this.taskService.deleteTask(task.id);
   }
 }

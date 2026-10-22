@@ -9,6 +9,7 @@
 import { LobeAgentManifest } from '@lobechat/builtin-tool-lobe-agent';
 import { MessageToolIdentifier } from '@lobechat/builtin-tool-message';
 import { RemoteDeviceManifest } from '@lobechat/builtin-tool-remote-device';
+import { TaskIdentifier } from '@lobechat/builtin-tool-task';
 import { TRPCError } from '@trpc/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -24,6 +25,9 @@ import { discoverTools } from '.';
 
 vi.mock('@/business/client/model-bank/loadModels', () => ({
   loadModels: vi.fn().mockResolvedValue([]),
+}));
+vi.mock('@/server/services/agentSignal/featureGate', () => ({
+  isAgentSignalEnabledForUser: vi.fn().mockResolvedValue(true),
 }));
 vi.mock('@/database/models/aiModel', () => ({
   AiModelModel: class {
@@ -44,6 +48,29 @@ vi.mock('@/database/models/chatGroup', () => ({
   ChatGroupModel: class {
     findById = vi.fn(async () => ({ content: 'group prompt', title: 'Group' }));
     getGroupAgentsWithMeta = vi.fn(async () => chatGroupState.roster);
+  },
+}));
+const { projectState } = vi.hoisted(() => ({
+  projectState: {
+    coordinatorAgentId: 'coordinator-1' as string | null,
+    inboxAgentId: 'lobe-ai',
+    knowledgeBaseIds: [] as string[],
+  },
+}));
+vi.mock('@/database/models/project', () => ({
+  ProjectModel: class {
+    findById = vi.fn(async (id: string) => ({
+      coordinatorAgentId: projectState.coordinatorAgentId,
+      id,
+    }));
+    getEnabledKnowledgeBaseIds = vi.fn(async () => projectState.knowledgeBaseIds);
+    // A cleared main agent reads back as LobeAI.
+    resolveCoordinatorAgents = vi.fn(async (items: Array<{ coordinatorAgentId: string | null }>) =>
+      items.map((item) => ({
+        ...item,
+        coordinatorAgentId: item.coordinatorAgentId ?? projectState.inboxAgentId,
+      })),
+    );
   },
 }));
 const { connectorToolState } = vi.hoisted(() => ({
@@ -179,6 +206,9 @@ const lastEngineOptions = () =>
 beforeEach(() => {
   deviceGatewayState.isConfigured = false;
   chatGroupState.roster = [];
+  projectState.coordinatorAgentId = 'coordinator-1';
+  projectState.inboxAgentId = 'lobe-ai';
+  projectState.knowledgeBaseIds = [];
   vi.mocked(getScopedOnlineDevices).mockReset().mockResolvedValue([]);
   vi.mocked(collectBorrowedConnectors).mockReset().mockReturnValue([]);
   vi.mocked(buildConnectorOwnershipPrompt).mockReset().mockReturnValue('');
@@ -194,7 +224,8 @@ describe('discoverTools — disabled tools and client function tools', () => {
     const result = await run({ input: { disableTools: true, functionTools } }).promise;
 
     expect(result.toolsEngine).toBeUndefined();
-    expect(result.tools).toBeUndefined();
+    expect(result.tools).toHaveLength(1);
+    expect(result.tools?.[0].function.name).toBe('lobe-client-fn____getWeather');
     expect(createServerAgentToolsEngine).not.toHaveBeenCalled();
     expect(result.toolsResult.enabledToolIds).toEqual(['lobe-client-fn']);
     expect(result.toolSourceMap['lobe-client-fn']).toBe('client');
@@ -221,6 +252,20 @@ describe('discoverTools — disabled tools and client function tools', () => {
       type: 'function',
     });
     expect(result.toolsResult.enabledToolIds.at(-1)).toBe('lobe-client-fn');
+  });
+
+  it('keeps an exclusive function-only surface despite media and self-feedback injection', async () => {
+    const result = await run({
+      agentConfig: { plugins: ['lobe-agent'] },
+      input: { exclusivePluginIds: [], externalFileTypes: ['image/png'], functionTools },
+    }).promise;
+
+    expect(result.agentPlugins).toEqual([]);
+    expect(result.toolsResult.enabledToolIds).toEqual(['lobe-client-fn']);
+    expect(Object.keys(result.toolManifestMap)).toEqual(['lobe-client-fn']);
+    expect(result.tools?.map((tool) => tool.function.name)).toEqual([
+      'lobe-client-fn____getWeather',
+    ]);
   });
 });
 
@@ -294,11 +339,42 @@ describe('discoverTools — turn-scoped builtins', () => {
     expect(result.agentPlugins).toContain(LobeAgentManifest.identifier);
   });
 
+  it('gives a project coordinator the task tool and the project knowledge', async () => {
+    projectState.coordinatorAgentId = 'agent-1';
+    projectState.knowledgeBaseIds = ['kb-project'];
+
+    const result = await run({ appContext: { projectId: 'project-1' } }).promise;
+
+    expect(result.agentPlugins).toContain(TaskIdentifier);
+    expect(lastEngineOptions().hasEnabledKnowledgeBases).toBe(true);
+  });
+
+  it('gives LobeAI the task tool in a project whose main agent was cleared', async () => {
+    // The run agent is LobeAI: a cleared main agent resolves to it.
+    projectState.coordinatorAgentId = null;
+    projectState.inboxAgentId = 'agent-1';
+
+    const result = await run({ appContext: { projectId: 'project-1' } }).promise;
+
+    expect(result.agentPlugins).toContain(TaskIdentifier);
+  });
+
+  it('lets a project member search project knowledge without delegating work', async () => {
+    projectState.knowledgeBaseIds = ['kb-project'];
+
+    const result = await run({ appContext: { projectId: 'project-1' } }).promise;
+
+    expect(result.agentPlugins).not.toContain(TaskIdentifier);
+    expect(lastEngineOptions().hasEnabledKnowledgeBases).toBe(true);
+  });
+
   it('adds nothing turn-scoped for a plain text turn', async () => {
     const result = await run().promise;
 
     expect(result.agentPlugins).not.toContain(MessageToolIdentifier);
     expect(result.agentPlugins).not.toContain(LobeAgentManifest.identifier);
+    expect(result.agentPlugins).not.toContain(TaskIdentifier);
+    expect(lastEngineOptions().hasEnabledKnowledgeBases).toBe(false);
     expect(result.operationAgentGroup).toBeUndefined();
   });
 });

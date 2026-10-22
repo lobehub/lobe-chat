@@ -246,6 +246,9 @@ export interface TaskSchedulerContext {
   consecutiveFailures?: number;
   // ISO timestamp when the latest tick was scheduled. Informational only.
   scheduledAt?: string;
+  // ISO timestamp opening the current schedule window: `maxExecutions` counts
+  // schedule runs since it, and the dispatcher never fires an earlier occurrence.
+  scheduleStartedAt?: string;
   // QStash messageId (or LocalScheduler scheduleId) for the next tick. Used to
   // cancel when the user wants an interval change to take effect immediately.
   tickMessageId?: string;

@@ -28,7 +28,13 @@ import type { GoalBriefService } from './goalBriefs';
 import type { GoalService } from './index';
 import { answeredProblem, GoalManagerService, problemKey } from './manager';
 import { buildReleaseGateDossier, openReleaseGateAcceptance, reviewedUnitIds } from './releaseGate';
-import { carriedUnitBrief, createRecipeUnitTask, rerunUnitNote } from './rolloutBatch';
+import {
+  createRecipeUnitTask,
+  deliveredUnits,
+  pickRerunUnits,
+  reopenRoundUnits,
+  rerunUnitNote,
+} from './rolloutBatch';
 import { describeGateChecks, type RolloutGateResult, withGateVerdict } from './rolloutGate';
 
 const log = debug('lobe-server:goal-rollout');
@@ -54,37 +60,6 @@ export interface ReleaseReviewHost {
  */
 const planVersionOf = (state: GoalRolloutState) =>
   state.planVersions?.[String(state.templateRevision)] ?? state.templateRevision;
-
-/**
- * The reviewed units a sent-back plan runs again, with the brief each keeps and
- * what it delivered. `names` are the node ids or titles the main Agent chose;
- * absent — or naming none of them, which is a slip rather than a choice —
- * every reviewed unit runs again, and an empty list runs none.
- */
-const rerunUnits = (
-  graph: GoalGraphSnapshot,
-  state: GoalRolloutState,
-  waveSize: number,
-  names: string[] | undefined,
-) => {
-  const units = reviewedUnitIds(state, waveSize).flatMap((id) => {
-    const node = graph.nodes.find((candidate) => candidate.id === id);
-    if (!node || node.kind !== 'task') return [];
-    const delivered = graph.workVersions
-      .filter((link) => link.nodeId === id && link.work && link.work.type !== 'task')
-      .map((link) => {
-        const title = link.work!.title ?? link.work!.identifier ?? '';
-        return link.work!.url ? `${title} ${link.work!.url}`.trim() : title;
-      })
-      .filter(Boolean);
-    return [
-      { brief: carriedUnitBrief(node), delivered: [...new Set(delivered)], id, title: node.title },
-    ];
-  });
-  if (!names) return units;
-  const chosen = units.filter((unit) => names.includes(unit.id) || names.includes(unit.title));
-  return names.length && !chosen.length ? units : chosen;
-};
 
 /**
  * The batch's release gate as a decision a person (or the main Agent) makes.
@@ -511,7 +486,11 @@ export class GoalReleaseReview {
     const recipe = pending.revisedRecipe!.trim();
     const round = String(state.templateRevision);
     const waveSize = Math.max(1, policy?.waveSize ?? ROLLOUT_WAVE_SIZE_DEFAULT);
-    const rerun = rerunUnits(graph, state, waveSize, pending.rerun);
+    const rerun = pickRerunUnits(
+      deliveredUnits(graph, reviewedUnitIds(state, waveSize)),
+      pending.rerun,
+      'all',
+    );
     const version = state.planSkill
       ? await new BatchPlanSkillService(this.db, this.userId, this.workspaceId)
           .revise(state.planSkill, {
@@ -552,37 +531,15 @@ export class GoalReleaseReview {
 
       // Each re-run replaces its earlier run in the round, so the gate judges
       // the re-runs and the review reports them.
-      const replaced = new Map<string, string>();
-      for (const unit of rerun) {
-        const nodeId = await createRecipeUnitTask(
-          writer,
-          goalId,
-          current.batchNodeId,
-          unit.title,
-          { outline: recipe, skill: planSkill },
-          unit.brief,
-          rerunUnitNote(pending.correction, unit.delivered),
-        );
-        if (!nodeId) continue;
-        replaced.set(unit.id, nodeId);
-        reopened.push(unit.title);
-        await writer.createEdge(goalId, nodeId, unit.id, 'derived_from');
-        if (current.waveIndex === 0 && current.assayNodeId)
-          await writer.createEdge(goalId, current.assayNodeId, nodeId, 'depends_on');
-      }
-      // A unit that waited on another keeps waiting on it: the order the units
-      // ran in carries over to their re-runs, so a re-run never starts on the
-      // output its prerequisite is still redoing.
-      for (const edge of graph.edges) {
-        const source = edge.kind === 'depends_on' && replaced.get(edge.sourceNodeId);
-        if (!source) continue;
-        await writer.createEdge(
-          goalId,
-          source,
-          replaced.get(edge.targetNodeId) ?? edge.targetNodeId,
-          'depends_on',
-        );
-      }
+      const replaced = await reopenRoundUnits(
+        writer,
+        graph,
+        current,
+        rerun,
+        { outline: recipe, skill: planSkill },
+        (unit) => rerunUnitNote(pending.correction, unit.delivered),
+      );
+      for (const unit of rerun) if (replaced.has(unit.id)) reopened.push(unit.title);
       const swap = (ids: string[]) => ids.map((id) => replaced.get(id) ?? id);
       await goalModel.updateRolloutState(goalId, {
         ...current,

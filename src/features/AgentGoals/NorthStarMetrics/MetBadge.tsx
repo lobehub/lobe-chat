@@ -6,7 +6,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 /**
- * "Met" beside a metric's name: a quiet check and word in the success color.
+ * "Met" for a metric clause: a quiet check and word in the success color.
  * A filled tag outweighed the number it qualifies.
  */
 const MetBadge = memo(() => {

@@ -107,34 +107,9 @@ const MetricCard = memo<{ canEdit: boolean; card: NorthStarCard; goalId: string 
         onClick={openDetail}
         onKeyDown={(event) => handleCardKeyDown(event, openDetail)}
       >
-        <Flexbox horizontal align={'center'} gap={8} justify={'space-between'}>
-          <Flexbox horizontal align={'center'} gap={8} style={{ minWidth: 0 }}>
-            <Text ellipsis fontSize={13} weight={600}>
-              {card.label}
-            </Text>
-            {card.met && <MetBadge />}
-          </Flexbox>
-          <Flexbox horizontal align={'center'} gap={4}>
-            {/* Recording stays available after the target is met: the world
-                can regress, and a card whose only refresh path disappeared
-                would stay falsely met forever. */}
-            {canEdit && (
-              <Tooltip title={t('goalProcess.northStar.record.title')}>
-                <Button
-                  aria-label={t('goalProcess.northStar.record.title')}
-                  icon={<Icon icon={Plus} size={13} />}
-                  size={'small'}
-                  type={'text'}
-                  onClick={(event) => {
-                    // Recording from the card must not also open the detail.
-                    event.stopPropagation();
-                    openRecordObservationModal(goalId, card.key, card.label);
-                  }}
-                />
-              </Tooltip>
-            )}
-          </Flexbox>
-        </Flexbox>
+        <Text ellipsis fontSize={13} weight={600}>
+          {card.label}
+        </Text>
         <Flexbox horizontal align={'center'} gap={8} justify={'space-between'}>
           <Flexbox horizontal align={'baseline'} gap={6}>
             <Text className={card.met ? styles.metValue : ''} fontSize={20} weight={700}>
@@ -161,10 +136,40 @@ const MetricCard = memo<{ canEdit: boolean; card: NorthStarCard; goalId: string 
             />
           )}
         </Flexbox>
-        <Text className={card.stale ? styles.stale : ''} fontSize={11} type={'secondary'}>
-          {freshness}
-          {card.stale ? ` · ${t('goalProcess.northStar.staleWarning')}` : ''}
-        </Text>
+        {/* The verdict and its freshness read together under the number; the
+            action sits apart in the opposite corner, clear of the title. */}
+        <Flexbox horizontal align={'center'} gap={8} justify={'space-between'}>
+          <Flexbox horizontal align={'center'} gap={8} style={{ minWidth: 0 }}>
+            {card.met && <MetBadge />}
+            <Text
+              ellipsis
+              className={card.stale ? styles.stale : ''}
+              fontSize={11}
+              type={'secondary'}
+            >
+              {freshness}
+              {card.stale ? ` · ${t('goalProcess.northStar.staleWarning')}` : ''}
+            </Text>
+          </Flexbox>
+          {/* Recording stays available after the target is met: the world
+              can regress, and a card whose only refresh path disappeared
+              would stay falsely met forever. */}
+          {canEdit && (
+            <Tooltip title={t('goalProcess.northStar.record.title')}>
+              <Button
+                aria-label={t('goalProcess.northStar.record.title')}
+                icon={<Icon icon={Plus} size={13} />}
+                size={'small'}
+                type={'text'}
+                onClick={(event) => {
+                  // Recording from the card must not also open the detail.
+                  event.stopPropagation();
+                  openRecordObservationModal(goalId, card.key, card.label);
+                }}
+              />
+            </Tooltip>
+          )}
+        </Flexbox>
       </Flexbox>
     );
   },

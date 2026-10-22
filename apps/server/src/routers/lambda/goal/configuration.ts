@@ -45,6 +45,27 @@ export const configurationRouter = router({
         mapGoalError(error, 'setMetricCriteria');
       }
     }),
+  /** Drop declared clauses by key, against the server's current list. */
+  removeMetricCriteria: goalWriteProcedure
+    .input(idInput.extend({ keys: z.array(z.string().min(1).max(255)).min(1) }))
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const goal = await ctx.goalModel.findById(input.id);
+        if (!goal) throw new TRPCError({ code: 'NOT_FOUND', message: 'Goal not found' });
+        assertWorkspaceRowManageable(ctx, goal.userId, 'goal');
+        const data = await ctx.goalService.removeMetricCriteria(input.id, input.keys);
+        // Dropping the last unmet clause frees a goal parked short of acceptance.
+        await scheduleGoalAdvance({
+          goalId: input.id,
+          trigger: 'observe',
+          userId: ctx.userId,
+          workspaceId: ctx.workspaceId ?? undefined,
+        });
+        return { data, message: 'Metric criteria removed', success: true };
+      } catch (error) {
+        mapGoalError(error, 'removeMetricCriteria');
+      }
+    }),
   /**
    * Record a measurement against this goal and let the coordinator react.
    *
@@ -150,6 +171,50 @@ export const configurationRouter = router({
         };
       } catch (error) {
         mapGoalError(error, 'setTaskAgent');
+      }
+    }),
+  /**
+   * Pick the model the goal agent plans with (`null` falls back to the agent's
+   * own). Tasks keep their own model.
+   */
+  setModel: goalWriteProcedure
+    .input(
+      idInput.extend({
+        modelConfig: z.object({ model: z.string().min(1), provider: z.string().min(1) }).nullable(),
+      }),
+    )
+    .mutation(async ({ ctx, input: { id, modelConfig } }) => {
+      try {
+        const goal = await ctx.goalModel.findById(id);
+        if (!goal) throw new TRPCError({ code: 'NOT_FOUND', message: 'Goal not found' });
+        assertWorkspaceRowManageable(ctx, goal.userId, 'goal');
+
+        const data = await ctx.goalService.setModel(id, modelConfig);
+        return { data, message: 'Goal model updated', success: true };
+      } catch (error) {
+        mapGoalError(error, 'setModel');
+      }
+    }),
+  /**
+   * Pick the model the goal's Tasks run on (`null` falls back to their
+   * executor's own). Unfinished Tasks switch with it.
+   */
+  setTaskModel: goalWriteProcedure
+    .input(
+      idInput.extend({
+        modelConfig: z.object({ model: z.string().min(1), provider: z.string().min(1) }).nullable(),
+      }),
+    )
+    .mutation(async ({ ctx, input: { id, modelConfig } }) => {
+      try {
+        const goal = await ctx.goalModel.findById(id);
+        if (!goal) throw new TRPCError({ code: 'NOT_FOUND', message: 'Goal not found' });
+        assertWorkspaceRowManageable(ctx, goal.userId, 'goal');
+
+        const data = await ctx.goalService.setTaskModel(id, modelConfig);
+        return { data, message: 'Goal task model updated', success: true };
+      } catch (error) {
+        mapGoalError(error, 'setTaskModel');
       }
     }),
   setBudget: goalWriteProcedure

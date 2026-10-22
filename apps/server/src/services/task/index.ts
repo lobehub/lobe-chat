@@ -1,5 +1,5 @@
 import { TASK_ASSIGNEE_PERMISSION_CODES } from '@lobechat/const/rbac';
-import type { TaskContext, TaskDetailData, TaskItem } from '@lobechat/types';
+import type { TaskContext, TaskDetailData, TaskItem, TaskStatus } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import pMap from 'p-map';
 
@@ -17,6 +17,7 @@ import { type SubtaskGraphPlan, TaskGraphService } from '../taskGraph';
 import { type ReviewResult, TaskReviewService } from '../taskReview';
 import { TaskRunnerService } from '../taskRunner';
 import { writeKeepingArchivedIdle } from './archiveGuard';
+import { armScheduleOnCreate } from './armScheduleOnCreate';
 import type { TaskServiceDeps } from './deps';
 import { TaskDetailService } from './detail';
 import { resolveMissingTaskModelConfig } from './modelSnapshot';
@@ -132,7 +133,7 @@ export class TaskService {
     }
 
     if (createData.projectId) {
-      const project = await this.projectModel.findManageableById(createData.projectId);
+      const project = await this.projectModel.findById(createData.projectId);
       if (!project) throw new TRPCError({ code: 'NOT_FOUND', message: 'Project not found' });
     }
 
@@ -190,7 +191,10 @@ export class TaskService {
     // produce a `Private parent + Public child` combo if the caller insists.
     this.assertParentVisibilityCompat(createData.visibility, parentVisibility);
 
-    const task = await this.createTaskWithAssigneeLock(createData);
+    const task = await this.createTaskWithAssigneeLock({
+      ...createData,
+      ...armScheduleOnCreate(createData),
+    });
 
     return task;
   }
@@ -638,7 +642,7 @@ export class TaskService {
   }
 
   private async createTaskWithAssigneeLock(
-    createData: CreateTaskInput & { config?: Record<string, unknown> },
+    createData: CreateTaskInput & { config?: Record<string, unknown>; status?: TaskStatus },
   ): Promise<TaskItem> {
     if (!createData.assigneeUserId || !this.workspaceId) {
       await this.assertAssigneeUserAssignable(createData.assigneeUserId);

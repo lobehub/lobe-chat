@@ -6,6 +6,7 @@
   "workingDirectory.agentDescription": "Standard-Arbeitsverzeichnis für alle Unterhaltungen mit diesem Agenten",
   "workingDirectory.agentLevel": "Agent-Arbeitsverzeichnis",
   "workingDirectory.bareWorktree": "nackt",
+  "workingDirectory.branchConfirming": "Aktuellen Branch wird bestätigt…",
   "workingDirectory.branchInWorktree": "Im Arbeitsbaum {{name}}",
   "workingDirectory.branchSearchPlaceholder": "Zweige durchsuchen",
   "workingDirectory.branchesEmpty": "Keine lokalen Zweige",

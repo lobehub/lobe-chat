@@ -244,6 +244,11 @@ export const UserLabSchema = z.object({
    * instead of being thrown away with the sandbox
    */
   enablePersistentSandbox: z.boolean().optional(),
+  /**
+   * show the redesigned onboarding flow when this user first enters a newly
+   * created workspace (the previous flow otherwise)
+   */
+  enableWorkspaceOnboardingV2: z.boolean().optional(),
 });
 
 export type UserLab = z.infer<typeof UserLabSchema>;
@@ -309,6 +314,12 @@ export interface UserPreference {
    * context. Stored as id (not slug) so workspace renames don't invalidate it.
    */
   lastWorkspaceId?: string | null;
+  /**
+   * How a project's topic sidebar groups its topics. Kept apart from
+   * `topicGroupMode` because a project spans agents and devices: it defaults to
+   * grouping by agent, and its choice must not leak into single-agent lists.
+   */
+  projectTopicGroupMode?: TopicGroupMode;
   /**
    * Personal-mode counterpart of
    * {@link WorkspaceUserPreference.sidebarHiddenAgentIds}: agents/chat-groups
@@ -396,6 +407,9 @@ export const UserPreferenceSchema = z
     integration: UserIntegrationPreferenceSchema.optional(),
     lab: UserLabSchema.optional(),
     lastWorkspaceId: z.string().nullish(),
+    projectTopicGroupMode: z
+      .enum(['byTime', 'byProject', 'flat', 'byStatus', 'byAgent', 'byDevice'])
+      .optional(),
     sidebarHiddenAgentIds: z.array(z.string()).optional(),
     sidebarHiddenGroupIds: z.array(z.string()).optional(),
     terminalFontFamily: z.string().optional(),

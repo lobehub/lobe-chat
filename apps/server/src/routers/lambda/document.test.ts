@@ -8,6 +8,7 @@ import { documentRouter } from './document';
 
 const mocks = vi.hoisted(() => ({
   createDocument: vi.fn(),
+  findDocumentById: vi.fn(),
   findOwnOperationById: vi.fn(),
   getDocumentById: vi.fn(),
   getFileAccessUrl: vi.fn(),
@@ -29,7 +30,9 @@ vi.mock('@/database/models/chunk', () => ({ ChunkModel: vi.fn() }));
 vi.mock('@/database/models/file', () => ({ FileModel: vi.fn() }));
 vi.mock('@/database/models/message', () => ({ MessageModel: vi.fn() }));
 vi.mock('@/database/models/document', () => ({
-  DocumentModel: vi.fn(),
+  DocumentModel: vi.fn().mockImplementation(function () {
+    return { findById: mocks.findDocumentById };
+  }),
   DOCUMENT_TRANSFER_FOREIGN_ROWS: 'foreign',
 }));
 vi.mock('@/server/services/document', () => ({
@@ -194,5 +197,47 @@ describe('document work provenance', () => {
     await expect(
       (await caller()).updateDocument({ content: 'v2', id: 'doc-1', operationId: 'child' }),
     ).resolves.toMatchObject({ id: 'doc-1' });
+  });
+});
+
+describe('HTML document writes', () => {
+  const html = '<!doctype html><html><body><h1>Report</h1></body></html>';
+
+  beforeEach(() => {
+    for (const mock of Object.values(mocks)) mock.mockReset();
+    mocks.createDocument.mockResolvedValue({ id: 'doc-1', visibility: 'private' });
+    mocks.updateDocument.mockResolvedValue({ id: 'doc-1' });
+  });
+
+  it('creates an HTML page without parsing its content as Markdown', async () => {
+    await (
+      await caller()
+    ).createDocument({ content: html, fileType: 'custom/html', title: 'Report' });
+
+    expect(mocks.createDocument).toHaveBeenCalledWith(
+      expect.objectContaining({ content: html, editorData: undefined, fileType: 'custom/html' }),
+    );
+  });
+
+  it('keeps a content-only edit of a stored HTML page out of the Markdown editor', async () => {
+    mocks.findDocumentById.mockResolvedValue({ fileType: 'custom/html', id: 'doc-1' });
+
+    await (await caller()).updateDocument({ content: html, id: 'doc-1' });
+
+    expect(mocks.updateDocument).toHaveBeenCalledWith(
+      'doc-1',
+      expect.objectContaining({ content: html, editorData: undefined }),
+    );
+  });
+
+  it('still builds editorData for a content-only edit of a Markdown page', async () => {
+    mocks.findDocumentById.mockResolvedValue({ fileType: 'custom/document', id: 'doc-1' });
+
+    await (await caller()).updateDocument({ content: '# Title', id: 'doc-1' });
+
+    expect(mocks.updateDocument).toHaveBeenCalledWith(
+      'doc-1',
+      expect.objectContaining({ editorData: expect.objectContaining({ root: expect.anything() }) }),
+    );
   });
 });

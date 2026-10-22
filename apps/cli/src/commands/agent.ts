@@ -199,6 +199,7 @@ export function registerAgentCommand(program: Command) {
 
   agent
     .command('edit [agentId]')
+    .alias('update')
     .description('Update agent configuration')
     .option('--slug <slug>', 'Agent slug (e.g. inbox)')
     .option('-t, --title <title>', 'New title')

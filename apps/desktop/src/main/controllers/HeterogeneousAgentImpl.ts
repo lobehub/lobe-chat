@@ -48,6 +48,7 @@ import {
   buildHeteroExecStdinPayload,
   buildHeterogeneousPrompt,
   HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV,
+  stripInheritedRunIdentity,
 } from '@lobechat/heterogeneous-agents/protocol';
 import {
   CLAUDE_CODE_QUOTA_FRESH_MS,
@@ -90,7 +91,9 @@ import {
   DroidAcpSession,
   DSH_COMMAND,
   ensureClaudeCodeResumeTranscript,
+  findClaudeCodeTranscriptPath,
   getCodexAppServerUnsupportedArgs,
+  getHeterogeneousAgentPresetEnv,
   GrokAcpSession,
   isCursorAcpSessionNotFoundError,
   isDevinAcpSessionNotFoundError,
@@ -98,7 +101,6 @@ import {
   normalizeImage,
   readClaudeCodeSessionCost,
   readCodexSessionModel,
-  resolveClaudeCodeTranscriptPath,
   resolveCliSpawnPlan,
   resolveCodexInitialModel,
   spawnDshAcpSession,
@@ -130,8 +132,8 @@ import semver from 'semver';
 import { HETERO_AGENT_FILES_DIR, HETERO_AGENT_TRACING_DIR } from '@/const/heteroAgent';
 import type { App } from '@/core/App';
 import { detectHeterogeneousCliCommand } from '@/modules/binaries';
-import { resolveCliScript } from '@/modules/cliEmbedding';
-import { getHeterogeneousAgentDriver } from '@/modules/heterogeneousAgent';
+import { resolveCliScript, withEmbeddedCliEnv } from '@/modules/cliEmbedding';
+import { getHeterogeneousAgentDriver, withCodexContextArgs } from '@/modules/heterogeneousAgent';
 import {
   consumeCodexRateLimitResetCredit as consumeCodexRateLimitResetCreditRequest,
   fetchCodexQuota,
@@ -180,6 +182,7 @@ import { createLogger } from '@/utils/logger';
 import BrowserControlCtr from './BrowserControlCtr';
 import { sendPromptWithCodexAppServer } from './codexAppServer';
 import type { AgentSession, CliTraceSession, SendPromptParams } from './heterogeneousAgentSession';
+import { claudeProfileDirOf } from './heterogeneousAgentSession';
 import RemoteServerConfigCtr from './RemoteServerConfigCtr';
 
 const logger = createLogger('controllers:HeterogeneousAgentCtr');
@@ -199,14 +202,14 @@ const STRIPPED_INHERITED_ENV_KEYS = [
 ] as const;
 
 /**
- * Inherited `process.env` with the Anthropic auth vars removed. Keep this pure
- * and exported so the "never leak host Anthropic creds into the CLI" invariant
- * can be unit-tested directly.
+ * Inherited `process.env` without the Anthropic auth vars or an ancestor agent run's
+ * identity (a Desktop launched from an agent shell carries its JWT file, which the CLI
+ * prefers over any token). Pure and exported so the invariant is unit-tested directly.
  */
 export const buildInheritedSpawnEnv = (
   sourceEnv: NodeJS.ProcessEnv = process.env,
 ): NodeJS.ProcessEnv => {
-  const env = { ...sourceEnv };
+  const env = stripInheritedRunIdentity(sourceEnv);
   for (const key of STRIPPED_INHERITED_ENV_KEYS) delete env[key];
   return env;
 };
@@ -1074,11 +1077,9 @@ export default class HeterogeneousAgentCtr {
     // shim finds its interpreter. `session.env` still wins if it sets PATH.
     if (session.resolvedCommandSearchPath) inheritedEnv.PATH = session.resolvedCommandSearchPath;
     const env: NodeJS.ProcessEnv = {
-      ...inheritedEnv,
+      ...withEmbeddedCliEnv(inheritedEnv),
       ...proxyEnv,
-      ...(session.agentType === 'codebuddy'
-        ? { CODEBUDDY_CODE_DISABLE_BACKGROUND_TASKS: '1' }
-        : {}),
+      ...getHeterogeneousAgentPresetEnv(session.agentType),
       ...session.env,
       ...(includeProcessOwnership
         ? managedProcessEnvironment(
@@ -1619,7 +1620,7 @@ export default class HeterogeneousAgentCtr {
     this.sessions.set(sessionId, {
       agentSessionId: resumeSessionId,
       agentType,
-      args: hostedProviderBinding?.args ?? params.args ?? [],
+      args: withCodexContextArgs(agentType, params.env, hostedProviderBinding?.args ?? params.args),
       command: params.command,
       cwd: params.cwd,
       env: hostedProviderBinding?.env ?? params.env,
@@ -1736,7 +1737,7 @@ export default class HeterogeneousAgentCtr {
     ) {
       try {
         const ensured = await ensureClaudeCodeResumeTranscript({
-          configDir: session.hostedProviderBinding?.profileDir,
+          configDir: claudeProfileDirOf(session),
           cwd: session.cwd,
           messages: params.resumeReplayMessages,
           sessionId: session.agentSessionId,
@@ -3387,7 +3388,7 @@ export default class HeterogeneousAgentCtr {
     notBefore?: string;
     sessionId: string;
   }): Promise<ReturnType<typeof buildClaudeCodeReplayTurn>> {
-    const filePath = await resolveClaudeCodeTranscriptPath(params);
+    const filePath = await findClaudeCodeTranscriptPath(params);
     if (!filePath) throw new Error(`Transcript replay rejected session id ${params.sessionId}`);
 
     let content: string;
@@ -3467,10 +3468,7 @@ export default class HeterogeneousAgentCtr {
     }
 
     const turn = (await this.readClaudeCodeReplayTurn({
-      configDir:
-        params.replayTranscriptConfigDir ??
-        session.env?.CLAUDE_CONFIG_DIR ??
-        session.hostedProviderBinding?.profileDir,
+      configDir: params.replayTranscriptConfigDir ?? claudeProfileDirOf(session),
       cwd: session.cwd,
       // The prompt this run was given — re-checked here, not just at probe time.
       expectedPrompt: params.prompt,
@@ -4172,19 +4170,11 @@ export default class HeterogeneousAgentCtr {
       });
     }
 
-    // Never inherit the launcher's conversation identity for a dispatched run.
-    const childEnv = { ...process.env };
-    for (const key of [
-      'LOBEHUB_AGENT_ID',
-      'LOBEHUB_ASSISTANT_MESSAGE_ID',
-      'LOBEHUB_TASK_ID',
-      'LOBEHUB_WORKSPACE_ID',
-    ]) {
-      delete childEnv[key];
-    }
+    // Never inherit the launcher's run identity (or JWT file) for a dispatched run.
+    const childEnv = stripInheritedRunIdentity(process.env);
 
     const env = {
-      ...childEnv,
+      ...withEmbeddedCliEnv(childEnv),
       ...buildProxyEnv(this.app.storeManager.get('networkProxy')),
       ELECTRON_RUN_AS_NODE: '1',
       [HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV]: '1',

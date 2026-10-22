@@ -77,6 +77,8 @@ vi.mock('@/services/agentBotProvider', () => ({
 vi.mock('@/store/agent', () => ({
   useAgentStore: (selector: (state: Record<string, unknown>) => unknown) =>
     selector({
+      // The channel form names quick-created bot apps after the agent.
+      agentMap: {},
       connectBot: vi.fn(),
       createBotProvider: vi.fn(),
       deleteAllBotProviders: vi.fn(),

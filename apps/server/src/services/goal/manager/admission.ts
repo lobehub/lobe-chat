@@ -55,11 +55,12 @@ export const PLAN_REJECTION = {
   },
   revise_turn_only: {
     message:
-      'This turn was handed a plan the owner sent back; answer it with revise_plan carrying the full revised recipe',
+      'This turn was handed the batch plan to rewrite; answer it with revise_plan carrying the full revised recipe',
     trpc: 'BAD_REQUEST',
   },
   revise_unsolicited: {
-    message: 'revise_plan only answers a plan the owner sent back to this turn',
+    message:
+      'revise_plan only answers a batch plan handed to this turn: one the owner sent back, or one to rewrite from settled probes',
     trpc: 'BAD_REQUEST',
   },
   release_unsolicited: {
@@ -191,9 +192,11 @@ export const evaluateAdmission = async (
     (plan.action !== 'escalate' || plan.ask !== undefined)
   )
     return rejectPlan('release_turn_only', op?.status);
-  // A plan the owner sent back has one answer: the Agent rewrites it. The
-  // plan is the Agent's, so nobody else applies the correction in its place.
-  const reviseTurn = state.problemKind === 'rollout_revise';
+  // A plan the owner sent back, or one the settled probes are to teach, has
+  // one answer: the Agent rewrites it. The plan is the Agent's, so nobody else
+  // applies the correction or the lessons in its place.
+  const reviseTurn =
+    state.problemKind === 'rollout_revise' || state.problemKind === 'rollout_distill';
   if (plan?.action === 'revise_plan' && !reviseTurn)
     return rejectPlan('revise_unsolicited', op?.status);
   if (plan && reviseTurn && plan.action !== 'revise_plan')

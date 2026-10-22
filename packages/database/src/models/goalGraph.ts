@@ -972,6 +972,41 @@ export class GoalGraphModel {
     });
 
   /**
+   * Rewrite the options of a still-pending decision, for when what an answer
+   * would do changed after the question was asked. A settled decision keeps
+   * the options it was answered against.
+   */
+  updatePendingDecisionOptions = async (
+    goalId: string,
+    decisionId: string,
+    options: GoalDecisionOption[],
+  ) =>
+    this.db.transaction(async (tx) => {
+      if (!(await this.ownedGoal(goalId, tx))) return undefined;
+      const [ownedDecision] = await tx
+        .select({ id: goalNodeDecisions.id })
+        .from(goalNodeDecisions)
+        .innerJoin(goalNodes, eq(goalNodeDecisions.nodeId, goalNodes.id))
+        .where(
+          and(
+            eq(goalNodeDecisions.id, decisionId),
+            eq(goalNodeDecisions.status, 'pending'),
+            eq(goalNodes.goalId, goalId),
+          ),
+        )
+        .limit(1);
+      if (!ownedDecision) return undefined;
+      const [decision] = await tx
+        .update(goalNodeDecisions)
+        .set({ options, updatedAt: new Date() })
+        .where(
+          and(eq(goalNodeDecisions.id, ownedDecision.id), eq(goalNodeDecisions.status, 'pending')),
+        )
+        .returning();
+      return decision;
+    });
+
+  /**
    * Cancel a still-pending decision whose question a later action made moot —
    * nobody picked an option, so this is distinct from `resolveDecision`. The
    * decision node retires with it; a canceled gate must not keep parking the

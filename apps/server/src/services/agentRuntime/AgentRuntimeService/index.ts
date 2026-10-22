@@ -69,7 +69,9 @@ import {
   acceptsFileWorks,
   acceptsMemberRuntimeEnd,
   controlCompletedToolResult,
+  getOperationEditingGroupId,
   getOperationStatus,
+  injectQueuedFollowUp,
   interruptOperation,
   isOperationInterrupted,
   readQueuedMessagesFlag,
@@ -327,6 +329,7 @@ export class AgentRuntimeService {
       queryMessagesFromDB: (...args) => self.queryMessagesFromDB(...args),
       queryStepEntryMessages: (...args) => self.queryStepEntryMessages(...args),
       queryUiMessages: (...args) => self.queryUiMessages(...args),
+      injectQueuedFollowUp: (...args) => self.injectQueuedFollowUp(...args),
       readQueuedMessagesFlag: (...args) => self.readQueuedMessagesFlag(...args),
       recordInterventionLifecycleCompletion: (...args) =>
         self.recordInterventionLifecycleCompletion(...args),
@@ -379,8 +382,16 @@ export class AgentRuntimeService {
     return acceptsMemberRuntimeEnd(this.context, ...args);
   }
 
+  getOperationEditingGroupId(...args: MethodArgs<typeof getOperationEditingGroupId>) {
+    return getOperationEditingGroupId(this.context, ...args);
+  }
+
   setQueuedMessages(...args: MethodArgs<typeof setQueuedMessages>) {
     return setQueuedMessages(this.context, ...args);
+  }
+
+  private injectQueuedFollowUp(...args: MethodArgs<typeof injectQueuedFollowUp>) {
+    return injectQueuedFollowUp(this.context, ...args);
   }
 
   private readQueuedMessagesFlag(...args: MethodArgs<typeof readQueuedMessagesFlag>) {

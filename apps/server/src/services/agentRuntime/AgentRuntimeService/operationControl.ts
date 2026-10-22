@@ -2,12 +2,15 @@ import type { AgentState } from '@lobechat/agent-runtime';
 import { isParkedStatus } from '@lobechat/agent-runtime';
 import debug from 'debug';
 
+import { redisService } from '@/server/services/redis';
+
 import { hookDispatcher } from '../hooks';
 import {
   controlDeferredToolResult,
   type DeferredToolResultControlInput,
   loadDurableToolResultHooks,
 } from '../hooks/deferredToolResultControl';
+import { steerQueueScopeOf } from '../steerQueueScope';
 import {
   type AgentStepContinuation,
   type OperationStatusResult,
@@ -31,6 +34,7 @@ export type OperationControlDeps = Pick<
   | 'baseURL'
   | 'completionLifecycle'
   | 'coordinator'
+  | 'delegate'
   | 'endExpiredClientLlmWait'
   | 'messageModel'
   | 'queueService'
@@ -220,6 +224,29 @@ export async function acceptsMemberRuntimeEnd(
 }
 
 /**
+ * The Group Agent Builder target frozen on the durable operation row.
+ *
+ * An intervention continuation rebuilds its app context from server-side
+ * evidence (never client input), and `state.origin` expires with the runtime
+ * snapshot. The row is the only durable copy — older topics may lack
+ * `topics.metadata.editingGroupId`, so without it the resumed member tools
+ * answer `NoGroupContext`.
+ */
+export async function getOperationEditingGroupId(
+  deps: OperationControlDeps,
+  operationId: string,
+): Promise<string | undefined> {
+  try {
+    const row = await deps.agentOperationModel.findById(operationId);
+    const value = row?.appContext?.editingGroupId;
+    return typeof value === 'string' && value ? value : undefined;
+  } catch (error) {
+    log('[%s] Failed to read the editing group target: %O', operationId, error);
+    return undefined;
+  }
+}
+
+/**
  * Record whether the client still holds user messages queued behind a run.
  * Only the run's owner may flag it; an unknown or foreign operation is a
  * no-op, so a caller cannot touch another user's run by guessing its id.
@@ -240,20 +267,66 @@ export async function setQueuedMessages(
 }
 
 /**
- * Read the queued-messages flag for a step. A failed read keeps the run
- * going: the follow-up still starts once the run ends, exactly as it did
- * before the flag existed, instead of failing the step.
+ * Whether follow-ups wait behind this run: the client's flag, or the
+ * follow-ups queued server-side on the run's conversation (a top-level run
+ * only — see `steerQueueScopeOf`). A failed read keeps the run going: the
+ * follow-up still starts once the run ends, exactly as it did before the flag
+ * existed, instead of failing the step.
  */
 export async function readQueuedMessagesFlag(
   deps: OperationControlDeps,
   operationId: string,
   stepIndex: number,
+  state?: AgentState,
 ): Promise<boolean> {
   try {
-    return await deps.coordinator.hasQueuedMessages(operationId);
+    if (await deps.coordinator.hasQueuedMessages(operationId)) return true;
+
+    const scope = state && steerQueueScopeOf(state, deps.userId);
+    return scope ? (await redisService.steerQueue.length(scope, operationId)) > 0 : false;
   } catch (error) {
     log('[%s][%d] Queued messages flag read failed: %O', operationId, stepIndex, error);
     return false;
+  }
+}
+
+/**
+ * Join the follow-ups queued behind this run into it, right before its next
+ * LLM call, instead of ending the run and starting another for them. Hands off
+ * to the owning layer (merge, access check, persisting the user message); the
+ * caller re-enters the LLM on top of that message.
+ *
+ * Best-effort: any failure leaves the follow-ups queued, and the run hands its
+ * turn back for them at this decision point as it did before.
+ *
+ * @returns the user message the follow-ups became, or `undefined` when none
+ * were taken in
+ */
+export async function injectQueuedFollowUp(
+  deps: OperationControlDeps,
+  operationId: string,
+  stepIndex: number,
+  state: AgentState,
+): Promise<{ messageId: string } | undefined> {
+  const scope = steerQueueScopeOf(state, deps.userId);
+  if (!scope || !deps.delegate.injectQueuedFollowUp) return;
+
+  try {
+    if ((await redisService.steerQueue.length(scope, operationId)) === 0) return;
+
+    const injected = await deps.delegate.injectQueuedFollowUp({ operationId, scope, state });
+    if (injected) {
+      log(
+        '[%s][%d] Joined queued follow-ups into the run as %s',
+        operationId,
+        stepIndex,
+        injected.messageId,
+      );
+    }
+    return injected;
+  } catch (error) {
+    log('[%s][%d] Joining queued follow-ups failed: %O', operationId, stepIndex, error);
+    return;
   }
 }
 

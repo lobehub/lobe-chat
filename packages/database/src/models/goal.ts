@@ -106,6 +106,28 @@ export class GoalModel {
     return row?.goal;
   };
 
+  /**
+   * Lock the unfinished goals supervised from these conversations
+   * (`subject_type = 'topic'`). Finished goals are left out: nothing dispatches
+   * for them, so the agent they were run by stays part of their record. Call
+   * inside a transaction; the locks hold the rows until it commits.
+   */
+  lockUnfinishedBySubjectTopics = async (topicIds: string[]): Promise<GoalItem[]> => {
+    if (topicIds.length === 0) return [];
+    return this.db
+      .select()
+      .from(goals)
+      .where(
+        and(
+          eq(goals.subjectType, 'topic'),
+          inArray(goals.subjectId, topicIds),
+          notInArray(goals.status, [...TERMINAL_GOAL_STATUSES]),
+          this.ownership(),
+        ),
+      )
+      .for('update');
+  };
+
   /** The Goal that owns a graph node, or undefined when the node is not in the caller's scope. */
   findByNode = async (nodeId: string): Promise<GoalItem | undefined> => {
     const [row] = await this.db
@@ -150,6 +172,35 @@ export class GoalModel {
         config: taskAgentId
           ? sql`jsonb_set(COALESCE(${goals.config}, '{}'::jsonb), '{taskAgentId}', ${JSON.stringify(taskAgentId)}::jsonb)`
           : sql`COALESCE(${goals.config}, '{}'::jsonb) - 'taskAgentId'`,
+        updatedAt: new Date(),
+      })
+      .where(and(eq(goals.id, id), this.ownership()))
+      .returning();
+    return row as GoalItem | undefined;
+  };
+
+  /**
+   * Patch only one model slot of `config` — `model`/`provider` for planning
+   * turns, `taskModel`/`taskProvider` for Tasks — or drop it with `null`, for
+   * the same reason as `updateTaskAgentId`.
+   */
+  updateModelConfig = async (
+    id: string,
+    modelConfig: { model: string; provider: string } | null,
+    slot: 'planning' | 'task' = 'planning',
+  ) => {
+    const [modelKey, providerKey] =
+      slot === 'task' ? ['taskModel', 'taskProvider'] : ['model', 'provider'];
+    const patch = modelConfig && {
+      [modelKey]: modelConfig.model,
+      [providerKey]: modelConfig.provider,
+    };
+    const [row] = await this.db
+      .update(goals)
+      .set({
+        config: patch
+          ? sql`COALESCE(${goals.config}, '{}'::jsonb) || ${JSON.stringify(patch)}::jsonb`
+          : sql`COALESCE(${goals.config}, '{}'::jsonb) - ${modelKey}::text - ${providerKey}::text`,
         updatedAt: new Date(),
       })
       .where(and(eq(goals.id, id), this.ownership()))

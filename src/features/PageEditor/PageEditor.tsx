@@ -26,12 +26,14 @@ import DocumentLikes from './DocumentLikes';
 import EditorCanvas from './EditorCanvas';
 import { recallEditorScrollTop, rememberEditorScrollTop } from './editorScrollMemory';
 import Header from './Header';
+import HtmlPageBody, { useIsHtmlPage } from './HtmlPageBody';
 import LockedAlert from './LockedAlert';
 import LockStatusBanner from './LockStatusBanner';
 import { PageAgentProvider } from './PageAgentProvider';
 import { PageEditorProvider } from './PageEditorProvider';
 import RightPanel from './RightPanel';
 import { usePageEditorStore } from './store';
+import TableOfContents from './TableOfContents';
 import TitleSection from './TitleSection';
 import { usePageEditable } from './usePageEditable';
 
@@ -159,6 +161,7 @@ const PageEditorCanvas = memo<PageEditorCanvasProps>((props) => {
   const editable = usePageEditable();
   const editor = usePageEditorStore((s) => s.editor);
   const documentId = usePageEditorStore((s) => s.documentId);
+  const isHtmlPage = useIsHtmlPage(documentId);
   const wideScreen = useGlobalStore(systemStatusSelectors.wideScreen);
   const tableBleedInline = wideScreen
     ? `${TABLE_BASE_BLEED}px`
@@ -376,10 +379,10 @@ const PageEditorCanvas = memo<PageEditorCanvasProps>((props) => {
         onScroll={handleEditorScroll}
       >
         <WideScreenContainer
-          wrapperStyle={{ cursor: editable ? 'text' : 'default' }}
+          wrapperStyle={{ cursor: editable && !isHtmlPage ? 'text' : 'default' }}
           onChange={notifyEditorLayoutChange}
           onClick={() => {
-            if (!editable) return;
+            if (!editable || isHtmlPage) return;
 
             editor?.focus();
           }}
@@ -399,13 +402,22 @@ const PageEditorCanvas = memo<PageEditorCanvasProps>((props) => {
             {/* Prominent in-body notice when another member holds the lock; the
                 compact status badge lives in the Header (EditingIndicator). */}
             <LockedAlert />
-            <EditorCanvas askCopilotTarget={askCopilotTarget} />
-            <BlockCommentMarker hostRef={editorContentRef} />
+            {isHtmlPage ? (
+              <HtmlPageBody />
+            ) : (
+              <>
+                <EditorCanvas askCopilotTarget={askCopilotTarget} />
+                <BlockCommentMarker hostRef={editorContentRef} />
+              </>
+            )}
             {documentId && <DocumentLikes documentId={documentId} key={documentId} />}
             <DocumentComments />
           </Flexbox>
         </WideScreenContainer>
       </Flexbox>
+      {!isHtmlPage && (
+        <TableOfContents contentRef={editorContentRef} scrollRef={contentWrapperRef} />
+      )}
       {documentId && <DiffAllToolbar documentId={documentId} editor={editor} />}
     </Flexbox>
   );
