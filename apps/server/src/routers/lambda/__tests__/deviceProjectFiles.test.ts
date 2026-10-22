@@ -9,6 +9,7 @@ const mocks = vi.hoisted(() => ({
   createProjectDirectory: vi.fn(),
   createProjectFile: vi.fn(),
   findByDeviceId: vi.fn(),
+  listClaudeCodeMemory: vi.fn(),
   moveProjectFiles: vi.fn(),
   renameProjectFile: vi.fn(),
   trashProjectFiles: vi.fn(),
@@ -43,6 +44,7 @@ vi.mock('@/server/services/deviceGateway', async (importOriginal) => ({
     copyProjectFiles: mocks.copyProjectFiles,
     createProjectDirectory: mocks.createProjectDirectory,
     createProjectFile: mocks.createProjectFile,
+    listClaudeCodeMemory: mocks.listClaudeCodeMemory,
     moveProjectFiles: mocks.moveProjectFiles,
     renameProjectFile: mocks.renameProjectFile,
     trashProjectFiles: mocks.trashProjectFiles,
@@ -115,5 +117,69 @@ describe('device project file mutations', () => {
     } as never);
     await expect((viewer[route] as any)(input)).rejects.toMatchObject({ code: 'FORBIDDEN' });
     expect(mocks[route]).not.toHaveBeenCalled();
+  });
+});
+
+describe('device listClaudeCodeMemory', () => {
+  const memoryDir = '/Users/me/.claude/projects/-Users-me-proj/memory';
+  const memoryFile = `${memoryDir}/MEMORY.md`;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mocks.findByDeviceId.mockResolvedValue({ workingDirs: [{ path: '/Users/me/proj' }] });
+    mocks.writeProjectFile.mockResolvedValue({ success: true });
+  });
+
+  it('refuses a project root the device never approved', async () => {
+    await expect(
+      caller().listClaudeCodeMemory({ deviceId: 'dev-mem-1', workingDirectory: '/' }),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' });
+    expect(mocks.listClaudeCodeMemory).not.toHaveBeenCalled();
+  });
+
+  it('approves the listed memory directory so its files can be saved', async () => {
+    const write = () =>
+      caller().writeProjectFile({
+        content: 'x',
+        deviceId: 'dev-mem-2',
+        path: memoryFile,
+        workingDirectory: memoryDir,
+      });
+    await expect(write()).rejects.toMatchObject({ code: 'FORBIDDEN' });
+
+    mocks.listClaudeCodeMemory.mockResolvedValue({
+      files: [{ isIndex: true, name: 'MEMORY', path: memoryFile, relativePath: 'MEMORY.md' }],
+      memoryDir,
+    });
+    await caller().listClaudeCodeMemory({ ...base, deviceId: 'dev-mem-2' });
+
+    expect(mocks.listClaudeCodeMemory).toHaveBeenCalledWith({
+      deviceId: 'dev-mem-2',
+      scope: '/Users/me/proj',
+      userId: 'user-1',
+      workspaceId: undefined,
+    });
+    await expect(write()).resolves.toEqual({ success: true });
+  });
+
+  it('leaves an empty memory directory unapproved', async () => {
+    mocks.listClaudeCodeMemory.mockResolvedValue({ files: [], memoryDir });
+    await caller().listClaudeCodeMemory({ ...base, deviceId: 'dev-mem-3' });
+
+    await expect(
+      caller().writeProjectFile({
+        content: 'x',
+        deviceId: 'dev-mem-3',
+        path: memoryFile,
+        workingDirectory: memoryDir,
+      }),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' });
+  });
+
+  it('returns null when the device is offline', async () => {
+    mocks.listClaudeCodeMemory.mockResolvedValue(undefined);
+    await expect(
+      caller().listClaudeCodeMemory({ ...base, deviceId: 'dev-mem-4' }),
+    ).resolves.toBeNull();
   });
 });

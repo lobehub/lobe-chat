@@ -5,7 +5,11 @@ import { requireWorkspaceRoleWhenScoped } from '@/business/server/trpc-middlewar
 import { router } from '@/libs/trpc/lambda';
 import { deviceGateway, isValidDirectoryName } from '@/server/services/deviceGateway';
 
-import { assertWorkspaceRootApproved, registerDeviceSkillRoots } from '../deviceWorkspaceGuard';
+import {
+  assertWorkspaceRootApproved,
+  registerDeviceMemoryRoot,
+  registerDeviceSkillRoots,
+} from '../deviceWorkspaceGuard';
 import { assertDeviceOperable } from './guards';
 import { deviceProcedure } from './procedures';
 
@@ -260,6 +264,27 @@ export const projectFilesRouter = router({
 
       return result ?? null;
     }),
+  /**
+   * Claude Code's auto memory for a project on a remote device, via the
+   * device's `listClaudeCodeMemory` RPC. Powers the workspace panel's Memory
+   * tab in device mode. The project must be an approved root; the memory
+   * directory it maps to is then approved for preview and save. Returns `null`
+   * when offline.
+   */
+  listClaudeCodeMemory: workspaceFileProcedure.query(async ({ ctx, input }) => {
+    const result = await deviceGateway.listClaudeCodeMemory({
+      deviceId: input.deviceId,
+      scope: input.workingDirectory,
+      userId: ctx.userId,
+      workspaceId: ctx.workspaceId,
+    });
+
+    if (result?.memoryDir && result.files.length > 0) {
+      registerDeviceMemoryRoot(input.deviceId, result.memoryDir);
+    }
+
+    return result ?? null;
+  }),
   /**
    * Move files/folders within a directory on a remote device, via the device's
    * `moveLocalFiles` RPC. Powers the Files tree's drag-to-move in device mode.
