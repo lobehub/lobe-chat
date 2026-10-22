@@ -2,7 +2,7 @@ import { TASK_STATUSES } from '@lobechat/builtin-tool-task';
 import type { RecentItem, TaskStatus } from '@lobechat/types';
 import { agentDisplayName } from '@lobechat/types';
 import type { FlexboxProps } from '@lobehub/ui';
-import { Avatar, cx, Flexbox, Icon, Segmented, Skeleton, Text } from '@lobehub/ui';
+import { Avatar, Flexbox, Icon, Segmented, Skeleton, Text } from '@lobehub/ui';
 import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
 import * as stylex from '@stylexjs/stylex';
 import { HashIcon } from 'lucide-react';
@@ -155,13 +155,13 @@ const Row = memo<RowProps>(({ description, href, icon, title, titleExtra, traili
         {/* The name takes the space and truncates; anything after it keeps its
             full width, so an identifier stays readable however long the name is. */}
         <Flexbox horizontal align={'center'} gap={8} style={FLEX_MIN_WIDTH_0}>
-          <Text ellipsis className={homeType.itemTitle}>
+          <Text ellipsis className={stylex.props(homeType.itemTitle).className}>
             {title}
           </Text>
           {titleExtra}
         </Flexbox>
         {description && (
-          <Text className={cx(stylex.props(styles.description).className, homeType.supporting)}>
+          <Text className={stylex.props(styles.description, homeType.supporting).className}>
             {description}
           </Text>
         )}
@@ -309,7 +309,7 @@ const TaskRow = memo<{ showTrigger?: boolean; task: TaskListItem }>(
         // belongs beside the name rather than in the sentence slot below it.
         titleExtra={
           title === task.identifier ? undefined : (
-            <Text className={cx(stylex.props(styles.identifier).className, homeType.meta)}>
+            <Text className={stylex.props(styles.identifier, homeType.meta).className}>
               {task.identifier}
             </Text>
           )

@@ -1,0 +1,8 @@
+/* Only the first banner in the queue shows; the rest wait until it is dismissed. */
+.queue {
+  display: contents;
+}
+
+.queue > :global([data-home-input-banner]) ~ :global([data-home-input-banner]) {
+  display: none;
+}

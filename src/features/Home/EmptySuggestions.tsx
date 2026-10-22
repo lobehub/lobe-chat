@@ -47,8 +47,12 @@ const EmptySuggestions = memo<EmptySuggestionsProps>(({ onSelect }) => {
     // outside the page's own rhythm.
     <Flexbox gap={12} paddingBlock={8} paddingInline={12}>
       <Flexbox gap={2}>
-        <Text className={homeType.sectionLabel}>{t('dashboard.empty.title')}</Text>
-        <Text className={homeType.supporting}>{t('dashboard.empty.subtitle')}</Text>
+        <Text className={stylex.props(homeType.sectionLabel).className}>
+          {t('dashboard.empty.title')}
+        </Text>
+        <Text className={stylex.props(homeType.supporting).className}>
+          {t('dashboard.empty.subtitle')}
+        </Text>
       </Flexbox>
       <Flexbox gap={1}>
         {suggestions.map(({ icon, key }) => {
@@ -66,7 +70,7 @@ const EmptySuggestions = memo<EmptySuggestionsProps>(({ onSelect }) => {
                   <Icon icon={icon} size={18} />
                 </Flexbox>
                 <Flexbox gap={2} style={{ flex: 1, minWidth: 0 }}>
-                  <Text className={homeType.itemTitleProse}>
+                  <Text className={stylex.props(homeType.itemTitleProse).className}>
                     {t(`dashboard.empty.${key}.title`)}
                   </Text>
                   <Text className={stylex.props(styles.description).className} fontSize={13}>
