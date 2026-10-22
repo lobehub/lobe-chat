@@ -11,9 +11,14 @@ const mocks = vi.hoisted(() => ({
   getAgentVisibility: vi.fn(),
   findInstanceById: vi.fn(),
   resolveSandboxStorageClaim: vi.fn(),
+  resolveScmCloneCredential: vi.fn(),
 }));
 
 const { findById, findInstanceById, getAgentVisibility, resolveSandboxStorageClaim } = mocks;
+
+vi.mock('@/server/services/scm/cloneCredential', () => ({
+  resolveScmCloneCredential: mocks.resolveScmCloneCredential,
+}));
 
 vi.mock('../entitlement', () => ({
   resolveSandboxStorageClaim: mocks.resolveSandboxStorageClaim,
@@ -582,6 +587,7 @@ describe('resolveSandboxSessionConfig', () => {
     };
 
     beforeEach(() => {
+      mocks.resolveScmCloneCredential.mockReset().mockResolvedValue(null);
       mocks.findEnvironmentById.mockReset().mockResolvedValue(environment);
     });
 
@@ -601,6 +607,30 @@ describe('resolveSandboxSessionConfig', () => {
         },
         mode: 'drive',
       });
+    });
+
+    it('carries the clone credential a private repository needs, resolved for this run', async () => {
+      resolveSandboxStorageClaim.mockResolvedValue(null);
+      findById.mockResolvedValue({ metadata: { sandboxEnvironmentId: 'env-1' } });
+      const credential = { header: 'Authorization: Basic eA==', urlPrefix: 'https://github.com/' };
+      mocks.resolveScmCloneCredential.mockResolvedValue(credential);
+
+      await expect(resolve()).resolves.toMatchObject({
+        initialization: { cloneCredential: credential, environmentId: 'env-1' },
+      });
+      expect(mocks.resolveScmCloneCredential).toHaveBeenCalledWith(
+        expect.objectContaining({ configuration: environment.configuration, userId: 'user_1' }),
+      );
+    });
+
+    it('initializes without a credential when none is granted, so a public repository still clones', async () => {
+      resolveSandboxStorageClaim.mockResolvedValue(null);
+      findById.mockResolvedValue({ metadata: { sandboxEnvironmentId: 'env-1' } });
+
+      const config = await resolve();
+
+      expect(config.initialization).toMatchObject({ environmentId: 'env-1' });
+      expect(config.initialization).not.toHaveProperty('cloneCredential');
     });
 
     it('initializes a temporary sandbox too, which has no drive at all', async () => {

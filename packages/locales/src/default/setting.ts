@@ -4286,7 +4286,7 @@ When I am ___, I need ___
   'environments.form.descriptionPlaceholder': 'What this environment is for',
   'environments.form.sources': 'Source code',
   'environments.form.sourcesHint':
-    'Cloned over HTTPS before anything else runs. Private repositories are not supported yet — a specification holds no credentials.',
+    'Cloned over HTTPS before anything else runs. A private repository clones through the GitHub App installation that grants it; the environment itself stores no credentials.',
   'environments.form.ref': 'Branch or tag',
   'environments.form.refDefault': 'Repository default branch',
   'environments.form.path': 'Folder',

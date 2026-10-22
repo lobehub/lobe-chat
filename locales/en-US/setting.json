@@ -695,7 +695,7 @@
   "environments.form.saved": "Saved",
   "environments.form.setup": "Setup",
   "environments.form.sources": "Source code",
-  "environments.form.sourcesHint": "Cloned over HTTPS before anything else runs. Private repositories are not supported yet — a specification holds no credentials.",
+  "environments.form.sourcesHint": "Cloned over HTTPS before anything else runs. A private repository clones through the GitHub App installation that grants it; the environment itself stores no credentials.",
   "environments.github.connect": "Connect GitHub",
   "environments.github.label": "Repository",
   "environments.github.loadFailed": "Could not load GitHub repositories. Try again.",

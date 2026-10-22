@@ -203,6 +203,14 @@ describe('MarketSandboxProvider', () => {
       });
     });
 
+    it("redacts the clone credential an environment's initializer exports for git", () => {
+      const params = {
+        command: "export GIT_CONFIG_VALUE_0='Authorization: Basic c2VjcmV0' && git clone x",
+      };
+
+      expect(redactSandboxParams(params).command).not.toContain('c2VjcmV0');
+    });
+
     it('fully redacts a command that writes into ~/.creds/env, regardless of the credential names it carries', () => {
       const params = {
         command:

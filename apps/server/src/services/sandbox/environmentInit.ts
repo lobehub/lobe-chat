@@ -19,6 +19,12 @@ export const SANDBOX_ENVIRONMENT_RAN_LINE = '__lobe_environment_ran';
  */
 export interface SandboxInitialization {
   bootstrapCommand?: string;
+  /**
+   * A header git sends for one URL prefix, so a private repository clones: a
+   * short-lived, repository-scoped token from the GitHub App installation, as
+   * a build used to get. Resolved per run and never stored.
+   */
+  cloneCredential?: { header: string; urlPrefix: string };
   env?: Record<string, string>;
   environmentId: string;
   name: string;
@@ -120,6 +126,21 @@ export const buildSandboxEnvironmentInitCommand = (init: SandboxInitialization):
     ].join(' && ');
   });
 
+  // Given to git through its environment for the clones alone, and unset
+  // before setup runs: nothing writes it to disk or into the checkout's
+  // `.git/config`, and setup — or a command after it — cannot read it back.
+  const credential =
+    init.cloneCredential && clones.length > 0
+      ? {
+          set: [
+            `export GIT_CONFIG_COUNT=1`,
+            `export GIT_CONFIG_KEY_0=${shellQuote(`http.${init.cloneCredential.urlPrefix}.extraHeader`)}`,
+            `export GIT_CONFIG_VALUE_0=${shellQuote(init.cloneCredential.header)}`,
+          ],
+          unset: [`unset GIT_CONFIG_COUNT GIT_CONFIG_KEY_0 GIT_CONFIG_VALUE_0`],
+        }
+      : { set: [], unset: [] };
+
   // Only when there is something to clone, and removed however the subshell
   // ends: a second copy of every repository would otherwise stay in the
   // sandbox, one more for each failed attempt.
@@ -129,7 +150,9 @@ export const buildSandboxEnvironmentInitCommand = (init: SandboxInitialization):
   const steps = [
     ...exports,
     ...staging,
+    ...credential.set,
     ...clones,
+    ...credential.unset,
     ...(init.bootstrapCommand ? [init.bootstrapCommand] : []),
   ];
 

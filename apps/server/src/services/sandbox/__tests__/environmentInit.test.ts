@@ -194,6 +194,27 @@ describe('buildSandboxEnvironmentInitCommand', () => {
     expect(readdirSync(sandbox.tmp)).toEqual([]);
   });
 
+  it('gives git the clone credential for the clones alone, and keeps it out of the checkout', () => {
+    const result = run(
+      buildSandboxEnvironmentInitCommand(
+        init({
+          bootstrapCommand: 'echo "[$GIT_CONFIG_VALUE_0]" > seen.txt',
+          cloneCredential: {
+            header: 'Authorization: Basic c2VjcmV0',
+            urlPrefix: 'https://github.com/',
+          },
+        }),
+      ),
+      work,
+    );
+
+    expect(environmentInitReport(result.stdout)).toContain('Initialized');
+    // Setup, which runs after the clones, cannot read it back.
+    expect(readFileSync(join(work, 'seen.txt'), 'utf8').trim()).toBe('[]');
+    expect(readFileSync(join(work, '.git', 'config'), 'utf8')).not.toContain('c2VjcmV0');
+    expect(result.stdout).not.toContain('c2VjcmV0');
+  });
+
   it('keeps the variables out of the shell that runs afterwards', () => {
     run(buildSandboxEnvironmentInitCommand(init()), work);
 

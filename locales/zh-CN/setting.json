@@ -695,7 +695,7 @@
   "environments.form.saved": "已保存",
   "environments.form.setup": "初始化",
   "environments.form.sources": "源代码",
-  "environments.form.sourcesHint": "在其他步骤之前通过 HTTPS 克隆。暂不支持私有仓库——规格里不存放任何凭据。",
+  "environments.form.sourcesHint": "在其他步骤之前通过 HTTPS 克隆。私有仓库通过已授权该仓库的 GitHub App 安装来克隆；环境本身不保存任何凭据。",
   "environments.github.connect": "连接 GitHub",
   "environments.github.label": "代码仓库",
   "environments.github.loadFailed": "无法加载 GitHub 仓库，请重试。",
