@@ -68,8 +68,17 @@ export const observeChatAttempt = async (
   attempt: RouteAttemptStart,
   streaming: boolean,
   onFinished: (result: RouteAttemptFinished) => Promise<void> | void,
-  observerOptions?: { deferCallbacks?: boolean },
+  observerOptions?: {
+    deferCallbacks?: boolean;
+    /**
+     * Image-output models stream thinking text and interim thought images long before the
+     * final image. Treat that reasoning as provisional so an upstream failure before the
+     * deliverable can still fall back instead of committing a stream with nothing usable.
+     */
+    holdReasoning?: boolean;
+  },
 ): Promise<Response> => {
+  const reasoningIsVisible = !observerOptions?.holdReasoning;
   const attemptDiagnostics: ModelRuntimeDiagnostics = {};
   let committed = !observerOptions?.deferCallbacks;
   let discarded = false;
@@ -275,7 +284,7 @@ export const observeChatAttempt = async (
     grounding ??= data.grounding;
     if (
       data.text.trim() ||
-      getReasoningContent(data).trim() ||
+      (reasoningIsVisible && getReasoningContent(data).trim()) ||
       (data.toolsCalling?.length ?? 0) > 0
     ) {
       visibleOutput = true;
@@ -322,7 +331,9 @@ export const observeChatAttempt = async (
     onReasoningPart: async (data) => {
       if (data.partType === 'image') imageCount += 1;
       else reasoning += data.content;
-      if (data.partType === 'image' || data.content.trim()) visibleOutput = true;
+      if (reasoningIsVisible && (data.partType === 'image' || data.content.trim())) {
+        visibleOutput = true;
+      }
       await runOrBuffer(async () => {
         await callback?.onReasoningPart?.(data);
       });
@@ -341,7 +352,7 @@ export const observeChatAttempt = async (
     },
     onThinking: async (text) => {
       reasoning += text;
-      if (text.trim()) visibleOutput = true;
+      if (reasoningIsVisible && text.trim()) visibleOutput = true;
       await runOrBuffer(async () => {
         await callback?.onThinking?.(text);
       });
