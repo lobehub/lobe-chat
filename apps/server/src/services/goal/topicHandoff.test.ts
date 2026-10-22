@@ -17,10 +17,29 @@ import {
 } from '@/database/schemas';
 import { topicRouter } from '@/server/routers/lambda/topic';
 
+import type * as AssignmentModule from './assignment';
 import { GoalService } from './index';
 
 vi.mock('@/database/core/db-adaptor', () => ({ getServerDB: () => db }));
 vi.mock('@/libs/oidc-provider/access-control', () => ({ assertOIDCUserActive: async () => {} }));
+// Fails the Nth `setAgent` call when set; `setAgent` is an instance field, so
+// it is wrapped per instance rather than spied on the prototype.
+const handoff = vi.hoisted(() => ({ calls: 0, failOnCall: 0 }));
+vi.mock('./assignment', async (importOriginal) => {
+  const actual = await importOriginal<typeof AssignmentModule>();
+  class GoalAssignmentService extends actual.GoalAssignmentService {
+    constructor(...args: ConstructorParameters<typeof actual.GoalAssignmentService>) {
+      super(...args);
+      const setAgent = this.setAgent;
+      this.setAgent = async (...setAgentArgs) => {
+        handoff.calls += 1;
+        if (handoff.calls === handoff.failOnCall) throw new Error('Goal not found');
+        return setAgent(...setAgentArgs);
+      };
+    }
+  }
+  return { ...actual, GoalAssignmentService };
+});
 vi.mock('@/database/models/rbac', () => ({
   RbacModel: class {
     hasAnyPermission = async () => true;
@@ -47,6 +66,8 @@ beforeEach(async () => {
 
 afterEach(async () => {
   vi.restoreAllMocks();
+  handoff.calls = 0;
+  handoff.failOnCall = 0;
   for (const table of [goalEdges, goalEvents, goalNodes, goals, topics, tasks, agents, users])
     await db.delete(table);
 });
@@ -99,5 +120,25 @@ describe('topic.batchMoveTopics with a goal bound to the topic', () => {
 
     expect(result).toEqual({ movedGoalIds: [] });
     expect((await goalModel().findById(id))!.agentId).toBe(sourceAgentId);
+  });
+
+  it('rolls the move back when a handoff fails, so no topic leaves its goal behind', async () => {
+    const first = await goalBoundToTopic();
+    const second = await goalBoundToTopic();
+    handoff.failOnCall = 2;
+
+    await expect(
+      caller().batchMoveTopics({ targetAgentId, topicIds: [topicId] }),
+    ).rejects.toThrow();
+
+    const [topic] = await db.select().from(topics).where(eq(topics.id, topicId));
+    expect(topic.agentId).toBe(sourceAgentId);
+    // The handoff that succeeded before the failure is undone with the move.
+    for (const { id, taskId } of [first, second]) {
+      expect((await goalModel().findById(id))!.agentId).toBe(sourceAgentId);
+      expect((await new TaskModel(db, userId).findById(taskId))!.assigneeAgentId).toBe(
+        sourceAgentId,
+      );
+    }
   });
 });

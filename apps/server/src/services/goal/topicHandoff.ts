@@ -18,6 +18,11 @@ import { GoalAssignmentService } from './assignment';
  * supervisor, its unfinished Tasks follow unless it has a dedicated executor,
  * and its planning turns keep landing in the moved conversation, which the
  * target now owns.
+ *
+ * Construct it on the transaction that moves the topics. A handoff that fails
+ * after the move would otherwise leave the topic moved and its goal behind —
+ * the very state this exists to prevent — so the failure has to roll the move
+ * back with it.
  */
 export class GoalTopicHandoffService {
   private assignment: GoalAssignmentService;
@@ -29,18 +34,18 @@ export class GoalTopicHandoffService {
   }
 
   /**
-   * The goals that must follow these topics to `targetAgentId`. Call before
-   * moving: it throws when the target cannot supervise one of them, so the
-   * move is refused instead of leaving the goal behind on the previous agent.
+   * Lock the goals that must follow these topics to `targetAgentId`. Throws
+   * when the target cannot supervise one of them, which rolls the move back
+   * instead of leaving the goal on the previous agent.
    */
-  prepare = async (topicIds: string[], targetAgentId: string): Promise<GoalItem[]> => {
-    const bound = await this.goalModel.findUnfinishedBySubjectTopics(topicIds);
+  lockFollowing = async (topicIds: string[], targetAgentId: string): Promise<GoalItem[]> => {
+    const bound = await this.goalModel.lockUnfinishedBySubjectTopics(topicIds);
     const following = bound.filter((goal) => goal.agentId !== targetAgentId);
     for (const goal of following) await this.assignment.assertUsableForGoal(goal, targetAgentId);
     return following;
   };
 
-  /** Hand the prepared goals to `targetAgentId` once their topics have moved. */
+  /** Hand the locked goals to `targetAgentId`. */
   handOver = async (goals: GoalItem[], targetAgentId: string): Promise<string[]> => {
     for (const goal of goals) await this.assignment.setAgent(goal.id, targetAgentId);
     return goals.map((goal) => goal.id);

@@ -7,6 +7,7 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
+import { TopicRepository } from '@/database/repositories/topic';
 import { router } from '@/libs/trpc/lambda';
 import { GoalTopicHandoffService } from '@/server/services/goal/topicHandoff';
 
@@ -127,17 +128,21 @@ export const updateRouter = router({
       // boundary rather than in the model defaults.
       await assertCreatorTopicTargets(guardCtx(ctx), input.topicIds);
       // A goal supervised from a moved topic follows it to the target agent;
-      // left on the previous agent it would keep dispatching there.
-      const goalHandoff = new GoalTopicHandoffService(
-        ctx.serverDB,
-        ctx.userId,
-        ctx.workspaceId ?? undefined,
-      );
-      const goals = await goalHandoff.prepare(input.topicIds, input.targetAgentId);
-      for (const goal of goals) assertWorkspaceRowManageable(ctx, goal.userId, 'goal');
-
-      await ctx.topicRepo.batchMoveToAgent(input.topicIds, input.targetAgentId);
-      return { movedGoalIds: await goalHandoff.handOver(goals, input.targetAgentId) };
+      // left on the previous agent it would keep dispatching there. The move
+      // and every handoff commit together, so a failed handoff never leaves a
+      // topic moved without its goal. Moving first locks the topic rows, and
+      // the goals bound to them are locked and checked after it.
+      const workspaceId = ctx.workspaceId ?? undefined;
+      return ctx.serverDB.transaction(async (tx) => {
+        await new TopicRepository(tx, ctx.userId, workspaceId).batchMoveToAgent(
+          input.topicIds,
+          input.targetAgentId,
+        );
+        const goalHandoff = new GoalTopicHandoffService(tx, ctx.userId, workspaceId);
+        const goals = await goalHandoff.lockFollowing(input.topicIds, input.targetAgentId);
+        for (const goal of goals) assertWorkspaceRowManageable(ctx, goal.userId, 'goal');
+        return { movedGoalIds: await goalHandoff.handOver(goals, input.targetAgentId) };
+      });
     }),
   cancelRateLimitContinuation: topicProcedure
     .use(withScopedPermission('topic:update'))
