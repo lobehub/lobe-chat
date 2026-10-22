@@ -1,7 +1,8 @@
 import { randomUUID } from 'node:crypto';
 
 import debug from 'debug';
-import { importJWK, jwtVerify, SignJWT } from 'jose';
+import type { JSONWebKeySet, JWK, JWK_RSA_Public } from 'jose';
+import { calculateJwkThumbprint, createLocalJWKSet, importJWK, jwtVerify, SignJWT } from 'jose';
 
 import { authEnv } from '@/envs/auth';
 
@@ -38,59 +39,57 @@ export interface HeteroOperationJwtClaims {
 /**
  * Get RSA key pair from JWKS_KEY environment variable
  */
-const getJwksKey = () => {
+const isRsaSigningKey = (key: JWK): key is JWK_RSA_Public =>
+  key.alg === 'RS256' &&
+  key.kty === 'RSA' &&
+  typeof key.e === 'string' &&
+  typeof key.n === 'string';
+
+const getKeyId = (key: JWK_RSA_Public) => key.kid ?? calculateJwkThumbprint(key);
+
+const toPublicRsaKey = async (key: JWK_RSA_Public): Promise<JWK_RSA_Public> => ({
+  alg: 'RS256',
+  e: key.e,
+  kid: await getKeyId(key),
+  kty: 'RSA',
+  n: key.n,
+  ...(key.use ? { use: key.use } : {}),
+});
+
+const getJwksKeys = () => {
   const jwksString = authEnv.JWKS_KEY;
 
   if (!jwksString) {
     throw new Error('JWKS_KEY environment variable is not set');
   }
 
-  const jwks = JSON.parse(jwksString);
-  const rsaKey = jwks.keys.find((key: any) => key.alg === 'RS256' && key.kty === 'RSA');
+  const jwks = JSON.parse(jwksString) as JSONWebKeySet;
+  const rsaKeys = jwks.keys.filter(isRsaSigningKey);
 
-  if (!rsaKey) {
+  if (rsaKeys.length === 0) {
     throw new Error('No RS256 RSA key found in JWKS');
   }
 
-  return rsaKey;
+  return rsaKeys;
 };
 
 /**
  * Get RSA private key for signing
  */
 const getSigningKey = async () => {
-  const rsaKey = getJwksKey();
+  const rsaKey = getJwksKeys()[0];
 
   return {
     key: await importJWK(rsaKey, 'RS256'),
-    kid: rsaKey.kid as string,
+    kid: await getKeyId(rsaKey),
   };
 };
 
 /**
  * Get RSA public key for verification
  */
-const getVerificationKey = async () => {
-  const privateRsaKey = getJwksKey();
-
-  // Create a "clean" JWK object containing only public key components
-  // The essential fields for RSA public key are: kty, n, e
-  const publicKeyJwk = {
-    alg: privateRsaKey.alg,
-    e: privateRsaKey.e,
-    kid: privateRsaKey.kid,
-    kty: privateRsaKey.kty,
-    n: privateRsaKey.n,
-    use: privateRsaKey.use,
-  };
-
-  // Remove any undefined fields to keep the object clean
-  Object.keys(publicKeyJwk).forEach(
-    (key) => (publicKeyJwk as any)[key] === undefined && delete (publicKeyJwk as any)[key],
-  );
-
-  return await importJWK(publicKeyJwk, 'RS256');
-};
+const getVerificationKeySet = async () =>
+  createLocalJWKSet({ keys: await Promise.all(getJwksKeys().map(toPublicRsaKey)) });
 
 /**
  * Sign JWT for internal lambda → async calls
@@ -213,8 +212,8 @@ export const validateHeteroOperationJWT = async (
   token: string,
 ): Promise<HeteroOperationJwtClaims | null> => {
   try {
-    const publicKey = await getVerificationKey();
-    const { payload } = await jwtVerify(token, publicKey, {
+    const publicKeySet = await getVerificationKeySet();
+    const { payload } = await jwtVerify(token, publicKeySet, {
       algorithms: ['RS256'],
       audience: HETERO_OPERATION_JWT_AUDIENCE,
       issuer: HETERO_OPERATION_JWT_ISSUER,
@@ -304,9 +303,9 @@ export const validateInternalJWT = async (token: string): Promise<boolean> => {
   try {
     log('Validating internal JWT token');
 
-    const publicKey = await getVerificationKey();
+    const publicKeySet = await getVerificationKeySet();
 
-    const { payload } = await jwtVerify(token, publicKey, {
+    const { payload } = await jwtVerify(token, publicKeySet, {
       algorithms: ['RS256'],
     });
 
