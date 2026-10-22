@@ -202,6 +202,12 @@ const ErrorMessageWithContent = ({ data }: { data: any }) => {
   return <ErrorMessageExtra data={data} error={error} />;
 };
 
+// Highlighter renders the JSON as token spans once its engine has loaded, so match the whole block.
+const getErrorDetails = (pattern: RegExp) =>
+  screen.getByText(
+    (_, element) => element?.tagName === 'PRE' && pattern.test(element.textContent ?? ''),
+  );
+
 describe('ErrorMessageExtra', () => {
   beforeEach(() => {
     dynamicComponentPropsMock.mockClear();
@@ -818,7 +824,7 @@ describe('ErrorMessageExtra', () => {
     );
 
     expect(screen.getByText('Raw runtime error')).toBeInTheDocument();
-    expect(screen.getByText(/"detail": "raw detail"/)).toBeInTheDocument();
+    expect(getErrorDetails(/"detail": "raw detail"/)).toBeInTheDocument();
   });
 
   it('shows a JSON gateway detail as an object instead of a twice-escaped string', () => {
@@ -838,7 +844,7 @@ describe('ErrorMessageExtra', () => {
     );
 
     expect(screen.getByText('response.DeviceResponseTimeout')).toBeInTheDocument();
-    const details = screen.getByText(/"error": "TIMEOUT"/).textContent ?? '';
+    const details = getErrorDetails(/"error": "TIMEOUT"/).textContent ?? '';
     expect(details).not.toContain('\\"');
     expect(details).not.toContain('"message"');
   });
@@ -858,10 +864,8 @@ describe('ErrorMessageExtra', () => {
       />,
     );
 
-    expect(screen.getByText(/"detail": "\{\\"error\\":\\"TIMEOUT\\""/)).toBeInTheDocument();
-    expect(
-      screen.getByText(/"message": "The device did not answer in time\."/),
-    ).toBeInTheDocument();
+    expect(getErrorDetails(/"detail": "\{\\"error\\":\\"TIMEOUT\\""/)).toBeInTheDocument();
+    expect(getErrorDetails(/"message": "The device did not answer in time\."/)).toBeInTheDocument();
   });
 
   it('shows the localized empty-completion message while retaining the raw error in details', () => {
@@ -881,7 +885,7 @@ describe('ErrorMessageExtra', () => {
 
     expect(screen.getByText('response.ModelEmptyCompletion')).toBeInTheDocument();
     expect(
-      screen.getByText(/"message": "The model provider returned an empty completion\."/),
+      getErrorDetails(/"message": "The model provider returned an empty completion\."/),
     ).toBeInTheDocument();
   });
 
@@ -907,7 +911,7 @@ describe('ErrorMessageExtra', () => {
 
     expect(screen.getByText('This request cost 5.98M credits.')).toBeInTheDocument();
     expect(
-      screen.getByText(/"message": "The model provider returned an empty completion\."/),
+      getErrorDetails(/"message": "The model provider returned an empty completion\."/),
     ).toBeInTheDocument();
   });
 
