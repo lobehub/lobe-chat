@@ -298,7 +298,9 @@ const SelfLearning = memo(() => {
           >
             <Flexbox gap={20} paddingBlock={'22px 64px'}>
               <Flexbox gap={4}>
-                <Text className={portraitStyles.sentence}>{sentence.headline}</Text>
+                <Text className={stylex.props(portraitStyles.sentence).className}>
+                  {sentence.headline}
+                </Text>
                 <Text type={'secondary'}>{subline}</Text>
               </Flexbox>
 
