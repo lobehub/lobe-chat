@@ -220,12 +220,17 @@ describe('recoverable WebSocket transport', () => {
     expect(vi.getTimerCount()).toBe(0);
   });
 
-  it('rejects authorization failures immediately, with no reconnect', async () => {
+  it('rejects authorization failures immediately, with no reconnect, as a gateway failure', async () => {
     const consumer = consumeAgentStream(options(), () => false);
-    const failure = expect(consumer.done).rejects.toThrow('Gateway auth failed');
+    // The Gateway rejecting a credential the server API accepts is a Gateway-only
+    // failure: the journal and the status endpoint may still be healthy, so the
+    // caller must keep the option of polling instead of reporting `unknown`.
+    const settled = consumer.done.catch((error: unknown) => error);
     sockets[0].message({ reason: 'foreign operation', type: 'auth_failed' });
     await flush();
-    await failure;
+    const error = await settled;
+    expect(error).toBeInstanceOf(AgentGatewayUnavailableError);
+    expect((error as Error).message).toContain('Gateway auth failed');
     expect(sockets).toHaveLength(1);
     expect(vi.getTimerCount()).toBe(0);
   });

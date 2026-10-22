@@ -52,10 +52,11 @@ export class AgentJournalUnsupportedError extends Error {
 }
 
 /**
- * The Gateway stayed unreachable through the whole reconnect budget. This is a
- * connectivity outage, not a lost history: the journal may still be intact and
- * the run may still be executing, so it must reach the caller untouched — the
- * caller degrades to status polling instead of reporting an unconfirmable run.
+ * The Gateway is unusable for this run — it stayed unreachable through the whole
+ * reconnect budget, or it rejected the CLI's credentials. This is a connectivity
+ * outage, not a lost history: the journal may still be intact and the run may
+ * still be executing, so it must reach the caller untouched — the caller
+ * degrades to status polling instead of reporting an unconfirmable run.
  */
 export class AgentGatewayUnavailableError extends Error {
   constructor(message: string) {
@@ -286,7 +287,14 @@ class GatewayWakeChannel {
   ) {
     switch (message.type) {
       case 'auth_failed': {
-        this.onFatal(new Error(`Gateway auth failed: ${message.reason}`));
+        // The server API accepted this credential but the Gateway did not — e.g.
+        // a self-hosted server paired with the wrong Gateway. Retrying cannot
+        // help, yet the journal and the status endpoint are still reachable, so
+        // this is a Gateway failure rather than an unconfirmable history: the
+        // caller must be able to fall back to polling instead of reporting an
+        // `unknown` run. This usually lands before the first journal read, so
+        // misclassifying it fails a healthy run with exit code 3 and no output.
+        this.onFatal(new AgentGatewayUnavailableError(`Gateway auth failed: ${message.reason}`));
         return;
       }
       case 'auth_success': {
