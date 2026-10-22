@@ -1,28 +1,23 @@
 'use client';
 
-import { createStaticStyles, Popover } from '@lobehub/ui';
+import { Popover } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import { type PropsWithChildren } from 'react';
 import { memo, Suspense, useState } from 'react';
 
 import { isDesktop } from '@/const/version';
 
+import moduleStyles from './index.module.css';
 import PanelContent from './PanelContent';
 import PanelContentSkeleton from './PanelContentSkeleton';
 import UpgradeBadge from './UpgradeBadge';
 import { useNewVersion } from './useNewVersion';
 
-const styles = createStaticStyles(({ css }) => {
-  return {
-    popover: css`
-      inset-block-start: ${isDesktop ? 32 : 8}px !important;
-      inset-inline-start: 8px !important;
-      border-radius: 10px;
-    `,
-    popoverContent: css`
-      padding: 0;
-    `,
-  };
+const styles = stylex.create({
+  popoverContent: { padding: 0 },
 });
+
+const popoverClassName = isDesktop ? moduleStyles.popoverDesktop : moduleStyles.popoverWeb;
 
 const UserPanel = memo<PropsWithChildren>(({ children }) => {
   const hasNewVersion = useNewVersion();
@@ -37,8 +32,8 @@ const UserPanel = memo<PropsWithChildren>(({ children }) => {
           placement="topLeft"
           trigger="click"
           classNames={{
-            root: styles.popover,
-            content: styles.popoverContent,
+            root: popoverClassName,
+            content: stylex.props(styles.popoverContent).className,
           }}
           content={
             <Suspense fallback={<PanelContentSkeleton />}>
