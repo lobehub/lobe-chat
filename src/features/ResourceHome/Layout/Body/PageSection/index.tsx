@@ -33,7 +33,7 @@ import { pageActions, pageSelectors, usePageStore } from '@/store/page';
 import type { PageSectionScope } from '@/store/page/projection';
 import type { LobeDocument } from '@/types/document';
 
-import { docsPagePath, resolveResourceRoute, RESOURCE_HOME_PATH } from '../../../paths';
+import { docsPagePath, resolveResourceRoute } from '../../../paths';
 import RenameInput from './RenameInput';
 import { buildPageTree } from './tree';
 
@@ -220,7 +220,10 @@ const PageSection = memo<PageSectionProps>(({ itemKey, scope }) => {
               <NavItem
                 icon={MoreHorizontal}
                 title={t('docs.viewAllPages')}
-                onClick={() => navigate(RESOURCE_HOME_PATH)}
+                // Opens the paged all-pages drawer rather than the Docs home,
+                // whose mixed recent list is capped and mixes files in — an
+                // older page pushed out of both lists would be unreachable.
+                onClick={() => pageActions.openAllPagesDrawer()}
               />
             )}
           </Flexbox>
