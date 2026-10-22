@@ -7,6 +7,31 @@ import { describe, expect, it } from 'vitest';
 import { mobileRoutes } from './mobileRouter.config';
 import { getRouteMetaFromHandle } from './routeMeta';
 
+describe('mobileRouter workspace home', () => {
+  it.each(['/acme', '/acme/'])(
+    'renders the mobile home page and layout within the workspace boundary at %s',
+    (pathname) => {
+      const personalMatches = matchRoutes(mobileRoutes, '/')!;
+      const workspaceMatches = matchRoutes(mobileRoutes, pathname)!;
+
+      expect(workspaceMatches.some((match) => match.route.path === ':workspaceSlug')).toBe(true);
+      expect(workspaceMatches.at(-1)?.params.workspaceSlug).toBe('acme');
+      expect(workspaceMatches.at(-1)?.route.element).toBeTruthy();
+      expect(workspaceMatches.at(-1)?.route.element).toBe(personalMatches.at(-1)?.route.element);
+      expect(workspaceMatches.at(-2)?.route.element).toBe(personalMatches.at(-2)?.route.element);
+    },
+  );
+
+  it('keeps workspace conversations outside the home layout', () => {
+    const homeMatches = matchRoutes(mobileRoutes, '/acme')!;
+    const chatMatches = matchRoutes(mobileRoutes, '/acme/agent/agt_fixture')!;
+    const homeLayout = homeMatches.at(-2)?.route;
+
+    expect(chatMatches.at(-1)?.params).toMatchObject({ aid: 'agt_fixture', workspaceSlug: 'acme' });
+    expect(chatMatches.some((match) => match.route === homeLayout)).toBe(false);
+  });
+});
+
 describe('mobileRouter agent share route', () => {
   it('leaves the agent-share visitor surface to the business routes', () => {
     // Agent sharing runs a visitor's conversation on the creator's account, so
