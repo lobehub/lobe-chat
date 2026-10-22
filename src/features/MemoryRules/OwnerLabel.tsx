@@ -2,6 +2,7 @@
 
 import { DEFAULT_AVATAR } from '@lobechat/const';
 import { Avatar, cssVar, Flexbox } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import { useTranslation } from 'react-i18next';
 
 import type { OwnerSection } from './labels';
@@ -37,7 +38,7 @@ const OwnerLabel = ({ count, owner }: OwnerLabelProps) => {
           ? t('rules.owner.mine')
           : owner.agent.title || t('rules.owner.untitledAgent')}
       </span>
-      <span className={styles.ownerCount}>{count}</span>
+      <span {...stylex.props(styles.ownerCount)}>{count}</span>
     </Flexbox>
   );
 };

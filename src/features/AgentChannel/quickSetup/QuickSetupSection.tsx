@@ -1,7 +1,9 @@
 'use client';
 
-import { createStaticStyles, cssVar, Flexbox, Text } from '@lobehub/ui';
+import { Flexbox, Text } from '@lobehub/ui';
 import { Form, type FormInstance, useWatch } from '@lobehub/ui/form';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -11,18 +13,20 @@ import { toRegistrationName } from './links';
 import SetupGuide from './SetupGuide';
 
 // Same quiet group heading as the form's Advanced Settings.
-const styles = createStaticStyles(({ css }) => ({
-  group: css`
-    border-block-end: 1px solid ${cssVar.colorBorderSecondary};
-    border-radius: 0 !important;
-  `,
-  title: css`
-    font-size: 13px;
-    font-weight: 400;
-    line-height: 1.4;
-    color: ${cssVar.colorTextSecondary};
-  `,
-}));
+const styles = stylex.create({
+  group: {
+    borderBlockEndWidth: '1px',
+    borderBlockEndStyle: 'solid',
+    borderBlockEndColor: cssVar.colorBorderSecondary,
+    borderRadius: 0,
+  },
+  title: {
+    fontSize: '13px',
+    fontWeight: 400,
+    lineHeight: 1.4,
+    color: cssVar.colorTextSecondary,
+  },
+});
 
 interface QuickSetupSectionProps {
   /** Name the created app / Slack manifest starts with (the agent's name). */
@@ -85,12 +89,12 @@ const QuickSetupSection = memo<QuickSetupSectionProps>(
         )}
         <Form.Group
           collapsible
-          className={styles.group}
+          className={stylex.props(styles.group).className}
           defaultActive={!hasConfig && !guide.scanToCreate}
           keyValue={`setup-guide-${platformId}`}
           variant={'borderless'}
           title={
-            <Text as={'span'} className={styles.title}>
+            <Text as={'span'} className={stylex.props(styles.title).className}>
               {t('channel.quickSetup.guideTitle')}
             </Text>
           }

@@ -1,7 +1,9 @@
 'use client';
 
-import { Alert, Button, confirmModal, createStaticStyles, Flexbox, toast } from '@lobehub/ui';
+import { Alert, Button, confirmModal, Flexbox, toast } from '@lobehub/ui';
 import { useForm } from '@lobehub/ui/form';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { ExternalLink } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -27,28 +29,26 @@ import {
 } from './formState';
 import { type ChannelPostSave, ChannelPostSaveContext } from './postSaveContext';
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  content: css`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    width: 100%;
-    padding-block: 16px 24px;
-    padding-inline: 24px;
-  `,
-  main: css`
-    position: relative;
-
-    display: flex;
-    flex: none;
-    flex-direction: column;
-
-    width: 100%;
-
-    background: ${cssVar.colorBgContainer};
-  `,
-}));
+const styles = stylex.create({
+  content: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: '100%',
+    paddingBlockStart: '16px',
+    paddingBlockEnd: '24px',
+    paddingInline: '24px',
+  },
+  main: {
+    position: 'relative',
+    display: 'flex',
+    flex: 'none',
+    flexDirection: 'column',
+    width: '100%',
+    backgroundColor: cssVar.colorBgContainer,
+    backgroundImage: 'none',
+  },
+});
 
 const omitUndefinedValues = <T extends Record<string, unknown>>(record: T) =>
   Object.fromEntries(Object.entries(record).filter(([, value]) => value !== undefined)) as T;
@@ -484,8 +484,8 @@ const PlatformDetail = memo<PlatformDetailProps>(
 
     return (
       <ChannelPostSaveContext value={postSaveRegistry}>
-        <main className={styles.main}>
-          <div className={styles.content}>
+        <main {...stylex.props(styles.main)}>
+          <div {...stylex.props(styles.content)}>
             {paidFeatureBlocked && (
               <Alert
                 showIcon

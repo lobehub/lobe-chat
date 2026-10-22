@@ -6,7 +6,6 @@ import {
   Block,
   Button,
   confirmModal,
-  createStaticStyles,
   Flexbox,
   Icon,
   InputNumber,
@@ -16,6 +15,8 @@ import {
   Text,
 } from '@lobehub/ui';
 import { Form, type FormInstance, useFormInstance, useWatch } from '@lobehub/ui/form';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import {
   Fingerprint,
   Hash,
@@ -48,29 +49,31 @@ import QuickSetupSection from '../quickSetup/QuickSetupSection';
 import { extractSettingsDefaults } from './formState';
 import type { ChannelFormValues } from './index';
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  advancedGroup: css`
-    border-block-start: 1px solid ${cssVar.colorBorderSecondary};
-    border-radius: 0 !important;
-  `,
-  advancedTitle: css`
-    font-size: 13px;
-    font-weight: 400;
-    line-height: 1.4;
-    color: ${cssVar.colorTextSecondary};
-  `,
-  container: css`
-    overflow: hidden;
-    gap: 0;
-    width: 100%;
-    padding-inline: 16px;
-  `,
-  fieldIcon: css`
-    flex: none;
-    align-self: center;
-    color: ${cssVar.colorTextSecondary};
-  `,
-}));
+const styles = stylex.create({
+  advancedGroup: {
+    borderBlockStartWidth: '1px',
+    borderBlockStartStyle: 'solid',
+    borderBlockStartColor: cssVar.colorBorderSecondary,
+    borderRadius: 0,
+  },
+  advancedTitle: {
+    fontSize: '13px',
+    fontWeight: 400,
+    lineHeight: 1.4,
+    color: cssVar.colorTextSecondary,
+  },
+  container: {
+    overflow: 'hidden',
+    gap: 0,
+    width: '100%',
+    paddingInline: '16px',
+  },
+  fieldIcon: {
+    flex: 'none',
+    alignSelf: 'center',
+    color: cssVar.colorTextSecondary,
+  },
+});
 
 // --------------- Validation rules builder ---------------
 
@@ -159,7 +162,7 @@ const getFieldIcon = (field: FieldSchema) => {
 };
 
 const renderFieldIcon = (field: FieldSchema) => (
-  <Icon className={styles.fieldIcon} icon={getFieldIcon(field)} size={20} />
+  <Icon className={stylex.props(styles.fieldIcon).className} icon={getFieldIcon(field)} size={20} />
 );
 
 const SchemaField = memo<SchemaFieldProps>(
@@ -462,7 +465,7 @@ const SettingsTitle = memo<{ schema: FieldSchema[] }>(({ schema }) => {
   const t = _t as (key: string) => string;
   const settingsSchema = schema.find((f) => f.key === 'settings');
   return settingsSchema ? (
-    <Text as={'span'} className={styles.advancedTitle}>
+    <Text as={'span'} className={stylex.props(styles.advancedTitle).className}>
       {t(settingsSchema.label)}
     </Text>
   ) : null;
@@ -558,7 +561,7 @@ const Body = memo<BodyProps>(
         style={{ maxWidth: 1024, padding: '16px 0', width: '100%' }}
         variant={'borderless'}
       >
-        <Block className={styles.container} variant={'outlined'}>
+        <Block className={stylex.props(styles.container).className} variant={'outlined'}>
           {CustomCredentialBody ? (
             <CustomCredentialBody
               currentConfig={currentConfig}
@@ -623,7 +626,7 @@ const Body = memo<BodyProps>(
             <Form.Group
               collapsible
               active={settingsActive}
-              className={styles.advancedGroup}
+              className={stylex.props(styles.advancedGroup).className}
               defaultActive={userIdInitiallyMissing}
               keyValue={`settings-${platformDef.id}`}
               title={<SettingsTitle schema={platformDef.schema} />}
