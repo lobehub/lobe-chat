@@ -1,6 +1,3 @@
-import { readFileSync } from 'node:fs';
-import path from 'node:path';
-
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -254,7 +251,7 @@ describe('Home input banner queue', () => {
       );
 
       // jsdom has no StyleX / CSS-module styles, so which banner is shown is checked on the DOM
-      // (the first one in the queue) and the hiding rule is checked in InputBanner.module.css below.
+      // (the first one in the queue); the hide rule is pinned in scripts/stylexMigration/homeBannerQueue.test.ts.
       expect(container.querySelector('[data-home-input-banner]')).toHaveTextContent('First');
       expect(screen.getByTestId('second')).toBeInTheDocument();
       fireEvent.click(within(screen.getByTestId('first')).getByRole('button'));
@@ -268,11 +265,4 @@ describe('Home input banner queue', () => {
       }));
     }
   }, 20000);
-
-  it('hides every banner after the first with a rule that outranks the StyleX display of a banner', () => {
-    const css = readFileSync(path.join(__dirname, '../InputArea/InputBanner.module.css'), 'utf8');
-
-    // The banner's own `display: flex` is StyleX, which beats a plain class rule on specificity.
-    expect(css).toMatch(/~ :global\(\[data-home-input-banner\]\)\s*\{[^}]*display: none !important/);
-  });
 });
