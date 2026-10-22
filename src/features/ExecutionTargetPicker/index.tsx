@@ -1,38 +1,34 @@
 'use client';
 
 import type { DeviceExecutionTarget, DeviceListItem } from '@lobechat/types';
-import { createStaticStyles, cssVar, Icon } from '@lobehub/ui';
+import { Icon } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { BoxIcon, LaptopIcon, MonitorOffIcon, SparklesIcon } from 'lucide-react';
 import { memo } from 'react';
 
 import { getDeviceIcon } from '@/features/DeviceManager/getDeviceIcon';
 
-const styles = createStaticStyles(({ css }) => ({
-  dotOffline: css`
-    flex: none;
-
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-
-    background: ${cssVar.colorTextQuaternary};
-  `,
-  dotOnline: css`
-    flex: none;
-
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-
-    background: ${cssVar.colorSuccess};
-    box-shadow: 0 0 0 2px ${cssVar.colorSuccessBg};
-  `,
-  status: css`
-    display: inline-flex;
-    gap: 6px;
-    align-items: center;
-  `,
-}));
+const styles = stylex.create({
+  dotOffline: {
+    flex: 'none',
+    width: '6px',
+    height: '6px',
+    borderRadius: '50%',
+    backgroundColor: cssVar.colorTextQuaternary,
+    backgroundImage: 'none',
+  },
+  dotOnline: {
+    flex: 'none',
+    width: '6px',
+    height: '6px',
+    borderRadius: '50%',
+    backgroundColor: cssVar.colorSuccess,
+    backgroundImage: 'none',
+    boxShadow: `0 0 0 2px ${cssVar.colorSuccessBg}`,
+  },
+  status: { display: 'inline-flex', gap: '6px', alignItems: 'center' },
+});
 
 export const SHARED_EXECUTION_TARGETS = ['auto', 'device', 'none', 'sandbox'] as const;
 
@@ -196,10 +192,12 @@ interface ExecutionTargetDeviceStatusProps {
 
 export const ExecutionTargetDeviceStatus = memo<ExecutionTargetDeviceStatusProps>(
   ({ offlineLabel, online, onlineLabel, unknown, unknownLabel }) => (
-    <span className={styles.status}>
+    <span {...stylex.props(styles.status)}>
       <span
         aria-hidden
-        className={unknown ? styles.dotOffline : online ? styles.dotOnline : styles.dotOffline}
+        {...stylex.props(
+          unknown ? styles.dotOffline : online ? styles.dotOnline : styles.dotOffline,
+        )}
       />
       <span>{unknown ? unknownLabel : online ? onlineLabel : offlineLabel}</span>
     </span>

@@ -1,24 +1,25 @@
 import type { BriefArtifactDocument, BriefArtifacts } from '@lobechat/types';
-import { Block, createStaticStyles, cssVar, Flexbox, Icon, Text } from '@lobehub/ui';
+import { Block, Flexbox, Icon, Text } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { ChevronRightIcon, FileTextIcon } from 'lucide-react';
 import { memo } from 'react';
 
 import { openDocumentModal, preloadDocumentModal } from '@/features/DocumentModal/loader';
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  iconWrap: css`
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
-
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-
-    background: ${cssVar.colorBgContainer};
-  `,
-}));
+const styles = stylex.create({
+  iconWrap: {
+    display: 'flex',
+    flexShrink: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '36px',
+    height: '36px',
+    borderRadius: '8px',
+    backgroundColor: cssVar.colorBgContainer,
+    backgroundImage: 'none',
+  },
+});
 
 const BriefArtifactCard = memo<{ doc: BriefArtifactDocument }>(({ doc }) => {
   const title = doc.title || 'Untitled';
@@ -36,7 +37,7 @@ const BriefArtifactCard = memo<{ doc: BriefArtifactDocument }>(({ doc }) => {
       onFocus={preloadDocumentModal}
       onPointerEnter={preloadDocumentModal}
     >
-      <div className={styles.iconWrap}>
+      <div {...stylex.props(styles.iconWrap)}>
         <Icon
           color={cssVar.colorTextSecondary}
           icon={FileTextIcon}
