@@ -3,6 +3,10 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { LobeTypeSafeAI } from './index';
 
+vi.mock('@lobechat/business-model-bank/model-config', () => ({
+  loadModels: vi.fn().mockResolvedValue([]),
+}));
+
 describe('LobeTypeSafeAI', () => {
   afterEach(() => {
     vi.restoreAllMocks();
