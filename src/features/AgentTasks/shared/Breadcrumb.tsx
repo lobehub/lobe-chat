@@ -9,7 +9,7 @@ import { useShallow } from 'zustand/react/shallow';
 import WorkspaceLink from '@/features/Workspace/WorkspaceLink';
 import { useTaskStore } from '@/store/task';
 
-import { styles } from './style';
+import styles from './breadcrumb.module.css';
 import { taskDetailPath } from './taskDetailPath';
 import { useAgentDisplayMeta } from './useAgentDisplayMeta';
 

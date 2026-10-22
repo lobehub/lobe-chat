@@ -1,16 +1,8 @@
 'use client';
 
-import {
-  createStaticStyles,
-  cssVar,
-  cx,
-  Flexbox,
-  Icon,
-  Image,
-  Markdown,
-  Skeleton,
-  Text,
-} from '@lobehub/ui';
+import { Flexbox, Icon, Image, Markdown, Skeleton, Text } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import {
   ChevronRight,
   CircleCheck,
@@ -37,65 +29,50 @@ import type { CriterionOutcome, CriterionOutcomeState, EvidenceLike } from './go
  * write-up for a met criterion belongs to the acceptance, not to this summary.
  */
 
-const styles = createStaticStyles(({ css }) => ({
-  arrow: css`
-    flex: none;
-    color: ${cssVar.colorTextQuaternary};
-    transition: transform 0.2s;
-  `,
-  arrowOpen: css`
-    transform: rotate(90deg);
-  `,
-  evidence: css`
-    padding-block: 0 12px;
-    padding-inline: 28px 0;
-  `,
-  item: css`
-    &:not(:last-child) {
-      border-block-end: 1px solid ${cssVar.colorBorderSecondary};
-    }
-  `,
-  reason: css`
-    color: ${cssVar.colorError};
-  `,
-  row: css`
-    width: 100%;
-    padding-block: 10px;
-    padding-inline: 0;
-    border: none;
-
-    text-align: start;
-
-    background: none;
-  `,
-  rowOpenable: css`
-    cursor: pointer;
-
-    &:hover {
-      background: ${cssVar.colorFillQuaternary};
-    }
-
-    &:focus-visible {
-      outline: 2px solid ${cssVar.colorPrimary};
-      outline-offset: -2px;
-    }
-  `,
-  docLink: css`
-    cursor: pointer;
-
-    width: fit-content;
-    padding: 0;
-    border: none;
-
-    color: ${cssVar.colorPrimary};
-
-    background: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  `,
-}));
+const styles = stylex.create({
+  arrow: { flex: 'none', color: cssVar.colorTextQuaternary, transition: 'transform 0.2s' },
+  arrowOpen: { transform: 'rotate(90deg)' },
+  evidence: {
+    paddingBlockStart: '0',
+    paddingBlockEnd: '12px',
+    paddingInlineStart: '28px',
+    paddingInlineEnd: '0',
+  },
+  item: {
+    borderBlockEndWidth: { 'default': null, ':not(:last-child)': '1px' },
+    borderBlockEndStyle: { 'default': null, ':not(:last-child)': 'solid' },
+    borderBlockEndColor: { 'default': null, ':not(:last-child)': cssVar.colorBorderSecondary },
+  },
+  reason: { color: cssVar.colorError },
+  row: {
+    width: '100%',
+    paddingBlock: '10px',
+    paddingInline: '0',
+    borderStyle: 'none',
+    textAlign: 'start',
+    backgroundColor: 'transparent',
+    backgroundImage: 'none',
+  },
+  rowOpenable: {
+    cursor: 'pointer',
+    backgroundColor: { 'default': null, ':hover': cssVar.colorFillQuaternary },
+    backgroundImage: { 'default': null, ':hover': 'none' },
+    outlineWidth: { 'default': null, ':focus-visible': '2px' },
+    outlineStyle: { 'default': null, ':focus-visible': 'solid' },
+    outlineColor: { 'default': null, ':focus-visible': cssVar.colorPrimary },
+    outlineOffset: { 'default': null, ':focus-visible': '-2px' },
+  },
+  docLink: {
+    cursor: 'pointer',
+    width: 'fit-content',
+    padding: '0',
+    borderStyle: 'none',
+    color: cssVar.colorPrimary,
+    backgroundColor: 'transparent',
+    backgroundImage: 'none',
+    textDecoration: { 'default': null, ':hover': 'underline' },
+  },
+});
 
 const STATE_ICON: Record<CriterionOutcomeState, typeof CircleCheck> = {
   failed: CircleX,
@@ -158,7 +135,7 @@ const EvidenceItem = ({ item }: { item: EvidenceLike }) => {
       <Flexbox horizontal align={'center'} gap={6}>
         <Icon color={cssVar.colorTextTertiary} icon={FileText} size={14} />
         <button
-          className={styles.docLink}
+          {...stylex.props(styles.docLink)}
           type={'button'}
           onClick={() => openDocument(item.documentId!)}
         >
@@ -192,12 +169,16 @@ const CriterionRow = ({ index, outcome }: { index: number; outcome: CriterionOut
   const color = STATE_COLOR[state];
 
   return (
-    <div className={styles.item} data-criterion-id={criterion.id} data-criterion-state={state}>
+    <div
+      {...stylex.props(styles.item)}
+      data-criterion-id={criterion.id}
+      data-criterion-state={state}
+    >
       <Flexbox
         horizontal
         align={'flex-start'}
         as={openable ? 'button' : 'div'}
-        className={cx(styles.row, openable && styles.rowOpenable)}
+        className={stylex.props(styles.row, openable && styles.rowOpenable).className}
         gap={10}
         {...(openable ? { onClick: () => setOpen(!open), type: 'button' as const } : {})}
       >
@@ -217,7 +198,11 @@ const CriterionRow = ({ index, outcome }: { index: number; outcome: CriterionOut
             </Text>
           </Flexbox>
           {state === 'failed' && reason && (
-            <Text className={styles.reason} fontSize={13} style={{ wordBreak: 'break-word' }}>
+            <Text
+              className={stylex.props(styles.reason).className}
+              fontSize={13}
+              style={{ wordBreak: 'break-word' }}
+            >
               {reason}
             </Text>
           )}
@@ -238,7 +223,7 @@ const CriterionRow = ({ index, outcome }: { index: number; outcome: CriterionOut
               {t('goalProcess.result.criteria.evidenceCount', { count: evidence.length })}
             </Text>
             <Icon
-              className={cx(styles.arrow, open && styles.arrowOpen)}
+              className={stylex.props(styles.arrow, open && styles.arrowOpen).className}
               icon={ChevronRight}
               size={14}
             />
@@ -246,7 +231,7 @@ const CriterionRow = ({ index, outcome }: { index: number; outcome: CriterionOut
         )}
       </Flexbox>
       {open && (
-        <Flexbox className={styles.evidence} gap={12}>
+        <Flexbox className={stylex.props(styles.evidence).className} gap={12}>
           {evidence.map((item) => (
             <EvidenceItem item={item} key={item.id} />
           ))}

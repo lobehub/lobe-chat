@@ -9,6 +9,7 @@ import {
   stopPropagation,
 } from '@lobehub/ui';
 import { ActionIcon, Avatar, confirmModal, cssVar, Tag, Text, toast } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import {
   ChevronDown,
   ChevronRight,
@@ -258,7 +259,7 @@ const TopicCard = memo<TopicCardProps>(({ activity, defaultExpanded = true, prim
     activity.author?.avatar || isAgent ? (
       <Avatar avatar={activity.author?.avatar || DEFAULT_AVATAR} size={24} />
     ) : (
-      <div className={styles.activityAvatar}>
+      <div className={stylex.props(styles.activityAvatar).className}>
         <CircleDot size={12} />
       </div>
     );

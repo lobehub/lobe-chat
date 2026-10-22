@@ -1,7 +1,8 @@
 'use client';
 
 import { ChatInput, ChatInputActionBar, SendButton, useEditor } from '@lobehub/editor/react';
-import { createStaticStyles, cssVar } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { $getRoot } from 'lexical';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,19 +18,19 @@ import { useEnterToSend } from '@/hooks/useEnterToSend';
  * question about this goal already lives.
  */
 
-const styles = createStaticStyles(({ css }) => ({
+const styles = stylex.create({
   // Pinned to the bottom of the page's scroll area, over a fade so the result
   // text scrolling underneath never collides with the box.
-  dock: css`
-    position: sticky;
-    z-index: 1;
-    inset-block-end: 0;
-
-    padding-block: 24px 16px;
-
-    background: linear-gradient(to bottom, transparent, ${cssVar.colorBgLayout} 24px);
-  `,
-}));
+  dock: {
+    position: 'sticky',
+    zIndex: 1,
+    insetBlockEnd: 0,
+    paddingBlockStart: '24px',
+    paddingBlockEnd: '16px',
+    backgroundColor: 'transparent',
+    backgroundImage: `linear-gradient(to bottom, transparent, ${cssVar.colorBgLayout} 24px)`,
+  },
+});
 
 interface GoalFollowUpComposerProps {
   /** Hidden rather than unmounted, so the draft outlives a tab switch. */
@@ -61,7 +62,7 @@ const GoalFollowUpComposer = memo<GoalFollowUpComposerProps>(({ hidden, onSend }
   return (
     // The dock itself carries `hidden`: a wrapper would become the sticky
     // element's containing block and unpin it from the page bottom.
-    <div className={styles.dock} hidden={hidden}>
+    <div {...stylex.props(styles.dock)} hidden={hidden}>
       <ChatInput
         maxHeight={200}
         minHeight={48}

@@ -1,6 +1,8 @@
 'use client';
 
-import { Block, ContextMenuTrigger, createStaticStyles, cssVar, Flexbox, Text } from '@lobehub/ui';
+import { Block, ContextMenuTrigger, Flexbox, Text } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import type { KeyboardEvent } from 'react';
 import { memo } from 'react';
 
@@ -15,21 +17,21 @@ import GoalStatusGlyph from './GoalStatusGlyph';
 import type { GoalItemProps } from './types';
 import { useGoalItemMenu } from './useGoalMenuItems';
 
-const styles = createStaticStyles(({ css }) => ({
-  row: css`
-    min-width: 0;
-    border-radius: 0;
-
-    & + & {
-      border-block-start: 1px solid ${cssVar.colorBorderSecondary};
-    }
-
-    &:hover,
-    &[data-popup-open] {
-      background: ${cssVar.colorFillQuaternary};
-    }
-  `,
-}));
+const HOVERED = ':is(:hover, [data-popup-open])';
+const styles = stylex.create({
+  row: {
+    minWidth: 0,
+    borderRadius: 0,
+    borderBlockStartWidth: { default: null, [stylex.when.siblingBefore(':is(*)')]: '1px' },
+    borderBlockStartStyle: { default: null, [stylex.when.siblingBefore(':is(*)')]: 'solid' },
+    borderBlockStartColor: {
+      default: null,
+      [stylex.when.siblingBefore(':is(*)')]: cssVar.colorBorderSecondary,
+    },
+    backgroundColor: { default: null, [HOVERED]: cssVar.colorFillQuaternary },
+    backgroundImage: { default: null, [HOVERED]: 'none' },
+  },
+});
 
 export const GoalListItem = memo<GoalItemProps>(({ globalScopeId, goal: item, projectId }) => {
   const navigate = useWorkspaceAwareNavigate();
@@ -61,7 +63,7 @@ export const GoalListItem = memo<GoalItemProps>(({ globalScopeId, goal: item, pr
         clickable
         horizontal
         align={'center'}
-        className={styles.row}
+        className={stylex.props(styles.row, stylex.defaultMarker()).className}
         gap={12}
         justify={'space-between'}
         paddingBlock={10}
@@ -72,7 +74,7 @@ export const GoalListItem = memo<GoalItemProps>(({ globalScopeId, goal: item, pr
         onClick={handleClick}
         onKeyDown={handleKeyDown}
       >
-        <Flexbox gap={4} style={{ flex: 1, minWidth: 0 }}>
+        <Flexbox gap={4} style={{ flex: '1', minWidth: 0 }}>
           <Flexbox horizontal align={'center'} gap={7}>
             <GoalStatusGlyph size={13} status={goal.status} />
             <Text ellipsis fontSize={15} weight={600}>

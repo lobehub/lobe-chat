@@ -7,8 +7,6 @@ import { useEditor } from '@lobehub/editor/react';
 import {
   ActionIcon,
   Button,
-  createStaticStyles,
-  cssVar,
   Flexbox,
   Icon,
   InputNumber,
@@ -17,6 +15,8 @@ import {
   toast,
   useModalContext,
 } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import {
   ArrowLeft,
   Paperclip,
@@ -42,159 +42,126 @@ import { pickAndInsertAttachments } from '@/features/EditorCanvas/editorAttachme
 import { usePermission } from '@/hooks/usePermission';
 import { goalService } from '@/services/goal';
 import { shinyTextStyles } from '@/styles';
+import { sx } from '@/styles/sx';
 
 import GoalAgentPill from '../GoalAgentPill';
+import moduleStyles from './CreateGoalContent.module.css';
 import { buildGoalAgents, buildGoalCreateInput, buildReviewedGoalContent } from './goalConfig';
 import { createFallbackGoalCriterion, generateGoalCriteria } from './goalCriteria';
 import { deriveGoalTitle } from './goalTitle';
 
-const styles = createStaticStyles(({ css }) => ({
-  budgetField: css`
-    display: grid;
-    grid-template-columns: 96px 144px minmax(0, 1fr);
-    gap: 12px;
-    align-items: center;
+const REDUCED_MOTION = '@media (prefers-reduced-motion: reduce)';
 
-    min-width: 0;
+const generationRoll = stylex.keyframes({
+  '0%, 20%': { transform: 'translateY(0)' },
+  '25%, 45%': { transform: 'translateY(-22px)' },
+  '50%, 70%': { transform: 'translateY(-44px)' },
+  '75%, 95%': { transform: 'translateY(-66px)' },
+  '100%': { transform: 'translateY(-88px)' },
+});
 
-    @media (width <= 640px) {
-      grid-template-columns: minmax(0, 1fr);
-      gap: 6px;
-    }
-  `,
-  body: css`
-    overflow-y: auto;
-
-    min-height: 0;
-    max-height: min(70vh, 680px);
-    padding-block: 8px 24px;
-    padding-inline: 16px;
-  `,
-  close: css`
-    position: absolute;
-    inset-block-start: 14px;
-    inset-inline-end: 14px;
-  `,
-  criteriaList: css`
-    overflow-y: auto;
-    max-height: 320px;
-  `,
-  footer: css`
-    padding-block: 8px;
-    padding-inline: 16px;
-    border-block-start: 1px solid ${cssVar.colorBorderSecondary};
-  `,
-  generatingStatus: css`
-    min-height: 36px;
-    padding-block: 6px;
-    color: ${cssVar.colorTextSecondary};
-  `,
-  generatingTextItem: css`
-    display: flex;
-    align-items: center;
-
-    height: 22px;
-
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 22px;
-    white-space: nowrap;
-  `,
-  generatingTextTrack: css`
-    animation: goal-generation-roll 16s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-
-    @media (prefers-reduced-motion: reduce) {
-      animation: none;
-    }
-
-    @keyframes goal-generation-roll {
-      0%,
-      20% {
-        transform: translateY(0);
-      }
-
-      25%,
-      45% {
-        transform: translateY(-22px);
-      }
-
-      50%,
-      70% {
-        transform: translateY(-44px);
-      }
-
-      75%,
-      95% {
-        transform: translateY(-66px);
-      }
-
-      100% {
-        transform: translateY(-88px);
-      }
-    }
-  `,
-  generatingTextViewport: css`
-    overflow: hidden;
-    height: 22px;
-  `,
-  head: css`
-    position: relative;
-    padding-block: 16px 8px;
-    padding-inline: 16px;
-  `,
-  inputShell: css`
-    overflow: hidden;
-    min-height: 208px;
-    background: ${cssVar.colorBgElevated};
-  `,
-  instructionEditor: css`
-    min-height: 36px;
-    padding-block: 0 4px;
-    padding-inline: 12px;
-
-    /* EditorCanvas reserves space for its document footer by default. The
-       compact review summary has no footer, so keeping that space turns a
-       one-line instruction into a conspicuous empty band. */
-    & > div > div > div {
-      padding-block-end: 0 !important;
-    }
-  `,
-  reviewSection: css`
-    padding-block: 16px;
-
-    &:first-child {
-      padding-block: 0 4px;
-    }
-  `,
-  sectionHint: css`
-    color: ${cssVar.colorTextSecondary};
-  `,
-  title: css`
-    box-sizing: border-box;
-    width: 100%;
-    padding-block: 4px 8px;
-    padding-inline-end: 40px;
-    border: none;
-
-    font-family: inherit;
-    font-size: 20px;
-    font-weight: 600;
-    line-height: 1.4;
-    color: inherit;
-
-    background: transparent;
-    outline: none;
-  `,
-  titleStatic: css`
-    padding-block: 4px 8px;
-    padding-inline-end: 40px;
-
-    font-size: 20px;
-    font-weight: 600;
-    line-height: 1.4;
-    color: ${cssVar.colorText};
-  `,
-}));
+const styles = stylex.create({
+  budgetField: {
+    display: 'grid',
+    gridTemplateColumns: {
+      'default': '96px 144px minmax(0, 1fr)',
+      '@media (width <= 640px)': 'minmax(0, 1fr)',
+    },
+    gap: { 'default': '12px', '@media (width <= 640px)': '6px' },
+    alignItems: 'center',
+    minWidth: 0,
+  },
+  body: {
+    overflowY: 'auto',
+    minHeight: 0,
+    maxHeight: 'min(70vh, 680px)',
+    paddingBlockStart: '8px',
+    paddingBlockEnd: '24px',
+    paddingInline: '16px',
+  },
+  close: {
+    position: 'absolute',
+    insetBlockStart: '14px',
+    insetInlineEnd: '14px',
+  },
+  criteriaList: { overflowY: 'auto', maxHeight: '320px' },
+  footer: {
+    paddingBlock: '8px',
+    paddingInline: '16px',
+    borderBlockStartWidth: '1px',
+    borderBlockStartStyle: 'solid',
+    borderBlockStartColor: cssVar.colorBorderSecondary,
+  },
+  generatingStatus: {
+    minHeight: '36px',
+    paddingBlock: '6px',
+    color: cssVar.colorTextSecondary,
+  },
+  generatingTextItem: {
+    display: 'flex',
+    alignItems: 'center',
+    height: '22px',
+    fontSize: '14px',
+    fontWeight: 500,
+    lineHeight: '22px',
+    whiteSpace: 'nowrap',
+  },
+  generatingTextTrack: {
+    animationName: { default: generationRoll, [REDUCED_MOTION]: 'none' },
+    animationDuration: '16s',
+    animationTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+    animationIterationCount: 'infinite',
+  },
+  generatingTextViewport: { overflow: 'hidden', height: '22px' },
+  head: {
+    position: 'relative',
+    paddingBlockStart: '16px',
+    paddingBlockEnd: '8px',
+    paddingInline: '16px',
+  },
+  inputShell: {
+    overflow: 'hidden',
+    minHeight: '208px',
+    backgroundColor: cssVar.colorBgElevated,
+    backgroundImage: 'none',
+  },
+  instructionEditor: {
+    minHeight: '36px',
+    paddingBlockStart: 0,
+    paddingBlockEnd: '4px',
+    paddingInline: '12px',
+  },
+  reviewSection: {
+    paddingBlockStart: { 'default': '16px', ':first-child': 0 },
+    paddingBlockEnd: { 'default': '16px', ':first-child': '4px' },
+  },
+  sectionHint: { color: cssVar.colorTextSecondary },
+  title: {
+    boxSizing: 'border-box',
+    width: '100%',
+    paddingBlockStart: '4px',
+    paddingBlockEnd: '8px',
+    paddingInlineEnd: '40px',
+    borderStyle: 'none',
+    fontFamily: 'inherit',
+    fontSize: '20px',
+    fontWeight: 600,
+    lineHeight: 1.4,
+    color: 'inherit',
+    backgroundColor: 'transparent',
+    backgroundImage: 'none',
+    outlineStyle: 'none',
+  },
+  titleStatic: {
+    paddingBlockStart: '4px',
+    paddingBlockEnd: '8px',
+    paddingInlineEnd: '40px',
+    fontSize: '20px',
+    fontWeight: 600,
+    lineHeight: 1.4,
+    color: cssVar.colorText,
+  },
+});
 
 const GENERATION_ESTIMATE_SECONDS = 90;
 
@@ -438,7 +405,7 @@ const CreateGoalContent = memo<CreateGoalContentProps>((props) => {
 
   return (
     <Flexbox onKeyDown={handleKeyDown}>
-      <Flexbox horizontal className={styles.head}>
+      <Flexbox horizontal className={stylex.props(styles.head).className}>
         <Flexbox flex={1} gap={6}>
           {step === 'review' && (
             <Flexbox horizontal align={'center'} gap={8}>
@@ -455,18 +422,23 @@ const CreateGoalContent = memo<CreateGoalContentProps>((props) => {
           )}
           {step === 'review' ? (
             <input
-              className={styles.title}
+              className={stylex.props(styles.title).className}
               disabled={!canCreate}
               placeholder={t('createGoal.titlePlaceholder')}
               value={plan.name}
               onChange={(e) => setPlan((current) => ({ ...current, name: e.target.value }))}
             />
           ) : (
-            <div className={styles.titleStatic}>{t('createGoal.describeTitle')}</div>
+            <div className={stylex.props(styles.titleStatic).className}>
+              {t('createGoal.describeTitle')}
+            </div>
           )}
           {step !== 'review' && (
             <>
-              <GeneratingBorder className={styles.inputShell} generating={step === 'preparing'}>
+              <GeneratingBorder
+                className={stylex.props(styles.inputShell).className}
+                generating={step === 'preparing'}
+              >
                 <EditorCanvas
                   disabled={!canCreate || step === 'preparing'}
                   editor={editor}
@@ -482,7 +454,7 @@ const CreateGoalContent = memo<CreateGoalContentProps>((props) => {
                 <Flexbox
                   horizontal
                   align={'center'}
-                  className={styles.generatingStatus}
+                  className={stylex.props(styles.generatingStatus).className}
                   gap={10}
                   justify={'space-between'}
                 >
@@ -490,14 +462,19 @@ const CreateGoalContent = memo<CreateGoalContentProps>((props) => {
                     <Spin size="small" variant="network" />
                     <div
                       aria-label={t('createGoal.generating')}
-                      className={styles.generatingTextViewport}
+                      className={stylex.props(styles.generatingTextViewport).className}
                       role={'status'}
                     >
-                      <div aria-hidden className={styles.generatingTextTrack}>
+                      <div
+                        aria-hidden
+                        className={stylex.props(styles.generatingTextTrack).className}
+                      >
                         {generatingMessages.map((message, index) => (
                           <div
-                            className={`${styles.generatingTextItem} ${shinyTextStyles.shinyText}`}
                             key={index}
+                            className={
+                              sx([styles.generatingTextItem], shinyTextStyles.shinyText).className
+                            }
                           >
                             {message}
                           </div>
@@ -519,13 +496,15 @@ const CreateGoalContent = memo<CreateGoalContentProps>((props) => {
             </>
           )}
         </Flexbox>
-        <ActionIcon className={styles.close} icon={X} onClick={close} />
+        <ActionIcon className={stylex.props(styles.close).className} icon={X} onClick={close} />
       </Flexbox>
 
       {step === 'review' && (
-        <Flexbox className={styles.body}>
-          <Flexbox className={styles.reviewSection} gap={10}>
-            <Flexbox className={styles.instructionEditor}>
+        <Flexbox className={stylex.props(styles.body).className}>
+          <Flexbox className={stylex.props(styles.reviewSection).className} gap={10}>
+            <Flexbox
+              className={sx([styles.instructionEditor], moduleStyles.instructionEditor).className}
+            >
               <EditorCanvas
                 disabled={!canCreate}
                 editor={editor}
@@ -539,14 +518,14 @@ const CreateGoalContent = memo<CreateGoalContentProps>((props) => {
             </Flexbox>
           </Flexbox>
 
-          <Flexbox className={styles.reviewSection} gap={10}>
+          <Flexbox className={stylex.props(styles.reviewSection).className} gap={10}>
             <Flexbox horizontal align={'center'} gap={8} justify={'space-between'}>
               <Flexbox horizontal align={'center'} gap={8}>
                 <Icon color={cssVar.colorTextTertiary} icon={ShieldCheck} size={16} />
                 <Text fontSize={13} weight={600}>
                   {t('createGoal.criteriaTitle')}
                 </Text>
-                <Text className={styles.sectionHint} fontSize={12}>
+                <Text className={stylex.props(styles.sectionHint).className} fontSize={12}>
                   {t('createGoal.criteriaHint')}
                 </Text>
               </Flexbox>
@@ -556,7 +535,7 @@ const CreateGoalContent = memo<CreateGoalContentProps>((props) => {
             </Flexbox>
             {/* Draft rows keep the C{seq} anchor but no status icon — the pending
                 circle belongs to the post-creation check list, not to authoring. */}
-            <CriterionList className={styles.criteriaList}>
+            <CriterionList className={stylex.props(styles.criteriaList).className}>
               {plan.criteria.map((criterion, index) => (
                 <CriterionRow
                   key={index}
@@ -599,7 +578,7 @@ const CreateGoalContent = memo<CreateGoalContentProps>((props) => {
             </CriterionList>
           </Flexbox>
 
-          <Flexbox className={styles.reviewSection} gap={10}>
+          <Flexbox className={stylex.props(styles.reviewSection).className} gap={10}>
             <Text fontSize={13} weight={600}>
               {t('createGoal.agentsTitle')}
             </Text>
@@ -630,17 +609,17 @@ const CreateGoalContent = memo<CreateGoalContentProps>((props) => {
                 />
               )}
             </Flexbox>
-            <Text className={styles.sectionHint} fontSize={12}>
+            <Text className={stylex.props(styles.sectionHint).className} fontSize={12}>
               {t('createGoal.agentsHint')}
             </Text>
           </Flexbox>
 
-          <Flexbox className={styles.reviewSection} gap={10}>
+          <Flexbox className={stylex.props(styles.reviewSection).className} gap={10}>
             <Text fontSize={13} weight={600}>
               {t('createGoal.budgetTitle')}
             </Text>
             <Flexbox gap={12}>
-              <div className={styles.budgetField}>
+              <div className={stylex.props(styles.budgetField).className}>
                 <Text fontSize={12} type={'secondary'}>
                   {t('createGoal.roundBudgetLabel')}
                 </Text>
@@ -658,12 +637,12 @@ const CreateGoalContent = memo<CreateGoalContentProps>((props) => {
                   }
                   onChange={(value) => setPlan((current) => ({ ...current, maxIterations: value }))}
                 />
-                <Text className={styles.sectionHint} fontSize={12}>
+                <Text className={stylex.props(styles.sectionHint).className} fontSize={12}>
                   {t('createGoal.roundBudgetHint')}
                 </Text>
               </div>
 
-              <div className={styles.budgetField}>
+              <div className={stylex.props(styles.budgetField).className}>
                 <Text fontSize={12} type={'secondary'}>
                   {t('createGoal.costBudgetLabel')}
                 </Text>
@@ -683,7 +662,7 @@ const CreateGoalContent = memo<CreateGoalContentProps>((props) => {
                   }
                   onChange={(value) => setPlan((current) => ({ ...current, maxTotalCost: value }))}
                 />
-                <Text className={styles.sectionHint} fontSize={12}>
+                <Text className={stylex.props(styles.sectionHint).className} fontSize={12}>
                   {t('createGoal.costBudgetHint')}
                 </Text>
               </div>
@@ -692,7 +671,12 @@ const CreateGoalContent = memo<CreateGoalContentProps>((props) => {
         </Flexbox>
       )}
 
-      <Flexbox horizontal align={'center'} className={styles.footer} justify={'space-between'}>
+      <Flexbox
+        horizontal
+        align={'center'}
+        className={stylex.props(styles.footer).className}
+        justify={'space-between'}
+      >
         <Flexbox horizontal align={'center'} gap={8} wrap={'wrap'}>
           {step === 'review' && (
             <ActionIcon

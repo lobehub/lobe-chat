@@ -9,6 +9,7 @@ import {
   hasTaskExecutionSelection,
 } from '@lobechat/types';
 import { Flexbox, Icon } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import { FolderIcon } from 'lucide-react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -143,10 +144,15 @@ const TaskExecutionControlsInner = memo<
           onChange={handleReposChange}
         />
       ) : (
-        <Flexbox horizontal align={'center'} className={styles.hint} gap={4}>
+        <Flexbox
+          horizontal
+          align={'center'}
+          className={stylex.props(styles.hint).className}
+          gap={4}
+        >
           <Icon icon={FolderIcon} size={12} />
           <span>{t('taskExecution.workingDirectory')}</span>
-          <span className={styles.hintValue}>· {directorySummary}</span>
+          <span className={stylex.props(styles.hintValue).className}>· {directorySummary}</span>
         </Flexbox>
       )}
     </>
