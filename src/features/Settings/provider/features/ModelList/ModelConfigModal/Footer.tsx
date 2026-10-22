@@ -47,7 +47,7 @@ const ModelConfigFooter = memo<ModelConfigFooterProps>(({ formRef, id, showDeplo
           }
         }}
       >
-        {t('ok', { ns: 'common' })}
+        {t('save', { ns: 'common' })}
       </Button>
     </ModalFooter>
   );
