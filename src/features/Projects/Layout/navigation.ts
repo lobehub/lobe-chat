@@ -18,6 +18,11 @@ export const getProjectDashboardPath = (projectId: string, dashboardId?: string)
     ? `/project/${projectId}/dashboard/${dashboardId}`
     : `/project/${projectId}/dashboard`;
 
+export type ProjectSettingsSection = 'general' | 'knowledge' | 'members';
+
+export const getProjectSettingsPath = (projectId: string, section: ProjectSettingsSection) =>
+  `/project/${projectId}/settings/${section}`;
+
 export const getProjectAcceptancePath = (projectId: string) => `/project/${projectId}/acceptance`;
 
 /** A section stays active on its own pages too — a board, an acceptance record. */

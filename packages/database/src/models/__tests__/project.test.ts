@@ -360,6 +360,44 @@ describe('ProjectModel', () => {
     expect(await model.removeKnowledgeBase(project.id, knowledgeBase.id)).toBe(false);
   });
 
+  // A private binding on a shared project would be filtered out for every reader but its creator.
+  it('binds only shared agents and knowledge bases to a shared workspace project', async () => {
+    const workspaceId = 'project-shared-binding-workspace';
+    await serverDB.insert(workspaces).values({
+      id: workspaceId,
+      name: 'Shared Binding Workspace',
+      primaryOwnerId: userId,
+      slug: workspaceId,
+    });
+    const creator = new ProjectModel(serverDB, userId, workspaceId);
+    const sharedProject = await createProject(creator, { name: 'Shared' });
+    const privateProject = await createProject(creator, { name: 'Mine', visibility: 'private' });
+    const [privateAgent] = await serverDB
+      .insert(agents)
+      .values({ title: 'Private agent', userId, visibility: 'private', workspaceId })
+      .returning();
+    const [privateKnowledgeBase] = await serverDB
+      .insert(knowledgeBases)
+      .values({ name: 'Private KB', userId, visibility: 'private', workspaceId })
+      .returning();
+
+    await expect(creator.addAgent(sharedProject.id, { agentId: privateAgent.id })).rejects.toThrow(
+      'A shared project only takes shared agents',
+    );
+    await expect(
+      creator.addKnowledgeBase(sharedProject.id, { knowledgeBaseId: privateKnowledgeBase.id }),
+    ).rejects.toThrow('A shared project only takes shared knowledge bases');
+
+    expect(await creator.addAgent(privateProject.id, { agentId: privateAgent.id })).toEqual(
+      expect.objectContaining({ agentId: privateAgent.id }),
+    );
+    expect(
+      await creator.addKnowledgeBase(privateProject.id, {
+        knowledgeBaseId: privateKnowledgeBase.id,
+      }),
+    ).toEqual(expect.objectContaining({ knowledgeBaseId: privateKnowledgeBase.id }));
+  });
+
   it('updates member and knowledge bindings without touching the coordinator', async () => {
     const project = await createProject(model, { name: 'Patch bindings' });
     const [agent] = await serverDB.insert(agents).values({ title: 'Writer', userId }).returning();

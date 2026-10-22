@@ -28,16 +28,19 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
   `,
 }));
 
+/** Multi-select agent picker shared by chat groups and projects. */
 export interface AddGroupMemberModalProps {
   existingMembers?: string[];
-  groupId: string;
+  groupId?: string;
   onCancel: () => void;
   onConfirm: (selectedAgents: string[]) => void | Promise<void>;
   open: boolean;
+  /** Offer only agents every workspace member can see, e.g. for a shared project. */
+  sharedOnly?: boolean;
 }
 
 const AddGroupMemberModal = memo<AddGroupMemberModalProps>(
-  ({ existingMembers = [], onCancel, onConfirm, open }) => {
+  ({ existingMembers = [], onCancel, onConfirm, open, sharedOnly }) => {
     const { t } = useTranslation(['chat', 'common']);
 
     const selectedAgentIds = useAgentSelectionStore((s) => s.selectedAgentIds);
@@ -47,7 +50,7 @@ const AddGroupMemberModal = memo<AddGroupMemberModalProps>(
       allAgents,
       availableAgents,
       isLoading: isLoadingAgents,
-    } = useAddableGroupMembers(existingMembers);
+    } = useAddableGroupMembers(existingMembers, { sharedOnly });
 
     // Clear selection when modal closes
     useEffect(() => {

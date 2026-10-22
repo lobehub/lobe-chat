@@ -4,9 +4,30 @@ import { createWorkspaceLambdaClient, lambdaClient } from '@/libs/trpc/client';
 
 const PROJECT_PAGE_SIZE = 100;
 
+export interface ProjectAgentBindingPatch {
+  enabled?: boolean;
+  responsibility?: string | null;
+  role?: string | null;
+  sortOrder?: number;
+}
+
+export interface ProjectKnowledgeBaseBindingPatch {
+  enabled?: boolean;
+  sortOrder?: number;
+}
+
 class ProjectService {
   acceptCompletion = async (id: string, comment?: string) =>
     lambdaClient.project.acceptCompletion.mutate({ comment, id });
+
+  addAgent = async (id: string, agentId: string, patch: ProjectAgentBindingPatch = {}) =>
+    lambdaClient.project.addAgent.mutate({ agentId, id, ...patch });
+
+  addKnowledgeBase = async (
+    id: string,
+    knowledgeBaseId: string,
+    patch: ProjectKnowledgeBaseBindingPatch = {},
+  ) => lambdaClient.project.addKnowledgeBase.mutate({ id, knowledgeBaseId, ...patch });
 
   listAll = async (params: { statuses?: ProjectStatus[] } = {}) => {
     const projects = [];
@@ -48,6 +69,12 @@ class ProjectService {
   rejectCompletion = async (id: string, comment: string) =>
     lambdaClient.project.rejectCompletion.mutate({ comment, id });
 
+  removeAgent = async (id: string, agentId: string) =>
+    lambdaClient.project.removeAgent.mutate({ agentId, id });
+
+  removeKnowledgeBase = async (id: string, knowledgeBaseId: string) =>
+    lambdaClient.project.removeKnowledgeBase.mutate({ id, knowledgeBaseId });
+
   reopen = async (id: string) => lambdaClient.project.reopen.mutate({ id });
 
   requestCompletion = async (id: string) => lambdaClient.project.requestCompletion.mutate({ id });
@@ -61,6 +88,15 @@ class ProjectService {
       slug?: string | null;
     },
   ) => lambdaClient.project.update.mutate({ id, ...input });
+
+  updateAgent = async (id: string, agentId: string, patch: ProjectAgentBindingPatch) =>
+    lambdaClient.project.updateAgent.mutate({ agentId, id, ...patch });
+
+  updateKnowledgeBase = async (
+    id: string,
+    knowledgeBaseId: string,
+    patch: ProjectKnowledgeBaseBindingPatch,
+  ) => lambdaClient.project.updateKnowledgeBase.mutate({ id, knowledgeBaseId, ...patch });
 
   updateStatus = async (id: string, status: 'active' | 'archived' | 'backlog' | 'paused') =>
     lambdaClient.project.updateStatus.mutate({ id, status });

@@ -66,6 +66,26 @@ describe('useAddableGroupMembers', () => {
     expect(agentService.queryAgents).not.toHaveBeenCalled();
   });
 
+  // A private agent bound to a shared project is hidden from every other member.
+  it('leaves private agents out when only shared agents are wanted', () => {
+    act(() =>
+      useHomeStore.setState({
+        isAgentListInit: true,
+        privateUngroupedAgents: [sidebarAgent('agt_private', '2026-05-01')],
+        ungroupedAgents: [sidebarAgent('agt_shared', '2026-02-01')],
+      }),
+    );
+
+    const { result: all } = renderHook(() => useAddableGroupMembers([]));
+    const { result: shared } = renderHook(() => useAddableGroupMembers([], { sharedOnly: true }));
+
+    expect(all.current.availableAgents.map((agent) => agent.id)).toEqual([
+      'agt_private',
+      'agt_shared',
+    ]);
+    expect(shared.current.availableAgents.map((agent) => agent.id)).toEqual(['agt_shared']);
+  });
+
   it('treats a restored empty list as loading until the server confirms it', () => {
     act(() => useHomeStore.setState({ isAgentListInit: true }));
 
