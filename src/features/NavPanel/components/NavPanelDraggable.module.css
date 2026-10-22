@@ -6,7 +6,7 @@
   user-select: none;
 }
 
-.panel #toggle_left_panel_button {
+.panel :global(#toggle_left_panel_button) {
   width: 0 !important;
   opacity: 0;
   transition:
@@ -14,7 +14,7 @@
     width 0.2s var(--lobe-motion-ease-out);
 }
 
-.panel #user-dropdown-icon {
+.panel :global(#user-dropdown-icon) {
   width: 0 !important;
   opacity: 0;
   transition:
@@ -22,16 +22,16 @@
     width 0.2s var(--lobe-motion-ease-out);
 }
 
-.panel #lobe-back-button {
+.panel :global(#lobe-back-button) {
   width: 24px !important;
 }
 
-.panel:hover #toggle_left_panel_button {
+.panel:hover :global(#toggle_left_panel_button) {
   width: 32px !important;
   opacity: 1;
 }
 
-.panel:hover #user-dropdown-icon {
+.panel:hover :global(#user-dropdown-icon) {
   width: 14px !important;
   opacity: 1;
 }
