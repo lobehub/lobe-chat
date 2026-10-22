@@ -32,7 +32,7 @@ describe('comment links', () => {
   it('links to the comment on the current report', () => {
     window.history.replaceState(null, '', '/acceptance/acc_1?r=2');
 
-    expect(commentAnchorUrl('c1')).toBe(
+    expect(commentAnchorUrl('c1', window.location.origin)).toBe(
       `${window.location.origin}/acceptance/acc_1?r=2#${commentAnchorId('c1')}`,
     );
   });
@@ -42,7 +42,7 @@ describe('comment links', () => {
   it('drops the workspace prefix so the shared link opens outside the workspace', () => {
     window.history.replaceState(null, '', '/acme/acceptance/acc_1/check/chk_1?r=2');
 
-    expect(commentAnchorUrl('c1')).toBe(
+    expect(commentAnchorUrl('c1', window.location.origin)).toBe(
       `${window.location.origin}/acceptance/acc_1/check/chk_1?r=2#${commentAnchorId('c1')}`,
     );
   });
@@ -50,7 +50,7 @@ describe('comment links', () => {
   it('leaves a project-hosted report path alone', () => {
     window.history.replaceState(null, '', '/project/prj_1/acceptance/acc_1');
 
-    expect(commentAnchorUrl('c1')).toBe(
+    expect(commentAnchorUrl('c1', window.location.origin)).toBe(
       `${window.location.origin}/project/prj_1/acceptance/acc_1#${commentAnchorId('c1')}`,
     );
   });
