@@ -108,6 +108,35 @@ describe('recoverable WebSocket transport', () => {
     expect(vi.getTimerCount()).toBe(0);
   });
 
+  it('renders a group member event mirrored onto the supervisor socket, which the journal can never replay', async () => {
+    journal.push(event(2, 'stream_chunk', 'supervisor'));
+    const done = streamAgentEvents({ ...options(), json: true });
+    await flush();
+
+    // Mirrored member events live under the member's operation id, so they are
+    // absent from this operation's history and only exist on the socket.
+    const memberChunk = { ...event(3, 'stream_chunk', 'member'), operationId: 'op-member-2' };
+    sockets[0].message({ event: memberChunk, id: 'gateway-1', type: 'agent_event' });
+    await flush();
+    // A resume replays from the gateway cursor: the same frame must not render twice.
+    sockets[0].message({ event: memberChunk, id: 'gateway-1', type: 'agent_event' });
+    await flush();
+    // A member finishing is not the supervisor finishing.
+    const memberEnd = { ...event(4, 'member_runtime_end'), operationId: 'op-member-2' };
+    sockets[0].message({ event: memberEnd, id: 'gateway-2', type: 'agent_event' });
+    await flush();
+
+    journal.push(event(5, 'agent_runtime_end'));
+    sockets[0].message({ type: 'session_complete' });
+    await flush();
+    await expect(done).resolves.toMatchObject({ kind: 'completed' });
+
+    const printed = JSON.parse(String(consoleLog.mock.calls[0][0])) as AgentStreamEvent[];
+    const mirrored = printed.filter((item) => item.operationId === 'op-member-2');
+    expect(mirrored.map((item) => item.type)).toEqual(['stream_chunk', 'member_runtime_end']);
+    expect(printed.at(-1)?.type).toBe('agent_runtime_end');
+  });
+
   it('reconnects with backoff and recovers missed output exactly once', async () => {
     journal.push(event(2, 'stream_chunk', 'before'));
     const done = streamAgentEvents(options());

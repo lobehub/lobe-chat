@@ -26,6 +26,17 @@ export interface AgentStreamTransportOptions {
   /** Called for every (re)connect so a long run picks up refreshed credentials. */
   getAuth: () => Promise<AgentStreamAuth>;
   maxRetries?: number;
+  /**
+   * Stream events the Gateway delivers for another operation on this socket — a
+   * group member's events mirrored onto the supervisor's channel.
+   *
+   * Server-side they are appended to the journal under the *member's* operation,
+   * so `readHistory(this.operationId)` can never replay them: this wire is their
+   * only source for a CLI run of a group/supervisor agent. They are therefore
+   * delivered here instead of being reduced to a wake-up, and never as terminal
+   * events — a member finishing must not end the supervisor's stream.
+   */
+  onMirroredEvent?: (event: AgentStreamEvent) => void;
   operationId: string;
   readHistory: (cursor: string, signal: AbortSignal) => Promise<AgentHistoryPage>;
 }
@@ -77,6 +88,8 @@ const HISTORY_REQUEST_TIMEOUT_MS = 10_000;
  * coalesced into at most one read per window. Terminal-ish wakes bypass it.
  */
 const WAKE_COALESCE_WINDOW_MS = 500;
+/** Gateway frame ids remembered so a resume replay cannot re-render a member event. */
+const MIRRORED_ID_MEMORY = 200;
 const FATAL_TRPC_CODES = new Set(['UNAUTHORIZED', 'FORBIDDEN', 'NOT_FOUND']);
 const REDIS_ID = /^\d+-\d+$/;
 
@@ -210,6 +223,7 @@ class GatewayWakeChannel {
   private heartbeat?: ReturnType<typeof setInterval>;
   private heartbeatPending = false;
   private connectTimer?: ReturnType<typeof setTimeout>;
+  private mirroredIds = new Set<string>();
   private reconnectTimer?: ReturnType<typeof setTimeout>;
   private retries = 0;
   private stopped = false;
@@ -283,7 +297,7 @@ class GatewayWakeChannel {
 
   private handleMessage(
     socket: WebSocket,
-    message: { id?: string; reason?: string; type: string },
+    message: { event?: AgentStreamEvent; id?: string; reason?: string; type: string },
   ) {
     switch (message.type) {
       case 'auth_failed': {
@@ -311,6 +325,7 @@ class GatewayWakeChannel {
       }
       case 'agent_event': {
         if (message.id) this.gatewayCursor = message.id;
+        this.deliverMirrored(message);
         this.onWake();
         return;
       }
@@ -321,6 +336,33 @@ class GatewayWakeChannel {
         return;
       }
     }
+  }
+
+  /**
+   * A group member's events are delivered on the supervisor's socket, but their
+   * journal entries stay under the member's own operation id — so no read of the
+   * supervisor's history can replay them. This wire is their only source, hence
+   * they are handed to the consumer instead of only waking the journal.
+   *
+   * Delivered non-terminal by contract: the server renames a mirrored member
+   * terminal to `member_runtime_end` precisely so the supervisor keeps running.
+   */
+  private deliverMirrored(message: { event?: AgentStreamEvent; id?: string }) {
+    const mirrored = message.event;
+    const deliver = this.options.onMirroredEvent;
+    if (!deliver || !mirrored?.operationId) return;
+    // Legacy gateways omit `operationId`; those events are this op's, and the
+    // journal already covers them.
+    if (mirrored.operationId === this.options.operationId) return;
+    // A reconnect resumes from `gatewayCursor`, so the same mirrored frame can
+    // legitimately arrive twice.
+    if (message.id) {
+      if (this.mirroredIds.has(message.id)) return;
+      if (this.mirroredIds.size >= MIRRORED_ID_MEMORY)
+        this.mirroredIds.delete(this.mirroredIds.values().next().value!);
+      this.mirroredIds.add(message.id);
+    }
+    deliver(mirrored);
   }
 
   private startHeartbeat(socket: WebSocket) {

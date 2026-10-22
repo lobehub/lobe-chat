@@ -163,22 +163,35 @@ export async function streamAgentEvents(
   const ctx = createRenderContext();
   let outcome: AgentRunOutcome | undefined;
 
-  const transport = consumeAgentStream(options, (event) => {
-    stall?.arm();
-    if (options.json) jsonEvents.push(event);
-    else renderEvent(event, ctx, options);
-    if (event.type === 'agent_runtime_end') {
-      outcome = outcomeFromEndEvent(event);
-      if (!options.json) renderEnd(event, outcome);
-      return true;
-    }
-    if (event.type === 'error') {
-      outcome = outcomeFromErrorEvent(event);
-      log.error(`Agent error: ${outcome.error}`);
-      return true;
-    }
-    return false;
-  });
+  const transport = consumeAgentStream(
+    {
+      ...options,
+      // A group member's events ride the supervisor's socket but never its
+      // journal, so they are rendered from the wire. They are never terminal:
+      // the supervisor continues after a member finishes.
+      onMirroredEvent: (event) => {
+        stall?.arm();
+        if (options.json) jsonEvents.push(event);
+        else renderEvent(event, ctx, options);
+      },
+    },
+    (event) => {
+      stall?.arm();
+      if (options.json) jsonEvents.push(event);
+      else renderEvent(event, ctx, options);
+      if (event.type === 'agent_runtime_end') {
+        outcome = outcomeFromEndEvent(event);
+        if (!options.json) renderEnd(event, outcome);
+        return true;
+      }
+      if (event.type === 'error') {
+        outcome = outcomeFromErrorEvent(event);
+        log.error(`Agent error: ${outcome.error}`);
+        return true;
+      }
+      return false;
+    },
+  );
   const stall =
     options.onStall &&
     watchForStall(
