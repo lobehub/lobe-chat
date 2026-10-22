@@ -20,14 +20,7 @@ export const useCanvasMoreMenu = (
 
   if (!data) return;
 
-  const extraItems: DropdownItem[] = [
-    ...publishItems,
-    {
-      key: 'open-in-tab',
-      label: t('canvas.menu.openInTab'),
-      onClick: () => window.open(data.previewUrl, '_blank', 'noopener,noreferrer'),
-    },
-  ];
+  const extraItems: DropdownItem[] = [...publishItems];
 
   if (versions && versions.length > 1) {
     extraItems.unshift({
