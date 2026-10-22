@@ -159,7 +159,7 @@ CREATE TABLE IF NOT EXISTS "channel_threads" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "channels" (
 	"id" text PRIMARY KEY NOT NULL,
-	"creator_id" text NOT NULL,
+	"creator_id" text,
 	"workspace_id" text,
 	"title" text NOT NULL,
 	"sequence" integer DEFAULT 0 NOT NULL,
@@ -227,7 +227,7 @@ ALTER TABLE "channel_threads" ADD CONSTRAINT "channel_threads_channel_id_channel
 ALTER TABLE "channel_threads" DROP CONSTRAINT IF EXISTS "channel_threads_root_fk";--> statement-breakpoint
 ALTER TABLE "channel_threads" ADD CONSTRAINT "channel_threads_root_fk" FOREIGN KEY ("channel_id","root_message_id") REFERENCES "public"."channel_messages"("channel_id","id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "channels" DROP CONSTRAINT IF EXISTS "channels_creator_id_users_id_fk";--> statement-breakpoint
-ALTER TABLE "channels" ADD CONSTRAINT "channels_creator_id_users_id_fk" FOREIGN KEY ("creator_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "channels" ADD CONSTRAINT "channels_creator_id_users_id_fk" FOREIGN KEY ("creator_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "channels" DROP CONSTRAINT IF EXISTS "channels_workspace_id_workspaces_id_fk";--> statement-breakpoint
 ALTER TABLE "channels" ADD CONSTRAINT "channels_workspace_id_workspaces_id_fk" FOREIGN KEY ("workspace_id") REFERENCES "public"."workspaces"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "channel_audit_channel_event_idx" ON "channel_audit" USING btree ("channel_id","event","created_at");--> statement-breakpoint
@@ -249,52 +249,9 @@ CREATE INDEX IF NOT EXISTS "channel_runs_channel_id_idx" ON "channel_runs" USING
 CREATE INDEX IF NOT EXISTS "channel_runs_unsettled_idx" ON "channel_runs" USING btree ("channel_id","id") WHERE "channel_runs"."writer_released" = false OR "channel_runs"."physical_stopped" = false;--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "channel_runs_lease_expires_idx" ON "channel_runs" USING btree ("lease_expires_at") WHERE "channel_runs"."writer_released" = false AND "channel_runs"."isolated_at" IS NULL;--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "channel_runs_active_member_unique" ON "channel_runs" USING btree ("member_id") WHERE "channel_runs"."writer_released" = false AND "channel_runs"."isolated_at" IS NULL;--> statement-breakpoint
-CREATE UNIQUE INDEX IF NOT EXISTS "channel_runs_active_directory_unique" ON "channel_runs" USING btree ("device_id","working_directory") WHERE "channel_runs"."device_id" IS NOT NULL AND "channel_runs"."working_directory" IS NOT NULL AND "channel_runs"."writer_released" = false AND "channel_runs"."isolated_at" IS NULL;--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS "channel_runs_active_directory_unique" ON "channel_runs" USING btree ("device_id","working_directory") WHERE "channel_runs"."device_id" IS NOT NULL AND "channel_runs"."working_directory" IS NOT NULL AND "channel_runs"."writer_released" = false;--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "channel_runtime_messages_session_key_unique" ON "channel_runtime_messages" USING btree ("session_id","stable_key");--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "channel_sessions_member_scope_unique" ON "channel_sessions" USING btree ("member_id","scope");--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "channel_threads_root_unique" ON "channel_threads" USING btree ("channel_id","root_message_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "channels_creator_id_idx" ON "channels" USING btree ("creator_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "channels_workspace_visibility_idx" ON "channels" USING btree ("workspace_id","visibility");--> statement-breakpoint
--- channels.revision is a change counter for watchers. Child-table triggers bump it; their
--- arguments name columns whose changes alone are invisible to other members (timestamps,
--- per-person read positions, run leases and heartbeats).
-CREATE OR REPLACE FUNCTION "channel_bump_revision"() RETURNS trigger LANGUAGE plpgsql AS $$
-BEGIN
-  IF TG_OP = 'UPDATE' AND (to_jsonb(NEW) - TG_ARGV) = (to_jsonb(OLD) - TG_ARGV) THEN
-    RETURN NULL;
-  END IF;
-  UPDATE "channels" SET "revision" = "revision" + 1
-  WHERE "id" = CASE WHEN TG_OP = 'DELETE' THEN OLD."channel_id" ELSE NEW."channel_id" END;
-  RETURN NULL;
-END;
-$$;--> statement-breakpoint
-CREATE OR REPLACE FUNCTION "channel_self_revision"() RETURNS trigger LANGUAGE plpgsql AS $$
-BEGIN
-  IF NEW."revision" = OLD."revision"
-    AND (to_jsonb(NEW) - 'updated_at') IS DISTINCT FROM (to_jsonb(OLD) - 'updated_at') THEN
-    NEW."revision" := OLD."revision" + 1;
-  END IF;
-  RETURN NEW;
-END;
-$$;--> statement-breakpoint
-DROP TRIGGER IF EXISTS "channels_revision" ON "channels";--> statement-breakpoint
-CREATE TRIGGER "channels_revision" BEFORE UPDATE ON "channels"
-  FOR EACH ROW EXECUTE FUNCTION "channel_self_revision"();--> statement-breakpoint
-DROP TRIGGER IF EXISTS "channel_members_revision" ON "channel_members";--> statement-breakpoint
-CREATE TRIGGER "channel_members_revision" AFTER INSERT OR UPDATE OR DELETE ON "channel_members"
-  FOR EACH ROW EXECUTE FUNCTION "channel_bump_revision"('updated_at', 'last_read_sequence');--> statement-breakpoint
-DROP TRIGGER IF EXISTS "channel_threads_revision" ON "channel_threads";--> statement-breakpoint
-CREATE TRIGGER "channel_threads_revision" AFTER INSERT OR UPDATE OR DELETE ON "channel_threads"
-  FOR EACH ROW EXECUTE FUNCTION "channel_bump_revision"('updated_at');--> statement-breakpoint
-DROP TRIGGER IF EXISTS "channel_messages_revision" ON "channel_messages";--> statement-breakpoint
-CREATE TRIGGER "channel_messages_revision" AFTER INSERT OR UPDATE OR DELETE ON "channel_messages"
-  FOR EACH ROW EXECUTE FUNCTION "channel_bump_revision"('updated_at');--> statement-breakpoint
-DROP TRIGGER IF EXISTS "channel_jobs_revision" ON "channel_jobs";--> statement-breakpoint
-CREATE TRIGGER "channel_jobs_revision" AFTER INSERT OR UPDATE OR DELETE ON "channel_jobs"
-  FOR EACH ROW EXECUTE FUNCTION "channel_bump_revision"('updated_at');--> statement-breakpoint
-DROP TRIGGER IF EXISTS "channel_runs_revision" ON "channel_runs";--> statement-breakpoint
-CREATE TRIGGER "channel_runs_revision" AFTER INSERT OR UPDATE OR DELETE ON "channel_runs"
-  FOR EACH ROW EXECUTE FUNCTION "channel_bump_revision"('updated_at', 'lease_owner', 'lease_expires_at', 'heartbeat_at');--> statement-breakpoint
-DROP TRIGGER IF EXISTS "channel_member_grants_revision" ON "channel_member_grants";--> statement-breakpoint
-CREATE TRIGGER "channel_member_grants_revision" AFTER INSERT OR UPDATE OR DELETE ON "channel_member_grants"
-  FOR EACH ROW EXECUTE FUNCTION "channel_bump_revision"('updated_at');
+CREATE INDEX IF NOT EXISTS "channels_workspace_visibility_idx" ON "channels" USING btree ("workspace_id","visibility");

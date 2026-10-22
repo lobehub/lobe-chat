@@ -43,14 +43,11 @@ import { workspaces } from './workspace';
  * Channel (LOBE-15104 §4): people and Agents in one shared conversation.
  *
  * Access is by membership, not by creator: a user reaches a channel only through an active
- * `channel_members` row. Every write serializes on the `channels` row lock.
+ * `channel_members` row. Every write first locks the `channels` row, then touches child rows,
+ * so writers always take locks in the same order.
  *
  * Child tables expose `unique (channel_id, id)` so composite foreign keys keep every
  * reference inside its own channel.
- *
- * `channels.revision` is maintained by the triggers in the `channel_revision` migration:
- * any change to the channel, its members, threads, messages, jobs, runs or grants bumps it,
- * and watchers compare it instead of reloading the channel.
  */
 export const channels = pgTable(
   'channels',
@@ -59,17 +56,22 @@ export const channels = pgTable(
       .primaryKey()
       .$defaultFn(() => idGenerator('channels'))
       .notNull(),
-    /** Who created the channel. Authorization reads the owner member, not this column. */
-    creatorId: text('creator_id')
-      .references(() => users.id, { onDelete: 'cascade' })
-      .notNull(),
+    /**
+     * Who created the channel. Authorization reads the owner member, not this column.
+     * NULL once that account is deleted: a workspace channel outlives its creator, while
+     * personal channels are deleted explicitly with the account (`UserModel.deleteUser`).
+     */
+    creatorId: text('creator_id').references(() => users.id, { onDelete: 'set null' }),
     /** NULL for a personal channel. */
     workspaceId: text('workspace_id').references(() => workspaces.id, { onDelete: 'cascade' }),
 
     title: text('title').notNull(),
     /** Last allocated message sequence; incremented under the row lock when a message lands. */
     sequence: integer('sequence').notNull().default(0),
-    /** Change counter for watchers; maintained by triggers, never written by the app. */
+    /**
+     * Change counter for watchers. Bumped once per committed channel write, in the same
+     * transaction that holds the row lock; watchers compare it instead of reloading.
+     */
     revision: integer('revision').notNull().default(0),
     archived: boolean('archived').notNull().default(false),
 
@@ -384,8 +386,9 @@ export const channelRuns = pgTable(
     writerReleased: boolean('writer_released').notNull().default(false),
     /**
      * Set when termination could not be confirmed in time (INC-049). Publication is revoked
-     * and the session retired so the member may run again; `writerReleased` and
-     * `physicalStopped` still mean physical confirmation only.
+     * and the session retired so the member may run again, though not in the same device
+     * directory until the stop is confirmed. `writerReleased` and `physicalStopped` still
+     * mean physical confirmation only.
      */
     isolatedAt: timestamptz('isolated_at'),
 
@@ -414,11 +417,15 @@ export const channelRuns = pgTable(
     uniqueIndex('channel_runs_active_member_unique')
       .on(t.memberId)
       .where(sql`${t.writerReleased} = false AND ${t.isolatedAt} IS NULL`),
-    /** At most one writer per device directory, across all channels. */
+    /**
+     * At most one writer per device directory, across all channels. Unlike the member lock,
+     * isolation does not release it: only physical stop confirmation proves the old process
+     * has left the directory.
+     */
     uniqueIndex('channel_runs_active_directory_unique')
       .on(t.deviceId, t.workingDirectory)
       .where(
-        sql`${t.deviceId} IS NOT NULL AND ${t.workingDirectory} IS NOT NULL AND ${t.writerReleased} = false AND ${t.isolatedAt} IS NULL`,
+        sql`${t.deviceId} IS NOT NULL AND ${t.workingDirectory} IS NOT NULL AND ${t.writerReleased} = false`,
       ),
     foreignKey({
       columns: [t.channelId, t.jobId],

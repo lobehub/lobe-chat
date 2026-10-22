@@ -1350,7 +1350,7 @@ table channel_threads {
 
 table channels {
   id text [pk, not null]
-  creator_id text [not null]
+  creator_id text
   workspace_id text
   title text [not null]
   sequence integer [not null, default: 0]

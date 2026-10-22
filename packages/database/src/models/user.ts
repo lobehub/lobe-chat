@@ -18,6 +18,7 @@ import { today } from '@/utils/time';
 import type { NewUser, UserItem, UserSettingsItem } from '../schemas';
 import {
   agents,
+  channels,
   chatGroups,
   goals,
   messages,
@@ -575,6 +576,12 @@ export class UserModel {
       await applyRemainingTimeout();
       // Purge share-visitor topics authored by this user under any creator.
       await tx.delete(topics).where(eq(topics.senderId, id));
+      await applyRemainingTimeout();
+      // Personal channels belong to this user alone. Workspace channels outlive their
+      // creator: the user cascade only clears `creator_id` and the member's `user_id`.
+      await tx
+        .delete(channels)
+        .where(and(eq(channels.creatorId, id), isNull(channels.workspaceId)));
       await applyRemainingTimeout();
       const result = await tx.delete(users).where(eq(users.id, id));
       if (deadline !== undefined && Date.now() >= deadline)

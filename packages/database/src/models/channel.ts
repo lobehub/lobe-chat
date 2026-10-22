@@ -1,5 +1,5 @@
 import type { ChannelMemberRole, ChannelVisibility } from '@lobechat/types';
-import { and, desc, eq, isNull } from 'drizzle-orm';
+import { and, desc, eq, isNull, sql } from 'drizzle-orm';
 
 import type { ChannelItem, ChannelMemberItem } from '../schemas';
 import { channelMembers, channels } from '../schemas';
@@ -35,7 +35,8 @@ export interface ChannelWriteOptions {
  *
  * A caller reaches a channel only through its own active human member row, in the current
  * scope (personal, or the given workspace). Every write runs inside `write`, which holds the
- * `channels` row lock so mutations of one channel serialize.
+ * `channels` row lock so mutations of one channel serialize, and bumps `channels.revision`
+ * once in the same transaction.
  */
 export class ChannelModel {
   private readonly workspaceId: string | null;
@@ -100,7 +101,7 @@ export class ChannelModel {
 
   /**
    * Runs `fn` while holding the channel row lock, after checking that the caller is an
-   * active member with at least `minRole` (default `member`).
+   * active member with at least `minRole` (default `member`), then bumps the revision.
    */
   write = async <T>(
     channelId: string,
@@ -108,24 +109,37 @@ export class ChannelModel {
     options: ChannelWriteOptions = {},
   ): Promise<T> =>
     this.db.transaction(async (tx) => {
-      const [row] = await tx
+      const [locked] = await tx
+        .select({ id: channels.id })
+        .from(channels)
+        .where(eq(channels.id, channelId))
+        .for('update');
+      if (!locked) throw new ChannelError('NOT_FOUND', 'Channel not found');
+
+      // Read membership only after the lock: a removal or demotion committed by the previous
+      // lock holder must be visible here, not the snapshot from before the wait.
+      const [access] = await tx
         .select({ channel: channels, member: channelMembers })
         .from(channels)
         .innerJoin(channelMembers, eq(channelMembers.channelId, channels.id))
         .where(and(eq(channels.id, channelId), this.membershipWhere()))
-        .limit(1)
-        .for('update', { of: channels });
-
-      if (!row) throw new ChannelError('NOT_FOUND', 'Channel not found');
+        .limit(1);
+      if (!access) throw new ChannelError('NOT_FOUND', 'Channel not found');
 
       const minRole = options.minRole ?? 'member';
-      const role = row.member.role ?? 'member';
+      const role = access.member.role ?? 'member';
       if (ROLE_RANK[role] < ROLE_RANK[minRole])
         throw new ChannelError('FORBIDDEN', `Requires the ${minRole} role in this channel`);
-      if (row.channel.archived && !options.allowArchived)
+      if (access.channel.archived && !options.allowArchived)
         throw new ChannelError('CONFLICT', 'Channel is archived');
 
-      return fn(tx, row);
+      const result = await fn(tx, access);
+      await tx
+        .update(channels)
+        .set({ revision: sql`${channels.revision} + 1` })
+        .where(eq(channels.id, channelId));
+
+      return result;
     });
 
   private membershipWhere() {

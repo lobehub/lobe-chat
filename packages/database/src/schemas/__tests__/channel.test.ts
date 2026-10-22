@@ -241,6 +241,24 @@ describe('channel schema', () => {
       const third = await createChannel('Third');
       await expect(createRun(third, 1)).resolves.toHaveLength(1);
     });
+
+    it('keeps the directory locked while an isolated run is still unconfirmed', async () => {
+      const first = await createChannel('First');
+      const second = await createChannel('Second');
+      const [run] = await createRun(first, 1);
+
+      await serverDB
+        .update(channelRuns)
+        .set({ isolatedAt: new Date() })
+        .where(eq(channelRuns.id, run.id));
+      await expect(createRun(second, 1)).rejects.toThrow();
+
+      await serverDB
+        .update(channelRuns)
+        .set({ physicalStopped: true, writerReleased: true })
+        .where(eq(channelRuns.id, run.id));
+      await expect(createRun(second, 2)).resolves.toHaveLength(1);
+    });
   });
 
   describe('grants', () => {
@@ -265,44 +283,19 @@ describe('channel schema', () => {
     });
   });
 
-  describe('revision triggers', () => {
-    it('bumps the revision on visible changes to the channel and its rows', async () => {
-      const { agent, channel, owner } = await createChannel();
-      const afterMembers = await revisionOf(channel.id);
-      expect(afterMembers).toBe(2);
-
-      await createMessage(channel.id, owner.id, 1);
-      expect(await revisionOf(channel.id)).toBe(afterMembers + 1);
-
-      await serverDB.update(channels).set({ title: 'Renamed' }).where(eq(channels.id, channel.id));
-      expect(await revisionOf(channel.id)).toBe(afterMembers + 2);
-
-      await serverDB
-        .update(channelMembers)
-        .set({ executionPaused: true })
-        .where(eq(channelMembers.id, agent.id));
-      expect(await revisionOf(channel.id)).toBe(afterMembers + 3);
-    });
-
-    it('ignores no-op updates, read positions and run heartbeats', async () => {
+  describe('channels', () => {
+    it('leaves the revision to the channel write path', async () => {
+      // Child writes must not lock the channel row behind the caller's back: a device
+      // receipt that locked a run first and the channel second would deadlock against
+      // a writer holding the channel lock.
       const fixture = await createChannel();
       const [run] = await createRun(fixture, 1);
-      const before = await revisionOf(fixture.channel.id);
-
-      await serverDB
-        .update(channels)
-        .set({ title: fixture.channel.title })
-        .where(eq(channels.id, fixture.channel.id));
-      await serverDB
-        .update(channelMembers)
-        .set({ lastReadSequence: 1 })
-        .where(eq(channelMembers.id, fixture.owner.id));
       await serverDB
         .update(channelRuns)
-        .set({ heartbeatAt: new Date(), leaseExpiresAt: new Date(), leaseOwner: 'worker-1' })
+        .set({ acceptance: 'accepted', status: 'running' })
         .where(eq(channelRuns.id, run.id));
 
-      expect(await revisionOf(fixture.channel.id)).toBe(before);
+      expect(await revisionOf(fixture.channel.id)).toBe(0);
     });
 
     it('deletes a channel with all of its rows', async () => {

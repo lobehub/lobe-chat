@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "94d008cf-a4bf-4cfd-a68b-c9ca7889cf21",
+  "id": "ef641912-ec44-46ae-b9e5-841150598b65",
   "policies": {},
   "prevId": "c99e72d2-93e1-4bcf-95c6-0ed39a86c5b8",
   "roles": {},
@@ -10810,7 +10810,7 @@
             }
           ],
           "isUnique": true,
-          "where": "\"channel_runs\".\"device_id\" IS NOT NULL AND \"channel_runs\".\"working_directory\" IS NOT NULL AND \"channel_runs\".\"writer_released\" = false AND \"channel_runs\".\"isolated_at\" IS NULL",
+          "where": "\"channel_runs\".\"device_id\" IS NOT NULL AND \"channel_runs\".\"working_directory\" IS NOT NULL AND \"channel_runs\".\"writer_released\" = false",
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -11261,7 +11261,7 @@
           "name": "creator_id",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "workspace_id": {
           "name": "workspace_id",
@@ -11363,7 +11363,7 @@
           "tableTo": "users",
           "columnsFrom": ["creator_id"],
           "columnsTo": ["id"],
-          "onDelete": "cascade",
+          "onDelete": "set null",
           "onUpdate": "no action"
         },
         "channels_workspace_id_workspaces_id_fk": {
