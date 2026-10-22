@@ -3595,6 +3595,11 @@ When I am ___, I need ___
     '💡 You can skip ahead; the analysis keeps running in the background',
   'workspace.onboarding.flow.learnYourTeam.error':
     "Couldn't finish the team analysis. Retry or skip for now.",
+  'workspace.onboarding.flow.learnYourTeam.budget.title':
+    'Not enough workspace credits for the team analysis',
+  'workspace.onboarding.flow.learnYourTeam.budget.desc':
+    "The team analysis uses this workspace's credits, and the balance can't cover it. Top up or upgrade the plan, then retry, or skip the analysis and finish the setup.",
+  'workspace.onboarding.flow.learnYourTeam.budget.skip': 'Skip analysis',
   'workspace.onboarding.flow.learnYourTeam.progress.review':
     'Reading team data from connected apps',
   'workspace.onboarding.flow.learnYourTeam.progress.build':
