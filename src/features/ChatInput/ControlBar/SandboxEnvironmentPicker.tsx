@@ -1,6 +1,6 @@
 'use client';
 
-import { Flexbox, Icon, Popover, Text } from '@lobehub/ui';
+import { Button, Flexbox, Icon, Popover, Text, toast } from '@lobehub/ui';
 import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
 import * as stylex from '@stylexjs/stylex';
 import { ChevronDownIcon, CircleSlashIcon, PackageIcon, SettingsIcon } from 'lucide-react';
@@ -15,7 +15,7 @@ import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 
 import OptionRow from './OptionRow';
-import { pickableEnvironments } from './sandboxEnvironmentOptions';
+import { environmentChipState, pickableEnvironments } from './sandboxEnvironmentOptions';
 import type { SandboxSelection } from './useSandboxPlacement';
 import { workingDirectoryChipStyles } from './workingDirectoryChipStyles';
 
@@ -82,7 +82,7 @@ const SandboxEnvironmentPicker = memo<SandboxEnvironmentPickerProps>(({ onChange
   const navigate = useWorkspaceAwareNavigate();
   const workspaceId = useActiveWorkspaceId();
 
-  const { data } = useSWR(['sandbox-environment-chip', workspaceId ?? ''], () =>
+  const { data, error, mutate } = useSWR(['sandbox-environment-chip', workspaceId ?? ''], () =>
     environmentService.listEnvironments(),
   );
   const sharedAgent = useAgentStore(
@@ -90,15 +90,25 @@ const SandboxEnvironmentPicker = memo<SandboxEnvironmentPickerProps>(({ onChange
   );
   const environments = pickableEnvironments(data?.environments ?? [], sharedAgent);
   const current = environments.find((environment) => environment.id === value.environmentId);
-  // Picked once but no longer readable — deleted, or unpublished by its owner.
-  // The run then starts without it, which the chip says rather than hides.
-  const missing = !!value.environmentId && !!data && !current;
+  // Picked once but no longer readable — deleted, or unpublished by its owner
+  // — is said rather than hidden; a list that has not loaded says nothing.
+  const state = environmentChipState({
+    current,
+    environmentId: value.environmentId,
+    failed: !!error,
+    loaded: !!data,
+  });
 
   const select = async (environmentId: string | undefined) => {
     setOpen(false);
-    // A legacy copy runs what its build made and is never initialized, so
-    // picking an environment leaves it for the folder it lives in.
-    await onChange({ ...value, environmentId, instanceId: undefined });
+    try {
+      // A legacy copy runs what its build made and is never initialized, so
+      // picking an environment leaves it for the folder it lives in.
+      await onChange({ ...value, environmentId, instanceId: undefined });
+    } catch {
+      // The topic kept its environment; said rather than left looking changed.
+      toast.error(t('sandboxEnvironment.saveFailed'));
+    }
   };
 
   const content = (
@@ -143,12 +153,29 @@ const SandboxEnvironmentPicker = memo<SandboxEnvironmentPickerProps>(({ onChange
       {data && environments.length === 0 && (
         <Text className={stylex.props(styles.hint).className}>{t('sandboxEnvironment.empty')}</Text>
       )}
+      {!data && error && (
+        <Flexbox horizontal align={'center'} gap={8} justify={'space-between'}>
+          <Text className={stylex.props(styles.hint).className} type={'danger'}>
+            {t('sandboxEnvironment.loadFailed')}
+          </Text>
+          <Button size={'small'} onClick={() => void mutate()}>
+            {t('sandboxEnvironment.retry')}
+          </Button>
+        </Flexbox>
+      )}
     </Flexbox>
   );
 
-  const label = missing
-    ? t('sandboxEnvironment.missing')
-    : (current?.name ?? t('sandboxEnvironment.none'));
+  const label =
+    state.kind === 'picked'
+      ? state.name
+      : state.kind === 'missing'
+        ? t('sandboxEnvironment.missing')
+        : state.kind === 'loading'
+          ? t('sandboxEnvironment.loading')
+          : state.kind === 'loadFailed'
+            ? t('sandboxEnvironment.loadFailed')
+            : t('sandboxEnvironment.none');
 
   // A plain div between the popover and the chip, as the device picker has:
   // the popover merges trigger props into its direct child.
