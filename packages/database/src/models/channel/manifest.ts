@@ -44,6 +44,10 @@ const rosterNames = async (tx: Transaction, channelId: string) => {
  * Input for one run, frozen at claim time. A Thread sees its own messages plus the main
  * channel up to its root. An existing session receives only what it has not accepted; a new
  * one gets the full snapshot. Later messages belong to the next run.
+ *
+ * The request itself is always included. A message Jev routed late can sit behind the
+ * session's cursor because the member already accepted newer ones; it arrived then only as
+ * context, and the run needs it as its task.
  */
 export const buildManifest = async (
   tx: Transaction,
@@ -77,6 +81,8 @@ export const buildManifest = async (
       ),
     )
     .orderBy(asc(channelMessages.sequence));
+  // The cutoff is the request's own sequence, so it always sorts last.
+  if (!visible.some((message) => message.id === request.id)) visible.push(request);
   const names = await rosterNames(tx, job.channelId);
 
   return {

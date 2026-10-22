@@ -3,13 +3,7 @@ import { eq, sql } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../../core/getTestDB';
-import {
-  channelJobs,
-  channelMemberGrants,
-  channelMessages,
-  channels,
-  channelSessions,
-} from '../../../schemas';
+import { channelJobs, channelMessages, channels, channelSessions } from '../../../schemas';
 import type { LobeChatDatabase } from '../../../type';
 import { ChannelExecutionModel } from '..';
 import { claimJob } from '../claim';
@@ -220,32 +214,48 @@ describe('ChannelExecutionModel', () => {
     },
   );
 
-  it('waits for the device owner to approve the environment', async () => {
-    const { agent, channel, job, member, ownerId } = {
-      ...(await mentionAgent()),
-      ownerId: fixture.ownerId,
-    };
-    const [grant] = await db
-      .insert(channelMemberGrants)
-      .values({
-        channelId: channel.id,
-        deviceId: 'device-1',
-        deviceOwnerId: ownerId,
-        environmentRevision: agent.environmentRevision,
-        memberId: agent.id,
-        requestedByMemberId: member.id,
-        workingDirectory: '/repo',
-      })
-      .returning();
+  it('fails the job when the writer ends without a reply', async () => {
+    const { channel, job } = await mentionAgent();
+    const run = (await execution.claim(channel.id, job.id, lease))!.run;
+    await execution.accepted(channel.id, run.id, run.fence, { nativeSessionId: 's' });
 
-    expect(await execution.claim(channel.id, job.id, lease)).toBeNull();
-    expect(await jobById(job.id)).toMatchObject({ blockedCode: 'device_approval_pending' });
+    await execution.releaseWriter(channel.id, run.id, run.fence);
 
-    await db
-      .update(channelMemberGrants)
-      .set({ status: 'approved' })
-      .where(eq(channelMemberGrants.id, grant.id));
-    expect(await execution.claim(channel.id, job.id, lease)).not.toBeNull();
+    expect(await runById(db, run.id)).toMatchObject({
+      publicationRevoked: true,
+      status: 'failed',
+      writerReleased: true,
+    });
+    expect((await jobById(job.id)).status).toBe('failed');
+  });
+
+  it('settles the job of an unknown execution without redelivering it', async () => {
+    const { channel, job } = await mentionAgent();
+    const run = (await execution.claim(channel.id, job.id, lease))!.run;
+    await execution.executionUnknown(channel.id, run.id, run.fence, 'receipt lost');
+
+    await execution.releaseWriter(channel.id, run.id, run.fence);
+
+    expect(await runById(db, run.id)).toMatchObject({
+      status: 'execution_unknown',
+      writerReleased: true,
+    });
+    expect((await jobById(job.id)).status).toBe('failed');
+  });
+
+  it('keeps an accepted draft publishable after the writer is released', async () => {
+    const { channel, job } = await mentionAgent();
+    const run = (await execution.claim(channel.id, job.id, lease))!.run;
+    await execution.accepted(channel.id, run.id, run.fence, { nativeSessionId: 's' });
+    await execution.saveDraft(channel.id, run.id, run.fence, 'Done');
+
+    await execution.releaseWriter(channel.id, run.id, run.fence);
+    expect(await runById(db, run.id)).toMatchObject({ status: 'running', writerReleased: true });
+    expect((await jobById(job.id)).status).toBe('running');
+
+    await execution.publish(channel.id, run.id, run.fence);
+    expect((await runById(db, run.id)).status).toBe('completed');
+    expect((await jobById(job.id)).status).toBe('completed');
   });
 
   it('refuses stale fences and archived channels', async () => {

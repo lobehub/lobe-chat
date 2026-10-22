@@ -1,7 +1,14 @@
 import type { ChannelMemberConfig, ChannelMemberRole } from '@lobechat/types';
 import { eq, inArray } from 'drizzle-orm';
 
-import { channelJobs, channelMembers, channelRuns, users, workspaces } from '../../../schemas';
+import {
+  channelJobs,
+  channelMembers,
+  channelRuns,
+  devices,
+  users,
+  workspaces,
+} from '../../../schemas';
 import type { LobeChatDatabase } from '../../../type';
 import { ChannelModel } from '..';
 
@@ -11,8 +18,14 @@ export const nativeConfig: ChannelMemberConfig = {
   runtime: 'native',
 };
 
-export const deviceConfig = (workingDirectory = '/repo'): ChannelMemberConfig => ({
-  deviceId: 'device-1',
+/** `device-1` is public in the fixture workspace; any other device id needs a grant. */
+export const deviceConfig = (
+  workingDirectory = '/repo',
+  deviceId = 'device-1',
+  deviceOwnerId?: string,
+): ChannelMemberConfig => ({
+  deviceId,
+  deviceOwnerId,
   model: 'gpt-5',
   provider: 'openai',
   runtime: 'codex',
@@ -39,6 +52,13 @@ export const createChannelFixture = (db: LobeChatDatabase, prefix: string) => {
     await db
       .insert(workspaces)
       .values({ id: workspaceId, name: 'Workspace', primaryOwnerId: ownerId, slug: workspaceId });
+    await db.insert(devices).values({
+      deviceId: 'device-1',
+      identitySource: 'fallback',
+      userId: ownerId,
+      visibility: 'public',
+      workspaceId,
+    });
   };
 
   const cleanup = async () => {

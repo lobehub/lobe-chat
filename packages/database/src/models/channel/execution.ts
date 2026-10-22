@@ -1,4 +1,5 @@
-import { and, eq, gt } from 'drizzle-orm';
+import type { ChannelRunStatus } from '@lobechat/types';
+import { and, eq, gt, inArray } from 'drizzle-orm';
 
 import type { ChannelRunItem } from '../../schemas';
 import { channelJobs, channelMembers, channelRuns, channelSessions } from '../../schemas';
@@ -12,7 +13,7 @@ import { resolveRouting } from './routing';
 import type { ChannelStopScope } from './stop';
 import { stopScope } from './stop';
 import { audit, withChannelLock } from './transaction';
-import { isolateWriter } from './writer';
+import { isolateWriter, OPEN_JOB_STATUSES } from './writer';
 
 /**
  * Run fence check under the channel lock. `fence` is publication authority; a revoked run
@@ -39,6 +40,35 @@ const fenced = async (
     throw new ChannelError('CONFLICT', 'Run authority was revoked');
 
   return run;
+};
+
+/**
+ * How a run ends once its writer is physically released.
+ *
+ * - Published: completed.
+ * - Failed or execution unknown: keeps its status; the job fails and nothing publishes.
+ *   An unknown execution is never redelivered.
+ * - Revoked (stopped or isolated): stopped; an open job is cancelled.
+ * - Accepted draft not yet published: unchanged, so a retried publish can still finish it.
+ * - Anything else ended without a reply: failed, job failed.
+ */
+export const releaseOutcome = (
+  run: ChannelRunItem,
+): {
+  error: string | null;
+  job?: 'cancelled' | 'failed';
+  revoke: boolean;
+  status: ChannelRunStatus;
+} => {
+  if (run.publishedMessageId) return { error: null, revoke: false, status: 'completed' };
+  if (run.status === 'failed' || run.status === 'execution_unknown')
+    return { error: run.error, job: 'failed', revoke: true, status: run.status };
+  if (run.publicationRevoked)
+    return { error: null, job: 'cancelled', revoke: true, status: 'stopped' };
+  if (run.acceptance === 'accepted' && run.draft !== null)
+    return { error: null, revoke: false, status: run.status };
+
+  return { error: 'The run ended without a reply', job: 'failed', revoke: true, status: 'failed' };
 };
 
 /**
@@ -145,7 +175,12 @@ export class ChannelExecutionModel {
       });
       await tx
         .update(channelRuns)
-        .set({ publicationStatus: 'published', publishedMessageId: reply.id })
+        .set({
+          publicationStatus: 'published',
+          publishedMessageId: reply.id,
+          // A writer released while its draft awaited publication finishes here.
+          ...(run.writerReleased && { status: 'completed' }),
+        })
         .where(eq(channelRuns.id, run.id));
       await tx
         .update(channelJobs)
@@ -159,21 +194,23 @@ export class ChannelExecutionModel {
   /**
    * Physical termination confirmed (process tree ended, or the native operation finished).
    * The only way to release a writer, and with it the member and the device directory.
+   * Settles the run and its job by how the run ended; see {@link releaseOutcome}.
    */
   releaseWriter = async (channelId: string, runId: string, fence: number) =>
     withChannelLock(this.db, channelId, async (tx) => {
       const run = await fenced(tx, channelId, runId, fence, true);
       if (run.writerReleased) return;
 
-      const failed = run.status === 'failed' || run.status === 'execution_unknown';
+      const outcome = releaseOutcome(run);
       await tx
         .update(channelRuns)
         .set({
           activity: null,
-          error: failed ? run.error : null,
+          error: outcome.error,
           leaseExpiresAt: null,
           leaseOwner: null,
-          status: failed ? run.status : run.publicationRevoked ? 'stopped' : 'completed',
+          publicationRevoked: outcome.revoke || run.publicationRevoked,
+          status: outcome.status,
           writerReleased: true,
           ...(run.executionConfig?.runtime === 'native' && {
             cleanupRequested: false,
@@ -181,7 +218,14 @@ export class ChannelExecutionModel {
           }),
         })
         .where(eq(channelRuns.id, run.id));
-      await audit(tx, channelId, 'writer_released', run.id);
+      if (outcome.job)
+        await tx
+          .update(channelJobs)
+          .set({ status: outcome.job })
+          .where(
+            and(eq(channelJobs.id, run.jobId), inArray(channelJobs.status, OPEN_JOB_STATUSES)),
+          );
+      await audit(tx, channelId, 'writer_released', run.id, { status: outcome.status });
     });
 
   /**

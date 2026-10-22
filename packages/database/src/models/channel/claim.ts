@@ -1,5 +1,5 @@
 import type { ChannelJobBlockCode } from '@lobechat/types';
-import { and, asc, eq, isNull, or } from 'drizzle-orm';
+import { and, asc, eq, isNotNull, isNull, or } from 'drizzle-orm';
 
 import type {
   ChannelItem,
@@ -15,6 +15,7 @@ import {
   channelMessages,
   channelRuns,
   channelSessions,
+  devices,
 } from '../../schemas';
 import type { Transaction } from '../../type';
 import { findThread } from './delivery';
@@ -64,13 +65,59 @@ const block = async (
   await audit(tx, job.channelId, 'job_blocked', job.id, { code, reason });
 };
 
-/** Why the member's environment cannot take this job, or undefined when it can. */
-const environmentBlock = async (
+/** Settles a job that must never run, e.g. its requester left or its environment changed. */
+const cancel = async (tx: Transaction, job: ChannelJobItem, reason: string) => {
+  await tx
+    .update(channelJobs)
+    .set({ blockedCode: null, blockedReason: null, status: 'cancelled' })
+    .where(eq(channelJobs.id, job.id));
+  await audit(tx, job.channelId, 'job_cancelled', job.id, { reason });
+};
+
+type Block = { code: ChannelJobBlockCode; reason: string };
+
+const APPROVAL_PENDING: Block = {
+  code: 'device_approval_pending',
+  reason: 'Waiting for the device owner to approve',
+};
+
+/**
+ * Whether the member may run on its device. Fails closed: outside a personal channel, a
+ * device that is not public in this workspace needs an approved grant for exactly the
+ * member's current device, directory and environment revision. A missing grant (never
+ * requested, or deleted with the owner's account) blocks like a pending one.
+ */
+const deviceBlock = async (
   tx: Transaction,
+  channel: ChannelItem,
   member: ChannelMemberItem,
-): Promise<{ code: ChannelJobBlockCode; reason: string } | undefined> => {
+): Promise<Block | undefined> => {
+  const { deviceId, deviceOwnerId, workingDirectory } = member.config ?? {};
+  if (workingDirectory && !deviceId)
+    return { code: 'unavailable', reason: 'A working directory requires a device' };
+  if (!deviceId) return;
+
+  if (!channel.workspaceId)
+    return deviceOwnerId && deviceOwnerId === channel.creatorId
+      ? undefined
+      : { code: 'unavailable', reason: 'The device does not belong to this channel owner' };
+
+  const [shared] = await tx
+    .select({ id: devices.id })
+    .from(devices)
+    .where(
+      and(
+        eq(devices.deviceId, deviceId),
+        eq(devices.workspaceId, channel.workspaceId),
+        eq(devices.visibility, 'public'),
+      ),
+    )
+    .limit(1);
+  if (shared) return;
+
+  if (!deviceOwnerId || !workingDirectory) return APPROVAL_PENDING;
   const [grant] = await tx
-    .select({ status: channelMemberGrants.status })
+    .select()
     .from(channelMemberGrants)
     .where(
       and(
@@ -78,14 +125,24 @@ const environmentBlock = async (
         eq(channelMemberGrants.environmentRevision, member.environmentRevision),
       ),
     );
-  if (grant?.status === 'pending')
-    return { code: 'device_approval_pending', reason: 'Waiting for the device owner to approve' };
-  if (grant && grant.status !== 'approved')
+  if (
+    !grant ||
+    grant.deviceId !== deviceId ||
+    grant.deviceOwnerId !== deviceOwnerId ||
+    grant.workingDirectory !== workingDirectory
+  )
+    return APPROVAL_PENDING;
+  if (grant.status === 'pending') return APPROVAL_PENDING;
+  if (grant.status !== 'approved')
     return { code: 'unavailable', reason: 'The device owner did not allow this environment' };
+};
 
+/** Another channel's live writer in the same device directory. */
+const directoryBlock = async (
+  tx: Transaction,
+  member: ChannelMemberItem,
+): Promise<Block | undefined> => {
   const { deviceId, workingDirectory } = member.config ?? {};
-  if (workingDirectory && !deviceId)
-    return { code: 'unavailable', reason: 'A working directory requires a device' };
   if (!deviceId || !workingDirectory) return;
 
   const [busy] = await tx
@@ -164,7 +221,33 @@ export const claimJob = async (
     .limit(1);
   if (busy) return null;
 
-  const blocked = await environmentBlock(tx, member);
+  const [request] = await tx
+    .select()
+    .from(channelMessages)
+    .where(eq(channelMessages.id, job.messageId));
+  // Queued before an environment switch: never run an old instruction in the new directory.
+  if (request.sequence <= member.environmentCutoff) {
+    await cancel(tx, job, 'environment_changed');
+    return null;
+  }
+  // The requester is the execution identity; without them there is nobody to run as.
+  const [requester] = await tx
+    .select({ id: channelMembers.id })
+    .from(channelMembers)
+    .where(
+      and(
+        eq(channelMembers.id, job.requesterMemberId),
+        eq(channelMembers.actorType, 'user'),
+        eq(channelMembers.active, true),
+        isNotNull(channelMembers.userId),
+      ),
+    );
+  if (!requester) {
+    await cancel(tx, job, 'requester_unavailable');
+    return null;
+  }
+
+  const blocked = (await deviceBlock(tx, channel, member)) ?? (await directoryBlock(tx, member));
   if (blocked) {
     await block(tx, job, blocked.code, blocked.reason);
     return null;
@@ -180,10 +263,6 @@ export const claimJob = async (
       target: [channelSessions.memberId, channelSessions.scope],
     })
     .returning();
-  const [request] = await tx
-    .select()
-    .from(channelMessages)
-    .where(eq(channelMessages.id, job.messageId));
   const manifest = await buildManifest(tx, { job, member, request, session, thread });
 
   const now = new Date();
