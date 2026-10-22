@@ -130,11 +130,11 @@ export const TaskTemplateCard = memo<TaskTemplateCardProps>(
 
     return (
       <Block
+        className={stylex.props(briefStyles.card, styles.card, stylex.defaultMarker()).className}
         gap={12}
         padding={12}
         style={{ borderRadius: cssVar.borderRadiusLG, cursor: 'pointer' }}
         variant={'outlined'}
-        className={stylex.props(briefStyles.card, styles.card, stylex.defaultMarker()).className}
         onClick={handleOpenDetail}
       >
         <Flexbox horizontal align={'center'} gap={16} justify={'space-between'}>

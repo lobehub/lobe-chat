@@ -34,12 +34,12 @@ export const TaskTemplateCardSkeleton = memo<TaskTemplateCardSkeletonProps>(
 
     return (
       <Block
+        className={stylex.props(briefStyles.card, styles.card, stylex.defaultMarker()).className}
         data-testid={'task-template-card-skeleton'}
         gap={12}
         padding={12}
         style={{ borderRadius: cssVar.borderRadiusLG }}
         variant={'outlined'}
-        className={stylex.props(briefStyles.card, styles.card, stylex.defaultMarker()).className}
       >
         <Flexbox horizontal align={'center'} gap={16} justify={'space-between'}>
           <Flexbox
