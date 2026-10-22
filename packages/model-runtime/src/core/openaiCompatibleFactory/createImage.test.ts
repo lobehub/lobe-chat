@@ -46,6 +46,29 @@ describe('createOpenAICompatibleImage', () => {
   });
 
   describe('chat model mode (model with :image suffix)', () => {
+    it('sends every imageUrls reference, since the :image schema declares only imageUrls', async () => {
+      vi.mocked(mockClient.chat.completions.create).mockResolvedValue({
+        choices: [{ message: { images: [{ image_url: { url: 'data:image/png;base64,out' } }] } }],
+      } as any);
+
+      const payload: CreateImagePayload = {
+        model: 'gemini-3.1-flash-image:image',
+        params: {
+          imageUrls: ['data:image/png;base64,first', 'data:image/jpeg;base64,second'],
+          prompt: 'Combine these',
+        },
+      };
+
+      await createOpenAICompatibleImage(mockClient, payload, 'openrouter');
+
+      const [request] = vi.mocked(mockClient.chat.completions.create).mock.calls[0];
+      expect((request as any).messages[0].content).toEqual([
+        { text: 'Combine these', type: 'text' },
+        { image_url: { url: 'data:image/png;base64,first' }, type: 'image_url' },
+        { image_url: { url: 'data:image/jpeg;base64,second' }, type: 'image_url' },
+      ]);
+    });
+
     describe('processImageUrlForChat function', () => {
       it('should process base64 data URI correctly', async () => {
         const mockImageUrl =

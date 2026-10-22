@@ -195,11 +195,18 @@ async function generateByChatModel(
     },
   ];
 
-  // Add image for editing mode if provided
-  if (params.imageUrl && params.imageUrl !== null) {
-    log('Processing image URL for editing mode: %s', params.imageUrl);
+  // `:image` models declare only `imageUrls` (CHAT_MODEL_IMAGE_GENERATION_PARAMS), so read both
+  // fields; `imageUrl` is kept for callers that still send a single reference.
+  const referenceUrls = [
+    ...new Set(
+      [params.imageUrl, ...(params.imageUrls ?? [])].filter((url): url is string => !!url),
+    ),
+  ];
+
+  for (const imageUrl of referenceUrls) {
+    log('Processing image URL for editing mode: %s', imageUrl);
     try {
-      const processedImageUrl = await processImageUrlForChat(params.imageUrl);
+      const processedImageUrl = await processImageUrlForChat(imageUrl);
       content.push({
         image_url: {
           url: processedImageUrl,
