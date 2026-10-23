@@ -3,7 +3,6 @@ import { Minimize2 } from 'lucide-react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { usePermission } from '@/hooks/usePermission';
 import { useChatStore } from '@/store/chat';
 
 import { useConversationStore } from '../store';
@@ -27,6 +26,12 @@ const COPY = {
 } as const;
 
 interface ExceededContextWindowErrorProps {
+  /**
+   * Whether the user may write to this conversation. Supplied by the error renderer so the
+   * card shares its retry gate (workspace permission plus `use` access to the agent or group);
+   * the compression route rejects anyone else.
+   */
+  canCompact: boolean;
   id: string;
   /** Parent user message of an assistant group, whose `id` is a nested content block. */
   parentId?: string;
@@ -34,9 +39,8 @@ interface ExceededContextWindowErrorProps {
 }
 
 const ExceededContextWindowError = memo<ExceededContextWindowErrorProps>(
-  ({ id, parentId: groupParentId, reason = 'exceededContext' }) => {
+  ({ canCompact, id, parentId: groupParentId, reason = 'exceededContext' }) => {
     const { t } = useTranslation('error');
-    const { allowed: canCreate } = usePermission('create_content');
 
     const context = useConversationStore((s) => s.context);
     const { disabled, loading, parentId, retryParentMessage } = useRetryParentMessage(
@@ -45,13 +49,13 @@ const ExceededContextWindowError = memo<ExceededContextWindowErrorProps>(
     );
 
     const handleCompact = useCallback(async () => {
-      if (!canCreate || !context.topicId) return;
+      if (!canCompact || !context.topicId) return;
 
       // Leave the failed turn out of the summary so it can be regenerated afterwards.
       await retryParentMessage(() =>
         useChatStore.getState().executeCompression(context, '', { beforeMessageId: parentId }),
       );
-    }, [canCreate, context, parentId, retryParentMessage]);
+    }, [canCompact, context, parentId, retryParentMessage]);
 
     return (
       <BaseErrorForm
@@ -60,7 +64,7 @@ const ExceededContextWindowError = memo<ExceededContextWindowErrorProps>(
         title={t(COPY[reason].title)}
         action={
           <Button
-            disabled={!canCreate || !context.topicId || disabled}
+            disabled={!canCompact || !context.topicId || disabled}
             loading={loading}
             type={'primary'}
             onClick={handleCompact}

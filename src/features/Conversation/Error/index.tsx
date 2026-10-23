@@ -589,12 +589,19 @@ const ErrorMessageExtra = memo<ErrorExtraProps>(
         }
 
         case AgentRuntimeErrorType.ExceededContextWindow: {
-          return <ExceededContextWindowError id={data.id} parentId={retryScopeId} />;
+          return (
+            <ExceededContextWindowError
+              canCompact={canCreate}
+              id={data.id}
+              parentId={retryScopeId}
+            />
+          );
         }
 
         case AgentRuntimeErrorType.RequestBodyTooLarge: {
           return (
             <ExceededContextWindowError
+              canCompact={canCreate}
               id={data.id}
               parentId={retryScopeId}
               reason={'requestBodyTooLarge'}
