@@ -201,6 +201,38 @@ describe('channel schema', () => {
       ).rejects.toThrow();
     });
 
+    it('rejects any field another actor type owns, and unknown actor types', async () => {
+      const { channel } = await createChannel();
+      const [source] = await serverDB.insert(agents).values({ userId: ownerId }).returning();
+      const expectCheckViolation = async (values: typeof channelMembers.$inferInsert) => {
+        const error = await serverDB
+          .insert(channelMembers)
+          .values(values)
+          .then(
+            () => undefined,
+            (caught: { cause?: { code?: string }; code?: string }) => caught,
+          );
+        expect(error?.cause?.code ?? error?.code).toBe('23514');
+      };
+      const person = { actorType: 'user', channelId: channel.id, role: 'member' } as const;
+      const agent = {
+        actorType: 'agent',
+        agentId: source.id,
+        channelId: channel.id,
+        config: agentConfig,
+        name: 'Agent',
+      } as const;
+
+      await expectCheckViolation({ ...person, agentId: source.id, userId: otherId });
+      await expectCheckViolation({ ...person, config: agentConfig, userId: otherId });
+      await expectCheckViolation({ ...agent, role: 'member' });
+      await expectCheckViolation({ ...agent, name: null });
+      await expectCheckViolation({
+        ...agent,
+        actorType: 'app' as typeof agent.actorType,
+      });
+    });
+
     it('lets a person join a channel only once', async () => {
       const { channel } = await createChannel();
 

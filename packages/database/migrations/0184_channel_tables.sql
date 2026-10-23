@@ -42,8 +42,13 @@ CREATE TABLE IF NOT EXISTS "channel_members" (
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "channel_members_scope_unique" UNIQUE("channel_id","id"),
-	CONSTRAINT "channel_members_actor_check" CHECK (("channel_members"."actor_type" = 'user' AND "channel_members"."role" IS NOT NULL AND "channel_members"."config" IS NULL AND "channel_members"."agent_id" IS NULL)
-        OR ("channel_members"."actor_type" = 'agent' AND "channel_members"."user_id" IS NULL AND "channel_members"."role" IS NULL AND "channel_members"."name" IS NOT NULL AND "channel_members"."config" IS NOT NULL))
+	CONSTRAINT "channel_members_actor_type_check" CHECK ("channel_members"."actor_type" IN ('user', 'agent')),
+	CONSTRAINT "channel_members_user_shape_check" CHECK ("channel_members"."actor_type" <> 'user' OR "channel_members"."role" IS NOT NULL),
+	CONSTRAINT "channel_members_agent_shape_check" CHECK ("channel_members"."actor_type" <> 'agent' OR ("channel_members"."name" IS NOT NULL AND "channel_members"."config" IS NOT NULL)),
+	CONSTRAINT "channel_members_user_id_owner_check" CHECK ("channel_members"."user_id" IS NULL OR "channel_members"."actor_type" = 'user'),
+	CONSTRAINT "channel_members_role_owner_check" CHECK ("channel_members"."role" IS NULL OR "channel_members"."actor_type" = 'user'),
+	CONSTRAINT "channel_members_agent_id_owner_check" CHECK ("channel_members"."agent_id" IS NULL OR "channel_members"."actor_type" = 'agent'),
+	CONSTRAINT "channel_members_config_owner_check" CHECK ("channel_members"."config" IS NULL OR "channel_members"."actor_type" <> 'user')
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "channels" (

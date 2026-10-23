@@ -130,10 +130,29 @@ export const channelMembers = pgTable(
       .where(sql`${t.userId} IS NOT NULL`),
     index('channel_members_user_id_idx').on(t.userId),
     index('channel_members_agent_id_idx').on(t.agentId),
+    // One constraint per rule, so a new actor type adds constraints instead of rewriting these.
+    check('channel_members_actor_type_check', sql`${t.actorType} IN ('user', 'agent')`),
     check(
-      'channel_members_actor_check',
-      sql`(${t.actorType} = 'user' AND ${t.role} IS NOT NULL AND ${t.config} IS NULL AND ${t.agentId} IS NULL)
-        OR (${t.actorType} = 'agent' AND ${t.userId} IS NULL AND ${t.role} IS NULL AND ${t.name} IS NOT NULL AND ${t.config} IS NOT NULL)`,
+      'channel_members_user_shape_check',
+      sql`${t.actorType} <> 'user' OR ${t.role} IS NOT NULL`,
+    ),
+    check(
+      'channel_members_agent_shape_check',
+      sql`${t.actorType} <> 'agent' OR (${t.name} IS NOT NULL AND ${t.config} IS NOT NULL)`,
+    ),
+    // Membership lookups match on `user_id`, so only a person may carry one.
+    check(
+      'channel_members_user_id_owner_check',
+      sql`${t.userId} IS NULL OR ${t.actorType} = 'user'`,
+    ),
+    check('channel_members_role_owner_check', sql`${t.role} IS NULL OR ${t.actorType} = 'user'`),
+    check(
+      'channel_members_agent_id_owner_check',
+      sql`${t.agentId} IS NULL OR ${t.actorType} = 'agent'`,
+    ),
+    check(
+      'channel_members_config_owner_check',
+      sql`${t.config} IS NULL OR ${t.actorType} <> 'user'`,
     ),
   ],
 );

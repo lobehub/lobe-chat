@@ -1258,6 +1258,12 @@ table channel_members {
     user_id [name: 'channel_members_user_id_idx']
     agent_id [name: 'channel_members_agent_id_idx']
     
+    
+    
+    
+    
+    
+    
   }
 }
 

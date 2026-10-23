@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "0f7fedc8-a0f0-4bab-ac27-d83f4a57415d",
+  "id": "b96ceba7-7595-4130-8be7-07bcd3b4b0fc",
   "policies": {},
   "prevId": "441054df-5d72-4ff2-b7fc-742c8cfb5db5",
   "roles": {},
@@ -10684,9 +10684,33 @@
       },
       "policies": {},
       "checkConstraints": {
-        "channel_members_actor_check": {
-          "name": "channel_members_actor_check",
-          "value": "(\"channel_members\".\"actor_type\" = 'user' AND \"channel_members\".\"role\" IS NOT NULL AND \"channel_members\".\"config\" IS NULL AND \"channel_members\".\"agent_id\" IS NULL)\n        OR (\"channel_members\".\"actor_type\" = 'agent' AND \"channel_members\".\"user_id\" IS NULL AND \"channel_members\".\"role\" IS NULL AND \"channel_members\".\"name\" IS NOT NULL AND \"channel_members\".\"config\" IS NOT NULL)"
+        "channel_members_actor_type_check": {
+          "name": "channel_members_actor_type_check",
+          "value": "\"channel_members\".\"actor_type\" IN ('user', 'agent')"
+        },
+        "channel_members_user_shape_check": {
+          "name": "channel_members_user_shape_check",
+          "value": "\"channel_members\".\"actor_type\" <> 'user' OR \"channel_members\".\"role\" IS NOT NULL"
+        },
+        "channel_members_agent_shape_check": {
+          "name": "channel_members_agent_shape_check",
+          "value": "\"channel_members\".\"actor_type\" <> 'agent' OR (\"channel_members\".\"name\" IS NOT NULL AND \"channel_members\".\"config\" IS NOT NULL)"
+        },
+        "channel_members_user_id_owner_check": {
+          "name": "channel_members_user_id_owner_check",
+          "value": "\"channel_members\".\"user_id\" IS NULL OR \"channel_members\".\"actor_type\" = 'user'"
+        },
+        "channel_members_role_owner_check": {
+          "name": "channel_members_role_owner_check",
+          "value": "\"channel_members\".\"role\" IS NULL OR \"channel_members\".\"actor_type\" = 'user'"
+        },
+        "channel_members_agent_id_owner_check": {
+          "name": "channel_members_agent_id_owner_check",
+          "value": "\"channel_members\".\"agent_id\" IS NULL OR \"channel_members\".\"actor_type\" = 'agent'"
+        },
+        "channel_members_config_owner_check": {
+          "name": "channel_members_config_owner_check",
+          "value": "\"channel_members\".\"config\" IS NULL OR \"channel_members\".\"actor_type\" <> 'user'"
         }
       },
       "isRLSEnabled": false

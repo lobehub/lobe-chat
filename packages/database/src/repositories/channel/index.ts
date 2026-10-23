@@ -177,6 +177,7 @@ export class ChannelRepository {
 
   private membershipWhere() {
     return and(
+      eq(channelMembers.actorType, 'user'),
       eq(channelMembers.userId, this.userId),
       eq(channelMembers.active, true),
       this.workspaceId ? eq(channels.workspaceId, this.workspaceId) : isNull(channels.workspaceId),
