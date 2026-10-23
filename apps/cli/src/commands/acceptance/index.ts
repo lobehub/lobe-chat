@@ -11,6 +11,7 @@ import { getTrpcClient } from '../../api/client';
 import { resolveServerUrl } from '../../settings';
 import { outputJson, printTable, timeAgo, truncate } from '../../utils/format';
 import { log } from '../../utils/logger';
+import { resolveUrlBuilder, resourcePath, withUrl, withUrls } from '../resourceUrl';
 import { collectCommentFeedback } from './commentFeedback';
 import { attachCriterionCommands } from './criterion';
 import { attachAcceptanceFlowCommands } from './flow';
@@ -246,7 +247,12 @@ export function registerAcceptanceCommands(parent: Command, options?: { deprecat
       const items = await client.acceptance.list.query();
 
       if (options.json !== undefined) {
-        outputJson(items, typeof options.json === 'string' ? options.json : undefined);
+        outputJson(
+          withUrls(items, await resolveUrlBuilder(client), (item: any) =>
+            resourcePath.acceptance(item.id),
+          ),
+          typeof options.json === 'string' ? options.json : undefined,
+        );
         return;
       }
       if (items.length === 0) {
@@ -275,7 +281,10 @@ export function registerAcceptanceCommands(parent: Command, options?: { deprecat
       const bundle = await client.acceptance.getBundle.query({ id });
 
       if (options.json !== undefined) {
-        outputJson(bundle, typeof options.json === 'string' ? options.json : undefined);
+        outputJson(
+          withUrl(bundle, await resolveUrlBuilder(client), resourcePath.acceptance(id)),
+          typeof options.json === 'string' ? options.json : undefined,
+        );
         return;
       }
 
@@ -574,7 +583,10 @@ export function registerAcceptanceCommands(parent: Command, options?: { deprecat
       const client = await getTrpcClient();
       const result = await client.acceptance.setPreviewUrl.mutate({ id, url });
       if (options.json !== undefined) {
-        outputJson(result, typeof options.json === 'string' ? options.json : undefined);
+        outputJson(
+          withUrl(result, await resolveUrlBuilder(client), resourcePath.acceptance(id)),
+          typeof options.json === 'string' ? options.json : undefined,
+        );
         return;
       }
       console.log(`${pc.green('✓')} r${result.roundIndex} preview: ${result.previewUrl}`);
@@ -616,7 +628,10 @@ export function registerAcceptanceCommands(parent: Command, options?: { deprecat
           url,
         });
         if (options.json !== undefined) {
-          outputJson(linked, typeof options.json === 'string' ? options.json : undefined);
+          outputJson(
+            withUrl(linked, await resolveUrlBuilder(client), resourcePath.acceptance(id)),
+            typeof options.json === 'string' ? options.json : undefined,
+          );
           return;
         }
         console.log(
@@ -636,7 +651,10 @@ export function registerAcceptanceCommands(parent: Command, options?: { deprecat
       const result = await client.acceptance.accept.mutate({ comment: options.comment, id });
 
       if (options.json !== undefined) {
-        outputJson(result, typeof options.json === 'string' ? options.json : undefined);
+        outputJson(
+          withUrl(result, await resolveUrlBuilder(client), resourcePath.acceptance(id)),
+          typeof options.json === 'string' ? options.json : undefined,
+        );
         return;
       }
       console.log(`${pc.green('✓')} Delivery accepted (${result.id})`);
@@ -653,7 +671,10 @@ export function registerAcceptanceCommands(parent: Command, options?: { deprecat
       const result = await client.acceptance.reject.mutate({ comment: options.comment, id });
 
       if (options.json !== undefined) {
-        outputJson(result, typeof options.json === 'string' ? options.json : undefined);
+        outputJson(
+          withUrl(result, await resolveUrlBuilder(client), resourcePath.acceptance(id)),
+          typeof options.json === 'string' ? options.json : undefined,
+        );
         return;
       }
       console.log(`${pc.red('✗')} Delivery rejected (${result.id}) — next round re-opens it`);

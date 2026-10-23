@@ -8,6 +8,7 @@ import { outputJson } from '../../utils/format';
 import { log } from '../../utils/logger';
 import { followAgentRun } from '../agent/followRun';
 import { pollAgentRunStatus, RUN_POLL_INTERVAL_MS } from '../agent/runStatus';
+import { resolveUrlBuilder, resourcePath } from '../resourceUrl';
 
 type LifecycleClient = Awaited<ReturnType<typeof getTrpcClient>>;
 
@@ -204,7 +205,9 @@ export function registerLifecycleCommands(task: Command) {
 
           const operationId = result.operationId;
           if (!shouldFollow && options.json) {
+            const toUrl = await resolveUrlBuilder(client);
             outputJson({
+              taskUrl: toUrl(resourcePath.task({ identifier: result.taskIdentifier })),
               autoStarted: result.autoStarted,
               operationId,
               status: result.status,
