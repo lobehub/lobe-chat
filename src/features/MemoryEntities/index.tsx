@@ -10,8 +10,8 @@ import { lastTouchedOf } from './derive';
 import EntityList from './EntityList';
 import EntityPage from './EntityPage';
 import { ErrorState, FirstRunState, LoadingState } from './states';
-import { useEntityViewStore } from './store';
 import { useEntityData } from './useEntityData';
+import { useSelection } from './useSelection';
 
 const styles = stylex.create({
   root: { display: 'flex', height: '100%', width: '100%' },
@@ -23,7 +23,7 @@ const styles = stylex.create({
  */
 const MemoryEntities = memo(() => {
   const data = useEntityData();
-  const selectedId = useEntityViewStore((s) => s.selectedId);
+  const { selectedId } = useSelection();
 
   // Nothing picked yet (or the pick was deleted): open the page that moved most recently.
   const entity = useMemo(() => {

@@ -13,8 +13,8 @@ import { memo } from 'react';
 import KindIcon from '../components/KindIcon';
 import { useEntityDataContext } from '../context';
 import { KIND_META, statusLabelOf } from '../kinds';
-import { useEntityViewStore } from '../store';
 import { type MemoryEntity } from '../types';
+import { useSelection } from '../useSelection';
 
 const styles = stylex.create({
   root: { display: 'flex', flexDirection: 'column', gap: '16px' },
@@ -60,10 +60,8 @@ interface HeaderProps {
 
 const Header = memo<HeaderProps>(({ entity }) => {
   const { entities, remove, setStatus } = useEntityDataContext();
-  const backId = useEntityViewStore((s) => s.history.at(-1));
-  const back = useEntityViewStore((s) => s.back);
-  const select = useEntityViewStore((s) => s.select);
-  const ensureSelected = useEntityViewStore((s) => s.ensureSelected);
+  const { back, ensureSelected, history, select } = useSelection();
+  const backId = history.at(-1);
   const backTo = entities.find((e) => e.id === backId);
   const statusLabel = statusLabelOf(entity.statusValue);
   // The free-text type is shown when it says more than the kind it was folded into.

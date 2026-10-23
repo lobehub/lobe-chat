@@ -7,8 +7,8 @@ import Avatar from '@/components/Avatar';
 import KindIcon from '../components/KindIcon';
 import { useEntityDataContext } from '../context';
 import { KIND_META } from '../kinds';
-import { useEntityViewStore } from '../store';
 import { type MemoryEntity } from '../types';
+import { useSelection } from '../useSelection';
 import Section from './Section';
 
 const styles = stylex.create({
@@ -77,7 +77,7 @@ interface RelatedProps {
 
 const Related = memo<RelatedProps>(({ entity }) => {
   const { entities, links } = useEntityDataContext();
-  const open = useEntityViewStore((s) => s.open);
+  const { open } = useSelection();
   const typeOf = new Map(entity.names.map((n) => [n.name.toLowerCase(), n.type]));
   const mentioned = (links?.mentions.get(entity.id) ?? [])
     .filter((name) => name !== entity.title)

@@ -7,8 +7,8 @@ import { memo, useMemo, useState } from 'react';
 import { useEntityDataContext } from '../context';
 import { lastTouchedOf } from '../derive';
 import { CONTEXT_KINDS, KIND_META } from '../kinds';
-import { useEntityViewStore } from '../store';
 import { type MemoryEntity } from '../types';
+import { useSelection } from '../useSelection';
 import ListItem from './ListItem';
 
 const styles = stylex.create({
@@ -65,8 +65,7 @@ const matches = (entity: MemoryEntity, keyword: string) =>
 const EntityList = memo(() => {
   const [keyword, setKeyword] = useState('');
   const { entities: contexts, links, truncated } = useEntityDataContext();
-  const selectedId = useEntityViewStore((s) => s.selectedId);
-  const select = useEntityViewStore((s) => s.select);
+  const { select, selectedId } = useSelection();
 
   const groups = useMemo(() => {
     const needle = keyword.trim().toLowerCase();
