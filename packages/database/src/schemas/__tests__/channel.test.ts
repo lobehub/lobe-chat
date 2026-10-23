@@ -17,6 +17,7 @@ import {
   files,
   messages,
   messagesFiles,
+  projects,
   topics,
   users,
   workspaces,
@@ -390,6 +391,37 @@ describe('channel schema', () => {
   });
 
   describe('channels', () => {
+    it('validates project associations and preserves history when the project is deleted', async () => {
+      const { channel, owner } = await createChannel();
+      expect(channel.projectId).toBeNull();
+      const message = await createMessage(channel.id, owner.id, 1);
+      await expect(
+        serverDB
+          .update(channels)
+          .set({ projectId: 'prj_missing' })
+          .where(eq(channels.id, channel.id)),
+      ).rejects.toThrow();
+
+      const [project] = await serverDB
+        .insert(projects)
+        .values({ name: 'Channel project', userId: ownerId, workspaceId })
+        .returning();
+      const [linked] = await serverDB
+        .update(channels)
+        .set({ projectId: project.id })
+        .where(eq(channels.id, channel.id))
+        .returning();
+      expect(linked.projectId).toBe(project.id);
+
+      await serverDB.delete(projects).where(eq(projects.id, project.id));
+
+      const [kept] = await serverDB.select().from(channels).where(eq(channels.id, channel.id));
+      expect(kept).toMatchObject({ id: channel.id, projectId: null, userId: ownerId, workspaceId });
+      expect(
+        await serverDB.select().from(channelMessages).where(eq(channelMessages.id, message.id)),
+      ).toHaveLength(1);
+    });
+
     it('leaves the revision to the channel write path', async () => {
       // Child writes must not lock the channel row behind the caller's back: a device
       // receipt that locked a run first and the channel second would deadlock against

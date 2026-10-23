@@ -1404,6 +1404,7 @@ table channels {
   id text [pk, not null]
   user_id text
   workspace_id text
+  project_id text
   title text [not null]
   sequence integer [not null, default: 0]
   revision integer [not null, default: 0]
@@ -1414,6 +1415,7 @@ table channels {
 
   indexes {
     user_id [name: 'channels_user_id_idx']
+    project_id [name: 'channels_project_id_idx']
     (workspace_id, visibility) [name: 'channels_workspace_visibility_idx']
   }
 }

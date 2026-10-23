@@ -38,6 +38,7 @@ import { createdAt, timestamptz, updatedAt } from './_helpers';
 import { agents } from './agent';
 import { agentOperations } from './agentOperations';
 import { messages } from './message';
+import { projects } from './project';
 import { topics } from './topic';
 import { users } from './user';
 import { workspaces } from './workspace';
@@ -67,6 +68,8 @@ export const channels = pgTable(
     userId: text('user_id').references(() => users.id, { onDelete: 'set null' }),
     /** NULL for a personal channel. */
     workspaceId: text('workspace_id').references(() => workspaces.id, { onDelete: 'cascade' }),
+    /** Optional project association; deleting the project preserves the channel. */
+    projectId: text('project_id').references(() => projects.id, { onDelete: 'set null' }),
 
     title: text('title').notNull(),
     /** Last allocated message sequence; incremented under the row lock when a message lands. */
@@ -88,6 +91,9 @@ export const channels = pgTable(
   },
   (t) => [
     index('channels_user_id_idx').on(t.userId),
+    index('channels_project_id_idx')
+      .on(t.projectId)
+      .where(sql`${t.projectId} IS NOT NULL`),
     index('channels_workspace_visibility_idx').on(t.workspaceId, t.visibility),
   ],
 );

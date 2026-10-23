@@ -146,6 +146,7 @@ CREATE TABLE IF NOT EXISTS "channels" (
 	"id" text PRIMARY KEY NOT NULL,
 	"user_id" text,
 	"workspace_id" text,
+	"project_id" text,
 	"title" text NOT NULL,
 	"sequence" integer DEFAULT 0 NOT NULL,
 	"revision" integer DEFAULT 0 NOT NULL,
@@ -222,6 +223,8 @@ ALTER TABLE "channels" DROP CONSTRAINT IF EXISTS "channels_user_id_users_id_fk";
 ALTER TABLE "channels" ADD CONSTRAINT "channels_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "channels" DROP CONSTRAINT IF EXISTS "channels_workspace_id_workspaces_id_fk";--> statement-breakpoint
 ALTER TABLE "channels" ADD CONSTRAINT "channels_workspace_id_workspaces_id_fk" FOREIGN KEY ("workspace_id") REFERENCES "public"."workspaces"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "channels" DROP CONSTRAINT IF EXISTS "channels_project_id_projects_id_fk";--> statement-breakpoint
+ALTER TABLE "channels" ADD CONSTRAINT "channels_project_id_projects_id_fk" FOREIGN KEY ("project_id") REFERENCES "public"."projects"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "channel_audit_channel_event_idx" ON "channel_audit" USING btree ("channel_id","event","created_at");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "channel_audit_target_event_idx" ON "channel_audit" USING btree ("target_id","event","created_at");--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "channel_jobs_delivery_unique" ON "channel_jobs" USING btree ("message_id","member_id","delivery_key");--> statement-breakpoint
@@ -246,6 +249,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS "channel_runs_active_directory_unique" ON "cha
 CREATE UNIQUE INDEX IF NOT EXISTS "channel_sessions_member_scope_unique" ON "channel_sessions" USING btree ("member_id","scope");--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "channel_threads_root_unique" ON "channel_threads" USING btree ("channel_id","root_message_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "channels_user_id_idx" ON "channels" USING btree ("user_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "channels_project_id_idx" ON "channels" USING btree ("project_id") WHERE "channels"."project_id" IS NOT NULL;--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "channels_workspace_visibility_idx" ON "channels" USING btree ("workspace_id","visibility");--> statement-breakpoint
 ALTER TABLE "agent_operations" DROP CONSTRAINT IF EXISTS "agent_operations_channel_id_channels_id_fk";--> statement-breakpoint
 ALTER TABLE "agent_operations" ADD CONSTRAINT "agent_operations_channel_id_channels_id_fk" FOREIGN KEY ("channel_id") REFERENCES "public"."channels"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint

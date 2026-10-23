@@ -23,6 +23,8 @@ A principal/environment change, missing topic, or quarantine starts a fresh gene
 accepted input advances the cursor; rejected or unknown submissions never silently consume it.
 
 Channels use `user_id` alongside `workspace_id`; authorization still uses membership.
+The optional `project_id` references `projects.id` and is cleared on project deletion,
+preserving the channel and its history. Project association does not grant Channel access.
 Member IDs and all relational member references are UUIDs. Agent membership references
 `agents.id` through nullable `agent_id`, not `config.agentId`; deleting an Agent clears the
 reference without deleting its member or public history. Human members cannot carry `agent_id`.
