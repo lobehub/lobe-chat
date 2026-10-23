@@ -307,6 +307,7 @@ export default {
   'settings.members': 'Members',
   'overview.createTask': 'Create task',
   'overview.createTaskFailed': 'Could not create the task',
+  'overview.messageNotSent': 'The message was not sent. Your draft has been kept.',
   'overview.mode.chat': 'Chat',
   'overview.mode.task': 'Task',
   'overview.sendFailed': 'Could not create the topic',

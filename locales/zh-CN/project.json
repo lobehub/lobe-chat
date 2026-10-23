@@ -164,6 +164,7 @@
   "overview.goalSummary": "项目目标",
   "overview.goalsEmpty": "添加目标后，可以在这里持续查看项目进度。",
   "overview.latestWorks": "最新产物",
+  "overview.messageNotSent": "消息没有发出，草稿已保留。",
   "overview.mode.chat": "对话",
   "overview.mode.task": "任务",
   "overview.needsAttention": "需要你处理",

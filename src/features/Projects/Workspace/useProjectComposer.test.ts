@@ -8,6 +8,7 @@ import type { ProjectDetail } from '@/store/project';
 
 import {
   AttachmentsNotReadyError,
+  MessageNotAcceptedError,
   toConversationTitle,
   useProjectComposer,
 } from './useProjectComposer';
@@ -21,7 +22,18 @@ const mocks = vi.hoisted(() => ({
   getAgentConfigById: vi.fn(),
   internal_dispatchAgentMap: vi.fn(),
   navigate: vi.fn(),
+  refreshProjectTopics: vi.fn(),
+  removeTopic: vi.fn(),
   sendMessage: vi.fn(),
+  workspaceSlug: null as string | null,
+}));
+
+vi.mock('@/business/client/hooks/useActiveWorkspaceSlug', () => ({
+  useActiveWorkspaceSlug: () => mocks.workspaceSlug,
+}));
+
+vi.mock('@/services/topic', () => ({
+  topicService: { removeTopic: mocks.removeTopic },
 }));
 
 vi.mock('@/features/Workspace/useWorkspaceAwareNavigate', () => ({
@@ -30,7 +42,10 @@ vi.mock('@/features/Workspace/useWorkspaceAwareNavigate', () => ({
 
 vi.mock('@/store/projectWorkingDirectory', () => ({
   useProjectDirectoryStore: (selector: (state: unknown) => unknown) =>
-    selector({ createProjectTopic: mocks.createProjectTopic }),
+    selector({
+      createProjectTopic: mocks.createProjectTopic,
+      refreshProjectTopics: mocks.refreshProjectTopics,
+    }),
 }));
 
 vi.mock('@/store/task', () => ({
@@ -98,6 +113,13 @@ describe('useProjectComposer', () => {
     vi.clearAllMocks();
     mocks.agentMap = { coordinator: {} };
     mocks.fileList = [];
+    mocks.workspaceSlug = null;
+    mocks.removeTopic.mockResolvedValue(undefined);
+    // The conversation takes the message, then the run goes on in the background.
+    mocks.sendMessage.mockImplementation(({ onMessageAccepted }) => {
+      onMessageAccepted?.();
+      return new Promise(() => {});
+    });
   });
 
   /**
@@ -126,6 +148,7 @@ describe('useProjectComposer', () => {
       files: [image],
       inputEditor: null,
       message: 'Plan the next milestone\nwith details',
+      onMessageAccepted: expect.any(Function),
     });
     expect(mocks.navigate).toHaveBeenCalledWith('/project/apollo/conversation/tpc_1');
     expect(input.clearContent).toHaveBeenCalled();
@@ -160,6 +183,60 @@ describe('useProjectComposer', () => {
 
     expect(mocks.createTask).toHaveBeenCalledWith(
       expect.objectContaining({ assigneeAgentId: 'reviewer', projectId: 'prj_1' }),
+    );
+  });
+
+  /**
+   * @example Codex review: a preflight rejection was fire-and-forget while the
+   * composer cleared itself and navigated, so the draft and attachments were lost.
+   */
+  it('keeps the draft and drops the empty topic when the send is refused before acceptance', async () => {
+    mocks.createProjectTopic.mockResolvedValue({ id: 'tpc_1' });
+    mocks.fileList = [image];
+    mocks.sendMessage.mockRejectedValue(new Error('device offline'));
+    const { result } = renderHook(() => useProjectComposer(project, 'chat', 'coordinator'));
+    const input = composer('Hello');
+
+    await act(async () => {
+      await expect(result.current.send(input)).rejects.toBeInstanceOf(MessageNotAcceptedError);
+    });
+
+    expect(input.clearContent).not.toHaveBeenCalled();
+    expect(mocks.clearChatUploadFileList).not.toHaveBeenCalled();
+    expect(mocks.navigate).not.toHaveBeenCalled();
+    expect(mocks.removeTopic).toHaveBeenCalledWith('tpc_1');
+    expect(mocks.refreshProjectTopics).toHaveBeenCalledWith('prj_1');
+    expect(result.current.sending).toBe(false);
+  });
+
+  it('treats a send that resolves without accepting the message as refused', async () => {
+    mocks.createProjectTopic.mockResolvedValue({ id: 'tpc_1' });
+    mocks.sendMessage.mockResolvedValue(undefined);
+    const { result } = renderHook(() => useProjectComposer(project, 'chat', 'coordinator'));
+    const input = composer('Hello');
+
+    await act(async () => {
+      await expect(result.current.send(input)).rejects.toBeInstanceOf(MessageNotAcceptedError);
+    });
+
+    expect(input.clearContent).not.toHaveBeenCalled();
+    expect(mocks.navigate).not.toHaveBeenCalled();
+  });
+
+  /** @example Codex review: desktop notifications from these sends linked outside the workspace. */
+  it('sends with the active workspace so its links stay inside it', async () => {
+    mocks.workspaceSlug = 'acme';
+    mocks.createProjectTopic.mockResolvedValue({ id: 'tpc_1' });
+    const { result } = renderHook(() => useProjectComposer(project, 'chat', 'coordinator'));
+
+    await act(async () => {
+      await result.current.send(composer('Hello'));
+    });
+
+    expect(mocks.sendMessage).toHaveBeenCalledWith(
+      expect.objectContaining({
+        context: { agentId: 'coordinator', topicId: 'tpc_1', workspaceSlug: 'acme' },
+      }),
     );
   });
 

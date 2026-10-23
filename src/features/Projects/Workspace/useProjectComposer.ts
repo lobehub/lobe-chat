@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { useActiveWorkspaceSlug } from '@/business/client/hooks/useActiveWorkspaceSlug';
 import { taskDetailPath } from '@/features/AgentTasks/shared/taskDetailPath';
 import type { SendButtonHandler } from '@/features/ChatInput/store/initialState';
 import { appendTaskAttachments } from '@/features/Home/InputArea/taskAttachments';
@@ -7,6 +8,7 @@ import { taskNameFromMessage } from '@/features/Home/InputArea/taskName';
 import { getProjectConversationPath } from '@/features/Projects/Layout/navigation';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { agentService } from '@/services/agent';
+import { topicService } from '@/services/topic';
 import { useAgentStore } from '@/store/agent';
 import { useChatStore } from '@/store/chat';
 import { fileChatSelectors, useFileStore } from '@/store/file';
@@ -44,6 +46,14 @@ export class AttachmentsNotReadyError extends Error {
   }
 }
 
+/** The send was refused before the message reached the conversation; the draft stays. */
+export class MessageNotAcceptedError extends Error {
+  constructor() {
+    super('The message was not accepted');
+    this.name = 'MessageNotAcceptedError';
+  }
+}
+
 export const useProjectComposer = (
   project: ProjectDetail['project'],
   mode: ProjectComposerMode,
@@ -51,7 +61,9 @@ export const useProjectComposer = (
   agentId: string,
 ) => {
   const navigate = useWorkspaceAwareNavigate();
+  const workspaceSlug = useActiveWorkspaceSlug();
   const createProjectTopic = useProjectDirectoryStore((s) => s.createProjectTopic);
+  const refreshProjectTopics = useProjectDirectoryStore((s) => s.refreshProjectTopics);
   const createTask = useTaskStore((s) => s.createTask);
   const sendMessage = useChatStore((s) => s.sendMessage);
   const clearChatUploadFileList = useFileStore((s) => s.clearChatUploadFileList);
@@ -92,15 +104,36 @@ export const useProjectComposer = (
         createProjectTopic({ agentId, projectId: project.id, title }),
         ensureAgentConfigLoaded(agentId),
       ]);
-      void sendMessage({
-        context: { agentId, topicId: topic.id },
-        editorData,
-        files,
-        // This composer is gone once the conversation opens; a failed send is
-        // shown on the message there instead of restored into this editor.
-        inputEditor: null,
-        message,
+      // Leave the composer only once the conversation owns the message. A send
+      // refused before that (access, device or preflight checks) either rejects
+      // or resolves without accepting, and with `inputEditor: null` nothing
+      // would put the draft back — so it stays here until then.
+      const accepted = await new Promise<boolean>((resolve) => {
+        sendMessage({
+          context: { agentId, topicId: topic.id, ...(workspaceSlug ? { workspaceSlug } : {}) },
+          editorData,
+          files,
+          inputEditor: null,
+          message,
+          onMessageAccepted: () => resolve(true),
+        }).then(
+          () => resolve(false),
+          (error) => {
+            console.error('[ProjectComposer] send failed', error);
+            resolve(false);
+          },
+        );
       });
+      if (!accepted) {
+        // Don't leave an empty conversation behind for every failed attempt.
+        await topicService
+          .removeTopic(topic.id)
+          .then(() => refreshProjectTopics(project.id))
+          .catch((error) =>
+            console.error('[ProjectComposer] failed to drop the empty topic', error),
+          );
+        throw new MessageNotAcceptedError();
+      }
       clearContent();
       clearChatUploadFileList();
       navigate(getProjectConversationPath(project.slug ?? project.id, topic.id));
