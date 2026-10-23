@@ -89,6 +89,8 @@ export const buildAgentBrowserCommands = (
   apiName: string,
   args: Record<string, unknown>,
   screenshotPath: string,
+  /** `fill` only: the target is a native `<select>`; see {@link runAgentBrowserCall}. */
+  fillsSelect = false,
 ): string[][] => {
   switch (apiName) {
     case 'navigate': {
@@ -110,7 +112,9 @@ export const buildAgentBrowserCommands = (
     }
     case 'fill': {
       if (typeof args.text !== 'string') throw new Error('text is required');
-      const commands = [['fill', toRef(args.ref), args.text]];
+      // `fill` on a native <select> reports success but blanks it; `select`
+      // takes the option value or its visible label, as the manifest promises.
+      const commands = [[fillsSelect ? 'select' : 'fill', toRef(args.ref), args.text]];
       if (args.submit) commands.push(['press', 'Enter']);
       return commands;
     }
@@ -144,6 +148,18 @@ const parseSteps = (stdout: string): BatchStep[] => {
   return parsed as BatchStep[];
 };
 
+/**
+ * Whether a ref points at a native `<select>`. agent-browser has no tag query,
+ * but `get html` returns the element's inner HTML, which for a select is its
+ * `<option>` list and for a text field is empty. A failed lookup falls back
+ * to `fill`, whose own step then reports the bad ref.
+ */
+const isNativeSelect = async (exec: AgentBrowserExec, session: string, ref: unknown) => {
+  const [step] = parseSteps(await exec(session, [['get', 'html', toRef(ref)]]));
+  const html = step?.success ? step.result?.html : undefined;
+  return typeof html === 'string' && /^\s*<(?:option|optgroup)\b/i.test(html);
+};
+
 /** PNG IHDR width/height, so the result reports the capture size like the desktop does. */
 const pngSize = (bytes: Uint8Array): { height?: number; width?: number } => {
   if (bytes.length < 24) return {};
@@ -174,8 +190,14 @@ export const runAgentBrowserCall = async (
   try {
     // The server rides the run identity in the args; it is not an api parameter.
     const { __agentId: _agentId, __topicId: topicId, ...args } = rawArgs;
-    const commands = buildAgentBrowserCommands(apiName, args, options.screenshotPath);
-    const steps = parseSteps(await options.exec(agentBrowserSessionName(topicId), commands));
+    const session = agentBrowserSessionName(topicId);
+    const commands = buildAgentBrowserCommands(
+      apiName,
+      args,
+      options.screenshotPath,
+      apiName === 'fill' && (await isNativeSelect(options.exec, session, args.ref)),
+    );
+    const steps = parseSteps(await options.exec(session, commands));
 
     const failed = steps.find((step) => !step.success);
     if (failed || steps.length < commands.length) {
@@ -220,7 +242,7 @@ export const runAgentBrowserCall = async (
       }
       case 'fill': {
         return {
-          content: `Filled ${String(args.ref)} with "${String(args.text)}"${args.submit ? ' and pressed Enter' : ''}.`,
+          content: `${commands[0][0] === 'select' ? 'Selected' : 'Filled'} ${String(args.ref)} with "${String(args.text)}"${args.submit ? ' and pressed Enter' : ''}.`,
           success: true,
         };
       }

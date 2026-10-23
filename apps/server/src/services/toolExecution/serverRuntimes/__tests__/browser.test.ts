@@ -118,6 +118,32 @@ describe('browserRuntime', () => {
       expect(mockReadDeviceSystemInfo).toHaveBeenCalledTimes(1);
     });
 
+    // A timed-out capability read was cached as "unsupported", so a CLI with
+    // agent-browser installed got install guidance for the rest of the run.
+    it('does not treat an unanswered capability read as missing support', async () => {
+      mockQueryDeviceList.mockResolvedValue([
+        { channels: [{ channel: 'cli', connectedAt: 1, connectionId: 'c1' }], deviceId: 'vm-cli' },
+      ]);
+      mockReadDeviceSystemInfo
+        .mockResolvedValueOnce({ ok: false, reason: 'TIMEOUT' })
+        .mockResolvedValueOnce({ ok: true, systemInfo: { supportedTools: [BrowserIdentifier] } });
+      mockExecuteToolCall.mockResolvedValue({ content: 'ok', success: true });
+
+      const runtime = browserRuntime.factory(context);
+      const first = await runtime.navigate({ url: 'https://example.com' });
+
+      expect(first.success).toBe(false);
+      expect(first.error.code).toBe('BROWSER_DEVICE_UNVERIFIED');
+      expect(first.content).toContain('TIMEOUT');
+      expect(first.content).not.toContain('install agent-browser');
+      expect(mockExecuteToolCall).not.toHaveBeenCalled();
+
+      const second = await runtime.navigate({ url: 'https://example.com' });
+
+      expect(second.success).toBe(true);
+      expect(mockExecuteToolCall.mock.calls[0][0]).toMatchObject({ clientKinds: ['cli'] });
+    });
+
     it('dispatches to the desktop app when the device also has one', async () => {
       mockQueryDeviceList.mockResolvedValue([
         {

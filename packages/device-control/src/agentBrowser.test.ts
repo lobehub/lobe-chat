@@ -131,6 +131,43 @@ describe('runAgentBrowserCall', () => {
     expect((result.state as { dataUrl: string }).dataUrl).toMatch(/^data:image\/png;base64,/);
   });
 
+  // `agent-browser fill` on a native <select> reports success but leaves the
+  // select blank, so the manifest's "option value or visible label" promise
+  // was silently broken on CLI devices.
+  it('fills a native select through `select`', async () => {
+    const exec = vi
+      .fn()
+      .mockResolvedValueOnce(
+        JSON.stringify([step(['get', 'html'], { html: '<option value="b">Banana</option>' })]),
+      )
+      .mockResolvedValueOnce(JSON.stringify([step(['select'], { selected: ['Banana'] })]));
+
+    const result = await runAgentBrowserCall(
+      'fill',
+      { __topicId: 't', ref: 'e5', text: 'Banana' },
+      { exec, readFile: vi.fn(), screenshotPath: '/s.png' },
+    );
+
+    expect(exec).toHaveBeenNthCalledWith(1, 'lobehub-topic-t', [['get', 'html', '@e5']]);
+    expect(exec).toHaveBeenNthCalledWith(2, 'lobehub-topic-t', [['select', '@e5', 'Banana']]);
+    expect(result).toMatchObject({ content: 'Selected e5 with "Banana".', success: true });
+  });
+
+  it('fills a text field through `fill`', async () => {
+    const exec = vi
+      .fn()
+      .mockResolvedValueOnce(JSON.stringify([step(['get', 'html'], { html: '' })]))
+      .mockResolvedValueOnce(JSON.stringify([step(['fill'], { filled: '@e6' })]));
+
+    await runAgentBrowserCall(
+      'fill',
+      { ref: 'e6', text: 'hello' },
+      { exec, readFile: vi.fn(), screenshotPath: '/s.png' },
+    );
+
+    expect(exec).toHaveBeenNthCalledWith(2, 'lobehub-default', [['fill', '@e6', 'hello']]);
+  });
+
   it('reports the failing step', async () => {
     const { promise } = run('click', { ref: 'e99' }, [
       { command: ['click', '@e99'], error: 'Unknown ref: e99', result: null, success: false },

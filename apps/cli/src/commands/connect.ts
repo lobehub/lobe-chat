@@ -81,7 +81,7 @@ import {
   resolveDeviceMetricsBacklogPath,
 } from '../settings';
 import { executeToolCall } from '../tools';
-import { executeBrowserCall, resolveBrowserDevice } from '../tools/browser';
+import { closeBrowserSessions, executeBrowserCall, resolveBrowserDevice } from '../tools/browser';
 import { executeComputerUseCall, resolveComputerUseDevice } from '../tools/computerUse';
 import { cleanupAllProcesses, getActiveShellCount } from '../tools/shell';
 import { log, setVerbose } from '../utils/logger';
@@ -937,7 +937,10 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
   // (bounded) before the socket closes, so the device page doesn't show the
   // final minutes as "not running".
   const shutdown = async () => {
-    await metricsSampler?.stop({ flushTimeoutMs: SHUTDOWN_METRICS_FLUSH_MS });
+    await Promise.all([
+      metricsSampler?.stop({ flushTimeoutMs: SHUTDOWN_METRICS_FLUSH_MS }),
+      closeBrowserSessions(browser),
+    ]);
     cleanup();
     process.exit(0);
   };

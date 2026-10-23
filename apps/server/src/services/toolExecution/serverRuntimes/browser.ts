@@ -135,6 +135,28 @@ const buildCliOnlyDeviceBrowserResult = (
   };
 };
 
+export const BROWSER_DEVICE_UNVERIFIED_ERROR_CODE = 'BROWSER_DEVICE_UNVERIFIED';
+
+/**
+ * The CLI did not answer the capability read (timeout, reconnect gap, gateway
+ * error). That says nothing about whether agent-browser is installed, so it
+ * must not be reported as missing — the next call reads again.
+ */
+const buildUnverifiedCliBrowserResult = (deviceId: string, reason: string) => {
+  const message =
+    `Could not confirm whether the \`lh connect\` CLI on the active device (${deviceId}) ` +
+    `can run lobe-browser: its capability check did not answer (${reason}). ` +
+    `Nothing was sent to the device. Retry shortly; if it keeps failing, ask the user to check ` +
+    `that \`lh connect\` is still running on that machine.`;
+  return {
+    content: message,
+    error: { code: BROWSER_DEVICE_UNVERIFIED_ERROR_CODE, message },
+    success: false,
+  };
+};
+
+type BrowserTarget = DeviceClient[] | 'unsupported' | { unverified: string };
+
 export const browserRuntime: ServerRuntimeRegistration = {
   factory: (context) => {
     if (!context.userId) {
@@ -174,8 +196,8 @@ export const browserRuntime: ServerRuntimeRegistration = {
     // comes first: the user can watch its panel and it carries their sign-ins.
     // A device with only `lh connect` runs it when that CLI found an
     // agent-browser; otherwise the dead end is explained instead of dispatched.
-    let targetPromise: Promise<DeviceClient[] | 'unsupported'> | undefined;
-    const resolveTarget = async (): Promise<DeviceClient[] | 'unsupported'> => {
+    let targetPromise: Promise<BrowserTarget> | undefined;
+    const resolveTarget = async (): Promise<BrowserTarget> => {
       const workspaceId = await getDeviceWorkspaceId();
       const clientKind = await resolveDeviceClientKind(
         context.userId!,
@@ -191,7 +213,8 @@ export const browserRuntime: ServerRuntimeRegistration = {
         workspaceId,
         { clientKinds: ['cli'] },
       );
-      if (cli.ok && cli.systemInfo.supportedTools?.includes(BrowserIdentifier)) return ['cli'];
+      if (!cli.ok) return { unverified: cli.reason };
+      if (cli.systemInfo.supportedTools?.includes(BrowserIdentifier)) return ['cli'];
       log('cli-only device %s does not offer the browser tool', context.activeDeviceId);
       return 'unsupported';
     };
@@ -205,6 +228,12 @@ export const browserRuntime: ServerRuntimeRegistration = {
           return buildCliOnlyDeviceBrowserResult(context.activeDeviceId!, {
             webBrowsingAvailable: WebBrowsingManifest.identifier in (context.toolManifestMap ?? {}),
           });
+        }
+
+        if (!Array.isArray(target)) {
+          // Only a definite answer is kept for the rest of the run.
+          targetPromise = undefined;
+          return buildUnverifiedCliBrowserResult(context.activeDeviceId!, target.unverified);
         }
 
         // Carry the run identity so the device resolves the right browser

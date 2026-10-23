@@ -818,10 +818,11 @@ describe('connect command', () => {
       beforeEach(async () => {
         binDir = await mkdtemp(path.join(os.tmpdir(), 'lh-connect-browser-'));
         binary = path.join(binDir, 'agent-browser');
-        // Records its argv and stdin, then answers like `agent-browser --json batch`.
+        // Records its argv, stdin and AGENT_BROWSER_* env, then answers like
+        // `agent-browser --json batch`.
         await writeFile(
           binary,
-          `#!/bin/sh\nprintf '%s ' "$@" > "$0.argv"\ncat > "$0.stdin"\nprintf '[{"command":["open"],"error":null,"result":{"title":"T","url":"https://e.com/"},"success":true}]'\n`,
+          `#!/bin/sh\nprintf '%s ' "$@" > "$0.argv"\nenv | grep '^AGENT_BROWSER_' > "$0.env"\ncat > "$0.stdin"\nprintf '[{"command":["open"],"error":null,"result":{"title":"T","url":"https://e.com/"},"success":true}]'\n`,
         );
         await chmod(binary, 0o755);
         vi.stubEnv('PATH', `${binDir}${path.delimiter}/bin${path.delimiter}/usr/bin`);
@@ -843,6 +844,8 @@ describe('connect command', () => {
       };
 
       it('advertises the browser tool from agent-browser on PATH and runs calls with it', async () => {
+        // A user's own agent-browser profile must not reach the model's browser.
+        vi.stubEnv('AGENT_BROWSER_PROFILE', 'Default');
         await createProgram().parseAsync(['node', 'test', 'connect']);
 
         await clientEventHandlers['system_info_request']?.({
@@ -859,9 +862,11 @@ describe('connect command', () => {
           state: { title: 'T', url: 'https://e.com/' },
           success: true,
         });
-        expect(await readFile(`${binary}.argv`, 'utf8')).toBe(
-          '--session lobehub-topic-tpc_1 --json batch --bail ',
+        const argv = await readFile(`${binary}.argv`, 'utf8');
+        expect(argv).toMatch(
+          /^--namespace lobehub --config \S+agent-browser\.json --headed false --idle-timeout 10m --session lobehub-topic-tpc_1 --json batch --bail $/,
         );
+        expect(await readFile(`${binary}.env`, 'utf8')).toBe('');
         expect(JSON.parse(await readFile(`${binary}.stdin`, 'utf8'))).toEqual([
           ['open', 'https://e.com'],
         ]);

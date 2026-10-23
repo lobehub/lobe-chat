@@ -1,6 +1,6 @@
 import { spawn } from 'node:child_process';
 import { constants } from 'node:fs';
-import { access, mkdtemp, readFile, rm, stat } from 'node:fs/promises';
+import { access, mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 
@@ -14,6 +14,46 @@ export interface BrowserDevice {
 // Covers a slow first launch of the browser plus a page load.
 const DEFAULT_TIMEOUT_MS = 90_000;
 const MAX_OUTPUT_BYTES = 16 * 1024 * 1024;
+// Topic sessions nobody drives any more shut their browser down on their own.
+const IDLE_TIMEOUT = '10m';
+const CLOSE_TIMEOUT_MS = 10_000;
+/** Keeps LobeHub's daemons and sessions apart from the user's own agent-browser use. */
+const NAMESPACE = 'lobehub';
+
+/**
+ * The user's agent-browser setup must not reach the model: a profile, saved
+ * state, CDP target, cloud provider or headed mode from
+ * `~/.agent-browser/config.json`, `./agent-browser.json` or `AGENT_BROWSER_*`
+ * would hand it a signed-in or visible browser, while the tool promises a
+ * clean headless one. So every run gets an empty config, no `AGENT_BROWSER_*`
+ * variables, and explicit headless settings.
+ */
+const isolatedEnv = () =>
+  Object.fromEntries(
+    Object.entries(process.env).filter(([key]) => !key.startsWith('AGENT_BROWSER_')),
+  );
+
+const isolationArgs = (configPath: string) => [
+  '--namespace',
+  NAMESPACE,
+  '--config',
+  configPath,
+  '--headed',
+  'false',
+  '--idle-timeout',
+  IDLE_TIMEOUT,
+];
+
+const spawnAgentBrowser = (binaryPath: string, args: string[], timeoutMs: number) =>
+  spawn(binaryPath, args, {
+    cwd: os.tmpdir(),
+    env: isolatedEnv(),
+    // `.cmd` shims on Windows only start through a shell; argv stays fixed.
+    shell: process.platform === 'win32' && binaryPath.endsWith('.cmd'),
+    stdio: ['pipe', 'pipe', 'pipe'],
+    timeout: timeoutMs,
+    windowsHide: true,
+  });
 
 const isExecutableFile = async (filePath: string) => {
   const stats = await stat(filePath).catch(() => undefined);
@@ -60,16 +100,14 @@ export const resolveBrowserDevice = async (
 
 /** One `agent-browser batch` run with the commands on stdin; see {@link AgentBrowserExec}. */
 const createExec =
-  (binaryPath: string, timeoutMs: number): AgentBrowserExec =>
+  (binaryPath: string, timeoutMs: number, configPath: string): AgentBrowserExec =>
   (session, commands) =>
     new Promise((resolve, reject) => {
-      const child = spawn(binaryPath, ['--session', session, '--json', 'batch', '--bail'], {
-        // `.cmd` shims on Windows only start through a shell; argv stays fixed.
-        shell: process.platform === 'win32' && binaryPath.endsWith('.cmd'),
-        stdio: ['pipe', 'pipe', 'pipe'],
-        timeout: timeoutMs,
-        windowsHide: true,
-      });
+      const child = spawnAgentBrowser(
+        binaryPath,
+        [...isolationArgs(configPath), '--session', session, '--json', 'batch', '--bail'],
+        timeoutMs,
+      );
       const stdout: Buffer[] = [];
       const stderr: Buffer[] = [];
       let size = 0;
@@ -120,8 +158,10 @@ export const executeBrowserCall = async (
   try {
     const args = JSON.parse(argsStr || '{}') as Record<string, unknown>;
     const timeoutMs = typeof timeout === 'number' && timeout > 0 ? timeout : DEFAULT_TIMEOUT_MS;
+    const configPath = path.join(dir, 'agent-browser.json');
+    await writeFile(configPath, '{}');
     return await runAgentBrowserCall(apiName, args, {
-      exec: createExec(device.binaryPath, timeoutMs),
+      exec: createExec(device.binaryPath, timeoutMs, configPath),
       readFile,
       screenshotPath: path.join(dir, 'screenshot.png'),
     });
@@ -131,4 +171,23 @@ export const executeBrowserCall = async (
   } finally {
     await rm(dir, { force: true, recursive: true }).catch(() => {});
   }
+};
+
+/**
+ * Closes every browser `lh connect` opened (`close --all` stays inside the
+ * LobeHub namespace), so stopping the device does not leave Chrome running
+ * until each session's idle timeout. Best-effort: resolves even on failure.
+ */
+export const closeBrowserSessions = async (device: BrowserDevice | undefined) => {
+  if (!device) return;
+  await new Promise<void>((resolve) => {
+    const child = spawnAgentBrowser(
+      device.binaryPath,
+      ['--namespace', NAMESPACE, 'close', '--all'],
+      CLOSE_TIMEOUT_MS,
+    );
+    child.on('error', () => resolve());
+    child.on('close', () => resolve());
+    child.stdin.end();
+  });
 };
