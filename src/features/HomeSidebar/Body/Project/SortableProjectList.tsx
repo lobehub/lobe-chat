@@ -77,12 +77,18 @@ class RowMouseSensor extends MouseSensor {
   ];
 }
 
-// Enter / Space on the focused ⋯ button must open its menu, not start a keyboard drag.
+// A keyboard drag starts only from the focused row itself. Enter / Space on
+// anything inside it — the project link, the ⋯ button — keeps its own meaning
+// (open the project, open the menu).
+const isRowItself = (event: Event) =>
+  event.target instanceof Element &&
+  event.target.getAttribute('aria-roledescription') === 'sortable';
+
 class RowKeyboardSensor extends KeyboardSensor {
   static activators = KeyboardSensor.activators.map((activator) => ({
     ...activator,
     handler: (...args: Parameters<typeof activator.handler>) =>
-      !startsOnRowAction(args[0].nativeEvent) && activator.handler(...args),
+      isRowItself(args[0].nativeEvent) && activator.handler(...args),
   }));
 }
 

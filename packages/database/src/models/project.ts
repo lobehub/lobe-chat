@@ -371,7 +371,11 @@ export class ProjectModel {
         .where(scope)
         .orderBy(sql`${projects.sortOrder} ASC NULLS FIRST`, desc(projects.updatedAt));
 
-      const order = rows.map((row) => row.id).filter((rowId) => rowId !== id);
+      // Either project may have been deleted since the check above.
+      const ids = rows.map((row) => row.id);
+      if (!ids.includes(id) || !ids.includes(anchorId)) throw new Error('Project not found');
+
+      const order = ids.filter((rowId) => rowId !== id);
       const anchorIndex = order.indexOf(anchorId);
       order.splice('beforeId' in anchor ? anchorIndex : anchorIndex + 1, 0, id);
 
