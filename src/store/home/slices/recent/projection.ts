@@ -22,6 +22,30 @@ export const recentListResource = defineReplica<RecentListParams, RecentItem[]>(
   version: 1,
 });
 
+/** Whose topics the home "Recent topics" block lists in a workspace. */
+export type HomeTopicRecentView = 'mine' | 'team';
+
+export interface HomeTopicRecentParams {
+  limit: number;
+  view: HomeTopicRecentView;
+}
+
+/** Entry key of one home topic recents query (`homeTopicRecentMap[mine:limit:N]`). */
+export const createHomeTopicRecentKey = ({ limit, view }: HomeTopicRecentParams): string =>
+  `${view}:limit:${limit}`;
+
+/**
+ * Home chat-mode "Recent topics", with message previews. Mine and team are
+ * separate entries: workspace topics are shared, so "mine" is narrowed
+ * server-side before the limit rather than filtered out of the team feed.
+ */
+export const homeTopicRecentListResource = defineReplica<HomeTopicRecentParams, RecentItem[]>({
+  key: createHomeTopicRecentKey,
+  name: 'homeTopicRecentList',
+  storage: 'localStorage',
+  version: 1,
+});
+
 export type DocsHomeTab = 'mine' | 'recent' | 'shared';
 
 export interface DocsHomeParams {

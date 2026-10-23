@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
+import { HOME_TOPIC_RECENT_LIMIT } from '@/store/home/slices/recent/action';
+
 import { HOME_COUNT_MAX, HOME_CUSTOMIZE_DEFAULTS } from '../CustomizeModal/config';
-import { HOME_TOPIC_RECENT_LIMIT, resolveRecentsBadgeCount } from '../HomeModeContent';
+import { resolveRecentsBadgeCount } from '../HomeModeContent';
 
 describe('HOME_TOPIC_RECENT_LIMIT', () => {
   it('fetches the stepper max as a fixed constant, independent of the homeRecentsCount preference', () => {

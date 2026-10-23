@@ -34,14 +34,13 @@ import { splitBriefs } from '@/features/HomeInbox/splitBriefs';
 import { useHomeInboxTopics } from '@/features/HomeInbox/useHomeInboxTopics';
 import Recommendations from '@/features/Recommendations';
 import WorkspaceLink from '@/features/Workspace/WorkspaceLink';
-import { useClientDataSWR } from '@/libs/swr';
-import { recentKeys } from '@/libs/swr/keys';
-import { useCacheScope } from '@/libs/swr/useCacheScope';
-import { recentService } from '@/services/recent';
 import { useBriefStore } from '@/store/brief';
 import { briefListSelectors } from '@/store/brief/selectors';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
+import { useHomeStore } from '@/store/home';
+import { HOME_TOPIC_RECENT_LIMIT } from '@/store/home/slices/recent/action';
+import { homeRecentSelectors } from '@/store/home/slices/recent/selectors';
 import { useTaskStore } from '@/store/task';
 import { taskListSelectors } from '@/store/task/selectors';
 import type { TaskListItem } from '@/store/task/slices/list/initialState';
@@ -143,8 +142,6 @@ const TASK_STATUS_SET = new Set<TaskStatus>(TASK_STATUSES);
 export const RECENT_TASK_STATUSES: TaskStatus[] = TASK_STATUSES.filter(
   (status) => status !== 'completed',
 );
-
-export const HOME_TOPIC_RECENT_LIMIT = 15;
 
 const FLEX_MIN_WIDTH_0 = { minWidth: 0 };
 
@@ -481,7 +478,6 @@ const HomeModeContent = memo<HomeModeContentProps>(({ inlineRail, mode, onSugges
   const recentsHidden = hiddenWidgets.includes('recents');
   const tasksHidden = hiddenWidgets.includes('tasks');
   const scheduledTasksHidden = isHomeWidgetHidden('scheduledTasks', hiddenWidgets);
-  const cacheScope = useCacheScope();
 
   // One page-level mine/team scope, shared by the inbox sections and Recent
   // topics. In personal mode the member map is empty, `isTeam` stays false and
@@ -494,12 +490,12 @@ const HomeModeContent = memo<HomeModeContentProps>(({ inlineRail, mode, onSugges
   // Workspace topics are shared, so "mine" must be narrowed server-side —
   // client-filtering the top N of a team-wide feed could starve out the
   // viewer's own topics entirely.
-  const recentsSWR = useClientDataSWR(
-    isLogin && !recentsHidden
-      ? recentKeys.topicList(HOME_TOPIC_RECENT_LIMIT, cacheScope, teamView ? 'team' : 'mine')
-      : null,
-    () => recentService.getAll(HOME_TOPIC_RECENT_LIMIT, ['topic'], true, !teamView, teamView),
-    { revalidateOnFocus: false },
+  const recentsView = teamView ? 'team' : 'mine';
+  const useFetchHomeTopicRecents = useHomeStore((s) => s.useFetchHomeTopicRecents);
+  const recentsSync = useFetchHomeTopicRecents(recentsView, !!isLogin && !recentsHidden);
+  const refreshHomeTopicRecents = useHomeStore((s) => s.refreshHomeTopicRecents);
+  const recentTopics = useHomeStore(
+    homeRecentSelectors.homeTopics({ limit: HOME_TOPIC_RECENT_LIMIT, view: recentsView }),
   );
 
   const inboxTopics = useHomeInboxTopics(isLogin);
@@ -516,7 +512,7 @@ const HomeModeContent = memo<HomeModeContentProps>(({ inlineRail, mode, onSugges
   const briefs = useBriefStore(briefListSelectors.briefs);
   const briefsInit = useBriefStore(briefListSelectors.isBriefsInit);
   const needsYouCount = useMemo(() => splitBriefs(briefs).needsYou.length, [briefs]);
-  const topicRecents = recentsSWR.data ?? [];
+  const topicRecents = recentTopics ?? [];
 
   if (mode === 'chat') {
     // With the recents section switched off nothing is fetched, so it reports as
@@ -524,10 +520,10 @@ const HomeModeContent = memo<HomeModeContentProps>(({ inlineRail, mode, onSugges
     // activity alone decides what this column is.
     const state = resolveHomeChatContentState({
       authLoaded: !!authLoaded,
-      hasError: !recentsHidden && !!recentsSWR.error,
+      hasError: !recentsHidden && !!recentsSync.error,
       isLogin: !!isLogin,
       recentsCount: topicRecents.length,
-      recentsInit: recentsHidden || recentsSWR.data !== undefined,
+      recentsInit: recentsHidden || recentTopics !== undefined,
       activityCount: mineRunningCount + mineUnreadCount + needsYouCount,
       activityError: Boolean(inboxTopics.error || briefsSWR.error),
       activityResolved:
@@ -588,7 +584,11 @@ const HomeModeContent = memo<HomeModeContentProps>(({ inlineRail, mode, onSugges
             }
           >
             {state === 'error' ? (
-              <AsyncError error={recentsSWR.error} variant={'inline'} onRetry={recentsSWR.mutate} />
+              <AsyncError
+                error={recentsSync.error}
+                variant={'inline'}
+                onRetry={() => void refreshHomeTopicRecents()}
+              />
             ) : state === 'loading' ? (
               <LoadingRows withTime />
             ) : (

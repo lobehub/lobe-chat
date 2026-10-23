@@ -3,7 +3,6 @@
 import {
   BrainCircuit,
   Download,
-  HomeIcon,
   Image,
   Scale,
   Settings,
@@ -39,7 +38,6 @@ import { pageRouteMeta } from '@/features/Pages/routeMeta';
 import { projectsRouteMeta } from '@/features/Projects/routeMeta';
 import ResourceCategorySkeleton from '@/features/ResourceHome/Skeleton';
 import { createSettingsRouteMeta, settingsRouteMeta } from '@/features/Settings/features/routeMeta';
-import { workspaceHomeRouteMeta } from '@/features/Workspace/routeMeta';
 import WorkspaceProviderRedirect from '@/features/WorkspaceSetting/ProviderRedirect';
 import {
   agentChannelDetailRouteMeta,
@@ -64,6 +62,7 @@ import { agentChatTopicListLoader } from '@/spa/router/agentChatTopicListLoader'
 import { agentDocumentListLoader } from '@/spa/router/agentDocumentListLoader';
 import { channelDataLoader } from '@/spa/router/channelDataLoader';
 import { contextListLoader } from '@/spa/router/contextListLoader';
+import { createHomeIndexRoute } from '@/spa/router/homeIndexRoute';
 import { identitiesListLoader } from '@/spa/router/identitiesListLoader';
 import { pageListLoader } from '@/spa/router/pageListLoader';
 import { preferenceListLoader } from '@/spa/router/preferenceListLoader';
@@ -1089,13 +1088,7 @@ const createMainAreaChildrenDefinition = (options: MainAreaRouteOptions = {}): R
   // Must come AFTER all reserved root paths so they don't shadow e.g. /agent.
   {
     children: [
-      // Web renders Home beside the router outlet; Electron injects a per-tab
-      // Home element because each tab owns an independent memory router.
-      {
-        element: deferPlatformElement(options.createHomeElement),
-        handle: { meta: workspaceHomeRouteMeta },
-        index: true,
-      },
+      createHomeIndexRoute('workspace', options.createHomeElement),
       ...sharedMainAreaChildren,
       // Workspace settings — `/:slug/settings/*`. Dedicated layout with its
       // own sidebar (workspace avatar + 6 tabs + back-to-chat), fully
@@ -1175,19 +1168,7 @@ const createMainAreaChildrenDefinition = (options: MainAreaRouteOptions = {}): R
     path: ':workspaceSlug',
   },
 
-  // Web leaves this element empty; Electron injects the per-tab Home route.
-  {
-    element: deferPlatformElement(options.createHomeElement),
-    handle: {
-      meta: routeMeta({
-        icon: HomeIcon,
-        Skeleton: NoRouteSkeleton,
-        tabTitleKey: 'navigation.home',
-        titleKey: 'navigation.home',
-      }),
-    },
-    index: true,
-  },
+  createHomeIndexRoute('personal', options.createHomeElement),
   // Catch-all route
   {
     element: redirectElement('/'),

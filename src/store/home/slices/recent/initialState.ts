@@ -17,6 +17,9 @@ export interface RecentState {
   /** Docs home list per tab, the view of the `docsHomeList` replica. */
   docsHomeMap: Record<string, DocsHomeRow[]>;
   docsHomeReplica: ReplicaState<DocsHomeRow[]>;
+  /** Home "Recent topics" per view and limit, the view of the `homeTopicRecentList` replica. */
+  homeTopicRecentMap: Record<string, RecentItem[]>;
+  homeTopicRecentReplica: ReplicaState<RecentItem[]>;
   /** Recents per query (`limit:N`), the view of the `recentList` replica. */
   recentListMap: Record<string, RecentItem[]>;
   /** Replica bookkeeping for `recentListMap`. */
@@ -27,6 +30,8 @@ export const initialRecentState: RecentState = {
   allRecentsDrawerOpen: false,
   docsHomeMap: {},
   docsHomeReplica: createReplicaState(),
+  homeTopicRecentMap: {},
+  homeTopicRecentReplica: createReplicaState(),
   recentListMap: {},
   recentListReplica: createReplicaState(),
 };

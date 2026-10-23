@@ -226,13 +226,6 @@ export const threadKeys = {
 
 // ---- recent -------------------------------------------------------------
 export const recentKeys = {
-  /** Home chat-only list; filtering happens before the server-side limit. */
-  topicList: def('recent:topicList', (limit: number, scope: string, view: 'mine' | 'team') => [
-    'recent:topicList',
-    limit,
-    scope,
-    view,
-  ]),
   trayList: def('recent:trayList', (limit: number, scope: string) => [
     'recent:trayList',
     limit,
