@@ -234,16 +234,14 @@ export class ChannelExecutionModel {
         .update(channelRuns)
         .set({
           activity: null,
+          cleanupRequested: false,
           error: outcome.error,
           leaseExpiresAt: null,
           leaseOwner: null,
+          physicalStopped: true,
           publicationRevoked: outcome.revoke || run.publicationRevoked,
           status: outcome.status,
           writerReleased: true,
-          ...(run.executionConfig?.runtime === 'native' && {
-            cleanupRequested: false,
-            physicalStopped: true,
-          }),
         })
         .where(eq(channelRuns.id, run.id));
       if (outcome.job)

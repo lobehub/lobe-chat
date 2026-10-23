@@ -7,6 +7,7 @@ import {
   agentOperations,
   channelJobs,
   channelMessages,
+  channelRuns,
   channels,
   channelSessions,
   messages,
@@ -116,12 +117,19 @@ describe('ChannelExecutionModel', () => {
     expect(operation.status).toBe('running');
     expect((await jobById(job.id)).status).toBe('completed');
 
-    await execution.releaseWriter(channel.id, run.id, run.fence);
-    expect(await runById(db, run.id)).toMatchObject({
+    await db.update(channelRuns).set({ cleanupRequested: true }).where(eq(channelRuns.id, run.id));
+    const releasedState = {
+      cleanupRequested: false,
       leaseOwner: null,
+      physicalStopped: true,
       status: 'completed',
       writerReleased: true,
-    });
+    };
+
+    await execution.releaseWriter(channel.id, run.id, run.fence);
+    expect(await runById(db, run.id)).toMatchObject(releasedState);
+    await execution.releaseWriter(channel.id, run.id, run.fence);
+    expect(await runById(db, run.id)).toMatchObject(releasedState);
   });
 
   it('gives an existing session only the messages it has not accepted', async () => {
@@ -183,9 +191,17 @@ describe('ChannelExecutionModel', () => {
 
     // Isolation lets the member move on but does not free the directory.
     await execution.isolate(first.channel.id, run.id, run.fence, 'termination unconfirmed');
+    expect(await runById(db, run.id)).toMatchObject({
+      physicalStopped: false,
+      writerReleased: false,
+    });
     expect(await execution.claim(asOther.channel.id, job.id, lease)).toBeNull();
 
     await execution.releaseWriter(first.channel.id, run.id, run.fence);
+    expect(await runById(db, run.id)).toMatchObject({
+      physicalStopped: true,
+      writerReleased: true,
+    });
     expect(await execution.claim(asOther.channel.id, job.id, lease)).not.toBeNull();
     expect(await jobById(job.id)).toMatchObject({ blockedCode: null, status: 'running' });
   });
