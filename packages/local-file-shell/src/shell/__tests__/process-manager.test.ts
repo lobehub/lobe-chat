@@ -534,6 +534,8 @@ describe('ShellProcessManager', () => {
   });
 
   describe('kill', () => {
+    const pid = 2_147_483_647;
+
     it('should kill process successfully', () => {
       const process = createMockProcess();
       manager.register('test-1', createShellProcess(manager, 'test-1', process));
@@ -544,19 +546,42 @@ describe('ShellProcessManager', () => {
       expect(process.kill).toHaveBeenCalledWith('SIGKILL');
     });
 
-    it.skipIf(process.platform === 'win32')('should kill the process tree by pid', async () => {
+    it.skipIf(process.platform === 'win32')('should kill the process group by pid', () => {
       const killSpy = vi.spyOn(globalThis.process, 'kill').mockImplementation(() => true);
       try {
-        const process = createMockProcess(null, 12_345);
+        const process = createMockProcess(null, pid);
         manager.register('test-1', createShellProcess(manager, 'test-1', process));
 
         const result = manager.kill('test-1');
 
         expect(result.success).toBe(true);
-        await waitUntil(() => killSpy.mock.calls.some(([pid]) => pid === 12_345));
-        expect(killSpy).toHaveBeenCalledWith(12_345, 'SIGKILL');
+        expect(killSpy).toHaveBeenCalledWith(-pid, 'SIGKILL');
         expect(process.kill).not.toHaveBeenCalled();
       } finally {
+        manager.cleanupAll();
+        killSpy.mockRestore();
+      }
+    });
+
+    it.skipIf(process.platform === 'win32').each([
+      ['ESRCH', true],
+      ['EPERM', false],
+    ] as const)('handles process group kill error %s', (code, success) => {
+      const error = Object.assign(new Error('Cannot kill process group'), { code });
+      const killSpy = vi.spyOn(globalThis.process, 'kill').mockImplementation(() => {
+        throw error;
+      });
+      try {
+        const child = createMockProcess(null, pid);
+        manager.register('test-1', createShellProcess(manager, 'test-1', child));
+
+        const result = manager.kill('test-1');
+
+        expect(result).toEqual(
+          success ? { success: true } : { error: error.message, success: false },
+        );
+      } finally {
+        manager.cleanupAll();
         killSpy.mockRestore();
       }
     });
@@ -657,14 +682,3 @@ describe('ShellProcessManager default output root', () => {
     }
   });
 });
-
-const waitUntil = async (predicate: () => boolean, timeout = 2000): Promise<void> => {
-  const startedAt = Date.now();
-
-  while (Date.now() - startedAt < timeout) {
-    if (predicate()) return;
-    await new Promise((resolve) => setTimeout(resolve, 50));
-  }
-
-  throw new Error('Timed out waiting for condition');
-};
