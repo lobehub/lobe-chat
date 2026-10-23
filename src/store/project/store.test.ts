@@ -179,8 +179,14 @@ describe('project store replicas', () => {
         ),
       );
     };
+    // Positions, not array order: the shared list keeps its own order.
     const names = () =>
-      useProjectStore.getState().projectListMap[PROJECT_LIST_KEY]?.map((p) => p.id);
+      useProjectStore
+        .getState()
+        .projectListMap[PROJECT_LIST_KEY]?.toSorted(
+          (a, b) => (a.sortOrder ?? -1) - (b.sortOrder ?? -1),
+        )
+        .map((p) => p.id);
 
     it('moves the row at once and sends queued moves only after the earlier one lands', async () => {
       await loadList('a', 'b', 'c');
@@ -202,6 +208,28 @@ describe('project store replicas', () => {
       await Promise.all([one, two]);
       expect(projectService.move).toHaveBeenCalledTimes(2);
       expect(projectService.move).toHaveBeenLastCalledWith('b', { beforeId: 'c' });
+    });
+
+    it('keeps the shared list order and reads back the server once the queue is idle', async () => {
+      await loadList('a', 'b', 'c');
+      vi.mocked(projectService.move).mockResolvedValue(ok(undefined) as any);
+      const fetchesBefore = vi.mocked(projectService.listAll).mock.calls.length;
+      const serverOrder = [
+        { ...project('a'), sortOrder: 1 },
+        { ...project('b'), sortOrder: 2 },
+        { ...project('c'), sortOrder: 0 },
+      ];
+      vi.mocked(projectService.listAll).mockResolvedValue(ok(serverOrder) as any);
+
+      await useProjectStore.getState().moveProject('c', ['c', 'a', 'b']);
+
+      const raw = () =>
+        useProjectStore.getState().projectListMap[PROJECT_LIST_KEY]?.map((p) => p.id);
+      expect(raw()).toEqual(['a', 'b', 'c']);
+      expect(names()).toEqual(['c', 'a', 'b']);
+      await waitFor(() =>
+        expect(vi.mocked(projectService.listAll).mock.calls.length).toBe(fetchesBefore + 1),
+      );
     });
 
     it('drops moves queued behind a failed one and refetches the server order', async () => {

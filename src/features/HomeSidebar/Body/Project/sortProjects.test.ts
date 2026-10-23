@@ -10,8 +10,14 @@ const projects = [
 const ids = (items: { id: string }[]) => items.map((i) => i.id);
 
 describe('sortProjects', () => {
-  it('keeps the server (manual) order', () => {
-    expect(ids(sortProjects(projects, 'manual'))).toEqual(['a', 'b', 'c']);
+  it('follows sort_order in manual mode, unplaced projects first and newest first', () => {
+    const placed = [
+      { ...projects[0], sortOrder: 1 },
+      { ...projects[1], sortOrder: 0 },
+      { ...projects[2], sortOrder: null },
+    ];
+    expect(ids(sortProjects(placed, 'manual'))).toEqual(['c', 'b', 'a']);
+    expect(ids(sortProjects(projects, 'manual'))).toEqual(['c', 'a', 'b']);
   });
 
   it('puts the newest created project first', () => {

@@ -318,8 +318,9 @@ export class ProjectModel {
       .from(projects)
       .leftJoin(agents, eq(agents.id, projects.coordinatorAgentId))
       .where(and(this.readable(), statusWhere))
-      // Manual order first; projects never placed (null) lead, newest first.
-      .orderBy(sql`${projects.sortOrder} ASC NULLS FIRST`, desc(projects.updatedAt))
+      // Recently updated first for every caller; the sidebar applies the manual
+      // `sort_order` itself, so the order stays a sidebar view, not the API default.
+      .orderBy(desc(projects.updatedAt))
       .limit(limit)
       .offset(offset);
     // Coordinators are virtual agents the client agent list never loads, so the

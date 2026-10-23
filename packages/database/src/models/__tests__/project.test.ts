@@ -54,7 +54,23 @@ describe('ProjectModel', () => {
   });
 
   describe('move', () => {
-    const ids = async (m: ProjectModel) => (await m.list()).map((p) => p.name);
+    // The manual order as the sidebar reads it: sort_order, unplaced first, newest first.
+    const ids = async (m: ProjectModel) =>
+      (await m.list())
+        .toSorted(
+          (a, b) =>
+            (a.sortOrder ?? -1) - (b.sortOrder ?? -1) ||
+            b.updatedAt.getTime() - a.updatedAt.getTime(),
+        )
+        .map((p) => p.name);
+
+    it('leaves the list API in recently-updated order', async () => {
+      const a = await createProject(model, { name: 'A' });
+      const b = await createProject(model, { name: 'B' });
+      await model.move(a.id, { beforeId: b.id });
+
+      expect((await model.list()).map((p) => p.name)).toEqual(['B', 'A']);
+    });
 
     it('places a project before or after another and keeps the order', async () => {
       const a = await createProject(model, { name: 'A' });

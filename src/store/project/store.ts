@@ -123,6 +123,7 @@ export const useProjectStore = createWithEqualityFn<ProjectStore>()(
     let moveQueue: Promise<unknown> = Promise.resolve();
     let moveGeneration = 0;
     let reconciling: Promise<unknown> | undefined;
+    let pendingMoves = 0;
 
     // A project page is keyed by its route param, so one project can sit under
     // both its id and its slug.
@@ -189,10 +190,15 @@ export const useProjectStore = createWithEqualityFn<ProjectStore>()(
         const index = ids.indexOf(id);
         const anchor =
           index < ids.length - 1 ? { beforeId: ids[index + 1] } : { afterId: ids[index - 1] };
+        // Only the positions change: the list itself is shared with pages that
+        // show it in their own order, and the sidebar sorts by `sortOrder`.
         const position = new Map(ids.map((itemId, i) => [itemId, i]));
         list.update(PROJECT_LIST_KEY, (items) =>
-          items?.slice().sort((a, b) => (position.get(a.id) ?? -1) - (position.get(b.id) ?? -1)),
+          items?.map((item) =>
+            position.has(item.id) ? { ...item, sortOrder: position.get(item.id)! } : item,
+          ),
         );
+        pendingMoves += 1;
 
         // Moves are computed against the order the user sees, which assumes
         // every earlier move landed. Once one fails, the queued ones are stale:
@@ -201,13 +207,23 @@ export const useProjectStore = createWithEqualityFn<ProjectStore>()(
         const write = moveQueue.then(() =>
           generation === moveGeneration ? projectService.move(id, anchor) : undefined,
         );
-        moveQueue = write.catch(() => {
-          moveGeneration += 1;
-          reconciling ??= refreshList().finally(() => {
-            reconciling = undefined;
-          });
-          return reconciling;
-        });
+        moveQueue = write.then(
+          () => {
+            pendingMoves -= 1;
+            // Once the queue is idle, read back the server order: a list
+            // revalidation that raced this write, or another member's move, may
+            // have left the local positions behind.
+            if (pendingMoves === 0 && !reconciling) void refreshList();
+          },
+          () => {
+            pendingMoves -= 1;
+            moveGeneration += 1;
+            reconciling ??= refreshList().finally(() => {
+              reconciling = undefined;
+            });
+            return reconciling;
+          },
+        );
         return write.then(
           () => undefined,
           async (error) => {
