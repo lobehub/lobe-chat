@@ -2,6 +2,7 @@ import { nanoid } from '@lobechat/utils';
 import debug from 'debug';
 import { produce } from 'immer';
 
+import { topicService } from '@/services/topic';
 import { type ChatStore } from '@/store/chat/store';
 import { type MessageMapKeyInput } from '@/store/chat/utils/messageMapKey';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
@@ -804,12 +805,14 @@ export class OperationActionsImpl {
 
   /**
    * Clear a topic's unread mark by flipping `status: 'unread'` back to 'active'.
-   * Only touches topics currently in the unread state — never stomps a
-   * running / paused / completed status. Invoked when the user opens the topic.
+   * Invoked when the user opens the topic.
    *
    * `status` is the caller's own copy of the topic's status, for surfaces that
    * list topics outside `topicDataMap` (the project sidebar); without it the
-   * status is read from the loaded topic buckets.
+   * status is read from the loaded topic buckets. That copy may be stale (a
+   * persisted list, another tab), so the server write is conditional on the row
+   * still being unread, and only a write that landed is mirrored locally — a run
+   * started since keeps its `running` status.
    */
   markTopicRead = async ({
     agentId,
@@ -834,16 +837,19 @@ export class OperationActionsImpl {
         : status;
     if (knownStatus !== 'unread') return;
 
-    await this.#get()
-      .updateTopicStatus?.({
-        agentId,
-        groupId: groupId ?? undefined,
-        status: 'active',
-        topicId,
-      })
-      ?.then(() => {
-        void getHomeStoreState().refreshAgentList?.();
-      });
+    const cleared = await topicService.markTopicRead(topicId).catch((error) => {
+      console.error('[markTopicRead] persist failed:', error);
+      return null;
+    });
+    if (!cleared) return;
+
+    this.#get().internal_pinTopicStatus?.({
+      agentId,
+      groupId: groupId ?? undefined,
+      status: 'active',
+      topicId,
+    });
+    void getHomeStoreState().refreshAgentList?.();
   };
   // ━━━ Message Queue Actions ━━━
 

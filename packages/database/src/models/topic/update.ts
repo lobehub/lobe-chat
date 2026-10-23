@@ -86,6 +86,24 @@ export const settleRunningStatus = async (
 };
 
 /**
+ * Clear a topic's unread mark: `unread` → `active`.
+ *
+ * Guarded on `status = 'unread'` like `settleRunningStatus`, so a reader acting
+ * on a stale copy of the row (a persisted list, another tab) degrades to a no-op
+ * instead of overwriting a status that has moved on — a run started since, or
+ * one now waiting for a human.
+ *
+ * Returns the cleared row, or nothing when the topic was not unread.
+ */
+export const markRead = async (ctx: TopicModelContext, id: string) => {
+  return ctx.db
+    .update(topics)
+    .set({ status: 'active', updatedAt: new Date() })
+    .where(and(eq(topics.id, id), eq(topics.status, 'unread'), ctx.ownership()))
+    .returning({ id: topics.id, status: topics.status });
+};
+
+/**
  * Recompute this topic's denormalized usage/cost rollup from its assistant
  * messages. The canonical aggregation lives in `recomputeTopicUsage`; the
  * live path (MessageModel) calls it inline within its own transaction, while
