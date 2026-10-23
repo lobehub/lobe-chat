@@ -10,12 +10,19 @@ import GroupItem from './GroupItem';
 
 const subGroupModes: Record<string, string> = {};
 let registeredMeta: { avatar?: string; name?: string; title?: string } = {};
+const agencyConfigById: Record<
+  string,
+  { boundDeviceId?: string; executionTargetSelectionPolicy?: string }
+> = {};
 
 vi.mock('@/store/agent', () => ({
   useAgentStore: (selector: (state: unknown) => unknown) => selector({ activeAgentId: 'agent-1' }),
 }));
 
 vi.mock('@/store/agent/selectors', () => ({
+  agentByIdSelectors: {
+    getAgencyConfigById: (id: string) => () => agencyConfigById[id],
+  },
   agentSelectors: {
     currentAgentMeta: () => ({ title: '验收合并-Alpha', avatar: '🅰️' }),
     getAgentMetaById: () => () => registeredMeta,
@@ -165,6 +172,7 @@ describe('TopicByAgentGroupItem', () => {
     vi.clearAllMocks();
     for (const key of Object.keys(subGroupModes)) delete subGroupModes[key];
     registeredMeta = {};
+    for (const key of Object.keys(agencyConfigById)) delete agencyConfigById[key];
     directories.splice(
       0,
       directories.length,
@@ -237,6 +245,26 @@ describe('TopicByAgentGroupItem', () => {
   it('skips a directory that cannot run when the agent "+" picks the default', () => {
     directories[0] = { ...directories[0], ...runnable('ins-mac'), permission: 'read' };
     directories[1] = { ...directories[1], ...runnable('ins-linux') };
+    renderGroup();
+
+    fireEvent.click(screen.getByRole('button', { name: 'sidebar.newConversation' }));
+
+    expect(startProjectTopicDraft).toHaveBeenCalledWith(
+      expect.objectContaining({ directoryId: 'binding-linux' }),
+    );
+  });
+
+  /** @example Review: an agent fixed to one device staged a directory on another, so the first send was refused. */
+  it('picks a directory on the device a fixed agent is bound to', () => {
+    // ROOT CAUSE: the agent "+" took the first runnable directory whatever the
+    // agent's fixed execution target was, and `resolveProjectDirectoryRun`
+    // throws "Agent is fixed to another execution target" on the first send.
+    directories[0] = { ...directories[0], ...runnable('ins-mac') };
+    directories[1] = { ...directories[1], ...runnable('ins-linux') };
+    agencyConfigById.agt_acc_merge_alpha = {
+      boundDeviceId: 'device-2',
+      executionTargetSelectionPolicy: 'fixed',
+    };
     renderGroup();
 
     fireEvent.click(screen.getByRole('button', { name: 'sidebar.newConversation' }));

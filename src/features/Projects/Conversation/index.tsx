@@ -27,6 +27,16 @@ import {
 import { getProjectConversationPath } from '../Layout/navigation';
 import { isFreshProjectTopic } from './isFreshProjectTopic';
 
+// A first send persists its topic after the route has already flipped to it, so
+// the revalidate that the route change triggers can still come back without the
+// new row. The optimistic topic keeps `isFreshTopic` true without changing any
+// dependency, so that single miss would leave the conversation missing from the
+// project sidebar until an unrelated focus or remount. Retry while it stays
+// fresh, and stop once the list reports it — or after a bounded budget, so a
+// send that failed does not poll forever.
+const FRESH_TOPIC_REVALIDATE_INTERVAL = 2000;
+const FRESH_TOPIC_REVALIDATE_ATTEMPTS = 15;
+
 const ProjectConversation = memo(() => {
   const { t } = useTranslation('project');
   const { projectId, topicId } = useParams<{ projectId: string; topicId?: string }>();
@@ -69,7 +79,18 @@ const ProjectConversation = memo(() => {
     : draftAgentId;
   const revalidateTopics = topicsRequest.revalidate;
   useEffect(() => {
-    if (isFreshTopic) void revalidateTopics();
+    if (!isFreshTopic) return;
+    void revalidateTopics();
+    let attempts = 1;
+    const timer = setInterval(() => {
+      attempts += 1;
+      if (attempts > FRESH_TOPIC_REVALIDATE_ATTEMPTS) {
+        clearInterval(timer);
+        return;
+      }
+      void revalidateTopics();
+    }, FRESH_TOPIC_REVALIDATE_INTERVAL);
+    return () => clearInterval(timer);
   }, [isFreshTopic, topicId, revalidateTopics]);
   const topicTitle = storedTopic?.title;
 

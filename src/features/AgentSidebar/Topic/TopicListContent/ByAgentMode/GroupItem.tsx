@@ -32,7 +32,7 @@ import {
 } from '@/features/Projects/WorkingDirectories/startProjectTopicDraft';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
+import { agentByIdSelectors, agentSelectors } from '@/store/agent/selectors';
 import { useGlobalStore } from '@/store/global';
 import { type ProjectTopicSubGroupMode } from '@/store/global/initialState';
 import { systemStatusSelectors } from '@/store/global/selectors';
@@ -80,6 +80,11 @@ const GroupItem = memo<GroupItemComponentProps>(({ group }) => {
   const registeredMeta = useAgentStore((s) =>
     agentId ? agentSelectors.getAgentMetaById(agentId)(s) : undefined,
   );
+  const agencyConfig = useAgentStore((s) =>
+    agentId ? agentByIdSelectors.getAgencyConfigById(agentId)(s) : undefined,
+  );
+  const fixedDeviceId =
+    agencyConfig?.executionTargetSelectionPolicy === 'fixed' ? agencyConfig.boundDeviceId : undefined;
 
   const row = children[0] as AgentAttributedRow | undefined;
   // The unattributed bucket — or a bucket of the currently open agent — speaks
@@ -102,10 +107,17 @@ const GroupItem = memo<GroupItemComponentProps>(({ group }) => {
   const canAddTopic = !!scope && !!agentId;
   // A device section offering a directory that can't run work would stage a
   // draft whose first send is refused, so its "+" only considers runnable ones.
-  const startDirectories = useMemo(
-    () => (canAddTopic ? directories.filter(isRunnableProjectDirectory) : undefined),
-    [canAddTopic, directories],
-  );
+  const startDirectories = useMemo(() => {
+    if (!canAddTopic) return undefined;
+    const runnable = directories.filter(isRunnableProjectDirectory);
+    // An agent fixed to one device cannot run on any other: the send preflight
+    // in `resolveProjectDirectoryRun` refuses it, so a default picked elsewhere
+    // would open a draft that can never start. Prefer that device's directory
+    // and fall through to the modal (where one can be added) when it has none.
+    return fixedDeviceId
+      ? runnable.filter((directory) => directory.deviceId === fixedDeviceId)
+      : runnable;
+  }, [canAddTopic, directories, fixedDeviceId]);
 
   const navigate = useWorkspaceAwareNavigate();
   // Same habit as an agent's "+": open a blank conversation on a directory and
