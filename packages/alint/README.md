@@ -58,14 +58,15 @@ Scopes are declared as `[[config.group]]` entries in the root `alint.config.toml
 
 ## Where a rule lives
 
-Rules come in two layers, and each layer is registered as its own plugin in `alint.config.toml`:
+Rules come in three layers, and each layer is registered as its own plugin in `alint.config.toml`:
 
 - **Repo-wide rules** live in `packages/alint/rules` under the `lobehub/` prefix. They state something true of a kind of code wherever it is, for example "browser code imports nothing Node-only" (`no-node-in-browser`).
 - **Package-level rules** live next to the package they describe, in `packages/<pkg>/alint/rules` with their fixtures in `packages/<pkg>/alint/fixtures`, under a prefix of their own (`hetero/` for `heterogeneous-agents`). They encode that package's architecture, for example which of its layers the web app reaches (`agent-layering`), and are only ever scoped to that package.
+- **App-only rules** live in `packages/alint/<app>/rules` (fixtures in `packages/alint/<app>/fixtures`) under a prefix of their own (`server/` for `apps/server`), for a boundary that only exists inside one app. They are scoped by a nested `alint.config.toml` in that app (`apps/server/alint.config.toml`), which the root `alint` run discovers on its own: patterns in it resolve against the app directory, and its fixture group stays in the root config because a nested config cannot reach outside its own directory.
 
 A per-file rule cannot see an import graph. When a package's boundary matters, pair its package-level rule with a deterministic test of the graph: `heterogeneous-agents` lists its browser entries in `browser-entries.json`; `src/runtimeBoundary.test.ts` walks everything those entries reach and fails on Node built-ins, Node globals such as `Buffer`, or files owned by a Node-only entry, and the root ESLint config reads the same list to reject value imports of any other entry from `src/`.
 
-To add a package-level rule: register the directory as a plugin in the rule's `[[config.group]]`, add a fixture group for it, and add its fixtures directory with the plugin prefix to `FIXTURE_ROOTS` in `fixtures.test.ts`. CI runs calibration when `packages/*/alint/**` changes.
+To add a package-level rule: register the directory as a plugin in the rule's `[[config.group]]`, add a fixture group for it, and add its fixtures directory with the plugin prefix to `FIXTURE_ROOTS` in `fixtures.test.ts`. An app-only rule follows the same steps, except its scope lives in the app's nested `alint.config.toml` rather than the root one. CI runs calibration when `packages/*/alint/**` changes.
 
 ## Security rules
 
