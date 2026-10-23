@@ -1,7 +1,7 @@
 'use client';
 
 import { Center, Flexbox, Spin, Text } from '@lobehub/ui';
-import { memo, useCallback, useLayoutEffect } from 'react';
+import { memo, useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useParams } from 'react-router';
 
@@ -25,7 +25,7 @@ import {
 } from '@/store/projectWorkingDirectory';
 
 import { getProjectConversationPath } from '../Layout/navigation';
-import { isFreshProjectTopic } from './isFreshProjectTopic';
+import { freshProjectTopicAgentId } from './freshProjectTopicAgentId';
 import { useRevalidateWhileUnlisted } from './useRevalidateWhileUnlisted';
 
 const ProjectConversation = memo(() => {
@@ -59,14 +59,21 @@ const ProjectConversation = memo(() => {
   const chatAgentId = useChatStore((s) => s.activeAgentId);
   // Keep the conversation on its agent instead of flashing "not found" while
   // the project list catches up with a topic the first send just created.
-  const isFreshTopic = isFreshProjectTopic({
+  const freshOwnerRef = useRef<{ agentId: string; topicId: string }>(undefined);
+  const freshTopicAgentId = freshProjectTopicAgentId({
     listed: !!selectedTopic,
     projectId: detail?.project.id,
+    rememberedOwner: freshOwnerRef.current,
     storedTopic,
     topicId,
   });
+  useEffect(() => {
+    if (freshTopicAgentId && topicId)
+      freshOwnerRef.current = { agentId: freshTopicAgentId, topicId };
+  }, [freshTopicAgentId, topicId]);
+  const isFreshTopic = !!freshTopicAgentId;
   const conversationAgentId = topicId
-    ? (selectedTopic?.agentId ?? (isFreshTopic ? chatAgentId : undefined))
+    ? (selectedTopic?.agentId ?? freshTopicAgentId)
     : draftAgentId;
   useRevalidateWhileUnlisted(isFreshTopic, topicId, topicsRequest.revalidate);
   const topicTitle = storedTopic?.title;
