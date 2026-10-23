@@ -80,6 +80,7 @@ export class MessageModel {
   findMessagePlugin: MessagePluginStore['findMessagePlugin'];
   listMessagePluginsByTopic: MessagePluginStore['listMessagePluginsByTopic'];
   findLatestPluginStateInTopic: MessagePluginStore['findLatestPluginStateInTopic'];
+  listToolCallsInTopics: MessagePluginStore['listToolCallsInTopics'];
   listMessagePluginsForOperation: MessagePluginStore['listMessagePluginsForOperation'];
   listMessagePluginsByIds: MessagePluginStore['listMessagePluginsByIds'];
   findToolMessageIdByToolCallId: MessagePluginStore['findToolMessageIdByToolCallId'];
@@ -187,6 +188,7 @@ export class MessageModel {
     this.findMessagePlugin = plugins.findMessagePlugin;
     this.listMessagePluginsByTopic = plugins.listMessagePluginsByTopic;
     this.findLatestPluginStateInTopic = plugins.findLatestPluginStateInTopic;
+    this.listToolCallsInTopics = plugins.listToolCallsInTopics;
     this.listMessagePluginsForOperation = plugins.listMessagePluginsForOperation;
     this.listMessagePluginsByIds = plugins.listMessagePluginsByIds;
     this.findToolMessageIdByToolCallId = plugins.findToolMessageIdByToolCallId;
