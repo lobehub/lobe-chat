@@ -1441,6 +1441,7 @@ export default {
   'opStatusTray.status.toolCalling': 'Calling tools',
   'opStatusTray.cost': 'cost',
   'opStatusTray.steps': 'steps',
+  'opStatusTray.llmCalls': 'LLM calls',
   'opStatusTray.tokens': 'tokens',
 
   // Connect Agent wizard (device-first): pick a machine, auto-scan the agents
@@ -1891,6 +1892,7 @@ export default {
   'task.intermediateSteps': '{{count}} intermediate steps',
   'task.metrics.duration': '(took {{duration}})',
   'task.metrics.stepsShort': 'steps',
+  'task.metrics.llmCallsShort': 'LLM calls',
   'task.metrics.toolCallsShort': 'skill uses',
   'task.status.cancelled': 'Task Cancelled',
   'task.status.failed': 'Task Failed',
