@@ -121,6 +121,63 @@ describe('llmCalls metric', () => {
     expect(result.newState.llmCalls).toBe(2);
   });
 
+  it('keeps the earlier calls of a step when a later LLM call fails', async () => {
+    // Two `call_llm` instructions in one step: the first succeeded, the second
+    // burned two provider attempts and threw. Rebuilding the error state from
+    // the step-entry state used to report 2 calls and lose the first one.
+    const agent = {
+      ...createAgent(),
+      runner: async () =>
+        [
+          { payload: { messages: [] }, type: 'call_llm' },
+          { payload: { messages: [] }, type: 'call_llm' },
+        ] as any,
+    } as unknown as Agent;
+    const runtime = new AgentRuntime(agent);
+    // @ts-expect-error - accessing a private property for testing
+    runtime.executors.call_llm = vi
+      .fn()
+      .mockImplementationOnce(async (_instruction, state) => ({
+        events: [],
+        newState: { ...state, usage: createUsage(1) },
+      }))
+      .mockRejectedValueOnce(withLlmAttemptCount(new Error('provider down'), 2));
+
+    const state = AgentRuntime.createInitialState({ operationId: 'test-op' });
+    const result = await runtime.step(state, createContext());
+
+    expect(result.newState.status).toBe('error');
+    expect(result.newState.usage?.llm.apiCalls).toBe(3);
+    expect(result.newState.llmCalls).toBe(3);
+  });
+
+  it('keeps the calls of a step whose later non-LLM instruction throws', async () => {
+    // The successful call must not be reported as zero just because a tool in
+    // the same step exploded afterwards.
+    const agent = {
+      ...createAgent(),
+      runner: async () =>
+        [
+          { payload: { messages: [] }, type: 'call_llm' },
+          { payload: { toolCalling: {}, type: 'default' }, type: 'call_tool' },
+        ] as any,
+    } as unknown as Agent;
+    const runtime = new AgentRuntime(agent);
+    // @ts-expect-error - accessing a private property for testing
+    runtime.executors.call_llm = vi.fn().mockImplementation(async (_instruction, state) => ({
+      events: [],
+      newState: { ...state, usage: createUsage(1) },
+    }));
+    // @ts-expect-error - accessing a private property for testing
+    runtime.executors.call_tool = vi.fn().mockRejectedValue(new Error('tool exploded'));
+
+    const state = AgentRuntime.createInitialState({ operationId: 'test-op' });
+    const result = await runtime.step(state, createContext());
+
+    expect(result.newState.status).toBe('error');
+    expect(result.newState.llmCalls).toBe(1);
+  });
+
   it('reads the explicit llmCalls field before falling back to usage', () => {
     const state = { llmCalls: 5, usage: createUsage(2) } as AgentState;
     expect(getLlmCallCount(state)).toBe(5);

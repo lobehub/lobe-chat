@@ -6,7 +6,7 @@ import { memo, useMemo, useState } from 'react';
 import { useAgentGroupStore } from '@/store/agentGroup';
 import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 import { useChatStore } from '@/store/chat';
-import { displayMessageSelectors } from '@/store/chat/selectors';
+import { displayMessageSelectors, operationSelectors } from '@/store/chat/selectors';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { type UIChatMessage } from '@/types/index';
 import { ThreadStatus } from '@/types/index';
@@ -75,6 +75,18 @@ const ClientTaskItem = memo<ClientTaskItemProps>(({ item }) => {
     [threadId, threadContext],
   );
 
+  // A provider retry is several LLM calls but still one finalized assistant
+  // block, so `blocks.length` under-counts while the task is processing and then
+  // jumps when the completion snapshot arrives. Prefer the live counter the
+  // runtime publishes on this thread's operation metadata.
+  const liveLlmCalls = useChatStore((s) =>
+    threadId
+      ? operationSelectors
+          .getOperationsByContext(threadContext)(s)
+          .reduce((max, op) => Math.max(max, op.metadata.llmCalls ?? 0), 0)
+      : 0,
+  );
+
   // Fetch thread messages (skip when executing - messages come from real-time updates)
   useFetchMessages(threadContext, { skipFetch: isProcessing });
 
@@ -104,7 +116,7 @@ const ClientTaskItem = memo<ClientTaskItemProps>(({ item }) => {
         // invoked) rather than the in-thread first assistant's createdAt (when the
         // thread finished initializing) — the latter excludes init / approval wait.
         startTime: item.createdAt,
-        llmCalls: blocks.length,
+        llmCalls: liveLlmCalls || blocks.length,
         toolCalls,
       };
     }
@@ -122,6 +134,7 @@ const ClientTaskItem = memo<ClientTaskItemProps>(({ item }) => {
     isCompleted,
     isError,
     blocks,
+    liveLlmCalls,
     item.createdAt,
     taskDetail?.duration,
     taskDetail?.totalSteps,

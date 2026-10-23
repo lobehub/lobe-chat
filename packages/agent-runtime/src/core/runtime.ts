@@ -92,6 +92,11 @@ export class AgentRuntime {
     const llmCallsBeforeStep = Math.max(state.llmCalls ?? 0, state.usage?.llm?.apiCalls ?? 0);
     const apiCallsBeforeStep = state.usage?.llm?.apiCalls ?? 0;
 
+    // Tracked outside the try block: when an instruction throws, the error path
+    // still has to keep the work the earlier instructions of this step finished.
+    let latestState: AgentState | undefined;
+    let executedLlmInstructions = 0;
+
     try {
       // Increment step count and check limits
       const newState = structuredClone(state);
@@ -224,6 +229,7 @@ export class AgentRuntime {
 
       // Execute all instructions sequentially
       let currentState = newState;
+      latestState = currentState;
       const allEvents: AgentEvent[] = [];
       let finalNextContext: AgentRuntimeContext | undefined = undefined;
       let hasFinishInstruction = false;
@@ -231,7 +237,7 @@ export class AgentRuntime {
       // Counted rather than flagged: a runner may queue several `call_llm`
       // instructions in one step (the fallback path when the selected executor
       // does not mutate `usage`), and each of them reached the provider.
-      let executedLlmInstructions = 0;
+      executedLlmInstructions = 0;
 
       for (const [instructionIndex, instruction] of normalizedInstructions.entries()) {
         if (instruction.type === 'call_llm') executedLlmInstructions += 1;
@@ -268,6 +274,7 @@ export class AgentRuntime {
 
         // Update state
         currentState = result.newState;
+        latestState = currentState;
 
 
         // A call_llm consumes any resume-seeded assistant placeholder exactly
@@ -322,8 +329,15 @@ export class AgentRuntime {
         nextContext: isBlockedStatus(currentState.status) ? undefined : finalNextContext,
       };
     } catch (error) {
-      const errorState = structuredClone(state);
-      errorState.stepCount += 1;
+      // Keep the progress this step already made. Earlier instructions may have
+      // reached the provider and mutated `usage`; rebuilding from the step-entry
+      // `state` would drop those calls, so a step whose second `call_llm` threw
+      // reported only the failed call and a step whose later tool threw reported
+      // the successful call as zero.
+      const errorState = structuredClone(latestState ?? state);
+      // `newState` bumped the counter before the first instruction; only the
+      // untouched step-entry state still needs it.
+      if (!latestState) errorState.stepCount += 1;
 
       // A terminated LLM call still made provider attempts. Record them even
       // though no output was finalized, so the user-facing count and the
@@ -332,9 +346,11 @@ export class AgentRuntime {
       if (llmAttempts > 0) {
         errorState.usage = UsageCounter.accumulateAttempts(errorState.usage, llmAttempts);
       }
-      errorState.llmCalls =
-        llmCallsBeforeStep +
-        Math.max((errorState.usage?.llm?.apiCalls ?? 0) - apiCallsBeforeStep, 0);
+      const apiCallsDelta = Math.max(
+        (errorState.usage?.llm?.apiCalls ?? 0) - apiCallsBeforeStep,
+        0,
+      );
+      errorState.llmCalls = llmCallsBeforeStep + (apiCallsDelta || executedLlmInstructions);
       errorState.lastModified = new Date().toISOString();
       return this.createErrorResult(errorState, error);
     }
