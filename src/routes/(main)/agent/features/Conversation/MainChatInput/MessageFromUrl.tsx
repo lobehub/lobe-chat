@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef } from 'react';
-import { useLocation, useSearchParams } from 'react-router';
+import { useLocation, useParams, useSearchParams } from 'react-router';
 
 import { useConversationStore } from '@/features/Conversation';
 import { useConversationResourceAccess } from '@/features/Conversation/hooks/useConversationResourceAccess';
@@ -12,6 +12,8 @@ import { usePermission } from '@/hooks/usePermission';
 import { useAgentStore } from '@/store/agent';
 import { agentByIdSelectors, agentSelectors } from '@/store/agent/selectors';
 import type { UploadFileItem } from '@/types/files/upload';
+
+import { isReadyToSendUrlMessage } from './urlMessageGate';
 
 /**
  * MessageFromUrl
@@ -28,6 +30,7 @@ const MessageFromUrl = () => {
   const agentId = context.agentId;
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
+  const { topicId: routeTopicId } = useParams<{ topicId?: string }>();
   const isAgentConfigLoading = useAgentStore(agentSelectors.isAgentConfigLoading);
   const { allowed: canCreate } = usePermission('create_content');
   const { allowed: canEdit } = usePermission('edit_own_content');
@@ -55,21 +58,18 @@ const MessageFromUrl = () => {
     if (!message) return;
     if (!canCreate) return;
 
-    // Wait for agentId to be available before sending
-    if (!agentId) return;
-
-    // During agent switching, URL/searchParams may update before ConversationStore context updates.
-    // Only consume the param when the route agentId matches the ConversationStore agentId.
-    if (routeAgentId && routeAgentId !== agentId) return;
-
-    // Ensure required agent info is loaded before consuming the param.
-    // For existing conversations (topicId exists), also wait until messages are initialized
-    // to avoid sending during skeleton fetch states.
-    const isNewConversation = !context.topicId;
-    const isReady = !isAgentConfigLoading && (isNewConversation || messagesInit);
-    if (!isReady) return;
-
-    if (isAccessLoading) return;
+    if (
+      !isReadyToSendUrlMessage({
+        agentId,
+        contextTopicId: context.topicId,
+        isAccessLoading,
+        isAgentConfigLoading,
+        messagesInit,
+        routeAgentId,
+        routeTopicId,
+      })
+    )
+      return;
 
     const signature = `${agentId}::${message}`;
     if (lastProcessedSignatureRef.current === signature) return;
@@ -103,6 +103,7 @@ const MessageFromUrl = () => {
     isAgentConfigLoading,
     messagesInit,
     routeAgentId,
+    routeTopicId,
   ]);
 
   useEffect(() => {
