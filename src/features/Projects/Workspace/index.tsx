@@ -130,6 +130,7 @@ const ProjectComposer = ({ project }: { project: ProjectDetail['project'] }) => 
           disabled={!message.trim()}
           icon={SendHorizontalIcon}
           loading={sending}
+          shape={'circle'}
           type={'primary'}
           onClick={submit}
         />
