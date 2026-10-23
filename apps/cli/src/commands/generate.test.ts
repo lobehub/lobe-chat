@@ -10,6 +10,9 @@ import { registerGenerateCommand } from './generate';
 
 const { mockTrpcClient } = vi.hoisted(() => ({
   mockTrpcClient: {
+    aiChat: {
+      outputJSON: { mutate: vi.fn() },
+    },
     asr: {
       transcribe: { mutate: vi.fn() },
     },
@@ -329,6 +332,224 @@ describe('generate command', () => {
       await program.parseAsync(['node', 'test', 'generate', 'text', 'fail']);
 
       expect(log.error).toHaveBeenCalledWith(expect.stringContaining('500'));
+      expect(exitSpy).toHaveBeenCalledWith(1);
+    });
+  });
+
+  describe('json', () => {
+    it('should send the schema to aiChat.outputJSON', async () => {
+      const fetchMock = vi.fn();
+      vi.stubGlobal('fetch', fetchMock);
+      mockTrpcClient.aiChat.outputJSON.mutate.mockResolvedValue({
+        data: { name: 'Maya' },
+        tracingId: 'trace-1',
+      });
+
+      const program = createProgram();
+      await program.parseAsync([
+        'node',
+        'test',
+        'generate',
+        'json',
+        'Invent a person',
+        '--schema',
+        '{"properties":{"name":{"type":"string"}},"required":["name"],"type":"object"}',
+        '--schema-name',
+        'person',
+      ]);
+
+      expect(mockTrpcClient.aiChat.outputJSON.mutate).toHaveBeenCalledWith({
+        messages: [{ content: 'Invent a person', role: 'user' }],
+        model: 'gpt-4o-mini',
+        provider: 'openai',
+        schema: {
+          name: 'person',
+          schema: { properties: { name: { type: 'string' } }, required: ['name'], type: 'object' },
+        },
+      });
+      expect(consoleSpy).toHaveBeenCalledWith(JSON.stringify({ name: 'Maya' }, null, 2));
+      // Structured output never touches the chat endpoint
+      expect(fetchMock).not.toHaveBeenCalled();
+    });
+
+    it('should require --schema', async () => {
+      const program = createProgram();
+      await program.parseAsync(['node', 'test', 'generate', 'json', 'Return JSON']);
+
+      expect(log.error).toHaveBeenCalledWith(expect.stringContaining('`--schema` is required'));
+      expect(exitSpy).toHaveBeenCalledWith(1);
+      expect(mockTrpcClient.aiChat.outputJSON.mutate).not.toHaveBeenCalled();
+    });
+
+    it('should keep slashes in the model id when --provider is given', async () => {
+      mockTrpcClient.aiChat.outputJSON.mutate.mockResolvedValue({ data: { ok: true } });
+
+      const program = createProgram();
+      await program.parseAsync([
+        'node',
+        'test',
+        'generate',
+        'json',
+        'Hi',
+        '--provider',
+        'siliconcloud',
+        '--model',
+        'Qwen/Qwen3.6-27B',
+        '--schema',
+        '{"type":"object","properties":{}}',
+      ]);
+
+      expect(mockTrpcClient.aiChat.outputJSON.mutate).toHaveBeenCalledWith(
+        expect.objectContaining({ model: 'Qwen/Qwen3.6-27B', provider: 'siliconcloud' }),
+      );
+    });
+
+    it('should reject schema keywords the server drops', async () => {
+      const program = createProgram();
+      await program.parseAsync([
+        'node',
+        'test',
+        'generate',
+        'json',
+        'Hi',
+        '--schema',
+        '{"type":"object","properties":{},"minProperties":1}',
+      ]);
+
+      expect(log.error).toHaveBeenCalledWith(expect.stringContaining('minProperties'));
+      expect(exitSpy).toHaveBeenCalledWith(1);
+      expect(mockTrpcClient.aiChat.outputJSON.mutate).not.toHaveBeenCalled();
+    });
+
+    it('should mark the schema strict when --strict is passed', async () => {
+      mockTrpcClient.aiChat.outputJSON.mutate.mockResolvedValue({ data: { age: 29 } });
+
+      const program = createProgram();
+      await program.parseAsync([
+        'node',
+        'test',
+        'generate',
+        'json',
+        'Give me an age',
+        '--schema',
+        '{"properties":{"age":{"type":"number"}},"type":"object"}',
+        '--strict',
+      ]);
+
+      expect(mockTrpcClient.aiChat.outputJSON.mutate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          schema: {
+            name: 'response',
+            schema: { properties: { age: { type: 'number' } }, type: 'object' },
+            strict: true,
+          },
+        }),
+      );
+    });
+
+    it('should read the schema from a file when --schema is a path', async () => {
+      const schemaPath = path.join(os.tmpdir(), `lh-gen-schema-${process.pid}.json`);
+      await fsWriteFile(
+        schemaPath,
+        JSON.stringify({ properties: { age: { type: 'number' } }, type: 'object' }),
+      );
+      mockTrpcClient.aiChat.outputJSON.mutate.mockResolvedValue({ data: { age: 29 } });
+
+      try {
+        const program = createProgram();
+        await program.parseAsync([
+          'node',
+          'test',
+          'generate',
+          'json',
+          'Give me an age',
+          '--schema',
+          schemaPath,
+        ]);
+      } finally {
+        await fsRm(schemaPath, { force: true });
+      }
+
+      expect(mockTrpcClient.aiChat.outputJSON.mutate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          schema: {
+            name: 'response',
+            schema: { properties: { age: { type: 'number' } }, type: 'object' },
+          },
+        }),
+      );
+    });
+
+    it('should reject an unreadable schema file', async () => {
+      const program = createProgram();
+      await program.parseAsync([
+        'node',
+        'test',
+        'generate',
+        'json',
+        'Hi',
+        '--schema',
+        './no-such-schema.json',
+      ]);
+
+      expect(log.error).toHaveBeenCalledWith(expect.stringContaining('Cannot read schema file'));
+      expect(exitSpy).toHaveBeenCalledWith(1);
+      expect(mockTrpcClient.aiChat.outputJSON.mutate).not.toHaveBeenCalled();
+    });
+
+    it('should reject a schema that is not an object schema', async () => {
+      const program = createProgram();
+      await program.parseAsync([
+        'node',
+        'test',
+        'generate',
+        'json',
+        'Hi',
+        '--schema',
+        '{"type":"array","properties":{}}',
+      ]);
+
+      expect(log.error).toHaveBeenCalledWith(expect.stringContaining('object schema'));
+      expect(exitSpy).toHaveBeenCalledWith(1);
+      expect(mockTrpcClient.aiChat.outputJSON.mutate).not.toHaveBeenCalled();
+    });
+
+    it('should fail when the endpoint returns no parsed data', async () => {
+      mockTrpcClient.aiChat.outputJSON.mutate.mockResolvedValue({
+        data: undefined,
+        tracingId: 'trace-1',
+      });
+
+      const program = createProgram();
+      await program.parseAsync([
+        'node',
+        'test',
+        'generate',
+        'json',
+        'Hi',
+        '--schema',
+        '{"type":"object","properties":{}}',
+      ]);
+
+      expect(log.error).toHaveBeenCalledWith(expect.stringContaining('not valid JSON'));
+      expect(exitSpy).toHaveBeenCalledWith(1);
+    });
+
+    it('should report a failed request', async () => {
+      mockTrpcClient.aiChat.outputJSON.mutate.mockRejectedValue(new Error('provider down'));
+
+      const program = createProgram();
+      await program.parseAsync([
+        'node',
+        'test',
+        'generate',
+        'json',
+        'Hi',
+        '--schema',
+        '{"type":"object","properties":{}}',
+      ]);
+
+      expect(log.error).toHaveBeenCalledWith(expect.stringContaining('provider down'));
       expect(exitSpy).toHaveBeenCalledWith(1);
     });
   });
