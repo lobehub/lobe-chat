@@ -1,8 +1,6 @@
 'use client';
 
-import { copyToClipboard, Flexbox } from '@lobehub/ui';
-import { ActionIcon, Text, toast } from '@lobehub/ui/base-ui';
-import { createStaticStyles } from 'antd-style';
+import { ActionIcon, copyToClipboard, createStaticStyles, Flexbox, Text, toast } from '@lobehub/ui';
 import { LinkIcon } from 'lucide-react';
 import { type CSSProperties, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
