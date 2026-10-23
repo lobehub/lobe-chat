@@ -29,6 +29,7 @@ export const CHANNEL_LIMITS = {
 
 /** Display name for a person whose account was deleted; their member row stays. */
 export const CHANNEL_DELETED_USER_NAME = 'Deleted user';
+export const CHANNEL_DELETED_AGENT_NAME = 'Deleted agent';
 
 /** Discoverability inside a workspace. Ignored for personal channels (`workspace_id IS NULL`). */
 export type ChannelVisibility = 'private' | 'public';
@@ -68,7 +69,7 @@ export type ChannelMessageRoutingStatus =
   'assigned' | 'directed' | 'pending' | 'reply' | 'skipped' | 'unassigned';
 
 /**
- * - `explicit`: recipients came from @mentions or Thread followers.
+ * - `explicit`: recipients came from @mentions, Thread followers or a bound direct Agent.
  * - `jev`: recipients came from a `decide()` call.
  * - `fallback`: no decision model is configured, so every available Agent was picked.
  */
@@ -103,8 +104,8 @@ export type ChannelMemberGrantStatus = 'approved' | 'pending' | 'rejected' | 're
 export type ChannelMemberGrantRevokeReason = 'device_owner_left' | 'revoked_by_owner';
 
 export interface ChannelContextMessage {
-  /** `id` is the author's member id. */
-  author: { id: string; name: string; type: ChannelMemberActorType };
+  /** `id` is the actual user/Agent id, or NULL after author deletion. */
+  author: { id: string | null; name: string; type: ChannelMemberActorType };
   content: string;
   /** Stable references; URLs and document contents are resolved at execution time. */
   fileIds?: string[];
@@ -128,7 +129,7 @@ export interface ChannelInputManifest {
   requesterMemberId: string;
   requestMessageId: string;
   /** Fixed at claim time. */
-  self: { memberId: string; name: string };
+  self: { agentId: string; memberId: string; name: string };
   threadId: string | null;
   /** Main-channel prefix visible to this branch; null for main. */
   threadRootSequence: number | null;

@@ -58,14 +58,19 @@ const createChannel = async (title = 'Channel') => {
 };
 
 const createMessage = async (channelId: string, authorMemberId: string, sequence: number) => {
+  const [sender] = await serverDB
+    .select()
+    .from(channelMembers)
+    .where(eq(channelMembers.id, authorMemberId));
   const [message] = await serverDB
     .insert(channelMessages)
     .values({
-      authorMemberId,
+      agentId: sender.agentId,
+      userId: sender.userId,
       channelId,
       content: `message ${sequence}`,
       requestKey: `request-${sequence}`,
-      routingStatus: 'directed',
+      routingStatus: sender.actorType === 'agent' ? 'reply' : 'directed',
       sequence,
     })
     .returning();
@@ -78,7 +83,7 @@ const manifest = (requesterMemberId: string, memberId: string): ChannelInputMani
   cutoffSequence: 1,
   requestMessageId: 'unused',
   requesterMemberId,
-  self: { memberId, name: 'Codex' },
+  self: { agentId: 'fixture-agent', memberId, name: 'Codex' },
   threadId: null,
   threadRootSequence: null,
 });
@@ -176,7 +181,12 @@ describe('channel schema', () => {
         .from(channelMessages)
         .where(eq(channelMessages.id, message.id));
       expect(keptMember).toMatchObject({ agentId: null, config: agentConfig, name: 'Codex' });
-      expect(keptMessage.authorMemberId).toBe(agent.id);
+      expect(keptMessage).toMatchObject({
+        agentId: null,
+        userId: null,
+        content: message.content,
+        routingStatus: 'reply',
+      });
     });
 
     it('keeps people and Agents in one member table with their own fields', async () => {
@@ -271,18 +281,33 @@ describe('channel schema', () => {
         .from(channelMessages)
         .where(eq(channelMessages.id, message.id));
       expect(member.userId).toBeNull();
-      expect(kept.authorMemberId).toBe(other.id);
+      expect(kept).toMatchObject({ agentId: null, userId: null, content: message.content });
     });
   });
 
   describe('messages', () => {
-    it('rejects a retried request key and an author from another channel', async () => {
+    it('rejects a retried request key and invalid sender references', async () => {
       const first = await createChannel('First');
-      const second = await createChannel('Second');
-      await createMessage(first.channel.id, first.owner.id, 1);
+      const message = await createMessage(first.channel.id, first.owner.id, 1);
 
       await expect(createMessage(first.channel.id, first.owner.id, 1)).rejects.toThrow();
-      await expect(createMessage(first.channel.id, second.owner.id, 2)).rejects.toThrow();
+      for (const sender of [
+        { userId: 'missing-user' },
+        { userId: null, agentId: 'missing-agent', routingStatus: 'reply' as const },
+        { userId: ownerId, agentId: first.agent.agentId },
+        { userId: null, agentId: first.agent.agentId },
+        { userId: ownerId, routingStatus: 'reply' as const },
+      ]) {
+        await expect(
+          serverDB.insert(channelMessages).values({
+            ...message,
+            ...sender,
+            id: undefined,
+            sequence: 2,
+            requestKey: 'next',
+          }),
+        ).rejects.toThrow();
+      }
     });
 
     it('keeps Channel attachments unique and drops them with the file', async () => {

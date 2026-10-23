@@ -1,12 +1,12 @@
 import type { ChannelMemberRole, ChannelVisibility } from '@lobechat/types';
-import { and, desc, eq, isNull } from 'drizzle-orm';
+import { and, desc, eq, isNull, or } from 'drizzle-orm';
 
 import type { ChannelItem, ChannelJobItem, ChannelMessageItem } from '../../schemas';
 import { channelJobs, channelMembers, channelMessages, channels } from '../../schemas';
 import type { LobeChatDatabase, Transaction } from '../../type';
 import { normalizeWorkspaceId } from '../../utils/workspace';
 import type { ChannelAddAgentInput } from './agent';
-import { addAgentMember } from './agent';
+import { addAgentMember, requireChannelAgent } from './agent';
 import { ChannelError } from './error';
 import { retryRouting } from './routing';
 import type { ChannelSendInput } from './send';
@@ -50,11 +50,22 @@ export class ChannelRepository {
   }
 
   /** Creates the channel with the caller as its owner member. */
-  create = async (params: { title: string; visibility?: ChannelVisibility }) =>
+  create = async (params: { agentId?: string; title: string; visibility?: ChannelVisibility }) =>
     this.db.transaction(async (tx) => {
+      if (
+        params.agentId !== undefined &&
+        (!params.agentId.trim() || params.visibility === 'public')
+      )
+        throw new ChannelError(
+          'BAD_REQUEST',
+          'A direct conversation requires an Agent and private visibility',
+        );
+      if (params.agentId)
+        await requireChannelAgent(tx, this.workspaceId, this.userId, params.agentId);
       const [channel] = await tx
         .insert(channels)
         .values({
+          agentId: params.agentId,
           userId: this.userId,
           title: params.title,
           visibility: params.visibility,
@@ -71,6 +82,9 @@ export class ChannelRepository {
           userId: this.userId,
         })
         .returning();
+
+      if (params.agentId)
+        await addAgentMember(tx, channel, this.userId, { agentId: params.agentId });
 
       return { channel, member } satisfies ChannelAccess;
     });
@@ -166,10 +180,10 @@ export class ChannelRepository {
     this.write(channelId, async (tx, { member }) => {
       if (!hasRole(member.role, 'admin')) {
         const [message] = await tx
-          .select({ authorMemberId: channelMessages.authorMemberId })
+          .select({ userId: channelMessages.userId })
           .from(channelMessages)
           .where(and(eq(channelMessages.channelId, channelId), eq(channelMessages.id, messageId)));
-        if (message && message.authorMemberId !== member.id)
+        if (message && message.userId !== member.userId)
           throw new ChannelError('FORBIDDEN', 'Only the author or an admin can retry routing');
       }
       return retryRouting(tx, channelId, messageId);
@@ -180,6 +194,7 @@ export class ChannelRepository {
       eq(channelMembers.actorType, 'user'),
       eq(channelMembers.userId, this.userId),
       eq(channelMembers.active, true),
+      or(isNull(channels.agentId), eq(channels.userId, this.userId)),
       this.workspaceId ? eq(channels.workspaceId, this.workspaceId) : isNull(channels.workspaceId),
     );
   }

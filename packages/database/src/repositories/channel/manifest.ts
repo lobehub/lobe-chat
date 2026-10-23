@@ -1,5 +1,9 @@
 import type { ChannelContextMessage, ChannelInputManifest } from '@lobechat/types';
-import { CHANNEL_DELETED_USER_NAME } from '@lobechat/types';
+import {
+  agentDisplayName,
+  CHANNEL_DELETED_AGENT_NAME,
+  CHANNEL_DELETED_USER_NAME,
+} from '@lobechat/types';
 import { and, asc, eq, gt, isNull, lte, notExists, or } from 'drizzle-orm';
 
 import type {
@@ -8,37 +12,9 @@ import type {
   ChannelMessageItem,
   ChannelThreadItem,
 } from '../../schemas';
-import { channelJobs, channelMembers, channelMessages, users } from '../../schemas';
+import { agents, channelJobs, channelMessages, users } from '../../schemas';
 import type { LobeChatDatabase, Transaction } from '../../type';
 import { fileIdsByMessage } from './attachments';
-
-/** Display names for every member, including people who left or deleted their account. */
-const rosterNames = async (db: LobeChatDatabase | Transaction, channelId: string) => {
-  const rows = await db
-    .select({
-      actorType: channelMembers.actorType,
-      fullName: users.fullName,
-      id: channelMembers.id,
-      name: channelMembers.name,
-      username: users.username,
-    })
-    .from(channelMembers)
-    .leftJoin(users, eq(users.id, channelMembers.userId))
-    .where(eq(channelMembers.channelId, channelId));
-
-  return new Map(
-    rows.map((row) => [
-      row.id,
-      {
-        name:
-          row.actorType === 'agent'
-            ? row.name || 'Agent'
-            : row.fullName || row.username || CHANNEL_DELETED_USER_NAME,
-        type: row.actorType,
-      },
-    ]),
-  );
-};
 
 /** Freeze the new public input window; a fresh topic receives the full branch. */
 export const buildManifest = (params: {
@@ -57,7 +33,7 @@ export const buildManifest = (params: {
     cutoffSequence: request.sequence,
     requestMessageId: request.id,
     requesterMemberId: job.requesterMemberId,
-    self: { memberId: member.id, name: member.name ?? 'Agent' },
+    self: { agentId: member.agentId!, memberId: member.id, name: member.name ?? 'Agent' },
     threadId: job.threadId,
     threadRootSequence: thread?.rootSequence ?? null,
   };
@@ -113,28 +89,39 @@ export const readManifestMessages = async (
   );
   const visible = await db
     .select({
-      authorMemberId: channelMessages.authorMemberId,
+      agentId: channelMessages.agentId,
+      agentName: agents.name,
+      agentTitle: agents.title,
+      fullName: users.fullName,
+      routingStatus: channelMessages.routingStatus,
+      userId: channelMessages.userId,
+      username: users.username,
       content: channelMessages.content,
       id: channelMessages.id,
       sequence: channelMessages.sequence,
       threadId: channelMessages.threadId,
     })
     .from(channelMessages)
+    .leftJoin(users, eq(users.id, channelMessages.userId))
+    .leftJoin(agents, eq(agents.id, channelMessages.agentId))
     .where(scope)
     .orderBy(asc(channelMessages.sequence));
-  const names = await rosterNames(db, channelId);
   const attachments = await fileIdsByMessage(
     db,
     db.select({ id: channelMessages.id }).from(channelMessages).where(scope),
   );
 
   return visible.map((message) => {
-    const author = names.get(message.authorMemberId);
+    const isAgent = message.routingStatus === 'reply';
     return {
       author: {
-        id: message.authorMemberId,
-        name: author?.name ?? CHANNEL_DELETED_USER_NAME,
-        type: author?.type ?? 'user',
+        id: isAgent ? message.agentId : message.userId,
+        name: isAgent
+          ? message.agentId
+            ? agentDisplayName({ name: message.agentName, title: message.agentTitle }, 'Agent')
+            : CHANNEL_DELETED_AGENT_NAME
+          : message.fullName || message.username || CHANNEL_DELETED_USER_NAME,
+        type: isAgent ? 'agent' : 'user',
       },
       content: message.content,
       ...(attachments.has(message.id) && { fileIds: attachments.get(message.id) }),
