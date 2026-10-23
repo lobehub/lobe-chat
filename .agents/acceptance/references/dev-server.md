@@ -83,19 +83,48 @@ That `.env` belongs to whoever set it up. Patching it (or patching
 the real cause. Open a throwaway worktree instead: it has no root `.env`, so the
 bootstrap branch applies and nothing is shared with that config.
 
-```bash
-git worktree add /tmp/lh-acceptance-<slug> <ref>
-cd /tmp/lh-acceptance-<slug>
+A bare worktree is not enough — it has no `node_modules`, and the bootstrap runs
+through the repo's own tooling. Provision it, keep the shared containers off each
+other's state, and invoke everything by absolute path:
 
-# Absolute paths from here on (common-mistakes L-S21).
-.agents/acceptance/scripts/init-dev-env.sh setup-db    # managed Postgres/Redis
-.agents/acceptance/scripts/init-dev-env.sh seed-user
-.agents/acceptance/scripts/init-dev-env.sh dev         # or dev-next
+```bash
+WT=/tmp/lh-acceptance-<slug>
+SRC=<working checkout>
+git worktree add "$WT" <ref>
+
+# 1. Install (L-S23): copy $SRC's install rather than resolving a lockfile-less repo.
+#    -c is APFS clonefile (macOS); drop it on Linux.
+cp -Rc "$SRC/node_modules" "$WT/node_modules"
+( cd "$SRC" && find . -mindepth 2 -maxdepth 3 -name node_modules -type d ) | while read -r rel; do
+  mkdir -p "$WT/$(dirname "$rel")"
+  cp -Rc "$SRC/$rel" "$WT/$rel"
+done
+# symlink any workspace package this branch adds into "$WT/node_modules/@lobechat/"
+
+# 2. Ports (L-S20): the managed containers are reused, possibly on non-default hosts.
+docker ps --format '{{.Names}} {{.Ports}}' | grep lobehub-agent-testing
+export DB_PORT=<from docker ps> REDIS_PORT=<from docker ps>
+
+# 3. Database of your own (L-S9): a sibling run's migrations and fixture
+#    truncation must not land here.
+"$WT/.agents/acceptance/scripts/init-dev-env.sh" setup-db
+docker exec lobehub-agent-testing-postgres psql -U postgres -c "CREATE DATABASE lh_acceptance_<slug>"
+docker exec lobehub-agent-testing-postgres psql -U postgres -d lh_acceptance_<slug> -c "CREATE EXTENSION IF NOT EXISTS vector"
+export DATABASE_URL="postgresql://postgres:postgres@localhost:$DB_PORT/lh_acceptance_<slug>"
+
+# 4. Bootstrap, absolute paths (L-S21).
+"$WT/.agents/acceptance/scripts/init-dev-env.sh" migrate
+"$WT/.agents/acceptance/scripts/init-dev-env.sh" seed-user
+"$WT/.agents/acceptance/scripts/init-dev-env.sh" dev         # or dev-next
 ```
 
-The managed containers are reused across worktrees (`setup-db` is a no-op when
-they are up), so the cost is a checkout, not a second environment. Record the
-worktree path in the report. Never substitute mock data for a dev server that
+`setup-db` still migrates the default `postgres` database on the way; step 4's
+`migrate` is what the run actually uses. Drop `lh_acceptance_<slug>` at teardown
+and leave the shared database holding the other session's rows.
+
+The containers cost nothing the second time (`setup-db` is a no-op when they are
+up), so the price of this path is a checkout, not a second environment. Record
+the worktree path in the report. Never substitute mock data for a dev server that
 failed to boot — a mocked screenshot is not evidence.
 
 ## When a server restart is needed

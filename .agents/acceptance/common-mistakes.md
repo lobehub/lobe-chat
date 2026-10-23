@@ -67,7 +67,7 @@ the next free number of that prefix.
 - **L-S23** A hand-built `node_modules` symlink farm runs unit tests but cannot start the dev server; clone a working checkout's `node_modules` instead of a fresh install, which this lockfile-less repo resolves against a moving registry.
 - **L-S24** Read the dev server's URL from its own log, and treat "ready" as any status but `000` — `/` answers `302` to `/signin` when signed out.
 - **L-S25** `dev:static` 的 Electron 重启会清空 `dist/renderer`（renderer Vite dev server 启动即删 outDir）；`start`/`restart` 后必须重建 renderer 再驱动，否则页面只有 Internal Server Error。
-- **L-S26** 根 `.env` 起不来时不修它、也不用 mock：开一个没有 `.env` 的 worktree，走 `init-dev-env.sh setup-db` → `seed-user` → `dev`。
+- **L-S26** 根 `.env` 起不来时不修它、也不用 mock：开一个没有 `.env` 的 worktree，先按 L-S23 装依赖、L-S20 取端口、L-S9 建 per-run 库，再 `setup-db` → `migrate` → `seed-user` → `dev`。
 
 ## Entries
 
@@ -630,6 +630,8 @@ dev.mjs 每次启动都会拉起 renderer Vite dev server，而后者启动即�
 改 `node_modules` 里的依赖硬救，或者干脆退回「真组件 + mock 数据截图」交差——最后一种不算验收证据。
 
 **Rule:** 根 `.env` 起不来就离开它：`git worktree add /tmp/<slug> <ref>` 开一棵没有根 `.env` 的树，
-按 `init-dev-env.sh setup-db` → `seed-user` → `dev` 起自带 agent-testing 环境（Postgres/Redis 容器跨
-worktree 复用）。之后按 L-S21 用绝对路径调用脚本，按 L-S24 从日志取端口，并把 worktree 路径写进
-report。不要在被改坏的根 `.env` 上继续调试，也不要用 mock 截图替代起不来的 dev server。
+再把这条路径走完整——按 L-S23 复制一份可用的 `node_modules`（含各 package 自己的），按 L-S20 从
+`docker ps` 取容器真实端口，按 L-S9 在容器里建 per-run 库并导出 `DATABASE_URL`，然后
+`init-dev-env.sh setup-db` → `migrate` → `seed-user` → `dev`（脚本一律用绝对路径，L-S21；端口从
+日志取，L-S24）。worktree 路径写进 report，teardown 时删掉这个库。不要在被改坏的根 `.env` 上继续
+调试，也不要用 mock 截图替代起不来的 dev server。
