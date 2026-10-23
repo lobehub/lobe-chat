@@ -66,6 +66,20 @@ export const updateRouter = router({
       });
     }),
   /**
+   * Clear the unread mark only while the topic is still unread — see
+   * `TopicModel.markRead`. Returns the cleared row, or `null` when the status
+   * had already moved on. Same co-editing rules as `updateTopic`.
+   */
+  markTopicRead: topicProcedure
+    .use(withScopedPermission('topic:update'))
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      await assertCanUseTopicTargets(guardCtx(ctx), [input.id]);
+      await assertCreatorTopicTargets(guardCtx(ctx), [input.id]);
+      const [cleared] = await ctx.topicModel.markRead(input.id);
+      return cleared ?? null;
+    }),
+  /**
    * Switch the topic's pinned model and its effort pin atomically — see
    * `TopicModel.updateModelPin`. Same co-editing rules as `updateTopic`.
    */

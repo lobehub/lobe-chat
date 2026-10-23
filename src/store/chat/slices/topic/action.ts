@@ -70,6 +70,7 @@ import { setNamespace } from '@/utils/storeDebug';
 
 import { displayMessageSelectors } from '../message/selectors';
 import { type TopicData } from './initialState';
+import { type PendingTopicStatusSource, PendingTopicStatusWrites } from './pendingStatusWrites';
 import {
   applyTopicDispatchToBucket,
   normalizeTopicListParams,
@@ -128,8 +129,6 @@ type TopicPatchScope = {
   groupId?: string;
   scope?: TopicMapScope;
 };
-
-type PendingTopicStatusSource = 'cache' | 'server';
 
 /**
  * Options for switchTopic action
@@ -884,72 +883,15 @@ export class ChatTopicActionImpl {
     throw error;
   };
 
-  /**
-   * Optimistic `updateTopicStatus` writes that a topic-list refetch must not
-   * clobber. A refetch whose server query ran BEFORE a status write can land
-   * AFTER the optimistic dispatch and revert the row — e.g. a run-end 'unread'
-   * reverting to 'running', leaving the sidebar spinning forever on a finished
-   * topic. Fetched rows are reconciled against this map: a row still carrying
-   * the pre-write status gets the pending status re-applied; a row already
-   * reflecting it confirms propagation and drops the pin. TTL-bounded so a
-   * failed persist or a legit cross-device status change can't be suppressed
-   * indefinitely.
-   */
-  #pendingTopicStatusWrites = new Map<string, { expiresAt: number; status: ChatTopicStatus }>();
-
-  /**
-   * Reconcile ONE server-sourced row against the pending optimistic writes.
-   *
-   * Every path that brings a topic row back from the server must go through
-   * here before the row reaches the store — list fetches, search, and the
-   * single-topic pull in {@link syncScheduledTopicRun} alike. A path that
-   * bypasses it silently reverts whatever the user just did, and the reader
-   * that trips it is usually the one the optimistic write itself woke up.
-   *
-   * Returns the row to trust: the fetched one, or the fetched one with the
-   * pending status re-applied when it predates the write.
-   */
-  #applyPendingStatusWrite = (item: ChatTopic, source: PendingTopicStatusSource): ChatTopic => {
-    const pending = this.#pendingTopicStatusWrites.get(item.id);
-    if (!pending) return item;
-    if (pending.expiresAt <= Date.now()) {
-      this.#pendingTopicStatusWrites.delete(item.id);
-      return item;
-    }
-    if (item.status === pending.status) {
-      if (source === 'server') this.#pendingTopicStatusWrites.delete(item.id);
-      return item;
-    }
-    return { ...item, status: pending.status };
-  };
-
-  /**
-   * Apply pending terminal statuses before a fetched topic list enters SWR.
-   *
-   * Reconciling only in `onData` keeps Zustand correct but is too late for the
-   * persisted cache: SWR has already accepted the older raw response and can
-   * flush `running` to IndexedDB. After the 15-second pin expires, remounting
-   * the sidebar restores that stale spinner. This step deliberately
-   * handles statuses only; client-only optimistic rows are still added later by
-   * {@link #reconcileFetchedTopics} and never enter the persisted response.
-   * Persisting the pin also means a failed write can survive until the next
-   * successful revalidation; that bounded, self-healing window is preferable to
-   * reintroducing an older response after a confirmed local terminal event.
-   */
-  #applyPendingStatusWrites = (
-    items: ChatTopic[],
-    source: PendingTopicStatusSource,
-  ): ChatTopic[] => {
-    if (this.#pendingTopicStatusWrites.size === 0) return items;
-    return items.map((item) => this.#applyPendingStatusWrite(item, source));
-  };
+  /** Optimistic status writes a refetch must not clobber — see {@link PendingTopicStatusWrites}. */
+  #pendingTopicStatusWrites = new PendingTopicStatusWrites();
 
   #reconcileFetchedTopics = (
     items: ChatTopic[],
     currentItems: ChatTopic[] | undefined,
     source: PendingTopicStatusSource,
   ): ChatTopic[] => {
-    let next = this.#applyPendingStatusWrites(items, source);
+    let next = this.#pendingTopicStatusWrites.applyAll(items, source);
 
     // In-flight first-send optimistic rows are client-only, so any refetch
     // landing mid-send (e.g. the fire-and-forget refreshTopic after a previous
@@ -1065,7 +1007,7 @@ export class ChatTopicActionImpl {
     await topicService.updateTopic(topicId, patch).catch((err) => {
       console.error('[updateTopicStatus] persist failed:', err);
       // The DB never got the write — stop pinning it over fetched rows.
-      this.#pendingTopicStatusWrites.delete(topicId);
+      this.#pendingTopicStatusWrites.drop(topicId);
     });
   };
 
@@ -1109,7 +1051,7 @@ export class ChatTopicActionImpl {
     const patch: Partial<ChatTopic> =
       status === 'completed' ? { completedAt: new Date(), status } : { status };
 
-    this.#pendingTopicStatusWrites.set(topicId, { expiresAt: Date.now() + 15_000, status });
+    this.#pendingTopicStatusWrites.pin(topicId, status);
 
     // Scope on the payload routes the write to the owning bucket inside
     // `internal_dispatchTopic`. A no-op if the bucket isn't loaded; the pin
@@ -1121,6 +1063,34 @@ export class ChatTopicActionImpl {
       agentId,
       groupId,
       scope,
+    });
+  };
+
+  /**
+   * Local mirror of a server-confirmed `unread → active` clear (`markTopicRead`).
+   * Unlike {@link internal_pinTopicStatus} it never pins: the clear's response
+   * may already be stale when it lands (a run started meanwhile, here or on
+   * another device), so a newer pending write wins and the next fetch stays
+   * authoritative. Only a loaded row that is still unread follows.
+   */
+  internal_settleTopicRead = (params: { agentId?: string; groupId?: string; topicId: string }) => {
+    const { agentId, groupId, topicId } = params;
+    if (!this.#pendingTopicStatusWrites.settle(topicId, 'unread')) return;
+
+    const state = this.#get();
+    const key = topicMapKey({
+      agentId: agentId ?? state.activeAgentId,
+      groupId: groupId ?? state.activeGroupId,
+    });
+    const topic = state.topicDataMap[key]?.items?.find((t) => t.id === topicId);
+    if (topic?.status !== 'unread') return;
+
+    state.internal_dispatchTopic({
+      type: 'updateTopic',
+      id: topicId,
+      value: { status: 'active' },
+      agentId,
+      groupId,
     });
   };
 
@@ -1276,7 +1246,7 @@ export class ChatTopicActionImpl {
     // (the button reading as a no-op until pressed a second time). The pin is
     // dropped when the persist fails, so a write that never reached the DB
     // still reverts here.
-    const fresh = this.#applyPendingStatusWrite(fetched, 'server');
+    const fresh = this.#pendingTopicStatusWrites.apply(fetched, 'server');
     if (fresh.status !== fetched.status) return false;
 
     // Server still parked — nothing to fold in.
@@ -1350,7 +1320,7 @@ export class ChatTopicActionImpl {
         pageSize,
         ...query,
       });
-      const items = this.#applyPendingStatusWrites(result.items, 'server');
+      const items = this.#pendingTopicStatusWrites.applyAll(result.items, 'server');
       if (isHead)
         this.#prefetchUnreadTopicMessages(items, this.#get().topicDataMap[containerKey]?.items, {
           agentId,
@@ -1374,7 +1344,7 @@ export class ChatTopicActionImpl {
       withDetails,
     });
     return {
-      items: this.#applyPendingStatusWrites(result.items, 'server'),
+      items: this.#pendingTopicStatusWrites.applyAll(result.items, 'server'),
       total: result.total,
     };
   };
@@ -1600,7 +1570,7 @@ export class ChatTopicActionImpl {
     );
 
     if (activeAgentId) {
-      this.#get().markTopicRead({ agentId: activeAgentId, topicId: id ?? null });
+      void this.#get().markTopicRead({ agentId: activeAgentId, topicId: id ?? null });
     }
 
     if (opts.skipRefreshMessage) return;
