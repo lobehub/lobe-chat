@@ -26,6 +26,12 @@ import { useTranslation } from 'react-i18next';
 
 import Avatar from '@/components/Avatar';
 import { openProjectTopicModal } from '@/features/Projects/WorkingDirectories/StartDirectoryModal';
+import {
+  canStageDraftOn,
+  startProjectTopicDraft,
+} from '@/features/Projects/WorkingDirectories/startProjectTopicDraft';
+import { useAgentFixedDeviceId } from '@/features/Projects/WorkingDirectories/useAgentFixedDeviceId';
+import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useGlobalStore } from '@/store/global';
@@ -95,16 +101,26 @@ const GroupItem = memo<GroupItemComponentProps>(({ group }) => {
   // Only an attributed bucket in a project-scoped list can start a topic with
   // its agent preselected; the `no-agent` bucket has no agent to preselect.
   const canAddTopic = !!scope && !!agentId;
-  // The new-topic modal's picker only lists instance-bound directories; a
-  // device section offering any other directory would open with an unselectable
-  // work location, so its "+" only considers instance-bound ones.
+  // A directory that can't run work — or one on another device than the agent
+  // is fixed to — would stage a draft whose first send is refused, so both the
+  // default and the device sections' "+" only consider ones the agent can use.
+  const fixedDeviceId = useAgentFixedDeviceId(agentId);
   const startDirectories = useMemo(
-    () => (canAddTopic ? directories.filter((directory) => directory.instanceId) : undefined),
-    [canAddTopic, directories],
+    () => (canAddTopic ? directories.filter((d) => canStageDraftOn(d, fixedDeviceId)) : undefined),
+    [canAddTopic, directories, fixedDeviceId],
   );
 
+  const navigate = useWorkspaceAwareNavigate();
+  // Same habit as an agent's "+": open a blank conversation on a directory and
+  // let the first message create the topic. The modal is only the fallback for
+  // a project with no runnable directory yet — it offers to add one.
   const handleAddTopic = (initialDirectoryId?: string) => {
     if (!scope || !agentId) return;
+    const directoryId = initialDirectoryId ?? startDirectories?.[0]?.id;
+    if (directoryId) {
+      startProjectTopicDraft({ agentId, directoryId, navigate, projectId: scope.projectId });
+      return;
+    }
     openProjectTopicModal({
       coordinatorAgentId: scope.coordinatorAgentId ?? agentId,
       directories,
