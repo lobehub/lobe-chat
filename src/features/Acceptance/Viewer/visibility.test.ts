@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   canCommentOnAcceptanceEvidence,
+  canRejectAcceptanceOnly,
   canReviewAcceptance,
   canViewAcceptanceHistory,
   isReadOnlyAcceptanceDecider,
@@ -70,5 +71,20 @@ describe('isReadOnlyAcceptanceDecider', () => {
   it('shows nothing to a viewer or link visitor who cannot weigh in', () => {
     expect(isReadOnlyAcceptanceDecider({ canReview: false }, false)).toBe(false);
     expect(isReadOnlyAcceptanceDecider(undefined, true)).toBe(false);
+  });
+});
+
+describe('canRejectAcceptanceOnly', () => {
+  it('turns on reject for a reviewer a decider granted reject access to', () => {
+    expect(canRejectAcceptanceOnly({ canReject: true, canReview: false })).toBe(true);
+  });
+
+  it('leaves a decider on the full bar', () => {
+    expect(canRejectAcceptanceOnly({ canReject: true, canReview: true })).toBe(false);
+  });
+
+  it('grants nothing without the grant, or before the bundle loads', () => {
+    expect(canRejectAcceptanceOnly({ canReject: false, canReview: false })).toBe(false);
+    expect(canRejectAcceptanceOnly(undefined)).toBe(false);
   });
 });

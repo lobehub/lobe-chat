@@ -3,7 +3,7 @@ import { getTestDB } from '@lobechat/database/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { WorkModel } from '@/database/models/work';
-import { users, workspaceMembers, workspaces } from '@/database/schemas';
+import { agents, users, workspaceMembers, workspaces } from '@/database/schemas';
 
 import { canvasRouter } from '../canvas';
 
@@ -136,8 +136,9 @@ describe('canvasRouter.getVersion', () => {
     expect(result!.metadata.manifestKey).toBe(metadata('a').manifestKey);
   });
 
-  it('loads a teammate project from its owner-scoped manifest', async () => {
+  it('loads a canvas created by a public agent for a teammate', async () => {
     const workspaceId = 'canvas-router-ws';
+    const agentId = 'canvas-router-public-agent';
     await serverDB
       .insert(workspaces)
       .values({ id: workspaceId, name: 'ws', primaryOwnerId: userId, slug: workspaceId });
@@ -145,14 +146,20 @@ describe('canvasRouter.getVersion', () => {
       { role: 'owner', userId, workspaceId },
       { role: 'editor', userId: 'stranger', workspaceId },
     ]);
+    await serverDB.insert(agents).values({
+      id: agentId,
+      userId,
+      visibility: 'public',
+      workspaceId,
+    });
     await new WorkModel(serverDB, userId, workspaceId).registerCanvas({
+      agentId,
       canvasId: 'cvs_ws',
       metadata: metadata('ws'),
       title: 'Shared',
       toolCallId: 'call-ws',
       toolIdentifier: 'lobe-canvas',
       toolName: 'createCanvas',
-      visibility: 'public',
     });
 
     const result = await canvasRouter

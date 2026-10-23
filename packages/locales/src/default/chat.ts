@@ -988,6 +988,8 @@ export default {
   'inputQueue.enqueueRejected': 'Queue is full. Try again after the current run finishes.',
   'inputQueue.queuedHint': 'Sends when the current step finishes',
   'inputQueue.queuedMergeHint': 'Merged and sent when the current step finishes',
+  'inputQueue.queuedRunEndHint': 'Sends when the current run finishes',
+  'inputQueue.queuedRunEndMergeHint': 'Merged and sent when the current run finishes',
   'inputQueue.sendNow': 'Send now (interrupts current run)',
   'inputQueue.alreadyDelivered': 'Already sent to the agent',
   'inputQueue.withdrawFailed': 'Couldn’t take the message back. Try again.',
@@ -1411,6 +1413,8 @@ export default {
   'newPlatformAgent': 'Connect External Agents',
   'newPlatformAgentDesc': 'Connect Claude Code, OpenClaw, and other agents',
   'newGroupChat': 'Create Group',
+  'agent.copyId': 'Copy Agent ID',
+  'agent.copyIdSuccess': 'Agent ID copied',
   'agent.publishToWorkspace': 'Publish to Workspace',
   'agent.publishToWorkspaceErrorFixedPrivateDevice':
     'Publish the fixed device to the workspace, or let members choose a device, before publishing this Agent.',
@@ -1437,6 +1441,7 @@ export default {
   'opStatusTray.status.toolCalling': 'Calling tools',
   'opStatusTray.cost': 'cost',
   'opStatusTray.steps': 'steps',
+  'opStatusTray.llmCalls': 'LLM calls',
   'opStatusTray.tokens': 'tokens',
 
   // Connect Agent wizard (device-first): pick a machine, auto-scan the agents
@@ -1887,6 +1892,7 @@ export default {
   'task.intermediateSteps': '{{count}} intermediate steps',
   'task.metrics.duration': '(took {{duration}})',
   'task.metrics.stepsShort': 'steps',
+  'task.metrics.llmCallsShort': 'LLM calls',
   'task.metrics.toolCallsShort': 'skill uses',
   'task.status.cancelled': 'Task Cancelled',
   'task.status.failed': 'Task Failed',
@@ -2505,6 +2511,7 @@ export default {
     'The coordinator is breaking the goal into executable tasks — they will appear here shortly.',
   'goalProcess.result.followUp.placeholder': 'Ask about this result, or what to do next…',
   'goalProcess.result.followUp.send': 'Send to the goal conversation',
+  'goalProcess.result.followUp.trigger': 'Follow up',
   'goalProcess.tag.needsDecision': 'Needs your decision',
   'goalProcess.acceptance.repairing': 'Repairing',
   'goalProcess.acceptance.verifying': 'Verifying',
@@ -3807,7 +3814,6 @@ export default {
     'Some expanded folders are too large to list fully — only the first entries are shown',
   'workingPanel.files.views.changes': 'Git Changes',
   'workingPanel.files.views.project': 'Project',
-  'workingPanel.files.views.title': 'File View',
   'workingPanel.pr.action.arming': 'Arming auto-merge…',
   'workingPanel.pr.action.autoMerge': 'Auto-merge when ready',
   'workingPanel.pr.action.bypassSuffix': 'bypass rules',
@@ -4027,4 +4033,42 @@ export default {
   'userFeedbackCard.count_other': '{{count}} comments',
   'userFeedbackCard.title': 'User feedback',
   'you': 'You',
+  'sandboxDrive.pickerTitle': 'Working directory',
+  'sandboxDrive.pickerInfoTooltip':
+    'Pick a folder on your drive and its files are kept across conversations. Without one, the sandbox is temporary.',
+  'sandboxDrive.manageEnvironments': 'Environments',
+  'sandboxEnvironment.title': 'Environment',
+  'sandboxEnvironment.hint':
+    'Cloned and set up once in the working directory before the first command. A folder that already has files is left as it is.',
+  'sandboxEnvironment.none': 'No environment',
+  'sandboxEnvironment.noneDesc': 'Start from an empty working directory',
+  'sandboxEnvironment.empty': 'No environments yet. Create one in Environments.',
+  'sandboxEnvironment.missing': 'Environment unavailable',
+  'sandboxEnvironment.loading': 'Loading environment…',
+  'sandboxEnvironment.loadFailed': "Couldn't load environments",
+  'sandboxEnvironment.retry': 'Retry',
+  'sandboxEnvironment.saveFailed': 'Could not change the environment. Try again.',
+  'sandboxDrive.root': 'Drive root',
+  'sandboxDrive.building': '{{name}} · building',
+  'sandboxDrive.browse': 'Choose a folder on your drive…',
+  'sandboxDrive.browseOther': 'Choose another folder…',
+  'sandboxDrive.browseDesc': 'Files in it are kept across conversations',
+  'sandboxDrive.folderDesc': 'Folder on your drive · {{path}}',
+  'sandboxDrive.environmentDesc': 'Environment directory · installed packages are kept too',
+  'sandboxDrive.environmentBuildingDesc':
+    'Environment directory · building, usable once it finishes',
+  'sandboxDrive.upsell': 'Keep files on a drive',
+  'sandboxDrive.fallback.directoryMissing':
+    'This folder no longer exists on the drive. Runs use a temporary sandbox until you pick another folder.',
+  'sandboxDrive.fallback.instanceUnavailable':
+    'This environment directory can’t be used here any more. Runs use a temporary sandbox until you pick another one.',
+  'sandboxDrive.fallback.rootNotAllowed':
+    'The public drive’s root cannot be a working folder. This run will use a temporary sandbox; pick a folder.',
+  'sandboxDrive.fallbackChip.directoryMissing': 'Folder no longer exists',
+  'sandboxDrive.fallbackChip.instanceUnavailable': 'Environment unavailable',
+  'sandboxDrive.fallbackChip.rootNotAllowed': 'Pick a folder',
+  'sandboxDrive.fallback.instanceRebuildRequired':
+    'This private environment directory is still on the public drive and needs to be rebuilt on your personal drive. This run will use a temporary sandbox.',
+  'sandboxDrive.fallbackChip.instanceRebuildRequired': 'Rebuild on personal drive',
+  'sandboxDrive.folderOnDriveDesc': '{{drive}} · {{path}}',
 };

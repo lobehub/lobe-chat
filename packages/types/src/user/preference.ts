@@ -120,6 +120,11 @@ export interface WorkspaceUserPreference {
    *   ignored; nothing reads or writes this map.
    */
   sidebarPinnedOverrides?: Record<string /* itemId */, boolean>;
+  /**
+   * Topic sidebars list only the topics this member created, hiding the other
+   * members' topics under the same agent / group.
+   */
+  topicOnlyMine?: boolean;
 }
 
 export interface LobeUser {
@@ -134,6 +139,11 @@ export interface LobeUser {
 }
 
 export const UserGuideSchema = z.object({
+  /**
+   * Pages and Resources were merged into Docs; set once the notice is acknowledged
+   */
+  docsMerged: z.boolean().optional(),
+
   /**
    * Move the settings button to the avatar dropdown
    */
@@ -244,11 +254,6 @@ export const UserLabSchema = z.object({
    * instead of being thrown away with the sandbox
    */
   enablePersistentSandbox: z.boolean().optional(),
-  /**
-   * show the redesigned onboarding flow when this user first enters a newly
-   * created workspace (the previous flow otherwise)
-   */
-  enableWorkspaceOnboardingV2: z.boolean().optional(),
 });
 
 export type UserLab = z.infer<typeof UserLabSchema>;

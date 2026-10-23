@@ -1,4 +1,5 @@
 import type { InternalExecAgentParams } from '../types';
+import { pickSandboxPlacement } from './sandboxPlacement';
 
 export interface NewTopicMetadataInput {
   appContext?: InternalExecAgentParams['appContext'];
@@ -61,10 +62,7 @@ export const buildNewTopicMetadata = ({
     ...(editingGroupId && { editingGroupId }),
     taskId,
     ...(initialTopicMeta?.repos && { repos: initialTopicMeta.repos }),
-    ...(initialTopicMeta?.sandboxInstanceId && {
-      sandboxInstanceId: initialTopicMeta.sandboxInstanceId,
-    }),
-    ...(initialTopicMeta?.sandboxMode && { sandboxMode: initialTopicMeta.sandboxMode }),
+    ...pickSandboxPlacement(initialTopicMeta),
     ...(initialTopicMeta?.workingDirectory && {
       workingDirectory: initialTopicMeta.workingDirectory,
     }),

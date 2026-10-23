@@ -467,6 +467,25 @@ describe('TopicItem active state', () => {
     expect(screen.getByTestId('topic-unread-dot')).toBeInTheDocument();
   });
 
+  /** @example A project row is not in the chat store, so only its own status says unread. */
+  it('shows the unread dot for a project row whose own status is unread', () => {
+    scopedTopicMock.value = { agentId: 'other-agent', agentName: 'Other Agent' };
+    useTopicNavigationMock.mockReturnValue({
+      isInAgentSubRoute: false,
+      isInTopicContextRoute: false,
+      navigateToTopic: vi.fn(),
+      routeTopicId: undefined,
+    });
+
+    render(
+      <TopicListScopeContext value={{ projectId: 'project-1' }}>
+        <TopicItem id="project-topic" status="unread" title="Project work" />
+      </TopicListScopeContext>,
+    );
+
+    expect(screen.getByTestId('topic-unread-dot')).toBeInTheDocument();
+  });
+
   it('shows the pull request marker once the topic is no longer unread', () => {
     topicMetaCardMock.value = { pullRequest: { state: 'open' } };
     useTopicNavigationMock.mockReturnValue({

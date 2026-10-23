@@ -162,6 +162,7 @@ export const cloudSandboxRuntime: ServerRuntimeRegistration = {
       fileService,
       marketService,
       sandboxCwd: sandbox.cwd,
+      sandboxInitialization: sandbox.initialization,
       sandboxInstanceId: sandbox.environment,
       sandboxSpecification: sandbox.specification,
       sandboxWorkingDir: sandbox.workingDir,

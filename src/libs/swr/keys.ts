@@ -128,18 +128,30 @@ export const topicKeys = {
     'topic:scheduledRunWatch',
     topicId,
   ]),
-  search: def('topic:search', (keywords: string, agentId?: string, groupId?: string) => [
+  search: def(
     'topic:search',
-    keywords,
-    agentId,
-    groupId,
-  ]),
+    (keywords: string, agentId?: string, groupId?: string, onlyMine?: boolean) => [
+      'topic:search',
+      keywords,
+      agentId,
+      groupId,
+      onlyMine,
+    ],
+  ),
 };
 
 // ---- acceptance comment -------------------------------------------------
 export const acceptanceCommentKeys = {
   list: def('acceptanceComment:list', (acceptanceId: string) => [
     'acceptanceComment:list',
+    acceptanceId,
+  ]),
+};
+
+// ---- acceptance collaboration -------------------------------------------
+export const acceptanceCollaborationKeys = {
+  conversation: def('acceptanceCollaboration:conversation', (acceptanceId: string) => [
+    'acceptanceCollaboration:conversation',
     acceptanceId,
   ]),
 };
@@ -298,23 +310,6 @@ export const briefKeys = {
 // ---- agent config / available / search ----------------------------------
 export const agentConfigKeys = {
   search: def('agent:search', (keyword?: string) => ['agent:search', keyword]),
-};
-
-// ---- aiModel ------------------------------------------------------------
-// The provider model list and the provider list live in `@lobechat/replica`
-// resources now (see `src/store/aiInfra/slices/*/projection.ts`); only the
-// paged disabled-models fetch and the per-model reasoning config are SWR keys.
-export const aiModelKeys = {
-  disabledModelsPage: def('aiModel:disabledModelsPage', (providerId: string, offset: number) => [
-    'aiModel:disabledModelsPage',
-    providerId,
-    offset,
-  ]),
-  reasoningConfig: def('aiModel:reasoningConfig', (provider: string, model: string) => [
-    'aiModel:reasoningConfig',
-    provider,
-    model,
-  ]),
 };
 
 // ---- image generation ---------------------------------------------------
@@ -951,7 +946,6 @@ export const swrKeys = {
   agentDocument: agentDocumentSWRKeys,
   agentHome: agentHomeKeys,
   agentSignal: agentSignalKeys,
-  aiModel: aiModelKeys,
   auth: authKeys,
   brief: briefKeys,
   changelog: changelogKeys,
@@ -988,6 +982,7 @@ export const swrKeys = {
   thread: threadKeys,
   tool: toolKeys,
   topic: topicKeys,
+  acceptanceCollaboration: acceptanceCollaborationKeys,
   acceptanceComment: acceptanceCommentKeys,
   documentComment: documentCommentKeys,
   documentLike: documentLikeKeys,

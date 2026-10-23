@@ -804,14 +804,28 @@ describe('groupTopicsByAgent', () => {
     ]);
   });
 
-  it('falls back to agentName when agentTitle is absent', () => {
-    const topics = [createRow('a1', 1, { agentId: 'agent-x', agentName: 'lobehub' })];
+  it('titles the group with agentName over agentTitle', () => {
+    const topics = [
+      createRow('a1', 1, {
+        agentId: 'agent-x',
+        agentName: 'Cook',
+        agentTitle: '公共CC(美国 100刀)',
+      }),
+    ];
 
     expect(groupTopicsByAgent(topics, 'updatedAt')[0]).toEqual({
       children: topics,
       id: 'agent:agent-x',
-      title: 'lobehub',
+      title: 'Cook',
     });
+  });
+
+  it('falls back to agentTitle when agentName is blank', () => {
+    const topics = [
+      createRow('a1', 1, { agentId: 'agent-x', agentName: ' ', agentTitle: 'LobeHub' }),
+    ];
+
+    expect(groupTopicsByAgent(topics, 'updatedAt')[0].title).toBe('LobeHub');
   });
 
   it('buckets rows without agent attribution as a title-less no-agent group', () => {
