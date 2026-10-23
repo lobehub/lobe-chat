@@ -1,11 +1,21 @@
 'use client';
 
 import { INBOX_SESSION_ID } from '@lobechat/const';
-import { Avatar, Flexbox, Icon, Input, Popover, Tooltip } from '@lobehub/ui';
-import { createStaticStyles, cx } from 'antd-style';
+import { agentDisplayName } from '@lobechat/types';
+import {
+  Avatar,
+  createStaticStyles,
+  cx,
+  Flexbox,
+  Icon,
+  Input,
+  Popover,
+  Tooltip,
+} from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { MoreHorizontalIcon } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
 
 import { DEFAULT_AVATAR, DEFAULT_INBOX_AVATAR } from '@/const/meta';
@@ -125,7 +135,7 @@ const useSwitchItems = (): SwitchItem[] => {
       id: INBOX_SESSION_ID,
       isInbox: true,
       navId: INBOX_SESSION_ID,
-      title: inboxMeta?.title || 'Inbox',
+      title: agentDisplayName(inboxMeta, 'Inbox'),
     };
 
     const fromAgent = (a: SidebarAgentItem): SwitchItem => ({
@@ -133,7 +143,7 @@ const useSwitchItems = (): SwitchItem[] => {
       background: a.backgroundColor || undefined,
       id: a.id,
       navId: a.id,
-      title: a.title || 'Untitled',
+      title: agentDisplayName(a, 'Untitled'),
     });
 
     const isAgent = (a: SidebarAgentItem): boolean => a.type === 'agent';
@@ -158,6 +168,7 @@ const QuickChatAgentSwitcher = memo(() => {
   // so we trigger the agent list fetch ourselves.
   useFetchAgentList();
 
+  const { t } = useTranslation('chat');
   const navigate = useWorkspaceAwareNavigate();
   const { aid } = useParams<{ aid: string }>();
   const inboxAgentId = useAgentStore(builtinAgentSelectors.inboxAgentId);
@@ -219,14 +230,14 @@ const QuickChatAgentSwitcher = memo(() => {
             <div className={styles.popoverContent}>
               <Input
                 allowClear
-                placeholder={'Search agents...'}
+                placeholder={t('quickChatSwitcher.searchPlaceholder')}
                 size={'small'}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
               <div className={styles.popoverList} style={{ marginTop: 8 }}>
                 {filteredRemaining.length === 0 ? (
-                  <div className={styles.popoverEmpty}>No agents found</div>
+                  <div className={styles.popoverEmpty}>{t('quickChatSwitcher.empty')}</div>
                 ) : (
                   filteredRemaining.map((item) => (
                     <div
@@ -257,7 +268,7 @@ const QuickChatAgentSwitcher = memo(() => {
           }
           onOpenChange={setPopoverOpen}
         >
-          <button aria-label={'More agents'} className={styles.more} type={'button'}>
+          <button aria-label={t('quickChatSwitcher.more')} className={styles.more} type={'button'}>
             <Icon icon={MoreHorizontalIcon} size={16} />
           </button>
         </Popover>

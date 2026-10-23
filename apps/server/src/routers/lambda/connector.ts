@@ -1,3 +1,4 @@
+import { getComposioAppByIdentifier } from '@lobechat/const';
 import { upsertPluginMode } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
@@ -10,7 +11,7 @@ import { AgentModel } from '@/database/models/agent';
 import { ConnectorModel } from '@/database/models/connector';
 import { ConnectorToolModel } from '@/database/models/connectorTool';
 import { PluginModel } from '@/database/models/plugin';
-import type { OIDCConfig } from '@/database/schemas';
+import type { ConnectorMetadata, OIDCConfig } from '@/database/schemas';
 import {
   ConnectorMcpConnectionType,
   ConnectorSourceType,
@@ -18,6 +19,7 @@ import {
   ConnectorToolPermission,
 } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
+import { getComposioClient } from '@/libs/composio';
 import { inferCrudType } from '@/libs/mcp/utils';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
@@ -28,6 +30,8 @@ import {
   discoverConnectorOAuth,
   getConnectorRedirectUri,
   registerDynamicClient,
+  registeredAuthMethod,
+  toClientInformation,
 } from '@/server/services/connector/oauth';
 import {
   generateConnectorOAuthState,
@@ -235,6 +239,7 @@ export const connectorRouter = router({
           return {
             ...rest,
             agentAvatar: meta?.avatar ?? null,
+            agentName: meta?.name ?? null,
             agentTitle: meta?.title ?? null,
             oidcConfig: safeOidcConfig,
             tools,
@@ -271,7 +276,8 @@ export const connectorRouter = router({
       // to know an OAuth flow is configured (reflected via oidcConfig presence).
       const safeCredentials = credentials?.type === 'oauth2' ? null : credentials;
 
-      return { ...rest, credentials: safeCredentials, oidcConfig: safeOidcConfig };
+      const tools = await ctx.connectorToolModel.queryByConnector(connector.id);
+      return { ...rest, credentials: safeCredentials, oidcConfig: safeOidcConfig, tools };
     }),
 
   /**
@@ -545,9 +551,18 @@ export const connectorRouter = router({
       const redirectUri = getConnectorRedirectUri();
 
       // 1. Discover the authorization server backing the MCP resource.
+      // Discovery and registration failures below are server-compatibility
+      // problems the user must fix in their OAuth setup, not internal errors —
+      // surface them as BAD_REQUEST with the reason so the form can show it.
       const { authorizationServerUrl, metadata } = await discoverConnectorOAuth(
         connector.mcpServerUrl,
-      );
+      ).catch((error: unknown) => {
+        throw new TRPCError({
+          cause: error,
+          code: 'BAD_REQUEST',
+          message: (error as Error)?.message ?? String(error),
+        });
+      });
 
       // Default to the scopes advertised by the server when the user did not
       // specify any — many MCP authorization servers reject (or issue a useless
@@ -558,6 +573,7 @@ export const connectorRouter = router({
       // 2. Resolve the OAuth client: pre-registration vs. DCR.
       let clientId = existing.clientId;
       let clientSecret = existing.clientSecret;
+      let tokenEndpointAuthMethod = existing.tokenEndpointAuthMethod;
       const scheme: OIDCConfig['scheme'] = clientId ? 'pre_registration' : 'dcr';
 
       if (!clientId) {
@@ -573,9 +589,16 @@ export const connectorRouter = router({
           metadata,
           redirectUri,
           scopes,
+        }).catch((error: unknown) => {
+          throw new TRPCError({
+            cause: error,
+            code: 'BAD_REQUEST',
+            message: `Dynamic client registration failed: ${(error as Error)?.message ?? String(error)}`,
+          });
         });
         clientId = reg.client_id;
         clientSecret = reg.client_secret ?? undefined;
+        tokenEndpointAuthMethod = registeredAuthMethod(reg, metadata);
       }
 
       // 3. Persist the resolved config so the callback + refresh can reuse it.
@@ -590,6 +613,7 @@ export const connectorRouter = router({
         scheme,
         scopes,
         tokenEndpoint: metadata.token_endpoint,
+        tokenEndpointAuthMethod,
       };
       await ctx.connectorModel.update(input.id, { oidcConfig: resolvedOidc });
 
@@ -597,7 +621,7 @@ export const connectorRouter = router({
       const state = generateConnectorOAuthState();
       const { authorizationUrl, codeVerifier } = await buildAuthorizationUrl({
         authorizationServerUrl,
-        clientInformation: { client_id: clientId, client_secret: clientSecret },
+        clientInformation: toClientInformation(resolvedOidc),
         metadata,
         redirectUri,
         resource: connector.mcpServerUrl,
@@ -611,6 +635,7 @@ export const connectorRouter = router({
         connectorId: input.id,
         lobeUserId: ctx.userId,
         returnTo: input.returnTo,
+        workspaceId: ctx.workspaceId ?? undefined,
       });
 
       return { authorizationUrl };
@@ -663,6 +688,24 @@ export const connectorRouter = router({
       // Missing row → keep the delete idempotent, nothing to authorize.
       if (!target) return;
       assertWorkspaceRowManageable(ctx, target.userId, 'connector');
+
+      const connectedAccountId = target.metadata?.composio?.connectedAccountId;
+      if (connectedAccountId) {
+        try {
+          await getComposioClient().connectedAccounts.delete(connectedAccountId);
+        } catch (error) {
+          // Keep deletion recoverable when the remote account is already gone or
+          // Composio is temporarily unavailable. This matches deleteConnection:
+          // the local connector must not become impossible to remove.
+          console.warn('[Composio] Failed to delete remote connection:', error);
+        }
+
+        // Personal Composio connections still carry the legacy plugin projection.
+        // Agent-scoped connections never create one, so do not remove a base
+        // plugin that may belong to a separate personal connection.
+        if (!target.agentId) await ctx.pluginModel.delete(target.identifier);
+      }
+
       await ctx.connectorModel.delete(input.id);
 
       // Agent-owned connector: also unpin its tool from the owning agent's
@@ -945,6 +988,12 @@ export const connectorRouter = router({
         return { connectorId: null, toolCount: 0 };
       }
 
+      // Legacy plugin rows can outlive a provider's removal from the Composio catalog. Do not
+      // project those rows back into user_connectors when the detail panel performs its sync.
+      if (plugin.customParams?.composio && !getComposioAppByIdentifier(input.identifier)) {
+        return { connectorId: null, toolCount: 0 };
+      }
+
       if (!plugin.manifest) {
         throw new TRPCError({
           code: 'NOT_FOUND',
@@ -954,6 +1003,7 @@ export const connectorRouter = router({
 
       const { connectorId, writable } = await upsertConnectorEntry(ctx, {
         avatar: plugin.manifest.meta?.avatar,
+        composio: plugin.customParams?.composio,
         description: plugin.manifest.meta?.description,
         identifier: input.identifier,
         name: plugin.manifest.meta?.title || input.identifier,
@@ -995,15 +1045,17 @@ async function upsertConnectorEntry(
   },
   params: {
     avatar?: string;
+    composio?: ConnectorMetadata['composio'];
     description?: string;
     identifier: string;
     name: string;
     sourceType: string;
   },
 ): Promise<{ connectorId: string; writable: boolean }> {
-  const metadata: Record<string, unknown> = {};
+  const metadata: ConnectorMetadata = {};
   if (params.description) metadata.description = params.description;
   if (params.avatar) metadata.avatar = params.avatar;
+  if (params.composio) metadata.composio = params.composio;
 
   // Viewers keep browse access: they resolve existing rows read-only below,
   // but must never create or rewrite connector state. These bootstrap
@@ -1026,8 +1078,9 @@ async function upsertConnectorEntry(
     const row = existing[0];
     const writable = canWrite && (!isWorkspaceNonOwner(ctx) || row.userId === ctx.userId);
     if (writable) {
-      // Update metadata with latest description/avatar from manifest
-      await ctx.connectorModel.update(row.id, { metadata });
+      // Preserve runtime-owned metadata (especially Composio account identity)
+      // while refreshing display fields from the latest plugin manifest.
+      await ctx.connectorModel.update(row.id, { metadata: { ...row.metadata, ...metadata } });
     }
     return { connectorId: row.id, writable };
   }

@@ -1,8 +1,7 @@
 'use client';
 
 import { AgentIcon } from '@lobehub/icons';
-import { Avatar, Flexbox, Markdown, Text } from '@lobehub/ui';
-import { createStaticStyles, responsive } from 'antd-style';
+import { Avatar, createStaticStyles, Flexbox, Markdown, responsive, Text } from '@lobehub/ui';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 

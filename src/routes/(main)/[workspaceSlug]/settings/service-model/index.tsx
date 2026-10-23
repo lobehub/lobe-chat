@@ -1,11 +1,13 @@
 'use client';
 
+import Page from '@/features/Settings/service-model';
 import WorkspaceAdminOnly from '@/features/WorkspaceSetting/AdminOnly';
-import Page from '@/routes/(main)/settings/service-model';
 
 const WorkspaceServiceModelSetting = () => (
   <WorkspaceAdminOnly>
-    <Page showSettingHeader={false} />
+    {/* Follow-up / input completion are personal: members edit them on the
+        Chat Preferences tab, so admins don't get a second entry here. */}
+    <Page hidePersonalPreferences showSettingHeader={false} />
   </WorkspaceAdminOnly>
 );
 

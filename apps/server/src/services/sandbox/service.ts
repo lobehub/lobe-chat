@@ -13,6 +13,12 @@ import {
   SANDBOX_INIT_TIMEOUT_MS,
   type SandboxInitDownload,
 } from './bootstrap';
+import {
+  buildSandboxEnvironmentInitCommand,
+  environmentInitRan,
+  environmentInitReport,
+  SANDBOX_ENVIRONMENT_INIT_TIMEOUT_MS,
+} from './environmentInit';
 import type {
   SandboxCommandResult,
   SandboxProvider,
@@ -28,6 +34,9 @@ export class SandboxMiddlewareService implements SandboxService {
   readonly capabilities: SandboxProviderCapabilities;
   readonly kind: SandboxProviderKind;
 
+  private environmentInitialized = false;
+  /** What applying the environment said, until a shell result carries it. */
+  private pendingEnvironmentReport: string | undefined;
   private filesInitialized = false;
 
   constructor(
@@ -42,8 +51,66 @@ export class SandboxMiddlewareService implements SandboxService {
     toolName: string,
     params: Record<string, unknown>,
   ): Promise<SandboxCallToolResult> {
+    const report = await this.ensureEnvironmentInitialized();
+    if (report) this.pendingEnvironmentReport = report;
     await this.ensureFilesInitialized();
-    return this.provider.callTool(toolName, params);
+    const result = await this.provider.callTool(toolName, params);
+
+    // Held until a shell result can carry it: a first call that lists or
+    // reads files has no output to put it in, and dropping it would hide a
+    // failed setup from the rest of the conversation.
+    const pending = this.pendingEnvironmentReport;
+    if (!pending || !SHELL_TOOLS.has(toolName)) return result;
+    this.pendingEnvironmentReport = undefined;
+
+    return withEnvironmentReport(toolName, result, pending);
+  }
+
+  /**
+   * Apply the topic's environment to the working directory the first time this
+   * service instance is used: clone its repository and run its setup there.
+   *
+   * The command itself decides whether to run: only an empty directory is
+   * initialized, so a temporary sandbox is initialized each time it starts
+   * empty and a folder on the drive once. Best-effort: a failure is reported,
+   * never thrown, and the tool call it precedes still runs.
+   *
+   * Returns what the run printed when it did something, for the next shell
+   * result to carry; nothing when the directory was already initialized.
+   */
+  private async ensureEnvironmentInitialized(): Promise<string | undefined> {
+    if (this.environmentInitialized) return;
+    this.environmentInitialized = true;
+
+    const init = this.options.sandboxInitialization;
+    if (!init || !this.provider.capabilities.shell) return;
+
+    try {
+      const result = await this.provider.callTool('runCommand', {
+        command: buildSandboxEnvironmentInitCommand(init),
+        timeout: SANDBOX_ENVIRONMENT_INIT_TIMEOUT_MS,
+      });
+      const stdout = (result.result as { stdout?: string } | null | undefined)?.stdout;
+      // The command always exits cleanly, so a failed call that printed
+      // nothing never reached the sandbox: said so, not passed off as a
+      // folder that was already initialized.
+      if (!environmentInitRan(stdout)) {
+        return result.success ? undefined : environmentInitUnreachable(init.name);
+      }
+
+      log(
+        'Environment %s applied for topic %s: success=%s',
+        init.environmentId,
+        this.options.topicId,
+        result.success,
+      );
+
+      return environmentInitReport(stdout) || undefined;
+    } catch (error) {
+      log('Environment init failed for topic %s: %O', this.options.topicId, error);
+
+      return environmentInitUnreachable(init.name);
+    }
   }
 
   /**
@@ -105,7 +172,11 @@ export class SandboxMiddlewareService implements SandboxService {
   async exportAndUploadFile(
     path: string,
     filename: string,
-    options?: { storageName?: string },
+    options?: {
+      /** Server-owned file-record metadata, e.g. Agent Share provenance. */
+      metadata?: Record<string, unknown>;
+      storageName?: string;
+    },
   ): Promise<SandboxExportFileResult> {
     const { fileService, topicId } = this.options;
 
@@ -148,8 +219,8 @@ export class SandboxMiddlewareService implements SandboxService {
       if (!exported.success) {
         return {
           error: {
+            ...exported.error,
             message: exported.error?.message || 'Failed to export file from sandbox',
-            name: exported.error?.name,
           },
           filename,
           success: false,
@@ -169,6 +240,7 @@ export class SandboxMiddlewareService implements SandboxService {
       const { fileId, url } = await fileService.createFileRecord({
         fileHash,
         fileType: mimeType,
+        ...(options?.metadata ? { metadata: options.metadata } : {}),
         name: filename,
         size: fileSize,
         url: key,
@@ -197,8 +269,12 @@ export class SandboxMiddlewareService implements SandboxService {
 export const normalizeSandboxCommandResult = (
   result: SandboxCallToolResult,
 ): SandboxCommandResult => {
+  const sessionState = result.sessionExpiredAndRecreated
+    ? { sessionExpiredAndRecreated: true }
+    : {};
   if (!result.success) {
     return {
+      ...sessionState,
       exitCode: 1,
       output: '',
       stderr: result.error?.message || 'Command execution failed',
@@ -214,9 +290,41 @@ export const normalizeSandboxCommandResult = (
   const success = typeof raw.success === 'boolean' ? raw.success : exitCode === 0;
 
   return {
+    ...sessionState,
     exitCode,
     output,
     stderr,
     success,
+  };
+};
+
+const SHELL_TOOLS = new Set(['execScript', 'runCommand']);
+
+/**
+ * What the conversation is told when the initializer could not be run at all
+ * — the sandbox did not answer — so a command that follows in an empty folder
+ * is not mistaken for one in the checkout. Nothing was recorded, so the next
+ * call tries again.
+ */
+const environmentInitUnreachable = (name: string) =>
+  `The environment "${name}" could not be applied: the sandbox did not respond. It will be tried again on the next command.`;
+
+/**
+ * The first shell result after an environment was applied, with what applying
+ * it said in front — so the conversation sees why its directory now holds a
+ * checkout, or why it does not. Other tools' results are left as they are:
+ * they have no output to put it in.
+ */
+const withEnvironmentReport = (
+  toolName: string,
+  result: SandboxCallToolResult,
+  report: string,
+): SandboxCallToolResult => {
+  const payload = result.result as { stdout?: string } | null | undefined;
+  if (!SHELL_TOOLS.has(toolName) || !payload || typeof payload !== 'object') return result;
+
+  return {
+    ...result,
+    result: { ...payload, stdout: `[environment] ${report}\n\n${payload.stdout ?? ''}` },
   };
 };

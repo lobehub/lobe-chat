@@ -1,9 +1,21 @@
 'use client';
 
 import { MCP } from '@lobehub/icons';
-import { ActionIcon, Avatar, Flexbox, Icon, Tag, Text, Tooltip, TooltipGroup } from '@lobehub/ui';
-import { Button, toast } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, useResponsive } from 'antd-style';
+import {
+  ActionIcon,
+  Avatar,
+  Button,
+  createStaticStyles,
+  cssVar,
+  Flexbox,
+  Icon,
+  Tag,
+  Text,
+  toast,
+  Tooltip,
+  TooltipGroup,
+  useResponsive,
+} from '@lobehub/ui';
 import {
   BookmarkCheckIcon,
   BookmarkIcon,
@@ -177,7 +189,7 @@ const Header = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
             <PublishedTime className={styles.time} date={createdAt as string} />
             <AgentForkTag />
             {!!forkCount && forkCount > 0 && (
-              <Tag bordered={false} color="default" icon={<Icon icon={GitBranchIcon} />}>
+              <Tag color="default" icon={<Icon icon={GitBranchIcon} />}>
                 {forkCount} {t('fork.forks')}
               </Tag>
             )}

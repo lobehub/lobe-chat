@@ -12,8 +12,18 @@ export interface PromptRewriteSystemAgent extends Omit<SystemAgentItem, 'enabled
 
 export interface UserSystemAgentConfig {
   agentMeta: SystemAgentItem;
+  /**
+   * Speech-to-text model that transcribes voice messages for runtimes that only take text
+   * (heterogeneous agents). Empty `model`/`provider` means unconfigured: voice input that
+   * depends on transcription stays hidden.
+   */
+  asr: SystemAgentItem;
+  /** Model used to draft expertise domains and extract reusable experience from conversations. */
+  expertise: SystemAgentItem;
   followUpAction: SystemAgentItem;
   generationTopic: SystemAgentItem;
+  /** Model used to turn a persistent goal into its standing acceptance criteria. */
+  goal: SystemAgentItem;
   historyCompress: SystemAgentItem;
   inputCompletion: SystemAgentItem;
   /** Model used to turn onboarding evidence into background-safe task recommendations. */
@@ -23,6 +33,8 @@ export interface UserSystemAgentConfig {
   promptRewrite: PromptRewriteSystemAgent;
   thread: SystemAgentItem;
   topic: SystemAgentItem;
+  /** Background workflow that summarizes inactive topics into description/historySummary. */
+  topicAutoSummary: SystemAgentItem;
   translation: SystemAgentItem;
 }
 
@@ -38,3 +50,16 @@ export interface UserServiceModelConfig
 export type UserSystemAgentConfigKey = keyof UserSystemAgentConfig;
 export type UserMemoryServiceModelConfigKey = keyof UserMemoryServiceModelConfig;
 export type UserServiceModelConfigKey = keyof UserServiceModelConfig;
+
+/**
+ * Service-model entries that only shape the user's own chat surface (their
+ * input box and the chips under replies). They stay personal preferences even
+ * inside a workspace: every member may change them, unlike the rest of
+ * `systemAgent`, which requires workspace settings permission there.
+ */
+export const PERSONAL_SYSTEM_AGENT_KEYS = [
+  'followUpAction',
+  'inputCompletion',
+] as const satisfies readonly UserSystemAgentConfigKey[];
+
+export type PersonalSystemAgentKey = (typeof PERSONAL_SYSTEM_AGENT_KEYS)[number];

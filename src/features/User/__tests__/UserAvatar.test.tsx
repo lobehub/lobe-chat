@@ -1,13 +1,11 @@
 import { BRANDING_NAME } from '@lobechat/business-const';
 import { act, render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { DEFAULT_USER_AVATAR_URL } from '@/const/meta';
 import { useUserStore } from '@/store/user';
 
 import UserAvatar from '../UserAvatar';
-
-vi.mock('zustand/traditional');
 
 describe('UserAvatar', () => {
   it('should show the username and avatar are displayed when the user is logged in', async () => {
@@ -38,8 +36,11 @@ describe('UserAvatar', () => {
     });
 
     render(<UserAvatar />);
-    // When user has no avatar url, <Avatar /> falls back to initials rendering (not an <img />)
-    expect(screen.getByText('TE')).toBeInTheDocument();
+    // With no avatar url, <Avatar /> draws a fallback generated from the name: an <svg>
+    // labelled with the username, not an <img />
+    const fallback = screen.getByRole('img', { name: mockUsername });
+    expect(fallback.tagName.toLowerCase()).toBe('svg');
+    expect(screen.queryByAltText(mockUsername)).not.toBeInTheDocument();
   });
 
   it('should show LobeChat and default avatar when the user is not logged in', () => {

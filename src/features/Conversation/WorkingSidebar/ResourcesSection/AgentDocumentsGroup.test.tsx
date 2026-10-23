@@ -11,7 +11,14 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import AgentDocumentsGroup from './AgentDocumentsGroup';
 
-const useClientDataSWR = vi.fn();
+// What the agent's document-list replica holds for this render
+// (`data` undefined = no entry yet) and its sync flags.
+const documentListMock = vi.hoisted(() => vi.fn());
+const documentListState = (): {
+  data?: unknown[];
+  error?: unknown;
+  mutate?: (...args: unknown[]) => unknown;
+} => documentListMock() ?? {};
 const useProjectSkillsMock = vi.hoisted(() => vi.fn());
 const modalConfirm = vi.hoisted(() => vi.fn());
 const messageError = vi.hoisted(() => vi.fn());
@@ -20,45 +27,13 @@ const navigateMock = vi.hoisted(() => vi.fn());
 const openDocumentMock = vi.hoisted(() => vi.fn());
 const removeDocumentMock = vi.hoisted(() => vi.fn());
 const useParamsMock = vi.hoisted(() => vi.fn());
+const documentExplorerShouldThrow = vi.hoisted(() => ({ current: false }));
 
-vi.mock('@lobehub/ui/base-ui', () => ({
+vi.mock('@lobehub/ui', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  ...(await import('~base-ui-stubs')).baseUiStubs,
   confirmModal: modalConfirm,
   toast: { error: messageError, success: messageSuccess },
-}));
-
-vi.mock('@lobehub/ui', () => ({
-  Accordion: ({ children }: { children?: ReactNode }) => <div>{children}</div>,
-  AccordionItem: ({ children, title }: { children?: ReactNode; title?: ReactNode }) => (
-    <div>
-      {title}
-      {children}
-    </div>
-  ),
-  ActionIcon: ({ onClick, title }: { onClick?: (e: React.MouseEvent) => void; title?: string }) => (
-    <button aria-label={title} onClick={onClick}>
-      {title}
-    </button>
-  ),
-  Center: ({ children }: { children?: ReactNode }) => <div>{children}</div>,
-  Empty: ({ description }: { description?: ReactNode }) => <div>{description}</div>,
-  Flexbox: ({
-    children,
-    onClick,
-    ...props
-  }: {
-    children?: ReactNode;
-    onClick?: () => void;
-    [key: string]: unknown;
-  }) => (
-    <div onClick={onClick} {...props}>
-      {children}
-    </div>
-  ),
-  Text: ({ children }: { children?: ReactNode }) => <div>{children}</div>,
-}));
-
-vi.mock('@/components/NeuralNetworkLoading', () => ({
-  default: () => <div data-testid="neural-network-loading" />,
 }));
 
 vi.mock('@/components/AsyncError', () => ({
@@ -69,8 +44,14 @@ vi.mock('@/components/AsyncError', () => ({
   ),
 }));
 
-vi.mock('@/libs/swr', () => ({
-  useClientDataSWR: (...args: unknown[]) => useClientDataSWR(...args),
+vi.mock('@/store/agentDocument', () => ({
+  agentDocumentActions: {
+    mutateDocumentList: (_agentId: string, ...args: unknown[]) =>
+      documentListState().mutate?.(...args),
+    useFetchDocumentList: () => ({ error: documentListState().error }),
+  },
+  agentDocumentSelectors: { getDocumentList: () => () => documentListState().data },
+  useAgentDocumentStore: (selector: (state: unknown) => unknown) => selector({}),
 }));
 
 vi.mock('react-i18next', () => ({
@@ -101,19 +82,24 @@ vi.mock('@/features/AgentDocumentsExplorer', () => ({
   }: {
     data: { documentId: string; id: string; title?: string }[];
     onOpenDocument?: (documentId: string, agentDocumentId?: string) => void;
-  }) => (
-    <div data-doc-count={data.length} data-testid="document-explorer-tree">
-      {data.map((doc) => (
-        <button
-          data-testid={`tree-open-${doc.id}`}
-          key={doc.id}
-          onClick={() => onOpenDocument?.(doc.documentId, doc.id)}
-        >
-          {doc.title}
-        </button>
-      ))}
-    </div>
-  ),
+  }) =>
+    documentExplorerShouldThrow.current ? (
+      (() => {
+        throw new Error('document tree render failed');
+      })()
+    ) : (
+      <div data-doc-count={data.length} data-testid="document-explorer-tree">
+        {data.map((doc) => (
+          <button
+            data-testid={`tree-open-${doc.id}`}
+            key={doc.id}
+            onClick={() => onOpenDocument?.(doc.documentId, doc.id)}
+          >
+            {doc.title}
+          </button>
+        ))}
+      </div>
+    ),
 }));
 
 vi.mock('@/features/Workspace/useWorkspaceAwareNavigate', () => ({
@@ -189,10 +175,6 @@ vi.mock('@/features/ChatInput/InputEditor/ActionTag/skillDragData', () => ({
 }));
 
 vi.mock('@/services/agentDocument', () => ({
-  agentDocumentSWRKeys: {
-    documents: (agentId: string) => ['agent:documents', agentId],
-    documentsList: (agentId: string) => ['agent:documentsList', agentId],
-  },
   agentDocumentService: {
     getDocuments: vi.fn(),
     removeDocument: removeDocumentMock,
@@ -291,7 +273,7 @@ const webDocRow = {
 
 describe('AgentDocumentsGroup', () => {
   beforeEach(() => {
-    useClientDataSWR.mockReset();
+    documentListMock.mockReset();
     useProjectSkillsMock.mockReset();
     useProjectSkillsMock.mockReturnValue({
       deviceItems: [],
@@ -313,10 +295,11 @@ describe('AgentDocumentsGroup', () => {
     removeDocumentMock.mockReset();
     removeDocumentMock.mockResolvedValue({ deleted: true, id: 'doc-1' });
     useParamsMock.mockReturnValue({});
+    documentExplorerShouldThrow.current = false;
   });
 
   it('defaults to the Skills tab and renders skill bundles via SkillsList', () => {
-    useClientDataSWR.mockReturnValue({
+    documentListMock.mockReturnValue({
       data: [skillBundleRow, skillIndexRow, fileDocRow, webDocRow],
       error: undefined,
       isLoading: false,
@@ -360,7 +343,7 @@ describe('AgentDocumentsGroup', () => {
       projectItems: [projectItem],
       raw: undefined,
     });
-    useClientDataSWR.mockReturnValue({
+    documentListMock.mockReturnValue({
       data: [fileDocRow, webDocRow],
       error: undefined,
       isLoading: false,
@@ -375,8 +358,44 @@ describe('AgentDocumentsGroup', () => {
     expect(screen.getByText('device-writer')).toBeInTheDocument();
   });
 
+  it('keeps the filesystem skill scan inert while the pane is disabled', () => {
+    const projectItem = {
+      description: 'writes things',
+      fileCount: 2,
+      files: [],
+      id: 'project-skill',
+      name: 'project-writer',
+      scope: 'project' as const,
+    };
+    useProjectSkillsMock.mockReturnValue({
+      deviceItems: [],
+      error: undefined,
+      getRowActions: () => [],
+      isLoading: false,
+      items: [projectItem],
+      mutate: vi.fn(),
+      onOpenFile: () => undefined,
+      onOpenSkill: () => undefined,
+      projectItems: [projectItem],
+      raw: undefined,
+    });
+    documentListMock.mockReturnValue({
+      data: [],
+      error: undefined,
+      isLoading: false,
+      mutate: vi.fn(),
+    });
+
+    render(<AgentDocumentsGroup showLocalProjectSkills enabled={false} workingDirectory="/repo" />);
+
+    // `undefined` workingDirectory is the hook's documented inert mode: no scan fires.
+    expect(useProjectSkillsMock).toHaveBeenCalledWith(undefined, undefined);
+    expect(screen.queryByTestId('skills-list')).not.toBeInTheDocument();
+    expect(screen.queryByText('project-writer')).not.toBeInTheDocument();
+  });
+
   it('opens the SKILL.md document in the portal when clicking a skill bundle row', () => {
-    useClientDataSWR.mockReturnValue({
+    documentListMock.mockReturnValue({
       data: [skillBundleRow, skillIndexRow],
       error: undefined,
       isLoading: false,
@@ -391,7 +410,7 @@ describe('AgentDocumentsGroup', () => {
   });
 
   it('falls back to the bundle id when opening an orphan skill bundle', () => {
-    useClientDataSWR.mockReturnValue({
+    documentListMock.mockReturnValue({
       data: [skillBundleRow], // no SKILL.md child
       error: undefined,
       isLoading: false,
@@ -406,7 +425,7 @@ describe('AgentDocumentsGroup', () => {
   });
 
   it('opens a child file by relative path through onOpenFile', () => {
-    useClientDataSWR.mockReturnValue({
+    documentListMock.mockReturnValue({
       data: [skillBundleRow, skillIndexRow],
       error: undefined,
       isLoading: false,
@@ -422,7 +441,7 @@ describe('AgentDocumentsGroup', () => {
 
   it('routes directly when opening a skill from document mode', () => {
     useParamsMock.mockReturnValue({ docId: 'doc-content-1' });
-    useClientDataSWR.mockReturnValue({
+    documentListMock.mockReturnValue({
       data: [skillBundleRow, skillIndexRow],
       error: undefined,
       isLoading: false,
@@ -437,7 +456,7 @@ describe('AgentDocumentsGroup', () => {
   });
 
   it('renders the document tree when switching to the Documents tab', () => {
-    useClientDataSWR.mockReturnValue({
+    documentListMock.mockReturnValue({
       data: [skillBundleRow, skillIndexRow, fileDocRow, webDocRow],
       error: undefined,
       isLoading: false,
@@ -455,8 +474,23 @@ describe('AgentDocumentsGroup', () => {
     expect(tree).toHaveAttribute('data-doc-count', '1');
   });
 
+  it('contains document tree render failures in an alert boundary', () => {
+    documentExplorerShouldThrow.current = true;
+    documentListMock.mockReturnValue({
+      data: [fileDocRow],
+      error: undefined,
+      isLoading: false,
+      mutate: vi.fn(),
+    });
+
+    render(<AgentDocumentsGroup activeFilter="documents" />);
+
+    expect(screen.getByRole('alert')).toHaveTextContent('Render Error');
+    expect(screen.getByRole('alert')).toHaveTextContent('document tree render failed');
+  });
+
   it('opens document tree files in the portal by default', () => {
-    useClientDataSWR.mockReturnValue({
+    documentListMock.mockReturnValue({
       data: [skillBundleRow, skillIndexRow, fileDocRow, webDocRow],
       error: undefined,
       isLoading: false,
@@ -474,7 +508,7 @@ describe('AgentDocumentsGroup', () => {
 
   it('routes document tree files directly in document mode', () => {
     useParamsMock.mockReturnValue({ docId: 'doc-content-1' });
-    useClientDataSWR.mockReturnValue({
+    documentListMock.mockReturnValue({
       data: [skillBundleRow, skillIndexRow, fileDocRow, webDocRow],
       error: undefined,
       isLoading: false,
@@ -491,7 +525,7 @@ describe('AgentDocumentsGroup', () => {
 
   it('defaults to Documents first in document mode and keeps Skills as the second tab', () => {
     useParamsMock.mockReturnValue({ docId: 'doc-content-1' });
-    useClientDataSWR.mockReturnValue({
+    documentListMock.mockReturnValue({
       data: [skillBundleRow, skillIndexRow, fileDocRow, webDocRow],
       error: undefined,
       isLoading: false,
@@ -517,7 +551,7 @@ describe('AgentDocumentsGroup', () => {
 
   it('can be controlled by an outer page-mode tab bar', () => {
     useParamsMock.mockReturnValue({ docId: 'doc-content-1' });
-    useClientDataSWR.mockReturnValue({
+    documentListMock.mockReturnValue({
       data: [skillBundleRow, skillIndexRow, fileDocRow, webDocRow],
       error: undefined,
       isLoading: false,
@@ -540,7 +574,7 @@ describe('AgentDocumentsGroup', () => {
   });
 
   it('resets to Documents when entering document mode', () => {
-    useClientDataSWR.mockReturnValue({
+    documentListMock.mockReturnValue({
       data: [fileDocRow, webDocRow],
       error: undefined,
       isLoading: false,
@@ -564,7 +598,7 @@ describe('AgentDocumentsGroup', () => {
 
   it('renders web items as cards in the Web tab and supports deletion', async () => {
     const mutate = vi.fn().mockResolvedValue(undefined);
-    useClientDataSWR.mockReturnValue({
+    documentListMock.mockReturnValue({
       data: [fileDocRow, webDocRow],
       error: undefined,
       isLoading: false,
@@ -591,6 +625,7 @@ describe('AgentDocumentsGroup', () => {
       agentId: 'agent-1',
       documentId: 'doc-content-2',
       id: 'doc-2',
+      withChildren: true,
     });
     expect(mutate).toHaveBeenCalled();
     expect(navigateMock).not.toHaveBeenCalled();
@@ -599,7 +634,7 @@ describe('AgentDocumentsGroup', () => {
   });
 
   it('falls back to a single empty placeholder when every skill source is empty', () => {
-    useClientDataSWR.mockReturnValue({
+    documentListMock.mockReturnValue({
       data: [fileDocRow, webDocRow],
       error: undefined,
       isLoading: false,
@@ -616,7 +651,7 @@ describe('AgentDocumentsGroup', () => {
   });
 
   it('shows the web empty state when no web items are present', () => {
-    useClientDataSWR.mockReturnValue({
+    documentListMock.mockReturnValue({
       data: [fileDocRow],
       error: undefined,
       isLoading: false,
@@ -629,10 +664,10 @@ describe('AgentDocumentsGroup', () => {
     expect(screen.getByText('No agent documents yet')).toBeInTheDocument();
   });
 
-  it('renders error state when SWR returns an error', () => {
+  it('renders error state when the first load fails', () => {
     const mutate = vi.fn();
-    useClientDataSWR.mockReturnValue({
-      data: [],
+    documentListMock.mockReturnValue({
+      data: undefined,
       error: new Error('oops'),
       isLoading: false,
       mutate,
@@ -644,8 +679,23 @@ describe('AgentDocumentsGroup', () => {
     expect(mutate).toHaveBeenCalled();
   });
 
+  it('keeps painting the persisted list when its revalidation fails', () => {
+    documentListMock.mockReturnValue({
+      data: [fileDocRow, webDocRow],
+      error: new Error('offline'),
+      isLoading: false,
+      mutate: vi.fn(),
+    });
+
+    render(<AgentDocumentsGroup />);
+    fireEvent.click(screen.getByText('Web'));
+
+    expect(screen.queryByTestId('async-error')).not.toBeInTheDocument();
+    expect(screen.getByText('Example')).toBeInTheDocument();
+  });
+
   it('renders the loading spinner while data is being fetched', () => {
-    useClientDataSWR.mockReturnValue({
+    documentListMock.mockReturnValue({
       data: undefined,
       error: undefined,
       isLoading: true,
@@ -653,6 +703,6 @@ describe('AgentDocumentsGroup', () => {
     });
 
     render(<AgentDocumentsGroup />);
-    expect(screen.getByTestId('neural-network-loading')).toBeInTheDocument();
+    expect(screen.getByRole('status')).toBeInTheDocument();
   });
 });

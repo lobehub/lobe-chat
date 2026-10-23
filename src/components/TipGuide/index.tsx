@@ -1,7 +1,5 @@
-import { ActionIcon, Flexbox, Popover } from '@lobehub/ui';
-import { type TooltipProps } from 'antd';
-import { ConfigProvider } from 'antd';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import { createStaticStyles, Flexbox, Popover } from '@lobehub/ui';
+import { ActionIcon, type PopoverPlacement } from '@lobehub/ui';
 import { XIcon } from 'lucide-react';
 import { type CSSProperties, type FC, type ReactNode } from 'react';
 
@@ -17,11 +15,6 @@ const styles = createStaticStyles(({ css }) => {
       display: flex;
       justify-content: end;
       width: 100%;
-    `,
-    overlay: css`
-      .ant-popover-inner {
-        border: none;
-      }
     `,
     tip: css`
       position: absolute;
@@ -67,7 +60,7 @@ export interface TipGuideProps {
   /**
    * Tooltip placement, defaults to bottom
    */
-  placement?: TooltipProps['placement'];
+  placement?: PopoverPlacement;
   /**
    * style
    */
@@ -90,60 +83,42 @@ const TipGuide: FC<TipGuideProps> = ({
   open,
   onOpenChange: setOpen,
 }) => {
+  if (!open) return children;
+
   return (
-    <ConfigProvider
-      theme={{
-        components: {
-          Badge: { fontSize: 12, lineHeight: 1 },
-          Button: { colorPrimary: cssVar.blue7 },
-          Checkbox: {
-            colorPrimary: cssVar.blue7,
-            colorText: cssVar.colorTextLightSolid,
-          },
-          Popover: { colorText: cssVar.colorTextLightSolid },
-        },
-      }}
-    >
-      {open ? (
-        <div className={styles.container}>
-          <div
-            style={{
-              marginTop: offsetY,
-            }}
-          >
-            <Popover
-              arrow={true}
-              open={open}
-              placement={placement}
-              trigger="hover"
-              classNames={{
-                root: cx(className, styles.overlay),
-              }}
-              content={
-                <Flexbox horizontal gap={24} style={{ userSelect: 'none' }}>
-                  <div>{title}</div>
-                  <ActionIcon
-                    className={styles.close}
-                    icon={XIcon}
-                    size={'small'}
-                    onClick={() => {
-                      setOpen(false);
-                    }}
-                  />
-                </Flexbox>
-              }
-              styles={{
-                root: { maxWidth, zIndex: 1000, ...style },
-              }}
-            >
-              {children}
-            </Popover>
-          </div>
-        </div>
-      ) : (
-        children
-      )}
-    </ConfigProvider>
+    <div className={styles.container}>
+      <div
+        style={{
+          marginTop: offsetY,
+        }}
+      >
+        <Popover
+          arrow={true}
+          classNames={{ root: className }}
+          open={open}
+          placement={placement}
+          trigger="hover"
+          content={
+            <Flexbox horizontal gap={24} style={{ userSelect: 'none' }}>
+              <div>{title}</div>
+              <ActionIcon
+                className={styles.close}
+                icon={XIcon}
+                size={'small'}
+                onClick={() => {
+                  setOpen(false);
+                }}
+              />
+            </Flexbox>
+          }
+          styles={{
+            root: { maxWidth, zIndex: 1000, ...style },
+          }}
+        >
+          {children}
+        </Popover>
+      </div>
+    </div>
   );
 };
 

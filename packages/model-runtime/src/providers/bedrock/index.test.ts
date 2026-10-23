@@ -8,6 +8,7 @@ import type { Mock } from 'vitest';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AgentRuntimeErrorType } from '../../types/error';
+import type { ModelRuntimeDiagnostics } from '../../types/providerDiagnostics';
 import * as debugStreamModule from '../../utils/debugStream';
 import { experimental_buildLlama2Prompt, LobeBedrockAI } from './index';
 
@@ -90,7 +91,6 @@ describe('LobeBedrockAI', () => {
         token: 'test-bedrock-api-key',
       });
     });
-
     it('should throw InvalidBedrockCredentials if accessKeyId is missing', () => {
       expect(() => {
         new LobeBedrockAI({
@@ -169,6 +169,42 @@ describe('LobeBedrockAI', () => {
         expect(result).toBeInstanceOf(Response);
       });
 
+      it('captures decoded Bedrock events before protocol transformation', async () => {
+        const providerChunks = [
+          { generation: '', generation_token_count: 1 },
+          { generation: '', generation_token_count: 1, stop_reason: 'stop' },
+        ];
+        (instance['client'].send as Mock).mockResolvedValue({
+          $metadata: { httpStatusCode: 200, requestId: 'request-1' },
+          body: {
+            async *[Symbol.asyncIterator]() {
+              for (const chunk of providerChunks) {
+                yield { chunk: { bytes: new TextEncoder().encode(JSON.stringify(chunk)) } };
+              }
+            },
+          },
+        });
+        const diagnostics: ModelRuntimeDiagnostics = {};
+
+        const response = await instance.chat(
+          {
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'meta.llama:1',
+          },
+          { diagnostics },
+        );
+        await response.text();
+
+        expect(diagnostics.providerResponse).toMatchObject({
+          apiMode: 'bedrock_llama',
+          rawEvents: providerChunks,
+          requestId: 'request-1',
+          status: 200,
+          stopReason: 'stop',
+          terminalEventReceived: true,
+        });
+      });
+
       it('should handle text messages correctly', async () => {
         // Arrange
         const mockStream = new ReadableStream({
@@ -244,7 +280,7 @@ describe('LobeBedrockAI', () => {
         ]);
       });
 
-      it('should drop ALL stacked trailing assistant messages (LOBE-12572)', async () => {
+      it('should drop ALL stacked trailing assistant messages', async () => {
         const mockStream = new ReadableStream({
           start(controller) {
             controller.enqueue('Hello, world!');
@@ -276,9 +312,39 @@ describe('LobeBedrockAI', () => {
         ]);
       });
 
+      it('should omit disabled thinking when the mapped Bedrock id always thinks', async () => {
+        // Sonnet 5 accepts `disabled`; a channel redirect to Sonnet 5.5 rejects it with a 400.
+        const mappedInstance = new LobeBedrockAI({
+          accessKeyId: 'test-access-key-id',
+          accessKeySecret: 'test-access-key-secret',
+          modelIdMapping: { 'claude-sonnet-5': 'global.anthropic.claude-sonnet-5-5' },
+          region: 'us-west-2',
+        });
+        const mockStream = new ReadableStream({
+          start(controller) {
+            controller.enqueue('Hello, world!');
+            controller.close();
+          },
+        });
+        vi.spyOn(mappedInstance['client'], 'send').mockResolvedValue(
+          Promise.resolve(mockStream) as any,
+        );
+
+        await mappedInstance.chat({
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'claude-sonnet-5',
+          thinking: { type: 'disabled' },
+        } as any);
+
+        const commandInput = (InvokeModelWithResponseStreamCommand as unknown as Mock).mock
+          .calls[0][0];
+        expect(commandInput.modelId).toBe('global.anthropic.claude-sonnet-5-5');
+        expect(JSON.parse(commandInput.body)).not.toHaveProperty('thinking');
+      });
+
       it('should drop assistant prefill when a logical id maps to a Claude 5 Bedrock id', async () => {
         // The channel modelIdMapping resolves the actually-sent Bedrock model
-        // id; the prefill guard must follow it, not the logical id (LOBE-12572).
+        // id; the prefill guard must follow it, not the logical id.
         const mappedInstance = new LobeBedrockAI({
           accessKeyId: 'test-access-key-id',
           accessKeySecret: 'test-access-key-secret',
@@ -1358,7 +1424,7 @@ describe('LobeBedrockAI', () => {
 
     it('should drop assistant prefill in generateObject when a logical id maps to Claude 5', async () => {
       // The prefill guard must follow the resolved Bedrock model id, not the
-      // logical alias the channel mapping hides it behind (LOBE-12572).
+      // logical alias the channel mapping hides it behind.
       const mappedInstance = new LobeBedrockAI({
         accessKeyId: 'test-access-key-id',
         accessKeySecret: 'test-access-key-secret',

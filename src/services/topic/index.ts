@@ -2,6 +2,7 @@ import type {
   HeteroSessionImportPayload,
   HeteroSessionImportResult,
   HeteroSessionImportStatus,
+  UpdateTopicMetadataInput,
 } from '@lobechat/types';
 
 import { INBOX_SESSION_ID } from '@/const/session';
@@ -23,24 +24,33 @@ import {
  */
 export interface TopicListItem extends ChatTopic {
   agentId?: string | null;
+  /** Owning chat group, for a group conversation (which has no `agentId`). */
+  groupId?: string | null;
   lastAssistantMessage?: string | null;
+  /**
+   * Visibility of the owning agent/group. `'private'` conversations stay out of
+   * team listings even when the viewer created them; null for legacy rows with
+   * no resolvable parent.
+   */
+  parentVisibility?: 'private' | 'public' | null;
   /**
    * Start time of the topic's current run (latest top-level running
    * `agent_operations` row). Only set for `running` topics; null when the run
    * never wrote an operation row (e.g. client-mode) — keep a fallback.
+   *
+   * Type widens {@link ChatTopic.runStartedAt}: over-the-wire values arrive as
+   * ISO strings, so a narrowed `Date` here contradicts the base and breaks
+   * assignment in both directions.
    */
-  runStartedAt?: Date | null;
+  runStartedAt?: ChatTopic['runStartedAt'];
 }
 
 export type TopicBatchDeleteScope = 'own' | 'workspace';
 
-type OnboardingSessionMetadataPatch = Partial<NonNullable<ChatTopicMetadata['onboardingSession']>>;
-
-type UpdateTopicMetadataInput = Omit<Partial<ChatTopicMetadata>, 'onboardingSession'> & {
-  onboardingSession?: OnboardingSessionMetadataPatch;
-};
-
 export class TopicService {
+  cancelRateLimitContinuation = (id: string) =>
+    lambdaClient.topic.cancelRateLimitContinuation.mutate({ id });
+
   createTopic = (params: CreateTopicParams): Promise<string> => {
     return lambdaClient.topic.createTopic.mutate({
       ...params,
@@ -54,6 +64,21 @@ export class TopicService {
 
   cloneTopic = (id: string, newTitle?: string): Promise<string> => {
     return lambdaClient.topic.cloneTopic.mutate({ id, newTitle });
+  };
+
+  forkTopic = (params: { id: string; messageId: string; newTitle?: string }): Promise<string> => {
+    return lambdaClient.topic.forkTopic.mutate(params);
+  };
+
+  /** Copies the conversation up to a user message into a new topic with edited content. */
+  branchTopicAtMessage = (params: {
+    content: string;
+    editorData?: Record<string, any> | null;
+    messageId: string;
+    title?: string;
+    topicId: string;
+  }): Promise<{ messageId: string; topicId: string }> => {
+    return lambdaClient.topic.branchTopicAtMessage.mutate(params);
   };
 
   batchMoveTopics = (topicIds: string[], targetAgentId: string) => {
@@ -84,11 +109,14 @@ export class TopicService {
     return lambdaClient.topic.getTopics.query({
       agentId: params.agentId,
       current: params.current,
+      editingAgentId: params.editingAgentId,
+      editingGroupId: params.editingGroupId,
       excludeStatuses: params.excludeStatuses,
       excludeTriggers: params.excludeTriggers,
       groupId: params.groupId,
       includeTriggers: params.includeTriggers,
       isInbox: params.isInbox,
+      onlyMine: params.onlyMine,
       pageSize: params.pageSize,
       sortBy: params.sortBy,
       triggers: params.triggers,
@@ -141,11 +169,17 @@ export class TopicService {
     return result.data.hasFiles;
   };
 
-  searchTopics = (keywords: string, agentId?: string, groupId?: string): Promise<ChatTopic[]> => {
+  searchTopics = (
+    keywords: string,
+    agentId?: string,
+    groupId?: string,
+    onlyMine?: boolean,
+  ): Promise<ChatTopic[]> => {
     return lambdaClient.topic.searchTopics.query({
       agentId,
       groupId,
       keywords,
+      onlyMine: onlyMine || undefined,
     }) as any;
   };
 
@@ -153,8 +187,32 @@ export class TopicService {
     return lambdaClient.topic.updateTopic.mutate({ id, value: data });
   };
 
+  updateTopicModel = (
+    id: string,
+    value: {
+      metadata?: Pick<ChatTopicMetadata, 'heteroEffort' | 'heteroSpeed' | 'reasoningConfig'>;
+      model: string;
+      provider: string;
+    },
+  ) => {
+    return lambdaClient.topic.updateTopicModel.mutate({ id, ...value });
+  };
+
   updateTopicMetadata = (id: string, metadata: UpdateTopicMetadataInput) => {
     return lambdaClient.topic.updateTopicMetadata.mutate({ id, metadata });
+  };
+
+  /** `unread` → `active` only while the topic is still unread; `null` when it was not. */
+  markTopicRead = (id: string) => {
+    return lambdaClient.topic.markTopicRead.mutate({ id });
+  };
+
+  settleRunningOperation = (
+    id: string,
+    operationId: string,
+    status?: NonNullable<ChatTopic['status']>,
+  ) => {
+    return lambdaClient.topic.settleRunningOperation.mutate({ id, operationId, status });
   };
 
   getShareInfo = (topicId: string) => {

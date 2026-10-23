@@ -1,17 +1,22 @@
 import {
+  type RegisterCanvasWorkParams,
   type RegisterDocumentWorkParams,
   type RegisterSkillToolResultWorkParams,
   type RegisterTaskWorkParams,
   WORK_SKILL_PROVIDERS,
   type WorkVersionCumulativeUsage,
 } from '@lobechat/types';
+import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
 import { wsCompatProcedure } from '@/business/server/trpc-middlewares/workspaceAuth';
+import { MessageModel } from '@/database/models/message';
 import { WorkModel } from '@/database/models/work';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
+import { createCanvasStorageService, isOwnCanvasManifestKey } from '@/server/services/canvas';
+import { registerShellWorksForLocalRun } from '@/server/services/workRegistration';
 
 const workProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
@@ -19,6 +24,7 @@ const workProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) => 
 
   return opts.next({
     ctx: {
+      messageModel: new MessageModel(ctx.serverDB, ctx.userId, wsId),
       workModel: new WorkModel(ctx.serverDB, ctx.userId, wsId),
     },
   });
@@ -85,6 +91,29 @@ const registerSkillToolResultSchema = z.object({
   topicId: z.string().nullable().optional(),
 }) satisfies z.ZodType<RegisterSkillToolResultWorkParams>;
 
+const registerCanvasSchema = z.object({
+  agentId: z.string().nullable().optional(),
+  canvasId: z.string().min(1),
+  cumulativeCost: z.number().nullable().optional(),
+  cumulativeUsage: cumulativeUsageSchema.nullable().optional(),
+  description: z.string().nullable().optional(),
+  messageId: z.string().nullable().optional(),
+  metadata: z.object({
+    entry: z.string().min(1),
+    fileCount: z.number().int().nonnegative(),
+    manifestKey: z.string().min(1),
+    runtimeMajor: z.number().int().positive(),
+    totalSize: z.number().int().nonnegative(),
+  }),
+  rootOperationId: z.string().nullable().optional(),
+  threadId: z.string().nullable().optional(),
+  title: z.string().min(1),
+  toolCallId: z.string().nullable().optional(),
+  toolIdentifier: z.string().min(1),
+  toolName: z.string().min(1),
+  topicId: z.string().nullable().optional(),
+}) satisfies z.ZodType<RegisterCanvasWorkParams>;
+
 const registerDocumentSchema = z.object({
   agentDocumentId: z.string().nullable().optional(),
   agentId: z.string().nullable().optional(),
@@ -123,8 +152,10 @@ export const workRouter = router({
         cursor: z.string().nullable().optional(),
         includeFileWorks: z.boolean().optional(),
         limit: z.number().min(1).max(100).default(30),
+        originAgentId: z.string().nullable().optional(),
         provider: z.enum(WORK_SKILL_PROVIDERS).optional(),
-        type: z.enum(['task', 'document', 'external', 'file']).nullable().optional(),
+        type: z.enum(['task', 'document', 'external', 'file', 'canvas']).nullable().optional(),
+        visibility: z.enum(['private', 'public']).optional(),
       }),
     )
     .query(async ({ ctx, input }) => ctx.workModel.listByWorkspace(input)),
@@ -169,9 +200,42 @@ export const workRouter = router({
     .input(z.object({ taskId: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => ctx.workModel.deleteTaskWork(input)),
 
+  // User-initiated removal of an orphaned Work card. The Work is polymorphic,
+  // so this takes the general `agent:update` workspace-write gate (the same one
+  // Work, project and goal mutations use) rather than a per-resource gate; the
+  // model further restricts the delete to the caller's own rows whose backing
+  // task / document is already gone, so a live Work cannot be removed here.
+  deleteWork: skillWorkProcedureWrite
+    .input(z.object({ id: z.string().min(1) }))
+    .mutation(async ({ ctx, input }) => {
+      const removed = await ctx.workModel.deleteWork(input);
+      const canvases = removed.flatMap((row) =>
+        row.resourceType === 'canvas' && row.resourceId
+          ? [{ id: row.resourceId, manifestKeys: row.canvasManifestKeys }]
+          : [],
+      );
+      if (canvases.length === 0) return;
+
+      const storage = createCanvasStorageService(
+        ctx.serverDB,
+        ctx.userId,
+        ctx.workspaceId ?? undefined,
+      );
+      for (const canvas of canvases) await storage.removeCanvas(canvas.id, canvas.manifestKeys);
+    }),
+
   registerTask: taskWorkProcedureWrite
     .input(registerTaskSchema)
     .mutation(async ({ ctx, input }) => ctx.workModel.registerTask(input)),
+
+  registerCanvas: skillWorkProcedureWrite
+    .input(registerCanvasSchema)
+    .mutation(async ({ ctx, input }) => {
+      if (!isOwnCanvasManifestKey(ctx.userId, input.metadata.manifestKey)) {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'Canvas manifest is not yours' });
+      }
+      return ctx.workModel.registerCanvas(input);
+    }),
 
   registerDocument: documentWorkProcedureWrite
     .input(registerDocumentSchema)
@@ -180,4 +244,30 @@ export const workRouter = router({
   handleSkillToolResult: skillWorkProcedureWrite
     .input(registerSkillToolResultSchema)
     .mutation(async ({ ctx, input }) => ctx.workModel.handleSkillToolResult(input)),
+
+  // Completion-time shell Work scan for desktop-LOCAL hetero runs (Claude
+  // Code / Codex with execution target `local`). Those runs create no
+  // `agent_operations` row and never call `heteroFinish`, so the server-side
+  // completion scan (`registerWorksForOperation`) structurally cannot fire —
+  // the client executor reports the run's persisted tool message ids here
+  // instead. Everything is re-read ownership- and topic-scoped from the DB, so
+  // the caller can only ever scan rows it already owns. Same write gate as the
+  // other external-provider registrations.
+  registerShellWorksForRun: skillWorkProcedureWrite
+    .input(
+      z.object({
+        anchorMessageId: z.string().min(1),
+        messageIds: z.array(z.string()).min(1).max(500),
+        topicId: z.string().min(1),
+      }),
+    )
+    .mutation(async ({ ctx, input }) =>
+      registerShellWorksForLocalRun({
+        anchorMessageId: input.anchorMessageId,
+        messageIds: input.messageIds,
+        messageModel: ctx.messageModel,
+        topicId: input.topicId,
+        workModel: ctx.workModel,
+      }),
+    ),
 });

@@ -2,12 +2,22 @@
 
 import { AGENT_CHAT_TOPIC_URL } from '@lobechat/const';
 import type { GroupedTopic } from '@lobechat/types';
-import { ActionIcon, Checkbox, DropdownMenu, Flexbox, Icon, Tag, Text } from '@lobehub/ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import {
+  ActionIcon,
+  Checkbox,
+  createStaticStyles,
+  cssVar,
+  DropdownMenu,
+  Flexbox,
+  Icon,
+  Tag,
+  Text,
+} from '@lobehub/ui';
 import { FolderIcon, MoreHorizontal, Star } from 'lucide-react';
 import { Fragment, memo, type MouseEvent, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { getPlatformIcon } from '@/features/AgentChannel/const';
 import { useTopicItemDropdownMenu } from '@/features/AgentSidebar/Topic/List/Item/useDropdownMenu';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useActivityTime } from '@/hooks/useActivityTime';
@@ -177,6 +187,9 @@ const Row = memo<RowProps>(({ topic, agentId }) => {
     ? (rawTrigger as TriggerFilter)
     : 'chat';
   const triggerLabel = t(`management.filters.trigger.${triggerKey}` as any) as string;
+  // Bot source platform icon (same identity mark as the sidebar topic item).
+  const botPlatform = topic.metadata?.bot?.platform;
+  const BotPlatformIcon = botPlatform ? getPlatformIcon(botPlatform) : undefined;
 
   return (
     <div
@@ -196,6 +209,13 @@ const Row = memo<RowProps>(({ topic, agentId }) => {
           {topic.favorite && (
             <Icon icon={Star} size={12} style={{ color: cssVar.colorWarning, flexShrink: 0 }} />
           )}
+          {BotPlatformIcon && (
+            <BotPlatformIcon
+              color={cssVar.colorTextDescription}
+              size={13}
+              style={{ flexShrink: 0 }}
+            />
+          )}
           <Text className={styles.title} fontSize={13} weight={500}>
             {topic.title || t('defaultTitle')}
           </Text>
@@ -208,7 +228,7 @@ const Row = memo<RowProps>(({ topic, agentId }) => {
       </div>
       <div className={styles.cell}>
         {projectLabel ? (
-          <Tag bordered={false} icon={<Icon icon={FolderIcon} size={11} />} size={'small'}>
+          <Tag icon={<Icon icon={FolderIcon} size={11} />} size={'small'}>
             {projectLabel}
           </Tag>
         ) : (
@@ -282,7 +302,7 @@ const TopicListView = memo<TopicListViewProps>(({ groups, agentId, showGroupTitl
         if (group.children.length === 0) return null;
         const title =
           groupBy === 'byProject'
-            ? getProjectGroupTitle(group.id, group.title, t)
+            ? getProjectGroupTitle(group, t)
             : group.title || getTimeGroupTitle(group.id, t);
         return (
           <Fragment key={group.id}>

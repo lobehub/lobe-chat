@@ -1,32 +1,46 @@
 import { deriveWorktreePath, type DeviceGitWorktreeListItem } from '@lobechat/types';
-import { Icon, Input, Tooltip } from '@lobehub/ui';
 import {
   confirmModal,
+  createStaticStyles,
+  cssVar,
+  cx,
   DropdownMenuItem,
   DropdownMenuPopup,
   DropdownMenuPortal,
   DropdownMenuPositioner,
   DropdownMenuRoot,
   DropdownMenuTrigger,
+  Icon,
+  Input,
+  Spin,
   toast,
-} from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+  Tooltip,
+} from '@lobehub/ui';
 import {
   CheckIcon,
   FolderPlusIcon,
   GitBranchIcon,
   GitForkIcon,
-  LoaderCircleIcon,
   RefreshCwIcon,
   SearchIcon,
   Trash2Icon,
 } from 'lucide-react';
-import { memo, type MouseEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  memo,
+  type MouseEvent,
+  type ReactElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { gitService } from '@/services/git';
 
 import { openCreateWorktreeModal } from './CreateWorktreeModal';
+import { gitMenuTriggerStyles } from './gitMenuTriggerStyles';
 import { useSwitchWorktree } from './useSwitchWorktree';
 import { getPathName, isDisabled, normalizeDisplayPath } from './worktreeHelpers';
 
@@ -114,14 +128,6 @@ const styles = createStaticStyles(({ css }) => ({
     padding-block: 4px;
     padding-inline: 12px;
     border-block-end: 1px solid ${cssVar.colorSplit};
-
-    .ant-input-affix-wrapper {
-      padding-inline: 0;
-    }
-
-    .ant-input-prefix {
-      margin-inline-end: 8px;
-    }
   `,
   section: css`
     flex: 1;
@@ -317,10 +323,6 @@ const styles = createStaticStyles(({ css }) => ({
       background: ${cssVar.colorFillTertiary};
     }
   `,
-  triggerAnchor: css`
-    display: inline-flex;
-    flex: none;
-  `,
 }));
 
 const TEMP_PATH_PREFIXES = ['/tmp', '/var/tmp', '/private/tmp'];
@@ -411,26 +413,38 @@ DirtyStat.displayName = 'DirtyStat';
 
 interface WorktreeSwitcherProps {
   agentId: string;
+  /** Custom trigger element; the default is the compact branch/fork icon chip. */
+  children?: ReactElement;
   currentBranch: string;
   detached?: boolean;
   deviceId?: string;
+  /** Mounted but inert while a stale-first branch awaits confirmation. */
+  disabled?: boolean;
   isGithub: boolean;
   onWorktreesChange?: () => Promise<unknown> | unknown;
   path: string;
+  /** Dropdown placement — the runtime bar opens upward, embedding panels open downward. */
+  placement?: 'topLeft' | 'bottomLeft' | 'bottomRight';
   sourcePath: string;
+  /** The conversation the switch is recorded on; omitted, the global active topic. */
+  topicId?: string | null;
   worktrees: DeviceGitWorktreeListItem[];
 }
 
 const WorktreeSwitcher = memo<WorktreeSwitcherProps>(
   ({
     agentId,
+    children,
     currentBranch,
     detached,
     deviceId,
+    disabled = false,
     isGithub,
     onWorktreesChange,
     path,
+    placement = 'topLeft',
     sourcePath,
+    topicId,
     worktrees,
   }) => {
     const { t } = useTranslation('device');
@@ -444,7 +458,7 @@ const WorktreeSwitcher = memo<WorktreeSwitcherProps>(
     // duplicate delete if the dropdown is reopened mid-removal.
     const [removingPaths, setRemovingPaths] = useState<Set<string>>(() => new Set());
     const currentRowRef = useRef<HTMLDivElement>(null);
-    const switchWorktree = useSwitchWorktree({ agentId, isGithub, sourcePath });
+    const switchWorktree = useSwitchWorktree({ agentId, isGithub, sourcePath, topicId });
 
     // Clear the query each time the dropdown closes so it reopens unfiltered.
     useEffect(() => {
@@ -496,7 +510,7 @@ const WorktreeSwitcher = memo<WorktreeSwitcherProps>(
           return;
         }
 
-        await switchWorktree(worktree.path);
+        await switchWorktree(worktree.path, worktree.detached ? undefined : worktree.branch);
         setOpen(false);
       },
       [switchWorktree],
@@ -567,7 +581,7 @@ const WorktreeSwitcher = memo<WorktreeSwitcherProps>(
 
         // Point the conversation at the freshly created worktree, then reconcile
         // the list so the new row (now `current`) appears.
-        await switchWorktree(result.worktreePath ?? worktreePath);
+        await switchWorktree(result.worktreePath ?? worktreePath, branch);
         await onWorktreesChange?.();
         return undefined;
       },
@@ -577,10 +591,18 @@ const WorktreeSwitcher = memo<WorktreeSwitcherProps>(
     const openCreateWorktree = useCallback(() => {
       setOpen(false);
       openCreateWorktreeModal({
+        // The modal reads the repo's full local branch list itself and draws the
+        // generated default from it, so a name is not handed out twice and does
+        // not collide with a ref on the `wt` namespace path (see
+        // `generateWorktreeBranchName`). It lives there rather than here so the
+        // list can be awaited: snapshotting an in-flight (empty) list would hand
+        // out a name git is guaranteed to refuse.
+        deviceId,
         onSubmit: handleCreateWorktree,
+        path,
         resolvePath: (branch) => deriveWorktreePath(sourcePath, branch),
       });
-    }, [handleCreateWorktree, sourcePath]);
+    }, [deviceId, handleCreateWorktree, path, sourcePath]);
 
     // Scroll the current worktree into view each time the dropdown opens — the
     // list mounts at scrollTop=0, so a current worktree below the fold would
@@ -608,7 +630,7 @@ const WorktreeSwitcher = memo<WorktreeSwitcherProps>(
         normalizeDisplayPath(currentPath) !== normalizeDisplayPath(mainWorktree.path));
     const triggerIcon = isLinkedWorktree ? GitForkIcon : GitBranchIcon;
 
-    const trigger = (
+    const trigger = children ?? (
       <div
         aria-label={t('workingDirectory.worktreesHeading')}
         className={styles.trigger}
@@ -619,12 +641,23 @@ const WorktreeSwitcher = memo<WorktreeSwitcherProps>(
     );
 
     return (
-      <DropdownMenuRoot open={open} onOpenChange={setOpen}>
-        <DropdownMenuTrigger className={styles.triggerAnchor}>
-          <div>{open ? trigger : <Tooltip title={triggerTitle}>{trigger}</Tooltip>}</div>
+      <DropdownMenuRoot
+        open={!disabled && open}
+        onOpenChange={(next) => {
+          if (!disabled) setOpen(next);
+        }}
+      >
+        <DropdownMenuTrigger>
+          <div
+            aria-disabled={disabled}
+            className={gitMenuTriggerStyles.trigger}
+            data-disabled={disabled || undefined}
+          >
+            {open ? trigger : <Tooltip title={triggerTitle}>{trigger}</Tooltip>}
+          </div>
         </DropdownMenuTrigger>
         <DropdownMenuPortal>
-          <DropdownMenuPositioner placement="topLeft" sideOffset={8}>
+          <DropdownMenuPositioner placement={placement} sideOffset={8}>
             <DropdownMenuPopup>
               <div className={styles.container}>
                 <div className={styles.searchBar}>
@@ -633,6 +666,7 @@ const WorktreeSwitcher = memo<WorktreeSwitcherProps>(
                     placeholder={t('workingDirectory.worktreeSearchPlaceholder')}
                     prefix={<Icon icon={SearchIcon} size={14} />}
                     size="small"
+                    style={{ paddingInline: 0 }}
                     value={search}
                     variant="borderless"
                     onChange={(e) => setSearch(e.target.value)}
@@ -718,7 +752,7 @@ const WorktreeSwitcher = memo<WorktreeSwitcherProps>(
                           </div>
                           <div className={styles.actionCell}>
                             {removing ? (
-                              <Icon spin icon={LoaderCircleIcon} size={13} />
+                              <Spin size={13} />
                             ) : worktree.current ? (
                               <Icon className={styles.check} icon={CheckIcon} size={14} />
                             ) : (

@@ -1,23 +1,29 @@
-import { ConnectorDataError } from '@lobechat/connector-data';
-import type { GitHubConnectorClient } from '@lobechat/connector-data/github';
 import {
-  createGitHubComposioConnectorClient,
-  createGitHubOAuthConnectorClient,
-} from '@lobechat/connector-data/github';
+  ConnectorDataError,
+  type ConnectorDataProvider,
+  isConnectorDataProvider,
+} from '@lobechat/connector-data';
+import type { ConfluenceConnectorClient } from '@lobechat/connector-data/confluence';
+import { createConfluenceConnectorClient } from '@lobechat/connector-data/confluence';
+import type { GitHubConnectorClient } from '@lobechat/connector-data/github';
+import { createGitHubMarketConnectorClient } from '@lobechat/connector-data/github';
 import type { GmailConnectorClient } from '@lobechat/connector-data/gmail';
-import { createGmailConnectorClient } from '@lobechat/connector-data/gmail';
-import { and, eq } from 'drizzle-orm';
+import { createGmailConnectorClient, hasGmailReadPermission } from '@lobechat/connector-data/gmail';
+import type { JiraConnectorClient } from '@lobechat/connector-data/jira';
+import { createJiraConnectorClient } from '@lobechat/connector-data/jira';
+import type { LinearConnectorClient } from '@lobechat/connector-data/linear';
+import { createLinearMarketConnectorClient } from '@lobechat/connector-data/linear';
+import type { NotionConnectorClient } from '@lobechat/connector-data/notion';
+import { createNotionConnectorClient } from '@lobechat/connector-data/notion';
+import type { TwitterConnectorClient } from '@lobechat/connector-data/twitter';
+import { createTwitterMarketConnectorClient } from '@lobechat/connector-data/twitter';
 
 import { ConnectorModel } from '@/database/models/connector';
-import { account } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
 import { getComposioClient, isComposioConnectedAccountLookupNotFoundError } from '@/libs/composio';
-import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
-import { ensureFreshConnectorToken } from '@/server/services/connector/tokens';
+import { MarketService } from '@/server/services/market';
 
-const TOKEN_EXPIRY_SKEW_MS = 60_000;
-
-const unavailable = (provider: 'github' | 'gmail') =>
+const unavailable = (provider: ConnectorDataProvider) =>
   new ConnectorDataError({
     code: `${provider}_authorization_unavailable`,
     operation: 'getClient',
@@ -25,7 +31,7 @@ const unavailable = (provider: 'github' | 'gmail') =>
     retryable: false,
   });
 
-const isConfirmedProviderUnavailableError = (error: unknown, provider: 'github' | 'gmail') =>
+const isConfirmedProviderUnavailableError = (error: unknown, provider: ConnectorDataProvider) =>
   error instanceof ConnectorDataError &&
   error.provider === provider &&
   !error.retryable &&
@@ -46,7 +52,7 @@ const isActiveComposioReference = (
     isEnabled: boolean;
     status: string;
   },
-  provider: 'github' | 'gmail',
+  provider: ConnectorDataProvider,
 ) =>
   isActiveReference(reference) &&
   reference.composio?.appSlug.slice(0, 32).toLowerCase() === provider &&
@@ -55,10 +61,6 @@ const isActiveComposioReference = (
   reference.composio.connectedAccountId.length <= 512 &&
   reference.composio.ownerUserId.length > 0 &&
   reference.composio.ownerUserId.length <= 512;
-
-const isTokenUsable = (expiresAt: Date | number | null | undefined) =>
-  expiresAt == null ||
-  (expiresAt instanceof Date ? expiresAt.getTime() : expiresAt) > Date.now() + TOKEN_EXPIRY_SKEW_MS;
 
 /**
  * Resolves authenticated connector-data clients for one user and workspace scope.
@@ -71,7 +73,7 @@ const isTokenUsable = (expiresAt: Date | number | null | undefined) =>
  * - The database and user scope come from an authenticated server context
  *
  * Returns:
- * - Provider clients backed by Composio, connector OAuth, or supported account fallback
+ * - Provider clients backed by Composio or LobeHub Market
  */
 export class ConnectorDataService {
   constructor(
@@ -79,6 +81,19 @@ export class ConnectorDataService {
     private readonly userId: string,
     private readonly workspaceId?: string,
   ) {}
+
+  private resolveProviderClient = (providerId: ConnectorDataProvider): Promise<unknown> => {
+    const resolvers: Record<ConnectorDataProvider, () => Promise<unknown>> = {
+      confluence: () => this.getConfluenceClient(),
+      github: () => this.getGitHubClient(),
+      gmail: () => this.getGmailClient(),
+      jira: () => this.getJiraClient(),
+      linear: () => this.getLinearClient(),
+      notion: () => this.getNotionClient(),
+      twitter: () => this.getTwitterClient(),
+    };
+    return resolvers[providerId]();
+  };
 
   /**
    * Lists provider identifiers with a connector client that can be resolved now.
@@ -95,97 +110,70 @@ export class ConnectorDataService {
   listAvailableProviderIds = async (providerIds: readonly string[]): Promise<string[]> => {
     const availability = await Promise.all(
       providerIds.map(async (providerId) => {
-        const provider = providerId === 'github' || providerId === 'gmail' ? providerId : undefined;
-        if (!provider) return;
+        if (!isConnectorDataProvider(providerId)) return;
 
         try {
-          if (provider === 'github') await this.getGitHubClient();
-          else await this.getGmailClient();
-          return provider;
+          const client = await this.resolveProviderClient(providerId);
+          if (providerId === 'gmail') {
+            const account = await (client as GmailConnectorClient).getAccount();
+            if (!hasGmailReadPermission(account.scopes)) return;
+          }
+          return providerId;
         } catch (error) {
-          if (isConfirmedProviderUnavailableError(error, provider)) return;
+          if (isConfirmedProviderUnavailableError(error, providerId)) return;
           throw error;
         }
       }),
     );
     return availability.filter(
-      (providerId): providerId is 'github' | 'gmail' => providerId !== undefined,
+      (providerId): providerId is ConnectorDataProvider => providerId !== undefined,
     );
   };
 
+  /**
+   * Resolves the current user's LobeHub Market GitHub connection.
+   *
+   * Use when:
+   * - A server workflow needs GitHub REST or GraphQL data without handling OAuth credentials
+   *
+   * Expects:
+   * - Trusted Client authentication is configured for the Market service
+   * - The current Market user has connected the `github` provider
+   *
+   * Returns:
+   * - A user-scoped GitHub connector client backed by Market's OAuth proxy
+   */
   getGitHubClient = async (): Promise<GitHubConnectorClient> => {
-    const referenceModel = new ConnectorModel(this.db, this.userId, this.workspaceId);
+    const market = new MarketService({
+      userInfo: { userId: this.userId, workspaceId: this.workspaceId },
+    });
+    const status = await market.market.skills.getStatus('github');
+    if (!status.success || !status.connected) throw unavailable('github');
 
-    const composioReferences = (
-      await referenceModel.queryComposioReferencesByIdentifiers(['github'])
-    )
-      .filter((reference) => isActiveComposioReference(reference, 'github'))
-      .toSorted((left, right) => left.id.localeCompare(right.id));
-    for (const reference of composioReferences) {
-      const metadata = reference.composio;
-      if (!metadata) continue;
-      try {
-        const composio = getComposioClient();
-        const connectedAccount = await composio.connectedAccounts.get(metadata.connectedAccountId);
-        if (connectedAccount.status !== 'ACTIVE') continue;
-        return createGitHubComposioConnectorClient({
-          composio,
-          connectedAccountId: metadata.connectedAccountId,
-        });
-      } catch (error) {
-        if (!isComposioConnectedAccountLookupNotFoundError(error)) throw error;
-        await referenceModel.markComposioConnectionUnavailable(
-          reference.id,
-          metadata.connectedAccountId,
-        );
-      }
-    }
+    return createGitHubMarketConnectorClient({ market });
+  };
 
-    const references = (await referenceModel.queryReferencesByIdentifiers(['github']))
-      .filter(isActiveReference)
-      .toSorted((left, right) => left.id.localeCompare(right.id));
+  /**
+   * Resolves the current user's LobeHub Market Linear connection.
+   *
+   * Use when:
+   * - A server workflow needs read-only Linear teams, projects or issues
+   *
+   * Expects:
+   * - Trusted Client authentication is configured for the Market service
+   * - The current Market user has connected the `linear` provider
+   *
+   * Returns:
+   * - A user-scoped Linear connector client backed by Market's OAuth proxy
+   */
+  getLinearClient = async (): Promise<LinearConnectorClient> => {
+    const market = new MarketService({
+      userInfo: { userId: this.userId, workspaceId: this.workspaceId },
+    });
+    const status = await market.market.skills.getStatus('linear');
+    if (!status.success || !status.connected) throw unavailable('linear');
 
-    if (references.length > 0) {
-      const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
-      const connectorModel = new ConnectorModel(this.db, this.userId, this.workspaceId, gateKeeper);
-      for (const reference of references) {
-        const connector = await connectorModel.findById(reference.id);
-        if (!connector || connector.identifier !== 'github' || !isActiveReference(connector)) {
-          continue;
-        }
-        const fresh = await ensureFreshConnectorToken(connector, connectorModel);
-        const credentials = fresh.credentials;
-        if (
-          credentials?.type === 'oauth2' &&
-          typeof credentials.accessToken === 'string' &&
-          credentials.accessToken.length > 0 &&
-          isTokenUsable(credentials.expiresAt ?? fresh.tokenExpiresAt)
-        ) {
-          return createGitHubOAuthConnectorClient({ accessToken: credentials.accessToken });
-        }
-      }
-    }
-
-    const accounts = await this.db
-      .select({
-        accessToken: account.accessToken,
-        accessTokenExpiresAt: account.accessTokenExpiresAt,
-        id: account.id,
-      })
-      .from(account)
-      .where(and(eq(account.userId, this.userId), eq(account.providerId, 'github')))
-      .orderBy(account.id)
-      .limit(16);
-    const authAccount = accounts.find(
-      ({ accessToken, accessTokenExpiresAt }) =>
-        typeof accessToken === 'string' &&
-        accessToken.length > 0 &&
-        isTokenUsable(accessTokenExpiresAt),
-    );
-    if (authAccount?.accessToken) {
-      return createGitHubOAuthConnectorClient({ accessToken: authAccount.accessToken });
-    }
-    throw unavailable('github');
+    return createLinearMarketConnectorClient({ market });
   };
 
   getGmailClient = async (): Promise<GmailConnectorClient> => {
@@ -227,5 +215,115 @@ export class ConnectorDataService {
       }
     }
     throw unavailable('gmail');
+  };
+
+  /**
+   * Resolves the first live Composio connected account for a toolkit, marking
+   * references whose account Composio no longer knows as unavailable.
+   *
+   * Returns:
+   * - The Composio client plus the account and owning entity to execute tools as
+   */
+  private resolveComposioAccount = async (provider: ConnectorDataProvider) => {
+    const connectorModel = new ConnectorModel(this.db, this.userId, this.workspaceId);
+    const references = (await connectorModel.queryComposioReferencesByIdentifiers([provider]))
+      .filter((reference) => isActiveComposioReference(reference, provider))
+      .toSorted((left, right) => left.id.localeCompare(right.id));
+
+    for (const reference of references) {
+      const composio = reference.composio;
+      if (!composio) continue;
+      try {
+        const composioClient = getComposioClient();
+        const connectedAccount = await composioClient.connectedAccounts.get(
+          composio.connectedAccountId,
+        );
+        if (connectedAccount.status !== 'ACTIVE') continue;
+        return {
+          composio: composioClient,
+          connectedAccountId: composio.connectedAccountId,
+          userId: composio.ownerUserId,
+        };
+      } catch (error) {
+        if (!isComposioConnectedAccountLookupNotFoundError(error)) throw error;
+        await connectorModel.markComposioConnectionUnavailable(
+          reference.id,
+          composio.connectedAccountId,
+        );
+      }
+    }
+    throw unavailable(provider);
+  };
+
+  /**
+   * Resolves the first active Notion Composio account for this user scope.
+   *
+   * Use when:
+   * - An onboarding collector needs read-only Notion workspace evidence
+   *
+   * Expects:
+   * - A connected Notion reference whose remote Composio account remains ACTIVE
+   *
+   * Returns:
+   * - A user-scoped Notion connector client
+   */
+  getNotionClient = async (): Promise<NotionConnectorClient> =>
+    createNotionConnectorClient(await this.resolveComposioAccount('notion'));
+
+  /**
+   * Resolves the current user's Composio Jira connection.
+   *
+   * Use when:
+   * - An onboarding collector needs read-only Jira projects and recent issues
+   *
+   * Returns:
+   * - A Jira connector client for the first live connected account
+   */
+  getJiraClient = async (): Promise<JiraConnectorClient> =>
+    createJiraConnectorClient(await this.resolveComposioAccount('jira'));
+
+  /**
+   * Resolves the current user's Composio Confluence connection.
+   *
+   * Use when:
+   * - An onboarding collector needs read-only recent Confluence pages
+   *
+   * Returns:
+   * - A Confluence connector client for the first live connected account
+   */
+  getConfluenceClient = async (): Promise<ConfluenceConnectorClient> =>
+    createConfluenceConnectorClient(await this.resolveComposioAccount('confluence'));
+
+  /**
+   * Resolves the current user's LobeHub Market X connection.
+   *
+   * Use when:
+   * - An onboarding collector needs read-only public X profile and recent-post evidence
+   *
+   * Expects:
+   * - Trusted Client authentication is configured for the Market service
+   * - The current Market user has connected the `twitter` provider
+   *
+   * Returns:
+   * - A user-scoped X connector client backed by Market skill tools
+   */
+  getTwitterClient = async (): Promise<TwitterConnectorClient> => {
+    const market = new MarketService({
+      userInfo: { userId: this.userId, workspaceId: this.workspaceId },
+    }).market;
+    const status = await market.skills.getStatus('twitter');
+    if (!status.success || !status.connected) throw unavailable('twitter');
+
+    return createTwitterMarketConnectorClient({
+      market: {
+        callTool: async (toolName, arguments_) => {
+          const response = await market.skills.callTool('twitter', {
+            args: arguments_,
+            tool: toolName,
+          });
+          return { data: response.data, success: response.success };
+        },
+      },
+    });
   };
 }

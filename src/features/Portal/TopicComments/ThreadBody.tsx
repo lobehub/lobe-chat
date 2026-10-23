@@ -1,20 +1,18 @@
-import { Center, Empty, Flexbox, Text } from '@lobehub/ui';
-import { Button } from '@lobehub/ui/base-ui';
+import { Button, Center, Empty, Flexbox, Text } from '@lobehub/ui';
 import { MessageCircle } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import AsyncError from '@/components/AsyncError';
-import Loading from '@/components/Loading/BrandTextLoading';
+import SurfaceSkeleton from '@/components/Skeleton/Surface';
 import {
   useTopicCommentDetail,
   useTopicCommentReplies,
   useTopicCommentReplyCount,
 } from '@/features/TopicComment/hooks';
-import { mutate } from '@/libs/swr';
-import { topicCommentKeys } from '@/libs/swr/keys';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';
+import { useTopicCommentStore } from '@/store/topicComment';
 
 import CommentCard from './CommentCard';
 import Composer from './Composer';
@@ -44,15 +42,16 @@ const ThreadBody = memo(() => {
     view?.rootCommentId,
     replies.total ?? view?.initialReplyCount ?? replies.items.length,
   );
+  const revalidateSummary = useTopicCommentStore((s) => s.revalidateTopicCommentSummary);
   const refresh = useCallback(async () => {
     if (!topicId) return;
     await Promise.all([
       rootMutate(),
       hasFocusedReply ? focusedReplyMutate() : Promise.resolve(),
       repliesReload(),
-      mutate(topicCommentKeys.summary(topicId)),
+      revalidateSummary(topicId),
     ]);
-  }, [focusedReplyMutate, hasFocusedReply, repliesReload, rootMutate, topicId]);
+  }, [focusedReplyMutate, hasFocusedReply, repliesReload, revalidateSummary, rootMutate, topicId]);
   useTopicCommentEvents(topicId, refresh);
   const listRef = useRef<HTMLDivElement>(null);
   const visibleReplies = useMemo(() => {
@@ -74,7 +73,11 @@ const ThreadBody = memo(() => {
     ).find((element) => element.dataset.topicCommentId === view.focusCommentId);
     if (!target) return;
 
-    requestAnimationFrame(() => target.scrollIntoView({ behavior: 'smooth', block: 'center' }));
+    // Honor reduced motion: jump to the comment instead of gliding.
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    requestAnimationFrame(() =>
+      target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' }),
+    );
   }, [focusedReply.data, replies.items, root.data, view?.focusCommentId]);
 
   if (!view) return null;
@@ -100,7 +103,7 @@ const ThreadBody = memo(() => {
     );
   }
   if (state === 'loading') {
-    return <Loading debugId="TopicCommentThreadPortal" />;
+    return <SurfaceSkeleton header={false} variant={'list'} />;
   }
   if (!root.data) return null;
 

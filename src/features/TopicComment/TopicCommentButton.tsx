@@ -1,11 +1,11 @@
-import { ActionIcon } from '@lobehub/ui';
-import { Badge } from 'antd';
+import { ActionIcon, Badge } from '@lobehub/ui';
 import { MessageCircle } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import { DESKTOP_HEADER_ICON_SMALL_SIZE, MOBILE_HEADER_ICON_SIZE } from '@/const/layoutTokens';
+import { useAgentContext } from '@/features/Conversation/useAgentContext';
 import { useChatStore } from '@/store/chat';
 
 import { usePrefetchTopicCommentsOnTopicLoad, useTopicCommentSummary } from './hooks';
@@ -13,7 +13,7 @@ import { usePrefetchTopicCommentsOnTopicLoad, useTopicCommentSummary } from './h
 const TopicCommentButton = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('chat');
   const workspaceId = useActiveWorkspaceId();
-  const topicId = useChatStore((s) => s.activeTopicId);
+  const { topicId } = useAgentContext();
   const openTopicComments = useChatStore((s) => s.openTopicComments);
   const { data } = useTopicCommentSummary(workspaceId ? topicId : undefined);
   usePrefetchTopicCommentsOnTopicLoad(workspaceId ? topicId : undefined);

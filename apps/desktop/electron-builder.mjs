@@ -6,15 +6,25 @@ import { fileURLToPath } from 'node:url';
 
 import dotenv from 'dotenv';
 
+import { copyExternalRuntimeModulesToSource } from './external-runtime-deps.config.mjs';
+import { getModuleFilesConfig } from './module-deps.config.mjs';
 import {
-  copyExternalRuntimeModulesToSource,
-  getExternalRuntimeModulesFilesConfig,
-} from './external-runtime-deps.config.mjs';
-import {
+  buildFirstPartyNativeAddons,
   copyNativeModulesToSource,
   getAsarUnpackPatterns,
   getNativeModulesFilesConfig,
 } from './native-deps.config.mjs';
+import {
+  COMPUTER_USE_HELPER_BUNDLE_PATH,
+  COMPUTER_USE_HELPER_SIGN_IGNORE,
+  embedComputerUseHelper,
+  resolveComputerUseHelperVersion,
+  verifyComputerUseHelper,
+} from './scripts/computerUseHelper.mjs';
+import { notarizeMacApp } from './scripts/notarizeMacApp.mjs';
+import { packBuiltinCore } from './scripts/packBuiltinCore.mjs';
+import { toSparkleBuildVersion } from './scripts/sparkleBuildVersion.mjs';
+import { resolveSparklePackaging } from './scripts/sparklePackaging.mjs';
 import { verifyFontListSignature } from './scripts/verifyFontListSigning.mjs';
 
 dotenv.config();
@@ -23,9 +33,51 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const packageJSON = JSON.parse(await fs.readFile(path.join(__dirname, 'package.json'), 'utf8'));
 
+const computerUseHelperVersion = resolveComputerUseHelperVersion(packageJSON);
+
 const channel = process.env.UPDATE_CHANNEL;
 const arch = os.arch();
 const hasAppleCertificate = Boolean(process.env.CSC_LINK);
+
+const macAppId = 'com.lobehub.lobehub-desktop';
+// Communication notifications need the restricted
+// `com.apple.developer.usernotifications.communication` entitlement, and
+// macOS refuses to launch an app carrying it without a provisioning profile
+// that authorizes it — so both must be applied together, and only when a
+// profile is provided.
+const macProvisioningProfile = process.env.MAC_PROVISIONING_PROFILE;
+const macTeamId = process.env.APPLE_TEAM_ID;
+const macCommunicationEntitlements =
+  macProvisioningProfile && macTeamId
+    ? path.join(__dirname, 'build', 'entitlements.mac.comm.generated.plist')
+    : undefined;
+
+if (macProvisioningProfile && !macTeamId) {
+  console.warn(
+    '⚠️ MAC_PROVISIONING_PROFILE is set but APPLE_TEAM_ID is missing — building without communication notification entitlements',
+  );
+}
+
+if (macCommunicationEntitlements) {
+  const baseEntitlements = await fs.readFile(
+    path.join(__dirname, 'build', 'entitlements.mac.plist'),
+    'utf8',
+  );
+  const communicationKeys = [
+    '    <key>com.apple.application-identifier</key>',
+    `    <string>${macTeamId}.${macAppId}</string>`,
+    '    <key>com.apple.developer.team-identifier</key>',
+    `    <string>${macTeamId}</string>`,
+    '    <key>com.apple.developer.usernotifications.communication</key>',
+    '    <true/>',
+    '  </dict>',
+  ].join('\n');
+  await fs.writeFile(
+    macCommunicationEntitlements,
+    baseEntitlements.replace('</dict>', communicationKeys),
+  );
+  console.info('🔔 Communication notification entitlements + provisioning profile enabled');
+}
 
 // 自定义更新服务器 URL (用于 stable 频道)
 const updateServerUrl = process.env.UPDATE_SERVER_URL;
@@ -88,6 +140,22 @@ const getProtocolScheme = () => {
 
 const protocolScheme = getProtocolScheme();
 
+const sparklePublicKey = process.env.SPARKLE_ED_PUBLIC_KEY;
+const { useSparkle } = resolveSparklePackaging({
+  channel,
+  hasAppleCertificate,
+  platform: process.platform,
+  sparklePublicKey,
+  updateServerUrl,
+});
+const sparklePackageDir = useSparkle
+  ? await fs.realpath(path.join(__dirname, 'node_modules/electron-sparkle-updater'))
+  : null;
+const sparkleFeedUrl =
+  useSparkle && updateServerUrl
+    ? `${stripChannelSuffix(updateServerUrl).replace(/\/$/, '')}/${isCanary || channel === 'beta' ? 'canary' : 'stable'}/appcast-${arch}.xml`
+    : undefined;
+
 // Determine icon file based on version type
 const getIconFileName = () => {
   if (isStable || isCanary) return 'Icon';
@@ -104,34 +172,67 @@ const config = {
    * BeforePack hook to resolve pnpm symlinks for native modules.
    * This ensures native modules are properly included in the asar archive.
    */
-  beforePack: async () => {
+  beforePack: async (context) => {
+    buildFirstPartyNativeAddons();
+
+    if (sparklePackageDir) {
+      console.info('🔧 Building Sparkle bridge addon...');
+      execSync(
+        `node "${path.join(sparklePackageDir, 'bin/electron-sparkle-updater.js')}" rebuild --arch ${arch}`,
+        { cwd: __dirname, stdio: 'inherit' },
+      );
+    }
+
     await copyNativeModulesToSource();
     await copyExternalRuntimeModulesToSource();
+
+    // Keep the AUV daemon version locked to @auv-js/sdk. The CLI package
+    // resolves the platform-specific executable without running postinstall,
+    // then we stage that real file outside app.asar for child_process.spawn().
+    const { binaryPath: resolveAuvBinaryPath } = await import('@auv-js/cli/binary');
+    const auvSource = resolveAuvBinaryPath();
+    const auvExecutable = process.platform === 'win32' ? 'auv.exe' : 'auv';
+    const auvDestination = path.resolve(__dirname, 'resources/bin', auvExecutable);
+    await fs.mkdir(path.dirname(auvDestination), { recursive: true });
+    await fs.copyFile(auvSource, auvDestination);
+    if (process.platform !== 'win32') await fs.chmod(auvDestination, 0o755);
 
     // agent-browser is no longer bundled in the installer — BinaryManager
     // lazily downloads it on first use into the per-user cache dir. See
     // apps/desktop/src/main/modules/binaries/agentBrowserBinaries.ts.
 
-    // Build and copy CLI bundle for embedding
     console.info('📦 Building CLI for embedding...');
     execSync('npm run build:cli', { stdio: 'inherit', cwd: __dirname });
-    const cliSrc = path.resolve(__dirname, '../cli/dist/index.js');
-    const cliDest = path.resolve(__dirname, 'resources/bin/lobe-cli.js');
-    await fs.mkdir(path.dirname(cliDest), { recursive: true });
-    await fs.copyFile(cliSrc, cliDest);
 
-    // Write a minimal package.json next to the CLI bundle so that
-    // createRequire('../package.json') resolves correctly in the packaged app.
-    // The CLI script lives at Resources/bin/lobe-cli.js, so '../package.json'
-    // resolves to Resources/package.json.
-    const cliPkg = JSON.parse(
-      await fs.readFile(path.resolve(__dirname, '../cli/package.json'), 'utf8'),
-    );
+    // The shell window has no React/i18next runtime. Bundle only its translated strings.
+    const updateStrings = {};
+    for (const locale of ['en-US', 'zh-CN']) {
+      const messages = JSON.parse(
+        await fs.readFile(path.join(__dirname, '../../locales', locale, 'electron.json'), 'utf8'),
+      );
+      updateStrings[locale] = Object.fromEntries(
+        Object.entries(messages)
+          .filter(([key]) => key.startsWith('startupUpdate.'))
+          .map(([key, value]) => [key.slice('startupUpdate.'.length), value]),
+      );
+    }
     await fs.writeFile(
-      path.resolve(__dirname, 'resources/cli-package.json'),
-      JSON.stringify({ name: cliPkg.name, type: 'module', version: cliPkg.version }),
+      path.join(__dirname, 'shell/update/strings.json'),
+      JSON.stringify(updateStrings, null, 2) + '\n',
     );
-    console.info('✅ CLI bundle copied to resources/bin/lobe-cli.js');
+
+    execSync('node scripts/shellAbi.mjs --write', { stdio: 'inherit', cwd: __dirname });
+    const { shellAbi } = JSON.parse(
+      await fs.readFile(path.join(__dirname, 'shell/abi.json'), 'utf8'),
+    );
+    const corePlatform =
+      context.electronPlatformName === 'mas' ? 'darwin' : context.electronPlatformName;
+    execSync('node scripts/assembleCore.mjs', { stdio: 'inherit', cwd: __dirname });
+    execSync(
+      `node scripts/buildCoreManifest.mjs --core=core-dist --platform=${corePlatform} --channel=${channel || 'stable'} --version=${packageJSON.version} --seq=${process.env.CORE_SEQ || 0} --shell-abi=${shellAbi}`,
+      { stdio: 'inherit', cwd: __dirname },
+    );
+    await packBuiltinCore(__dirname);
   },
   /**
    * AfterPack hook for copying Liquid Glass Assets.car on macOS 26+.
@@ -146,12 +247,19 @@ const config = {
       return;
     }
 
-    const resourcesPath = path.join(
-      context.appOutDir,
-      `${context.packager.appInfo.productFilename}.app`,
-      'Contents',
-      'Resources',
-    );
+    const appPath = path.join(context.appOutDir, `${context.packager.appInfo.productFilename}.app`);
+    const resourcesPath = path.join(appPath, 'Contents', 'Resources');
+
+    // The Mac App Store sandbox cannot register the helper's LaunchAgent.
+    if (context.electronPlatformName === 'darwin') {
+      await embedComputerUseHelper({
+        appPath,
+        arch: arch === 'arm64' ? 'arm64' : 'x64',
+        cacheDir: path.join(__dirname, 'node_modules', '.cache', 'lobehub-computer-use'),
+        version: computerUseHelperVersion,
+      });
+    }
+
     const iconFileName = getIconFileName();
     const assetsCarSource = path.join(__dirname, 'build', `${iconFileName}.Assets.car`);
     const assetsCarDest = path.join(resourcesPath, 'Assets.car');
@@ -166,8 +274,28 @@ const config = {
       console.info(`⏭️  Skipping Assets.car (not found or copy failed)`);
     }
   },
-  afterSign: verifyFontListSignature,
-  appId: 'com.lobehub.lobehub-desktop',
+  afterSign: async (context) => {
+    await verifyFontListSignature(context);
+
+    if (context.electronPlatformName === 'darwin') {
+      verifyComputerUseHelper(
+        path.join(
+          context.appOutDir,
+          `${context.packager.appInfo.productFilename}.app`,
+          COMPUTER_USE_HELPER_BUNDLE_PATH,
+        ),
+        { version: computerUseHelperVersion },
+      );
+      console.info('✅ Computer Use helper kept its notarized signature');
+
+      if (hasAppleCertificate) {
+        await notarizeMacApp(
+          path.join(context.appOutDir, `${context.packager.appInfo.productFilename}.app`),
+        );
+      }
+    }
+  },
+  appId: macAppId,
   appImage: {
     artifactName: '${productName}-${version}.${ext}',
   },
@@ -179,6 +307,8 @@ const config = {
 
   // Native modules must be unpacked from asar to work correctly
   asarUnpack: getAsarUnpackPatterns(),
+
+  ...(useSparkle ? { buildVersion: toSparkleBuildVersion(packageJSON.version) } : {}),
 
   detectUpdateChannel: true,
 
@@ -209,17 +339,16 @@ const config = {
   electronLanguages: ['en', 'en_GB', 'en_US', 'en-GB', 'en-US'],
 
   files: [
-    'dist',
-    'resources',
-    'dist/renderer/**/*',
-    '!resources/locales',
-    '!resources/dmg.png',
+    'shell/**',
+    '!shell/__tests__',
+    ...(useSparkle ? ['!shell/rescue/electron-updater.cjs'] : []),
+    'package.json',
     // Exclude all node_modules first
     '!node_modules',
     // Then explicitly include native modules using object form (handles pnpm symlinks)
     ...getNativeModulesFilesConfig(),
-    // Include non-native runtime modules that are intentionally externalized from Vite.
-    ...getExternalRuntimeModulesFilesConfig(),
+    // electron-log ships in the core (assembleCore), a shell copy would shadow it via the resolver shim
+    ...getModuleFilesConfig(['font-list']),
   ],
   generateUpdatesFilesForAllChannels: true,
   linux: {
@@ -229,10 +358,28 @@ const config = {
     target: ['AppImage', 'snap', 'deb', 'rpm', 'tar.gz'],
   },
   mac: {
-    binaries: ['Contents/Resources/app.asar.unpacked/node_modules/font-list/libs/darwin/fontlist'],
+    binaries: [
+      'Contents/Resources/app.asar.unpacked/node_modules/font-list/libs/darwin/fontlist',
+      'Contents/Resources/bin/auv',
+    ],
     compression: 'maximum',
     entitlementsInherit: 'build/entitlements.mac.plist',
+    ...(macCommunicationEntitlements
+      ? {
+          entitlements: macCommunicationEntitlements,
+          provisioningProfile: macProvisioningProfile,
+        }
+      : {}),
     extendInfo: {
+      ...(useSparkle
+        ? {
+            SUDeltaChainHistory: 6,
+            SUEnableAutomaticChecks: false,
+            SUEnableInstallerLauncherService: false,
+            SUFeedURL: sparkleFeedUrl,
+            SUPublicEDKey: sparklePublicKey,
+          }
+        : {}),
       CFBundleIconName: 'AppIcon',
       CFBundleURLTypes: [
         {
@@ -247,13 +394,19 @@ const config = {
         "Application requests access to the user's Documents folder.",
       NSDownloadsFolderUsageDescription:
         "Application requests access to the user's Downloads folder.",
+      NSLocalNetworkUsageDescription:
+        'LobeHub connects to self-hosted servers, model providers, and other services on your local network.',
       NSMicrophoneUsageDescription: "Application requests access to the device's microphone.",
       NSScreenCaptureUsageDescription:
         'Application requests access to record and analyze screen content for AI assistance.',
+      NSUserActivityTypes: ['INSendMessageIntent'],
     },
     gatekeeperAssess: false,
     hardenedRuntime: hasAppleCertificate,
-    notarize: hasAppleCertificate,
+    // Ship the notarized helper as built; re-signing drops its stapled ticket.
+    signIgnore: [COMPUTER_USE_HELPER_SIGN_IGNORE],
+    // Notarized in afterSign so a transient staple failure retries instead of failing the build.
+    notarize: false,
     ...(hasAppleCertificate ? {} : { identity: null }),
     target: [
       { arch: [arch === 'arm64' ? 'arm64' : 'x64'], target: 'dmg' },
@@ -287,9 +440,53 @@ const config = {
     releaseNotes: process.env.RELEASE_NOTES || undefined,
   },
 
+  ...(sparklePackageDir
+    ? {
+        extraFiles: [
+          {
+            from: path.join(sparklePackageDir, 'native/vendor/Sparkle.framework'),
+            to: 'Frameworks/Sparkle.framework',
+          },
+        ],
+      }
+    : {}),
   extraResources: [
     { from: 'resources/bin', to: 'bin' },
-    { from: 'resources/cli-package.json', to: 'package.json' },
+    { from: 'core.asar', to: 'core.asar' },
+    { from: 'core.asar.unpacked', to: 'core.asar.unpacked' },
+    // The Sparkle bridge addon is loaded by an explicit path outside app.asar; pnpm's
+    // symlinked package dir cannot be matched by asarUnpack, so it ships as a resource.
+    ...(sparklePackageDir
+      ? [
+          {
+            from: path.join(sparklePackageDir, 'native/build/Release/sparkle_bridge.node'),
+            to: 'sparkle/sparkle_bridge.node',
+          },
+        ]
+      : []),
+    // Local Sandbox helper binaries. The sandbox spawns these by path, so they
+    // must be real files — not entries inside app.asar, and not something the
+    // user is expected to install separately.
+    //
+    // Shipped as a resource rather than by externalizing
+    // `@anthropic-ai/sandbox-runtime`: its JavaScript bundles into the main
+    // process perfectly well, and making it a production dependency instead
+    // drags four transitive packages into electron-builder's node_modules
+    // traversal, which pnpm's layout does not satisfy (`@pondwader/socks5-server
+    // not found`). Only the binaries need to exist on disk.
+    {
+      from: 'node_modules/@anthropic-ai/sandbox-runtime/vendor',
+      to: 'sandbox-runtime/vendor',
+    },
+    // Carried alongside the binaries so the staging directory stays keyed on the
+    // backend's real version. Without it the version lookup falls back to the
+    // binary's size — which still works, but would defeat the per-version
+    // isolation in exactly the case it exists for: an installed app being
+    // updated.
+    {
+      from: 'node_modules/@anthropic-ai/sandbox-runtime/package.json',
+      to: 'sandbox-runtime/package.json',
+    },
   ],
 
   win: {

@@ -2,7 +2,8 @@ import { render } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { FilesTabs, SortType } from '@/types/files';
+import type { ViewMode } from '@/features/ResourceManager/store/initialState';
+import { FilesTabs, ResourceSourceFilter, SortType } from '@/types/files';
 
 import ResourceExplorer from './index';
 
@@ -14,30 +15,31 @@ const mocks = vi.hoisted(() => ({
     searchQuery: null as string | null,
     sorter: 'createdAt' as const,
     sortType: 'desc' as SortType,
-    viewMode: 'list' as const,
+    sourceFilter: undefined as ResourceSourceFilter | undefined,
+    viewMode: 'list' as ViewMode,
   },
   useFetchResources: vi.fn(),
 }));
 
-vi.mock('@/routes/(main)/resource/features/hooks/useFolderPath', () => ({
+vi.mock('@/features/ResourceManager/hooks/useFolderPath', () => ({
   useFolderPath: () => ({ currentFolderSlug: null }),
 }));
 
-vi.mock('@/routes/(main)/resource/features/hooks/useResourceManagerUrlSync', () => ({
+vi.mock('@/features/ResourceManager/hooks/useResourceManagerUrlSync', () => ({
   useResourceManagerUrlSync: vi.fn(),
 }));
 
-vi.mock('@/routes/(main)/resource/features/store', () => ({
+vi.mock('@/features/ResourceManager/store', () => ({
   useResourceManagerStore: (selector: (state: typeof mocks.resourceManagerState) => unknown) =>
     selector(mocks.resourceManagerState),
 }));
 
-vi.mock('@/routes/(main)/resource/features/store/selectors', () => ({
-  getResourceQueryVisibility: (
-    libraryId: string | undefined,
-    visibility: 'private' | 'workspace',
-  ) => (libraryId ? undefined : visibility === 'private' ? 'private' : 'public'),
-  sortFileList: (items: unknown[]) => items,
+// Real selectors: the query params under test (visibility narrowing, source
+// defaults) are exactly what those selectors decide, so stubbing them would
+// assert the stub.
+vi.mock(import('@/features/ResourceManager/store/selectors'), async (importOriginal) => ({
+  ...(await importOriginal()),
+  sortFileList: (items: any) => items,
 }));
 
 vi.mock('@/store/file/slices/resource/hooks', () => ({
@@ -86,20 +88,57 @@ describe('ResourceExplorer', () => {
     mocks.resourceManagerState.searchQuery = null;
     mocks.resourceManagerState.sorter = 'createdAt';
     mocks.resourceManagerState.sortType = SortType.Desc;
+    mocks.resourceManagerState.sourceFilter = undefined;
     mocks.resourceManagerState.viewMode = 'list';
     mocks.useFetchResources.mockReturnValue({ isLoading: false, isValidating: false });
   });
 
-  it('keeps library contents excluded from the All resource query', () => {
+  it('lists every uploaded file, library ones included, and no pages in the drive', () => {
     render(<ResourceExplorer />);
 
     expect(mocks.useFetchResources).toHaveBeenCalledWith(
       expect.objectContaining({
         category: FilesTabs.All,
+        filesOnly: true,
+        includeContentPreview: false,
         libraryId: undefined,
         parentId: null,
-        showFilesInKnowledgeBase: false,
+        showFilesInKnowledgeBase: true,
       }),
+    );
+  });
+
+  it('requests a server-generated content preview only for masonry cards', () => {
+    mocks.resourceManagerState.viewMode = 'masonry';
+
+    render(<ResourceExplorer />);
+
+    expect(mocks.useFetchResources).toHaveBeenCalledWith(
+      expect.objectContaining({ includeContentPreview: true }),
+    );
+  });
+
+  it('opens the images category on generated output without an explicit pick', () => {
+    mocks.resourceManagerState.category = FilesTabs.Images;
+
+    render(<ResourceExplorer />);
+
+    expect(mocks.useFetchResources).toHaveBeenCalledWith(
+      expect.objectContaining({
+        category: FilesTabs.Images,
+        sourceFilter: ResourceSourceFilter.Generated,
+      }),
+    );
+  });
+
+  it('sends the explicit source pick over the category default', () => {
+    mocks.resourceManagerState.category = FilesTabs.Images;
+    mocks.resourceManagerState.sourceFilter = ResourceSourceFilter.Uploaded;
+
+    render(<ResourceExplorer />);
+
+    expect(mocks.useFetchResources).toHaveBeenCalledWith(
+      expect.objectContaining({ sourceFilter: ResourceSourceFilter.Uploaded }),
     );
   });
 
@@ -113,6 +152,20 @@ describe('ResourceExplorer', () => {
       expect.objectContaining({
         libraryId: 'kb-shared',
         visibility: undefined,
+      }),
+    );
+  });
+
+  it('lists the library own rows, pages and folders included, inside a library', () => {
+    mocks.resourceManagerState.libraryId = 'kb-shared';
+
+    render(<ResourceExplorer />);
+
+    expect(mocks.useFetchResources).toHaveBeenCalledWith(
+      expect.objectContaining({
+        filesOnly: false,
+        libraryId: 'kb-shared',
+        showFilesInKnowledgeBase: false,
       }),
     );
   });

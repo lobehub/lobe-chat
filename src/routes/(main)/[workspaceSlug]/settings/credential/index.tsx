@@ -1,22 +1,26 @@
 'use client';
 
-import { Block, Flexbox, Icon, Text, Tooltip } from '@lobehub/ui';
-import { Button, Tabs } from '@lobehub/ui/base-ui';
-import { Empty } from 'antd';
-import { createStaticStyles } from 'antd-style';
+import {
+  Block,
+  Button,
+  createStaticStyles,
+  Empty,
+  Flexbox,
+  Icon,
+  Tabs,
+  Text,
+  Tooltip,
+} from '@lobehub/ui';
 import { Plus, UserRoundIcon, UsersIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { createCreateCredModal } from '@/features/Settings/creds/features/CreateCredModal';
+import CredsList from '@/features/Settings/creds/features/CredsList';
+import { type CredsApi, CredsApiProvider } from '@/features/Settings/creds/features/useCredsApi';
 import { usePermission } from '@/hooks/usePermission';
 import { useMarketAuth } from '@/layout/AuthProvider/MarketAuth';
 import { lambdaClient, lambdaQuery } from '@/libs/trpc/client';
-import { createCreateCredModal } from '@/routes/(main)/settings/creds/features/CreateCredModal';
-import CredsList from '@/routes/(main)/settings/creds/features/CredsList';
-import {
-  type CredsApi,
-  CredsApiProvider,
-} from '@/routes/(main)/settings/creds/features/useCredsApi';
 
 import PersonalCredsSection from './features/PersonalCredsSection';
 

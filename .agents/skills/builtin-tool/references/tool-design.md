@@ -275,7 +275,7 @@ Use when the same logic runs in browser and Node (e.g. mathjs, nerdamer). The ru
 
 ### Pattern C: Extend a shared base
 
-When you're implementing a domain that already has a base runtime (file ops via `ComputerRuntime`), extend and only override `callService` + result normalization. See `builtin-tool-local-system/src/ExecutionRuntime/index.ts`.
+When you're implementing a domain that already has a base runtime (file ops via `ComputerRuntime`), extend and only override `callService` + result normalization. See `packages/tool-runtime/src/LocalSystemExecutionRuntime.ts`.
 
 ### Runtime contract
 
@@ -446,9 +446,7 @@ This entry is what `packages/builtin-tools/src/index.ts` and `identifiers.ts` im
   "main": "./src/index.ts",
   "name": "@lobechat/builtin-tool-<name>",
   "peerDependencies": {
-    "@lobehub/ui": "^5",
-    "antd": "^6",
-    "antd-style": "*",
+    "@lobehub/ui": "^6",
     "lucide-react": "*",
     "react": "*",
     "react-i18next": "*"

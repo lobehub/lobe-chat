@@ -1,20 +1,21 @@
-import { toast } from '@lobehub/ui/base-ui';
+import { toast } from '@lobehub/ui';
 import { act, renderHook } from '@testing-library/react';
 import { type Mock } from 'vitest';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useVisualMediaUploadAbility } from '@/hooks/useVisualMediaUploadAbility';
+import { useMediaUploadAbility } from '@/hooks/useMediaUploadAbility';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 
 import { getContainer, useDragUpload } from './useDragUpload';
 
 // Mock the hooks and components
-vi.mock('@/hooks/useVisualMediaUploadAbility');
+vi.mock('@/hooks/useMediaUploadAbility');
 vi.mock('@/store/agent');
-vi.mock('@lobehub/ui/base-ui', () => {
-  return { toast: { warning: vi.fn() } };
-});
+vi.mock('@lobehub/ui', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  ...(await import('~base-ui-stubs')).baseUiStubs,
+}));
 
 describe('useDragUpload', () => {
   let mockOnUploadFiles: Mock;
@@ -25,7 +26,7 @@ describe('useDragUpload', () => {
     document.body.innerHTML = '';
 
     // Mock the hooks
-    (useVisualMediaUploadAbility as Mock).mockReturnValue({
+    (useMediaUploadAbility as Mock).mockReturnValue({
       canUploadImage: false,
       canUploadVideo: false,
     });
@@ -193,7 +194,7 @@ describe('useDragUpload', () => {
   });
 
   it('should allow image files when vision is supported', async () => {
-    (useVisualMediaUploadAbility as Mock).mockReturnValue({
+    (useMediaUploadAbility as Mock).mockReturnValue({
       canUploadImage: true,
       canUploadVideo: false,
     });
@@ -227,7 +228,7 @@ describe('useDragUpload', () => {
   });
 
   it('should allow image files when visual understanding fallback is enabled', async () => {
-    (useVisualMediaUploadAbility as Mock).mockReturnValue({
+    (useMediaUploadAbility as Mock).mockReturnValue({
       canUploadImage: true,
       canUploadVideo: true,
     });

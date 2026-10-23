@@ -1,13 +1,11 @@
 'use client';
 
 import { type TaskDetail } from '@lobechat/types';
-import { Flexbox, Text } from '@lobehub/ui';
-import { createStaticStyles, keyframes } from 'antd-style';
-import { Footprints, Timer, Wrench } from 'lucide-react';
+import { createStaticStyles, Flexbox, keyframes, Spin, Text } from '@lobehub/ui';
+import { BrainCircuit, Timer, Wrench } from 'lucide-react';
 import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import NeuralNetworkLoading from '@/components/NeuralNetworkLoading';
 import { useChatStore } from '@/store/chat';
 
 import { MAX_PROGRESS, PROGRESS_INCREMENT, PROGRESS_INTERVAL } from './constants';
@@ -206,7 +204,7 @@ const ProcessingState = memo<ProcessingStateProps>(
           {currentActivity && (
             <div className={styles.activityRow}>
               <Flexbox horizontal align={'center'} gap={4}>
-                <NeuralNetworkLoading size={14} />
+                <Spin size="small" variant="network" />
                 <Text as={'span'} fontSize={12} type={'secondary'}>
                   {renderActivityText()}
                 </Text>
@@ -252,14 +250,14 @@ const ProcessingState = memo<ProcessingStateProps>(
               )}
             </Flexbox>
             <Flexbox horizontal align="center" gap={12}>
-              {/* Steps */}
+              {/* LLM calls (`totalSteps` holds the LLM-call total) */}
               {totalSteps !== undefined && totalSteps > 0 && (
                 <Text as={'span'} fontSize={12} type={'secondary'}>
-                  <Footprints size={12} />
+                  <BrainCircuit size={12} />
                   <Text as={'span'} fontSize={12} type={'secondary'} weight={500}>
                     {totalSteps}
                   </Text>
-                  <span>{t('task.metrics.stepsShort')}</span>
+                  <span>{t('task.metrics.llmCallsShort')}</span>
                 </Text>
               )}
               {/* Tool Calls */}
@@ -289,7 +287,7 @@ const ProcessingState = memo<ProcessingStateProps>(
         {/* Current Activity */}
         {currentActivity && (
           <Flexbox horizontal align="center" gap={8}>
-            <NeuralNetworkLoading size={14} />
+            <Spin size="small" variant="network" />
             <Text
               ellipsis
               as={'span'}
@@ -334,11 +332,11 @@ const ProcessingState = memo<ProcessingStateProps>(
             <Flexbox horizontal align="center" gap={12}>
               {totalSteps !== undefined && totalSteps > 0 && (
                 <Text as={'span'} fontSize={12} type={'secondary'}>
-                  <Footprints size={12} />
+                  <BrainCircuit size={12} />
                   <Text as={'span'} fontSize={12} type={'secondary'} weight={500}>
                     {totalSteps}
                   </Text>
-                  <span>{t('task.metrics.stepsShort')}</span>
+                  <span>{t('task.metrics.llmCallsShort')}</span>
                 </Text>
               )}
               {totalToolCalls !== undefined && totalToolCalls > 0 && (

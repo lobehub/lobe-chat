@@ -1,16 +1,19 @@
 import { execFile } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import path from 'node:path';
 
-import { parseClaudeAccountIdentity } from '../quota/identity';
-import type {
-  ClaudeCodeQuotaSnapshot,
-  ClaudeCodeQuotaUnavailableReason,
-  ClaudeCodeScopedWeekly,
-  HeteroQuotaWindow,
-} from '../quota/snapshot';
-import { mapClaudeUsageToReadings } from '../quota/usageApi';
+import type { ClaudeCodeExternalRoutingEnvKey } from '../quota/claudeCodeRouting';
+import {
+  CLAUDE_CODE_EXTERNAL_ROUTING_ENV_KEYS,
+  isClaudeCodeRoutingFlagEnabled,
+} from '../quota/claudeCodeRouting';
+import { buildClaudeQuotaWindows } from '../quota/readings';
+import type { ClaudeCodeQuotaSnapshot, ClaudeCodeQuotaUnavailableReason } from '../quota/snapshot';
+import { parseClaudeAccountIdentity } from './identity';
+import type { ClaudeUsagePayload } from './usageApi';
+import { mapClaudeUsageToReadings } from './usageApi';
 
 /**
  * How long a sampler host's snapshot cache may serve a Claude quota reading
@@ -30,6 +33,20 @@ const USAGE_TIMEOUT_MS = 10_000;
 const KEYCHAIN_SERVICE = 'Claude Code-credentials';
 const KEYCHAIN_TIMEOUT_MS = 3000;
 
+/**
+ * The macOS Keychain item the CLI stores a login under. The default profile
+ * uses the bare service name; a `CLAUDE_CONFIG_DIR` profile gets its own item,
+ * suffixed with the first 8 hex chars of the SHA-256 of the (NFC) dir path —
+ * so two profiles never share, or overwrite, one login.
+ */
+export const claudeCodeKeychainService = (configDir?: string | null): string =>
+  configDir
+    ? `${KEYCHAIN_SERVICE}-${createHash('sha256')
+        .update(configDir.normalize('NFC'))
+        .digest('hex')
+        .slice(0, 8)}`
+    : KEYCHAIN_SERVICE;
+
 // Same trio the session spawn strips from inherited env: when an agent
 // explicitly configures one of these, `claude` runs on API-key/base-url auth
 // and the subscription quota below does not apply to it.
@@ -38,19 +55,6 @@ const EXTERNAL_AUTH_ENV_KEYS = [
   'ANTHROPIC_AUTH_TOKEN',
   'ANTHROPIC_BASE_URL',
 ] as const;
-
-// Boolean-ish flags that route Claude Code to a third-party provider
-// (AWS Bedrock / Google Vertex / Mantle), whose quotas are billed there —
-// the Anthropic subscription quota does not apply to those runs either.
-const EXTERNAL_ROUTING_FLAG_ENV_KEYS = [
-  'CLAUDE_CODE_USE_BEDROCK',
-  'CLAUDE_CODE_USE_MANTLE',
-  'CLAUDE_CODE_USE_VERTEX',
-] as const;
-
-// The CLI treats these as booleans, so "0"/"false" must not count as enabled.
-const isRoutingFlagEnabled = (value: string | undefined) =>
-  !!value && !['0', 'false'].includes(value.trim().toLowerCase());
 
 /**
  * Unlike the API-key trio (stripped from the inherited spawn env, so only the
@@ -61,7 +65,7 @@ const isRoutingFlagEnabled = (value: string | undefined) =>
  */
 const effectiveRoutingFlag = (
   options: FetchClaudeCodeQuotaOptions,
-  key: (typeof EXTERNAL_ROUTING_FLAG_ENV_KEYS)[number],
+  key: ClaudeCodeExternalRoutingEnvKey,
 ): string | undefined => (options.env && key in options.env ? options.env[key] : process.env[key]);
 
 export interface FetchClaudeCodeQuotaOptions {
@@ -109,6 +113,21 @@ const unavailableSnapshot = (
   status: 'unavailable',
 });
 
+/**
+ * Anthropic answers a request from a blocked network or region with a 403
+ * `forbidden` error ("Request not allowed") before it ever looks at the token,
+ * so it says nothing about the login. A 403 for a bad token carries an auth /
+ * permission error type instead.
+ */
+const isRequestBlocked = async (response: Response) => {
+  try {
+    const body = (await response.json()) as { error?: { type?: unknown } };
+    return body?.error?.type === 'forbidden';
+  } catch {
+    return false;
+  }
+};
+
 const parseCredentialsJson = (raw: string): ClaudeOAuthCredentials | null => {
   try {
     const parsed = JSON.parse(raw) as {
@@ -128,13 +147,15 @@ const parseCredentialsJson = (raw: string): ClaudeOAuthCredentials | null => {
   }
 };
 
-const readKeychainCredentials = async (): Promise<ClaudeOAuthCredentials | null> => {
+const readKeychainCredentials = async (
+  configDir?: string | null,
+): Promise<ClaudeOAuthCredentials | null> => {
   if (process.platform !== 'darwin') return null;
 
   return new Promise((resolve) => {
     execFile(
       'security',
-      ['find-generic-password', '-s', KEYCHAIN_SERVICE, '-w'],
+      ['find-generic-password', '-s', claudeCodeKeychainService(configDir), '-w'],
       { timeout: KEYCHAIN_TIMEOUT_MS },
       (error, stdout) => {
         resolve(error ? null : parseCredentialsJson(stdout.trim()));
@@ -176,26 +197,21 @@ const isExpired = (credentials: ClaudeOAuthCredentials) =>
  * A custom `CLAUDE_CONFIG_DIR` is an isolated CLI profile: `claude` ignores
  * the default Keychain / `~/.claude` login there (with a fresh default login
  * and an empty custom dir, `claude auth status` reports logged out). So when
- * one is configured, only that profile's credentials file is consulted —
- * falling back to the default login would show another account's quota.
+ * one is configured, only that profile's own Keychain item and credentials
+ * file are consulted — falling back to the default login would show another
+ * account's quota.
  */
 const readClaudeOAuthCredentials = async (
   options: FetchClaudeCodeQuotaOptions,
 ): Promise<CredentialLookup> => {
   const explicitDir = resolveExplicitConfigDir(options);
-  if (explicitDir) {
-    const fromFile = await readFileCredentials(explicitDir);
-    if (!fromFile) return { state: 'not-found' };
-    return isExpired(fromFile) ? { state: 'expired' } : { credentials: fromFile, state: 'ok' };
-  }
-
   const candidates: ClaudeOAuthCredentials[] = [];
 
-  const fromKeychain = await readKeychainCredentials();
+  const fromKeychain = await readKeychainCredentials(explicitDir);
   if (fromKeychain) candidates.push(fromKeychain);
 
-  const fromDefaultFile = await readFileCredentials(path.join(homedir(), '.claude'));
-  if (fromDefaultFile) candidates.push(fromDefaultFile);
+  const fromFile = await readFileCredentials(explicitDir ?? path.join(homedir(), '.claude'));
+  if (fromFile) candidates.push(fromFile);
 
   if (candidates.length === 0) return { state: 'not-found' };
 
@@ -203,97 +219,13 @@ const readClaudeOAuthCredentials = async (
   return fresh ? { credentials: fresh, state: 'ok' } : { state: 'expired' };
 };
 
-interface OAuthUsageWindow {
-  resets_at?: number | string;
-  used_percentage?: number;
-  utilization?: number;
-}
-
-interface OAuthUsageLimit {
-  kind?: string;
-  percent?: number;
-  resets_at?: number | string;
-  scope?: { model?: { display_name?: string } } | null;
-}
-
-interface OAuthUsageResponse {
-  fable_seven_day?: OAuthUsageWindow;
-  fable_weekly?: OAuthUsageWindow;
-  five_hour?: OAuthUsageWindow;
-  limits?: OAuthUsageLimit[];
-  seven_day?: OAuthUsageWindow;
-  seven_day_fable?: OAuthUsageWindow;
-}
-
-const parseResetsAt = (value: number | string | undefined): number | null => {
-  if (typeof value === 'number' && Number.isFinite(value)) {
-    return value < 10_000_000_000 ? value * 1000 : value;
-  }
-
-  if (typeof value !== 'string' || !value.trim()) return null;
-
-  const numeric = Number(value);
-  if (Number.isFinite(numeric)) {
-    return numeric < 10_000_000_000 ? numeric * 1000 : numeric;
-  }
-
-  const parsed = Date.parse(value);
-  return Number.isFinite(parsed) ? parsed : null;
-};
-
-const mapUsageWindow = (
-  raw: OAuthUsageWindow | undefined,
-  windowMinutes: number,
-): HeteroQuotaWindow | null => {
-  const usedPercent =
-    typeof raw?.utilization === 'number' && Number.isFinite(raw.utilization)
-      ? raw.utilization
-      : typeof raw?.used_percentage === 'number' && Number.isFinite(raw.used_percentage)
-        ? raw.used_percentage
-        : null;
-
-  if (usedPercent === null) return null;
-
-  return {
-    resetsAt: parseResetsAt(raw?.resets_at),
-    usedPercent: Math.min(100, Math.max(0, usedPercent)),
-    windowMinutes,
-  };
-};
-
 /**
- * Model-scoped weekly windows (e.g. the Fable weekly meter) are reported in
- * the `limits` array as `kind: 'weekly_scoped'` with the model display name in
- * `scope`, not as a top-level window field. Older deployments exposed a
- * `fable_*` top-level window instead, so keep those as a fallback.
+ * Whether the profile a spawn with these options would use holds a login at
+ * all. An expired access token still counts: the CLI refreshes it on its own,
+ * so only a profile with no credential anywhere is signed out.
  */
-const mapScopedWeekly = (payload: OAuthUsageResponse): ClaudeCodeScopedWeekly | null => {
-  const scoped = payload.limits?.find(
-    (limit) =>
-      limit?.kind === 'weekly_scoped' &&
-      typeof limit.percent === 'number' &&
-      Number.isFinite(limit.percent) &&
-      typeof limit.scope?.model?.display_name === 'string' &&
-      limit.scope.model.display_name.length > 0,
-  );
-
-  if (scoped) {
-    return {
-      modelName: scoped.scope!.model!.display_name!,
-      window: {
-        resetsAt: parseResetsAt(scoped.resets_at),
-        usedPercent: Math.min(100, Math.max(0, scoped.percent!)),
-        windowMinutes: 10_080,
-      },
-    };
-  }
-
-  const fableWindow = mapUsageWindow(
-    payload.fable_weekly ?? payload.fable_seven_day ?? payload.seven_day_fable,
-    10_080,
-  );
-  return fableWindow ? { modelName: 'Fable', window: fableWindow } : null;
-};
+export const hasClaudeCodeLogin = async (options: FetchClaudeCodeQuotaOptions): Promise<boolean> =>
+  (await readClaudeOAuthCredentials(options)).state !== 'not-found';
 
 /**
  * Read the account identity for DB persistence. `~/.claude.json` (or the
@@ -329,8 +261,8 @@ export const fetchClaudeCodeQuota = async (
 ): Promise<ClaudeCodeQuotaSnapshot> => {
   const externalAuthKey =
     EXTERNAL_AUTH_ENV_KEYS.find((key) => asNonEmpty(options.env?.[key])) ??
-    EXTERNAL_ROUTING_FLAG_ENV_KEYS.find((key) =>
-      isRoutingFlagEnabled(effectiveRoutingFlag(options, key)),
+    CLAUDE_CODE_EXTERNAL_ROUTING_ENV_KEYS.find((key) =>
+      isClaudeCodeRoutingFlagEnabled(effectiveRoutingFlag(options, key)),
     );
   if (externalAuthKey) {
     return unavailableSnapshot(
@@ -361,6 +293,13 @@ export const fetchClaudeCodeQuota = async (
       signal: controller.signal,
     });
 
+    if (response.status === 403 && (await isRequestBlocked(response))) {
+      return unavailableSnapshot(
+        'request-blocked',
+        'Anthropic usage API blocked the request from this network (403)',
+      );
+    }
+
     if (response.status === 401 || response.status === 403) {
       return unavailableSnapshot(
         'credentials-expired',
@@ -372,19 +311,23 @@ export const fetchClaudeCodeQuota = async (
       return errorSnapshot(`Anthropic usage API returned ${response.status}`);
     }
 
-    const payload = (await response.json()) as OAuthUsageResponse;
+    const payload = (await response.json()) as ClaudeUsagePayload;
     const capturedAt = Date.now();
+    // The panel windows are projected from the same readings we persist, so a
+    // limit can never render live yet go missing from the account's history.
+    const readings = mapClaudeUsageToReadings(payload, capturedAt);
+    const windows = buildClaudeQuotaWindows(readings, capturedAt);
 
     return {
       error: null,
       identity: await readAccountIdentity(options),
       provider: 'claude-code',
-      readings: mapClaudeUsageToReadings(payload, capturedAt),
-      scopedWeekly: mapScopedWeekly(payload),
-      session: mapUsageWindow(payload.five_hour, 300),
+      readings,
+      scopedWeekly: windows.scopedWeekly,
+      session: windows.session,
       status: 'ok',
       updatedAt: capturedAt,
-      weekly: mapUsageWindow(payload.seven_day, 10_080),
+      weekly: windows.weekly,
     };
   } catch (error) {
     if (controller.signal.aborted) {

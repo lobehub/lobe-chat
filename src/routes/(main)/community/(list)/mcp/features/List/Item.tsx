@@ -5,6 +5,8 @@ import {
   ActionIcon,
   Avatar,
   Block,
+  createStaticStyles,
+  cssVar,
   Flexbox,
   Icon,
   stopPropagation,
@@ -13,7 +15,6 @@ import {
   Tooltip,
 } from '@lobehub/ui';
 import { Spotlight } from '@lobehub/ui/awesome';
-import { createStaticStyles, cssVar } from 'antd-style';
 import { ClockIcon } from 'lucide-react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';

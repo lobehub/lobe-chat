@@ -1,5 +1,4 @@
-import { Flexbox, Text } from '@lobehub/ui';
-import { Button } from '@lobehub/ui/base-ui';
+import { Button, Flexbox, Text } from '@lobehub/ui';
 import { RefreshCw } from 'lucide-react';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,7 +8,10 @@ import {
   type DailyBriefRecommendationsUIState,
   useDailyBriefRecommendationsUI,
 } from '@/business/client/useDailyBriefRecommendationsUI';
+import GroupBlock from '@/features/Home/components/GroupBlock';
 import RailCard from '@/features/Home/components/RailCard';
+import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
 
 import { useEligibleActions } from './hooks/useEligibleActions';
 import { RecommendationCard } from './RecommendationCard';
@@ -19,19 +21,26 @@ import { styles } from './style';
 const isTaskTemplatesVisible = (state: DailyBriefRecommendationsUIState): boolean =>
   state.mode !== 'hidden';
 
+const useSuggestionsHidden = (): boolean =>
+  useGlobalStore(systemStatusSelectors.hiddenHomeWidgets).includes('suggestions');
+
 export const useRecommendationsVisible = (): boolean => {
+  const hidden = useSuggestionsHidden();
   const taskTemplatesState = useDailyBriefRecommendationsUI();
   const { actions } = useEligibleActions();
+  if (hidden) return false;
+
   return actions.length > 0 || isTaskTemplatesVisible(taskTemplatesState);
 };
 
 interface RecommendationsProps {
-  variant?: 'default' | 'rail';
+  variant?: 'default' | 'main' | 'rail';
 }
 
 const Recommendations = memo<RecommendationsProps>(({ variant = 'default' }) => {
   const { t } = useTranslation('home');
   const { t: tCommon } = useTranslation('common');
+  const hidden = useSuggestionsHidden();
   const taskTemplatesState = useDailyBriefRecommendationsUI();
   const { actions } = useEligibleActions();
 
@@ -67,6 +76,7 @@ const Recommendations = memo<RecommendationsProps>(({ variant = 'default' }) => 
   }, [isRefreshing, onRefresh]);
 
   const showTaskTemplates = isTaskTemplatesVisible(taskTemplatesState);
+  if (hidden) return null;
   if (actions.length === 0 && !showTaskTemplates) return null;
 
   // Rendered through the skeleton phase, not just in 'cards': the control that
@@ -92,8 +102,8 @@ const Recommendations = memo<RecommendationsProps>(({ variant = 'default' }) => 
           ctaKey={action.ctaKey}
           descriptionKey={action.descriptionKey}
           i18nValues={action.i18nValues}
-          icon={action.icon}
           key={action.id}
+          renderIcon={action.renderIcon}
           tagKey={action.tagKey}
           titleKey={action.titleKey}
           onAction={action.run}
@@ -110,6 +120,15 @@ const Recommendations = memo<RecommendationsProps>(({ variant = 'default' }) => 
       <RailCard action={refresh} title={t('recommendations.title')}>
         {body}
       </RailCard>
+    );
+
+  // In the main column it is one section among the page's other headed blocks,
+  // so it wears the same heading they do instead of its own subtitle line.
+  if (variant === 'main')
+    return (
+      <GroupBlock action={refresh} title={t('recommendations.title')}>
+        {body}
+      </GroupBlock>
     );
 
   return (

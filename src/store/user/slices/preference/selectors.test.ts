@@ -82,6 +82,26 @@ describe('preferenceSelectors', () => {
   });
 
   describe('labPreferSelectors', () => {
+    it('keeps desktop split view disabled by default', () => {
+      store.preference.lab = undefined;
+
+      expect(labPreferSelectors.enableDesktopSplitView(store)).toBe(false);
+    });
+
+    it('returns the configured desktop split view preference', () => {
+      store.preference.lab = { enableDesktopSplitView: true };
+
+      expect(labPreferSelectors.enableDesktopSplitView(store)).toBe(true);
+    });
+
+    it('should default project workspaces to disabled and honor the lab preference', () => {
+      store.preference.lab = undefined;
+      expect(labPreferSelectors.enableProjects(store)).toBe(false);
+
+      store.preference.lab = { enableProjects: true };
+      expect(labPreferSelectors.enableProjects(store)).toBe(true);
+    });
+
     it('returns false for message text selection actions by default', () => {
       store.preference.lab = undefined;
 
@@ -104,6 +124,14 @@ describe('preferenceSelectors', () => {
       store.preference.lab = { enableOAuthApps: true };
 
       expect(labPreferSelectors.enableOAuthApps(store)).toBe(true);
+    });
+
+    it('hides Integrations unless the lab flag is on', () => {
+      store.preference.lab = undefined;
+      expect(labPreferSelectors.enableIntegrations(store)).toBe(false);
+
+      store.preference.lab = { enableIntegrations: true };
+      expect(labPreferSelectors.enableIntegrations(store)).toBe(true);
     });
   });
 });

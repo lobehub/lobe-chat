@@ -48,10 +48,9 @@ export const REACT_DEVTOOLS_BRIDGE_URL = 'http://localhost:8097';
 export const reactDevtoolsPlugin = (): PluginOption => ({
   apply: 'serve',
   name: 'lobe-desktop-react-devtools',
-  transformIndexHtml: () =>
-    process.env.DESKTOP_REACT_DEVTOOLS === '1'
-      ? [{ attrs: { src: REACT_DEVTOOLS_BRIDGE_URL }, injectTo: 'head-prepend', tag: 'script' }]
-      : [],
+  transformIndexHtml: () => [
+    { attrs: { src: REACT_DEVTOOLS_BRIDGE_URL }, injectTo: 'head-prepend', tag: 'script' },
+  ],
 });
 
 export const nodeExternals = [
@@ -108,7 +107,12 @@ export const applyDesktopViteConfigExtension = async (
 
   const { module: extensionModule } = await runnerImport<DesktopViteConfigExtensionModule>(
     extensionPath,
-    { configFile: false, root: path.dirname(extensionPath) },
+    {
+      configFile: false,
+      // The module runner resolves these build tools from Desktop's frozen installation.
+      resolve: { dedupe: ['@sentry/vite-plugin', 'magic-string'] },
+      root: DESKTOP_DIR,
+    },
   );
 
   if (typeof extensionModule.extendDesktopViteConfig !== 'function') {

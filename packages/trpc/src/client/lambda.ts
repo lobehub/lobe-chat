@@ -1,6 +1,13 @@
 import { isRemoteServerNetworkError } from '@lobechat/types';
-import { type TRPCLink } from '@trpc/client';
-import { createTRPCClient, httpBatchLink, httpLink, splitLink } from '@trpc/client';
+import { type TRPCClientError, type TRPCLink } from '@trpc/client';
+import {
+  createTRPCClient,
+  httpBatchLink,
+  httpBatchStreamLink,
+  httpLink,
+  httpSubscriptionLink,
+  splitLink,
+} from '@trpc/client';
 import { createTRPCReact } from '@trpc/react-query';
 import { observable } from '@trpc/server/observable';
 import debug from 'debug';
@@ -17,6 +24,29 @@ let last401Time = 0;
 let lastMarket401Time = 0;
 const MIN_401_INTERVAL = 5000; // 5 seconds
 
+const isPublicShareRoute = () =>
+  typeof location !== 'undefined' && location.pathname.startsWith('/share/');
+
+// `@trpc/client` throws `TransformResultError` when a response body parses as
+// JSON but is not a `TRPCResponse` — the desktop proxy's 502 network envelope
+// (`{ errorType, body }`), a gateway/WAF JSON error page, and so on. Its message
+// is an internal transport detail, yet every surface that renders `err.message`
+// prints it verbatim: that is how "Unable to transform response from server"
+// ends up as the description of the "agent config failed to load" alert above
+// the chat input while the app is simply offline. Rewrite it into copy that
+// says what actually happened.
+const TRANSFORM_RESULT_ERROR_MESSAGE = 'Unable to transform response from server';
+
+const rewriteUnreadableResponseMessage = async (err: TRPCClientError<LambdaRouter>) => {
+  if (err.message !== TRANSFORM_RESULT_ERROR_MESSAGE) return;
+
+  // dynamic import to avoid circular dependency
+  const { unreadableResponseMessage } =
+    await import('@/components/Error/unreadableResponseMessage');
+
+  err.message = unreadableResponseMessage(err.meta?.responseJSON);
+};
+
 // handle error
 const errorHandlingLink: TRPCLink<LambdaRouter> = () => {
   return ({ op, next }) =>
@@ -30,6 +60,8 @@ const errorHandlingLink: TRPCLink<LambdaRouter> = () => {
             err.name === 'AbortError' ||
             err.cause?.name === 'AbortError' ||
             err.message.includes('signal is aborted without reason');
+
+          if (!isAbortError) await rewriteUnreadableResponseMessage(err);
 
           const showError = (op.context?.showNotification as boolean) ?? true;
           const status = err.data?.httpStatus as number;
@@ -68,18 +100,25 @@ const errorHandlingLink: TRPCLink<LambdaRouter> = () => {
                   if (now - last401Time > MIN_401_INTERVAL) {
                     last401Time = now;
                     // Desktop app doesn't have the web auth routes like `/signin`,
-                    // so skip the login redirect/notification there.
-                    if (!isDesktop) {
+                    // so skip the login redirect/notification there. A public
+                    // share page renders without a session, so a 401 from a side
+                    // query there must not log the reader out or leave the page.
+                    if (!isDesktop && !isPublicShareRoute()) {
                       const { getUserStoreState } = await import('@/store/user/store');
                       const { isSignedIn, logout } = getUserStoreState();
                       // If user is still marked as signed in but got 401,
                       // session is invalid - clear client state first
                       if (isSignedIn) {
-                        await logout();
+                        const params = new URLSearchParams({ callbackUrl: location.toString() });
+                        params.set('reason', 'sessionExpired');
+                        await logout({ redirectTo: `/signin?${params.toString()}` });
+                      } else {
+                        // No session to expire: ask to sign in without the
+                        // "session expired" notice.
+                        const { loginRequired } =
+                          await import('@/components/Error/loginRequiredNotification');
+                        loginRequired.redirect();
                       }
-                      const { loginRequired } =
-                        await import('@/components/Error/loginRequiredNotification');
-                      loginRequired.redirect();
                     }
                   }
                 }
@@ -162,14 +201,116 @@ const linkOptions = {
 
 // Procedures that should skip batching for faster initial load
 const initialLoadProcedures = new Set(['user.getUserState', 'config.getGlobalConfig']);
-const slowProcedures = new Set(['market.getAssistantList']);
-const SKIP_BATCH_PROCEDURES = new Set([...initialLoadProcedures, ...slowProcedures]);
+// `message.getMessages` can serialize multi-MB payloads on very long topics and
+// run for tens of seconds when the data is cold. Batched with the rest of the
+// initial load, one slow read delays the whole batch; if it exceeds the upstream
+// request timeout the response comes back as an HTML error page instead of JSON,
+// so every sibling procedure in the batch (e.g. `agent.getAgentConfigById`) fails
+// its `JSON.parse` with `Unexpected token '<'`. Split it out so a slow message
+// read only slows itself.
+const slowProcedures = new Set(['market.getAssistantList', 'message.getMessages']);
+// Procedures whose latency is felt directly as "the UI is stuck". The gateway
+// token refresh gates every reconnect: until it answers, the client cannot
+// register the local operation that drives the status tray, the sidebar elapsed
+// time and the stop button — so a topic switch shows a live run as idle for as
+// long as the slowest procedure sharing its batch. It is a cheap read; give it
+// its own request instead of the shared queue.
+const latencyCriticalProcedures = new Set([
+  'aiAgent.refreshGatewayToken',
+  // The share-visitor mirror of the same reconnect handshake.
+  'shareChat.refreshGatewayToken',
+  // Decides whether entering a workspace opens its onboarding page. Entering a
+  // workspace revalidates every SWR key at once; batched, this read waited for
+  // the slowest home read and the admin stayed on the home page.
+  'workspace.getSettings',
+]);
+const SKIP_BATCH_PROCEDURES = new Set([
+  ...initialLoadProcedures,
+  ...slowProcedures,
+  ...latencyCriticalProcedures,
+]);
+
+// Every `device.*` read leaves the server and hops to one of the user's own
+// machines, where the server waits out a 10-60s RPC timeout if that machine is
+// asleep, offline or busy. Batched with ordinary lambda reads, one such hop
+// holds the whole batch's response — opening a topic with a working directory
+// fires several of them at once (git branch / ahead-behind / working tree /
+// linked PR / agent quota). Keep them batched among themselves, but in their
+// own dataloader so they can only ever delay each other.
+const DEVICE_RPC_PREFIX = 'device.';
+
+// Queries whose input can exceed the GET URL budget (`maxURLLength` 2083):
+// the transfer-job status poll sends the visible-topic candidate set (up to
+// 1000 ids), which httpBatchLink would reject client-side with "Input is too
+// big for a single dispatch". Route them over POST instead (the lambda route
+// handler enables `allowMethodOverride`).
+const LARGE_INPUT_QUERY_PROCEDURES = new Set([
+  'agent.getTransferJobStatus',
+  'group.getTransferJobStatus',
+  // Takes every projected tool row of a topic at once; ~60 ids already exceed
+  // the batched GET's 2083-char budget, and a tool-heavy topic is exactly when
+  // it is called.
+  'message.getToolResultPayloads',
+]);
+
+/**
+ * Operation context key for the one-shot LLM relay headers (`withLlmRelay`):
+ * the tab subscribed a gateway channel for this call's LLM requests, and the
+ * server must see which. Per call, so such a call never shares a batch.
+ */
+export const LLM_RELAY_HEADERS_CONTEXT_KEY = 'llmRelayHeaders';
+
+const getLlmRelayHeaders = (op: { context: Record<string, unknown> }) =>
+  op.context?.[LLM_RELAY_HEADERS_CONTEXT_KEY] as Record<string, string> | undefined;
+
+/** TRPC call options carrying a one-shot relay's headers; none without a relay. */
+export const withLlmRelay = (relay?: { headers: Record<string, string> }) =>
+  relay ? { context: { [LLM_RELAY_HEADERS_CONTEXT_KEY]: relay.headers } } : undefined;
 
 // 3. splitLink to conditionally disable batching
+const buildBatchedHttpLinks = (options: typeof linkOptions) =>
+  splitLink({
+    condition: (op) => LARGE_INPUT_QUERY_PROCEDURES.has(op.path),
+    false: splitLink({
+      condition: (op) => SKIP_BATCH_PROCEDURES.has(op.path),
+      false: splitLink({
+        condition: (op) => op.path.startsWith(DEVICE_RPC_PREFIX),
+        // Two distinct link instances on purpose: each `httpBatchLink` owns its
+        // own dataloader, which is what keeps the device hops in a separate HTTP
+        // request from everything else.
+        false: httpBatchLink({ ...options, maxURLLength: 2083 }),
+        true: httpBatchLink({ ...options, maxURLLength: 2083 }),
+      }),
+      true: httpLink(options),
+    }),
+    true: httpLink({ ...options, methodOverride: 'POST' }),
+  });
+
+const buildHttpLinks = (options: typeof linkOptions) =>
+  splitLink({
+    condition: (op) => !!getLlmRelayHeaders(op),
+    false: splitLink({
+      // Source snapshots can exceed the serverless buffered-response limit.
+      condition: (op) => op.path === 'canvas.getProject',
+      false: buildBatchedHttpLinks(options),
+      true: httpBatchStreamLink({ ...options, maxItems: 1 }),
+    }),
+    true: httpLink({
+      ...options,
+      headers: async ({ op }) => ({
+        ...(await options.headers()),
+        ...getLlmRelayHeaders(op),
+      }),
+      methodOverride: 'POST',
+    }),
+  });
+
 const customSplitLink = splitLink({
-  condition: (op) => SKIP_BATCH_PROCEDURES.has(op.path),
-  false: httpBatchLink({ ...linkOptions, maxURLLength: 2083 }),
-  true: httpLink(linkOptions),
+  condition: (op) => op.type === 'subscription',
+  false: buildHttpLinks(linkOptions),
+  // EventSource sends the same-origin session cookie. Subscription event payloads are progress
+  // hints only; all durable onboarding state is still read via the authenticated polling calls.
+  true: httpSubscriptionLink({ transformer: superjson, url: linkOptions.url }),
 });
 
 // 4. assembly links
@@ -186,24 +327,29 @@ export const lambdaClient = createTRPCClient<LambdaRouter>({
  * not currently in — e.g. sharing a personal device into a chosen workspace
  * from the personal settings page — pin the workspace header per client
  * instead. The override runs after the business headers merge, so it wins.
+ * `null` pins the personal scope: the workspace header is dropped even while a
+ * workspace is active.
  */
-export const createWorkspaceLambdaClient = (workspaceId: string) => {
+export const createWorkspaceLambdaClient = (workspaceId: string | null) => {
   const scopedLinkOptions = {
     ...linkOptions,
-    headers: async () => ({
-      ...(await linkOptions.headers()),
+    headers: async () => {
+      const headers = (await linkOptions.headers()) as Record<string, string>;
       // Same contract as the cloud business headers slot / the server's
       // `WORKSPACE_ID_HEADER` (src/app/(backend)/webapi/_utils/workspace.ts).
-      'X-Workspace-Id': workspaceId,
-    }),
+      if (workspaceId) return { ...headers, 'X-Workspace-Id': workspaceId };
+
+      const { 'X-Workspace-Id': _, ...personal } = headers;
+      return personal;
+    },
   };
   return createTRPCClient<LambdaRouter>({
     links: [
       errorHandlingLink,
       splitLink({
-        condition: (op) => SKIP_BATCH_PROCEDURES.has(op.path),
-        false: httpBatchLink({ ...scopedLinkOptions, maxURLLength: 2083 }),
-        true: httpLink(scopedLinkOptions),
+        condition: (op) => op.type === 'subscription',
+        false: buildHttpLinks(scopedLinkOptions),
+        true: httpSubscriptionLink({ transformer: superjson, url: scopedLinkOptions.url }),
       }),
     ],
   });

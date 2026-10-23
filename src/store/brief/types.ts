@@ -1,6 +1,7 @@
 import {
   type BriefAction,
   type BriefArtifacts,
+  type BriefMetadata,
   type BriefType,
   type TaskStatus,
 } from '@lobechat/types';
@@ -9,6 +10,8 @@ export interface AgentAvatarInfo {
   avatar: string | null;
   backgroundColor: string | null;
   id: string;
+  /** Personal name; renderers resolve the label with `agentDisplayName(agent, fallback)`. */
+  name: string | null;
   title: string | null;
 }
 
@@ -20,6 +23,8 @@ export interface BriefItem {
   createdAt: Date | string;
   cronJobId: string | null;
   id: string;
+  /** Feature-owned payload; a goal brief names its goal here. */
+  metadata?: BriefMetadata | null;
   priority: string | null;
   readAt: Date | string | null;
   resolvedAction: string | null;

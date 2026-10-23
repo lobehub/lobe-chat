@@ -2,9 +2,17 @@
 
 import type { GitFileDiffStatus } from '@lobechat/electron-client-ipc';
 import { nanoid } from '@lobechat/utils';
-import { ActionIcon, copyToClipboard, Flexbox, PatchDiff } from '@lobehub/ui';
-import { confirmModal, toast } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar as themeCssVar } from 'antd-style';
+import {
+  ActionIcon,
+  confirmModal,
+  copyToClipboard,
+  createStaticStyles,
+  cssVar as themeCssVar,
+  Flexbox,
+  PatchDiff,
+  Skeleton,
+  toast,
+} from '@lobehub/ui';
 import { CopyIcon, LocateFixedIcon, Undo2Icon } from 'lucide-react';
 import path from 'path-browserify-esm';
 import { memo, type MouseEvent, useCallback, useMemo } from 'react';
@@ -14,6 +22,7 @@ import { gitService } from '@/services/git';
 import { useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 
+import type { ComposerTarget } from '../../types';
 import type { DiffSelectedLineRange } from './selection';
 import { buildCodeContextSelection } from './selection';
 
@@ -59,6 +68,10 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
   `,
   deletions: css`
     color: ${cssVar.colorError};
+  `,
+  pending: css`
+    padding-block: 8px;
+    padding-inline: 12px;
   `,
   empty: css`
     padding-block: 12px;
@@ -182,13 +195,16 @@ interface FileItemHeaderProps {
   onReverted?: () => void;
   /** When provided, enables the per-file revert button (unstaged mode only). */
   revertContext?: { deviceId?: string; workingDirectory: string };
+  /** Keep the revert button visible but inert, e.g. while the row is a
+   * persisted summary the live read has not confirmed yet. */
+  revertDisabled?: boolean;
   // Status reserved for future use (e.g. dim deleted entries) — keep on the
   // shape so the parent doesn't need to re-derive it later.
   status: GitFileDiffStatus;
 }
 
 export const FileItemHeader = memo<FileItemHeaderProps>(
-  ({ filePath, additions, deletions, hideDir, revertContext, onReverted }) => {
+  ({ filePath, additions, deletions, hideDir, revertContext, revertDisabled, onReverted }) => {
     const { t } = useTranslation('chat');
     const revealInFilesTab = useGlobalStore((s) => s.revealInFilesTab);
 
@@ -217,7 +233,7 @@ export const FileItemHeader = memo<FileItemHeaderProps>(
     const handleRevert = useCallback(
       (event: MouseEvent<HTMLDivElement>) => {
         event.stopPropagation();
-        if (!revertContext) return;
+        if (!revertContext || revertDisabled) return;
         confirmModal({
           cancelText: t('workingPanel.review.revert.confirm.cancel'),
           content: t('workingPanel.review.revert.confirm.description'),
@@ -251,7 +267,7 @@ export const FileItemHeader = memo<FileItemHeaderProps>(
           title: t('workingPanel.review.revert.confirm.title'),
         });
       },
-      [fileName, filePath, onReverted, revertContext, t],
+      [fileName, filePath, onReverted, revertContext, revertDisabled, t],
     );
 
     return (
@@ -290,6 +306,8 @@ export const FileItemHeader = memo<FileItemHeaderProps>(
           {revertContext && (
             <ActionIcon
               className={`${styles.rowAction} ${styles.revertDanger}`}
+              data-testid="revert-file"
+              disabled={revertDisabled}
               icon={Undo2Icon}
               size={'small'}
               title={t('workingPanel.review.revert')}
@@ -305,11 +323,14 @@ export const FileItemHeader = memo<FileItemHeaderProps>(
 FileItemHeader.displayName = 'ReviewFileItemHeader';
 
 interface FileItemBodyProps {
+  composerTarget: ComposerTarget;
   /** Whether the Collapse panel is expanded — gates the heavy PatchDiff render. */
   expanded: boolean;
   filePath: string;
   isBinary: boolean;
   patch: string;
+  /** Diff text not loaded yet — show a placeholder instead of the error line. */
+  pending?: boolean;
   /** Inline word-level diff highlighting; off → plain line-level. */
   textDiff: boolean;
   truncated: boolean;
@@ -320,8 +341,10 @@ interface FileItemBodyProps {
 
 const FileItemBody = memo<FileItemBodyProps>(
   ({
+    composerTarget,
     filePath,
     patch,
+    pending,
     isBinary,
     truncated,
     expanded,
@@ -338,10 +361,12 @@ const FileItemBody = memo<FileItemBodyProps>(
 
     const diffOptions = useMemo(
       () => ({
-        enableGutterUtility: true,
+        enableGutterUtility: composerTarget.writable,
         enableLineSelection: true,
         lineDiffType: textDiff ? ('word-alt' as const) : ('none' as const),
         onGutterUtilityClick: (range: DiffSelectedLineRange) => {
+          if (!composerTarget.writable) return;
+
           const selection = buildCodeContextSelection({
             filePath,
             language,
@@ -353,22 +378,41 @@ const FileItemBody = memo<FileItemBodyProps>(
           if (!selection) return;
 
           addChatContextSelection({
-            ...selection,
-            id: `code-selection-${nanoid(6)}`,
-            type: 'text',
+            contextKey: composerTarget.contextKey,
+            selection: {
+              ...selection,
+              id: `code-selection-${nanoid(6)}`,
+              type: 'text',
+            },
           });
           toast.success(t('workingPanel.review.addSelectionToContext.success'));
         },
         overflow: wordWrap ? ('wrap' as const) : ('scroll' as const),
         unsafeCSS: reviewDiffUnsafeCSS,
       }),
-      [addChatContextSelection, filePath, language, patch, t, textDiff, wordWrap, workingDirectory],
+      [
+        addChatContextSelection,
+        composerTarget,
+        filePath,
+        language,
+        patch,
+        t,
+        textDiff,
+        wordWrap,
+        workingDirectory,
+      ],
     );
 
     if (!expanded) return null;
 
     if (isBinary) return <div className={styles.empty}>{t('workingPanel.review.binary')}</div>;
     if (truncated) return <div className={styles.empty}>{t('workingPanel.review.tooLarge')}</div>;
+    if (!patch && pending)
+      return (
+        <div aria-busy className={styles.pending} data-testid={'review-diff-pending'}>
+          <Skeleton.Text rows={3} width={['80%', '60%', '70%']} />
+        </div>
+      );
     if (!patch) return <div className={styles.empty}>{t('workingPanel.review.error')}</div>;
 
     return (

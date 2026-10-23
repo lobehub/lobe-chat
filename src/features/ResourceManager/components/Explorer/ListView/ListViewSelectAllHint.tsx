@@ -1,8 +1,7 @@
-import { Flexbox } from '@lobehub/ui';
-import { Button } from '@lobehub/ui/base-ui';
+import { Button, Flexbox } from '@lobehub/ui';
 import { useTranslation } from 'react-i18next';
 
-import type { SelectAllState } from '@/routes/(main)/resource/features/store/initialState';
+import type { SelectAllState } from '@/features/ResourceManager/store/initialState';
 
 import { getListViewMinWidth } from './ListItem/constants';
 import { styles } from './styles';

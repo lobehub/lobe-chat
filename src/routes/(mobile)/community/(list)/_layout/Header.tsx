@@ -1,8 +1,7 @@
 'use client';
 
-import { ActionIcon, Flexbox } from '@lobehub/ui';
+import { ActionIcon, createStaticStyles, Flexbox } from '@lobehub/ui';
 import { ChatHeader } from '@lobehub/ui/mobile';
-import { createStaticStyles } from 'antd-style';
 import { SearchIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 

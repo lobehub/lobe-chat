@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises';
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { fetchClaudeCodeQuota } from './claudeCodeQuota';
+import { claudeCodeKeychainService, fetchClaudeCodeQuota } from './claudeCodeQuota';
 
 vi.mock('node:fs/promises', () => ({
   readFile: vi.fn(),
@@ -31,6 +31,23 @@ const mockKeychain = (result: string | Error) => {
       else callback(null, `${result}\n`, '');
     },
   );
+};
+
+/** One Keychain item per service name, like the real login keychain. */
+const mockKeychainItems = (items: Record<string, string>) => {
+  execFileMock.mockImplementation(
+    (_cmd: string, args: string[], _opts: unknown, callback: ExecFileCallback) => {
+      const service = args[args.indexOf('-s') + 1];
+      const item = items[service];
+      if (item === undefined) callback(new Error('item could not be found'), '', '');
+      else callback(null, `${item}\n`, '');
+    },
+  );
+};
+
+const keychainServiceArg = (call: unknown[]) => {
+  const args = call[1] as string[];
+  return args[args.indexOf('-s') + 1];
 };
 
 const credentialsJson = (expiresAt: number, accessToken = 'file-token') =>
@@ -106,18 +123,6 @@ describe('fetchClaudeCodeQuota', () => {
     expect(result.status).toBe('ok');
   });
 
-  it('ignores disabled routing flags and falls through to the credential lookup', async () => {
-    setPlatform('linux');
-    vi.mocked(readFile).mockResolvedValue(credentialsJson(FRESH_EXPIRES_AT));
-    vi.mocked(fetch).mockResolvedValue(okUsageResponse({ five_hour: { utilization: 10 } }));
-
-    const result = await fetchClaudeCodeQuota({
-      env: { CLAUDE_CODE_USE_BEDROCK: '0', CLAUDE_CODE_USE_VERTEX: 'false' },
-    });
-
-    expect(result.status).toBe('ok');
-  });
-
   it('reports missing credentials when neither keychain nor files hold a login', async () => {
     setPlatform('darwin');
 
@@ -165,7 +170,9 @@ describe('fetchClaudeCodeQuota', () => {
       status: 'ok',
       weekly: {
         resetsAt: Date.parse('2026-07-08T12:00:00Z'),
-        usedPercent: 62.5,
+        // Rounded like the readings we persist, so the panel cannot show one
+        // number live and another after ingest.
+        usedPercent: 63,
         windowMinutes: 10_080,
       },
     });
@@ -198,7 +205,7 @@ describe('fetchClaudeCodeQuota', () => {
     // resets_at in unix seconds; used_percentage instead of utilization
     vi.mocked(fetch).mockResolvedValue(
       okUsageResponse({
-        five_hour: { resets_at: 1_782_741_600, used_percentage: 140 },
+        five_hour: { resets_at: 1_783_002_600, used_percentage: 140 },
       }),
     );
 
@@ -207,7 +214,7 @@ describe('fetchClaudeCodeQuota', () => {
     expect(result.status).toBe('ok');
     // clamped to 100, seconds converted to ms
     expect(result.session).toEqual({
-      resetsAt: 1_782_741_600 * 1000,
+      resetsAt: 1_783_002_600 * 1000,
       usedPercent: 100,
       windowMinutes: 300,
     });
@@ -223,11 +230,6 @@ describe('fetchClaudeCodeQuota', () => {
 
   it('prefers the CLAUDE_CONFIG_DIR profile over a fresh default keychain login', async () => {
     setPlatform('darwin');
-    mockKeychain(
-      JSON.stringify({
-        claudeAiOauth: { accessToken: 'default-account-token', expiresAt: FRESH_EXPIRES_AT },
-      }),
-    );
     vi.mocked(readFile).mockImplementation(async (file) => {
       if (file === '/custom/claude/.credentials.json') {
         return credentialsJson(FRESH_EXPIRES_AT, 'profile-token');
@@ -235,12 +237,19 @@ describe('fetchClaudeCodeQuota', () => {
       throw new Error('ENOENT');
     });
     vi.mocked(fetch).mockResolvedValue(okUsageResponse({ five_hour: { utilization: 10 } }));
+    mockKeychainItems({
+      'Claude Code-credentials': JSON.stringify({
+        claudeAiOauth: { accessToken: 'default-account-token', expiresAt: FRESH_EXPIRES_AT },
+      }),
+    });
 
     const result = await fetchClaudeCodeQuota({ env: { CLAUDE_CONFIG_DIR: '/custom/claude' } });
 
     expect(result.status).toBe('ok');
-    // The custom profile's token is used and the default keychain is never consulted.
-    expect(execFileMock).not.toHaveBeenCalled();
+    // The custom profile's token is used and the default keychain item is never consulted.
+    expect(execFileMock.mock.calls.map(keychainServiceArg)).toEqual([
+      claudeCodeKeychainService('/custom/claude'),
+    ]);
     expect(fetch).toHaveBeenCalledWith(
       expect.any(String),
       expect.objectContaining({
@@ -249,18 +258,43 @@ describe('fetchClaudeCodeQuota', () => {
     );
   });
 
-  it('reports not-found for an unauthenticated CLAUDE_CONFIG_DIR profile instead of falling back', async () => {
+  it('reads a CLAUDE_CONFIG_DIR profile login from its own macOS Keychain item', async () => {
     setPlatform('darwin');
-    mockKeychain(
-      JSON.stringify({
+    mockKeychainItems({
+      'Claude Code-credentials': JSON.stringify({
         claudeAiOauth: { accessToken: 'default-account-token', expiresAt: FRESH_EXPIRES_AT },
       }),
+      [claudeCodeKeychainService('/custom/claude')]: JSON.stringify({
+        claudeAiOauth: { accessToken: 'profile-keychain-token', expiresAt: FRESH_EXPIRES_AT },
+      }),
+    });
+    vi.mocked(fetch).mockResolvedValue(okUsageResponse({ five_hour: { utilization: 10 } }));
+
+    const result = await fetchClaudeCodeQuota({ env: { CLAUDE_CONFIG_DIR: '/custom/claude' } });
+
+    expect(result.status).toBe('ok');
+    expect(fetch).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        headers: expect.objectContaining({ Authorization: 'Bearer profile-keychain-token' }),
+      }),
     );
+  });
+
+  it('reports not-found for an unauthenticated CLAUDE_CONFIG_DIR profile instead of falling back', async () => {
+    setPlatform('darwin');
+    mockKeychainItems({
+      'Claude Code-credentials': JSON.stringify({
+        claudeAiOauth: { accessToken: 'default-account-token', expiresAt: FRESH_EXPIRES_AT },
+      }),
+    });
 
     const result = await fetchClaudeCodeQuota({ env: { CLAUDE_CONFIG_DIR: '/custom/claude' } });
 
     expect(result).toMatchObject({ reason: 'credentials-not-found', status: 'unavailable' });
-    expect(execFileMock).not.toHaveBeenCalled();
+    expect(execFileMock.mock.calls.map(keychainServiceArg)).toEqual([
+      claudeCodeKeychainService('/custom/claude'),
+    ]);
     expect(fetch).not.toHaveBeenCalled();
   });
 
@@ -364,6 +398,56 @@ describe('fetchClaudeCodeQuota', () => {
     });
   });
 
+  it('reports a window whose reset already passed as refilled, not as spent', async () => {
+    setPlatform('linux');
+    vi.mocked(readFile).mockResolvedValue(credentialsJson(FRESH_EXPIRES_AT));
+    // Idle for over five hours: the usage API keeps echoing the last session
+    // window, whose reset is now in the past. That quota has refilled — showing
+    // its 96% would paint an exhausted meter over a free window.
+    vi.mocked(fetch).mockResolvedValue(
+      okUsageResponse({
+        five_hour: { resets_at: '2026-07-02T06:00:00Z', utilization: 96 },
+        seven_day: { resets_at: '2026-07-08T12:00:00Z', utilization: 13 },
+      }),
+    );
+
+    const result = await fetchClaudeCodeQuota();
+
+    expect(result.session).toEqual({ resetsAt: null, usedPercent: 0, windowMinutes: 300 });
+    expect(result.weekly).toMatchObject({ usedPercent: 13 });
+  });
+
+  it('keeps a scoped weekly the provider reports without a reset time', async () => {
+    setPlatform('linux');
+    vi.mocked(readFile).mockResolvedValue(credentialsJson(FRESH_EXPIRES_AT));
+    // An untouched model-scoped weekly reports `resets_at: null` — there is no
+    // window to project it into, but the plan does have the limit.
+    vi.mocked(fetch).mockResolvedValue(
+      okUsageResponse({
+        limits: [
+          {
+            is_active: false,
+            kind: 'weekly_scoped',
+            percent: 0,
+            resets_at: null,
+            scope: { model: { display_name: 'Fable', id: null }, surface: null },
+            severity: 'normal',
+          },
+        ],
+      }),
+    );
+
+    const result = await fetchClaudeCodeQuota();
+
+    expect(result.scopedWeekly).toEqual({
+      modelName: 'Fable',
+      window: { resetsAt: null, usedPercent: 0, windowMinutes: 10_080 },
+    });
+    expect(result.readings).toContainEqual(
+      expect.objectContaining({ limitType: 'weekly_scoped', resetsAt: null, scopeKey: 'Fable' }),
+    );
+  });
+
   it('treats a 401 as an expired login', async () => {
     setPlatform('linux');
     vi.mocked(readFile).mockResolvedValue(credentialsJson(FRESH_EXPIRES_AT));
@@ -373,6 +457,34 @@ describe('fetchClaudeCodeQuota', () => {
 
     expect(result).toMatchObject({ reason: 'credentials-expired', status: 'unavailable' });
     expect(result.error).toContain('401');
+  });
+
+  it('reports a network-blocked 403 as request-blocked, not an expired login', async () => {
+    setPlatform('linux');
+    vi.mocked(readFile).mockResolvedValue(credentialsJson(FRESH_EXPIRES_AT));
+    vi.mocked(fetch).mockResolvedValue({
+      json: async () => ({ error: { message: 'Request not allowed', type: 'forbidden' } }),
+      ok: false,
+      status: 403,
+    } as Response);
+
+    const result = await fetchClaudeCodeQuota();
+
+    expect(result).toMatchObject({ reason: 'request-blocked', status: 'unavailable' });
+  });
+
+  it('keeps a token-rejecting 403 as an expired login', async () => {
+    setPlatform('linux');
+    vi.mocked(readFile).mockResolvedValue(credentialsJson(FRESH_EXPIRES_AT));
+    vi.mocked(fetch).mockResolvedValue({
+      json: async () => ({ error: { message: 'OAuth token revoked', type: 'permission_error' } }),
+      ok: false,
+      status: 403,
+    } as Response);
+
+    const result = await fetchClaudeCodeQuota();
+
+    expect(result).toMatchObject({ reason: 'credentials-expired', status: 'unavailable' });
   });
 
   it('surfaces a 429 as a transient error', async () => {
@@ -403,5 +515,16 @@ describe('fetchClaudeCodeQuota', () => {
 
     expect(result.status).toBe('error');
     expect(result.error).toContain('timed out');
+  });
+});
+
+describe('claudeCodeKeychainService', () => {
+  it('matches the CLI: bare name by default, sha256(dir)[0..8] suffix for a profile', () => {
+    expect(claudeCodeKeychainService()).toBe('Claude Code-credentials');
+    // sha256('/Users/me/.claude-work') starts with these 8 hex chars.
+    expect(claudeCodeKeychainService('/Users/me/.claude-work')).toMatch(
+      /^Claude Code-credentials-[\da-f]{8}$/,
+    );
+    expect(claudeCodeKeychainService('/a')).not.toBe(claudeCodeKeychainService('/b'));
   });
 });

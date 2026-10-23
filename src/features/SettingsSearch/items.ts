@@ -1,11 +1,21 @@
+import { LAB_FEATURES } from '@/features/Settings/labs/features';
 import { SettingsTabs } from '@/store/global/initialState';
+import { WorkspaceSettingsTabs } from '@/types/workspaceSettings';
+
+/**
+ * Tab key the search indexes by. Personal tabs and the workspace-only tabs
+ * share one namespace: tabs whose page is the same on both surfaces use the
+ * personal key (the workspace sidebar maps e.g. `statistics` → `stats`).
+ */
+export type SettingsSearchTab = SettingsTabs | WorkspaceSettingsTabs;
 
 export interface SettingsSearchContext {
   disableEmailPassword: boolean;
   enableBusinessFeatures: boolean;
   enableComposio: boolean;
   enableGatewayMode: boolean;
-  enableSTT: boolean;
+  /** Workspaces are available to this user */
+  enableWorkspace: boolean;
   /** Whether the signed-in user has an email on their profile */
   hasEmail: boolean;
   hideDocs: boolean;
@@ -30,7 +40,7 @@ export interface SettingsSearchItem {
   labelKey: string;
   /** i18n namespace of `labelKey` / `descKey`, defaults to `setting` */
   ns?: 'auth' | 'electron' | 'labs' | 'setting' | 'spend' | 'subscription';
-  tab: SettingsTabs;
+  tab: SettingsSearchTab;
   /**
    * Extra visibility gate mirroring the target item's own render condition
    * (tab visibility is already handled via useCategory). Defaults to visible.
@@ -46,10 +56,13 @@ export interface SettingsSearchItem {
  * technical terms — it must always stay searchable; localized keywords enrich
  * on top of this floor.
  */
-export const TAB_SEARCH_EN_KEYWORDS: Partial<Record<SettingsTabs, string[]>> = {
+// Keyed by `SettingsSearchTab` values. Typed as `string`: the two tab enums
+// share values ('about', 'skill', …), which TypeScript rejects as record keys.
+export const TAB_SEARCH_EN_KEYWORDS: Partial<Record<string, string[]>> = {
   [SettingsTabs.About]: ['about', 'version', 'changelog', 'feedback', 'help'],
   [SettingsTabs.Advanced]: ['advanced', 'developer', 'diagnostics'],
-  [SettingsTabs.APIKey]: ['api key', 'apikey', 'token', 'secret'],
+  [SettingsTabs.APIKey]: ['api', 'api key', 'apikey', 'token', 'secret', 'personal key'],
+  [SettingsTabs.Labels]: ['label', 'labels', 'tag', 'tags', 'group', 'grouping'],
   [SettingsTabs.Appearance]: [
     'appearance',
     'theme',
@@ -58,6 +71,7 @@ export const TAB_SEARCH_EN_KEYWORDS: Partial<Record<SettingsTabs, string[]>> = {
     'font',
     'language',
     'color',
+    'background',
   ],
   [SettingsTabs.Billing]: ['billing', 'payment', 'invoice', 'card', 'transaction'],
   [SettingsTabs.Connector]: ['connectors', 'integrations', 'mcp', 'oauth'],
@@ -67,8 +81,36 @@ export const TAB_SEARCH_EN_KEYWORDS: Partial<Record<SettingsTabs, string[]>> = {
   [SettingsTabs.Hotkey]: ['hotkey', 'shortcut', 'keyboard'],
   [SettingsTabs.Labs]: ['labs', 'experiment', 'beta', 'preview', 'developer'],
   [SettingsTabs.Memory]: ['memory', 'memories', 'personalization'],
-  [SettingsTabs.Messenger]: ['messenger', 'chat platform', 'bot'],
-  [SettingsTabs.Notification]: ['notification', 'email', 'push', 'alerts'],
+  [SettingsTabs.Drive]: ['storage', 'drive', 'network drive', 'files', 'quota'],
+  [SettingsTabs.Environments]: [
+    'sandbox',
+    'environments',
+    'instances',
+    'setup script',
+    'repository',
+  ],
+  [SettingsTabs.Messenger]: [
+    'messenger',
+    'chat platform',
+    'bot',
+    'telegram',
+    'slack',
+    'discord',
+    'wechat',
+  ],
+  [SettingsTabs.Integrations]: ['integrations', 'github', 'pull request', 'ci', 'review', 'merge'],
+  [SettingsTabs.Notification]: [
+    'notification',
+    'email',
+    'push',
+    'alerts',
+    'inbox',
+    'telegram',
+    'slack',
+    'discord',
+    'wechat',
+  ],
+  [SettingsTabs.OAuthApps]: ['oauth', 'oauth apps', 'developer apps'],
   [SettingsTabs.Plans]: ['subscription', 'plan', 'upgrade', 'pricing', 'membership'],
   [SettingsTabs.Profile]: [
     'profile',
@@ -84,27 +126,30 @@ export const TAB_SEARCH_EN_KEYWORDS: Partial<Record<SettingsTabs, string[]>> = {
     'provider',
     'model',
     'llm',
+    'api',
     'api key',
     'apikey',
     'byok',
     'bring your own key',
     'endpoint',
+    'model provider',
+    'language model',
+    'custom provider',
   ],
-  [SettingsTabs.Proxy]: ['proxy', 'network', 'connection'],
+  [SettingsTabs.Proxy]: ['proxy', 'network', 'connection', 'proxy settings'],
   [SettingsTabs.Referral]: ['referral', 'invite', 'rewards', 'bonus'],
   [SettingsTabs.ServiceModel]: [
     'service model',
     'model assignment',
     'topic naming',
     'translation',
-    'tts',
-    'voice',
-    'speech',
     'image',
     'image generation',
     'embedding',
     'prompt rewrite',
     'suggestion',
+    'search',
+    'search model',
   ],
   [SettingsTabs.Skill]: ['skill', 'skills', 'plugins', 'tools'],
   [SettingsTabs.Stats]: ['analytics', 'statistics', 'stats'],
@@ -116,11 +161,30 @@ export const TAB_SEARCH_EN_KEYWORDS: Partial<Record<SettingsTabs, string[]>> = {
     'backup',
     'reset',
     'clear data',
+    'clear storage',
+    'knowledge base',
     'account deletion',
     'delete account',
   ],
-  [SettingsTabs.SystemTools]: ['system tools', 'built-in tools'],
+  [SettingsTabs.Trash]: ['trash', 'recycle bin', 'deleted', 'restore', 'undelete', 'recover'],
+  [SettingsTabs.SystemTools]: [
+    'system tools',
+    'built-in tools',
+    'system',
+    'node',
+    'python',
+    'cli',
+    'environment',
+  ],
   [SettingsTabs.Usage]: ['usage', 'consumption', 'quota', 'spend', 'statistics'],
+  [WorkspaceSettingsTabs.ChatPreference]: [
+    'chat preferences',
+    'follow up',
+    'follow-up suggestions',
+    'input suggestions',
+    'input completion',
+    'autocomplete',
+  ],
 };
 
 /**
@@ -130,7 +194,7 @@ export const TAB_SEARCH_EN_KEYWORDS: Partial<Record<SettingsTabs, string[]>> = {
  * "积分", and "文件" (files) should hit Storage ("数据存储"). Each locale
  * carries its own synonym set, layered on top of TAB_SEARCH_EN_KEYWORDS.
  */
-export const TAB_SEARCH_KEYWORDS_KEYS: Partial<Record<SettingsTabs, string>> = {
+export const TAB_SEARCH_KEYWORDS_KEYS: Partial<Record<string, string>> = {
   [SettingsTabs.About]: 'settingsSearch.tabKeywords.about',
   [SettingsTabs.Advanced]: 'settingsSearch.tabKeywords.advanced',
   [SettingsTabs.APIKey]: 'settingsSearch.tabKeywords.apikey',
@@ -140,10 +204,14 @@ export const TAB_SEARCH_KEYWORDS_KEYS: Partial<Record<SettingsTabs, string>> = {
   [SettingsTabs.Credits]: 'settingsSearch.tabKeywords.credits',
   [SettingsTabs.Creds]: 'settingsSearch.tabKeywords.creds',
   [SettingsTabs.Devices]: 'settingsSearch.tabKeywords.devices',
+  [SettingsTabs.Labels]: 'settingsSearch.tabKeywords.labels',
   [SettingsTabs.Hotkey]: 'settingsSearch.tabKeywords.hotkey',
+  [SettingsTabs.Labs]: 'settingsSearch.tabKeywords.labs',
   [SettingsTabs.Memory]: 'settingsSearch.tabKeywords.memory',
   [SettingsTabs.Messenger]: 'settingsSearch.tabKeywords.messenger',
+  [SettingsTabs.Integrations]: 'settingsSearch.tabKeywords.integrations',
   [SettingsTabs.Notification]: 'settingsSearch.tabKeywords.notification',
+  [SettingsTabs.OAuthApps]: 'settingsSearch.tabKeywords.oauthApps',
   [SettingsTabs.Plans]: 'settingsSearch.tabKeywords.plans',
   [SettingsTabs.Profile]: 'settingsSearch.tabKeywords.profile',
   [SettingsTabs.Provider]: 'settingsSearch.tabKeywords.provider',
@@ -154,7 +222,9 @@ export const TAB_SEARCH_KEYWORDS_KEYS: Partial<Record<SettingsTabs, string>> = {
   [SettingsTabs.Stats]: 'settingsSearch.tabKeywords.stats',
   [SettingsTabs.Storage]: 'settingsSearch.tabKeywords.storage',
   [SettingsTabs.SystemTools]: 'settingsSearch.tabKeywords.systemTools',
+  [SettingsTabs.Trash]: 'settingsSearch.tabKeywords.trash',
   [SettingsTabs.Usage]: 'settingsSearch.tabKeywords.usage',
+  [WorkspaceSettingsTabs.ChatPreference]: 'settingsSearch.tabKeywords.chatPreference',
 };
 
 /**
@@ -284,13 +354,6 @@ export const SETTINGS_SEARCH_ITEMS: SettingsSearchItem[] = [
     tab: SettingsTabs.Appearance,
   },
   {
-    anchor: 'appearance-font-size',
-    descKey: 'settingChatAppearance.fontSize.desc',
-    keywords: ['font', 'size', 'text'],
-    labelKey: 'settingChatAppearance.fontSize.title',
-    tab: SettingsTabs.Appearance,
-  },
-  {
     anchor: 'appearance-app-tray',
     keywords: ['tray', 'menu bar', 'menubar'],
     labelKey: 'settingAppearance.appTray.title',
@@ -298,12 +361,50 @@ export const SETTINGS_SEARCH_ITEMS: SettingsSearchItem[] = [
     visible: (ctx) => ctx.isDesktop,
   },
   {
-    anchor: 'appearance-terminal-font',
-    descKey: 'settingAppearance.terminal.fontFamily.desc',
-    keywords: ['terminal font', 'monospace', 'font family'],
-    labelKey: 'settingAppearance.terminal.fontFamily.title',
+    anchor: 'appearance-font-family',
+    descKey: 'settingAppearance.font.fontFamily.desc',
+    keywords: ['font', 'font family', 'typeface', 'interface font'],
+    labelKey: 'settingAppearance.font.fontFamily.title',
     tab: SettingsTabs.Appearance,
     visible: (ctx) => ctx.isDesktop,
+  },
+  {
+    anchor: 'appearance-font-fallback',
+    descKey: 'settingAppearance.font.fallback.desc',
+    keywords: ['fallback font', 'font stack', 'cjk font', 'chinese font', 'font family'],
+    labelKey: 'settingAppearance.font.fallback.title',
+    tab: SettingsTabs.Appearance,
+    visible: (ctx) => ctx.isDesktop,
+  },
+  {
+    anchor: 'appearance-monospace-font',
+    descKey: 'settingAppearance.font.monospace.desc',
+    keywords: ['terminal font', 'monospace', 'code font', 'font family'],
+    labelKey: 'settingAppearance.font.monospace.title',
+    tab: SettingsTabs.Appearance,
+    visible: (ctx) => ctx.isDesktop,
+  },
+  {
+    anchor: 'appearance-monospace-font-fallback',
+    descKey: 'settingAppearance.font.monospaceFallback.desc',
+    keywords: ['fallback font', 'monospace', 'code font', 'terminal font'],
+    labelKey: 'settingAppearance.font.monospaceFallback.title',
+    tab: SettingsTabs.Appearance,
+    visible: (ctx) => ctx.isDesktop,
+  },
+  {
+    anchor: 'appearance-font-size',
+    descKey: 'settingChatAppearance.fontSize.desc',
+    keywords: ['font', 'size', 'text'],
+    labelKey: 'settingChatAppearance.fontSize.title',
+    tab: SettingsTabs.Appearance,
+  },
+  {
+    anchor: 'appearance-font-antialiasing',
+    descKey: 'settingAppearance.font.antialiasing.desc',
+    keywords: ['font', 'antialiasing', 'smoothing', 'text', 'rendering'],
+    labelKey: 'settingAppearance.font.antialiasing.title',
+    tab: SettingsTabs.Appearance,
   },
   // System Tools
   {
@@ -349,6 +450,21 @@ export const SETTINGS_SEARCH_ITEMS: SettingsSearchItem[] = [
     tab: SettingsTabs.Advanced,
     visible: (ctx) => ctx.isDesktop,
   },
+  // Labs — derived from the LAB_FEATURES catalog the page renders, so a new
+  // lab flag becomes searchable without a second registration. Anchors use
+  // `labs-${flag}`, matching the SettingsSearchAnchor wrap on each toggle.
+  ...LAB_FEATURES.map(
+    ({ desktopOnly, flag, i18nKey, searchKeywords, workspaceOnly }): SettingsSearchItem => ({
+      anchor: `labs-${flag}`,
+      descKey: `features.${i18nKey}.desc`,
+      keywords: searchKeywords,
+      labelKey: `features.${i18nKey}.title`,
+      ns: 'labs',
+      tab: SettingsTabs.Labs,
+      ...(desktopOnly ? { visible: (ctx: SettingsSearchContext) => ctx.isDesktop } : {}),
+      ...(workspaceOnly ? { visible: (ctx: SettingsSearchContext) => ctx.enableWorkspace } : {}),
+    }),
+  ),
   // Service Model
   {
     anchor: 'service-model-assignments',
@@ -368,12 +484,21 @@ export const SETTINGS_SEARCH_ITEMS: SettingsSearchItem[] = [
     labelKey: 'serviceModel.optionalFeatures.title',
     tab: SettingsTabs.ServiceModel,
   },
+  // Chat Preferences (workspace only — the personal sidebar keeps these rows in
+  // Service Model › Optional Features)
   {
-    anchor: 'service-model-tts',
-    keywords: ['tts', 'voice', 'speech', 'text to speech'],
-    labelKey: 'settingTTS.openai.ttsModel',
-    tab: SettingsTabs.ServiceModel,
-    visible: (ctx) => ctx.enableSTT,
+    anchor: 'chat-preference-followUpAction',
+    descKey: 'systemAgent.followUpAction.modelDesc',
+    keywords: ['follow up', 'suggestion', 'chips'],
+    labelKey: 'systemAgent.followUpAction.title',
+    tab: WorkspaceSettingsTabs.ChatPreference,
+  },
+  {
+    anchor: 'chat-preference-inputCompletion',
+    descKey: 'systemAgent.inputCompletion.modelDesc',
+    keywords: ['input completion', 'autocomplete', 'suggestion'],
+    labelKey: 'systemAgent.inputCompletion.title',
+    tab: WorkspaceSettingsTabs.ChatPreference,
   },
   {
     anchor: 'service-model-image',
@@ -599,6 +724,28 @@ export const SETTINGS_SEARCH_ITEMS: SettingsSearchItem[] = [
     tab: SettingsTabs.Usage,
   },
   // Notification
+  {
+    anchor: 'notification-completion-sound',
+    descKey: 'completionSound.desc',
+    keywords: ['sound', 'audio', 'OpenPeon', 'completion'],
+    labelKey: 'completionSound.title',
+    tab: SettingsTabs.Notification,
+    visible: (ctx) => ctx.isDesktop,
+  },
+  {
+    anchor: 'notification-banner-sound',
+    descKey: 'completionSound.banner.desc',
+    keywords: ['sound', 'notification', 'banner', 'background'],
+    labelKey: 'completionSound.banner.title',
+    tab: SettingsTabs.Notification,
+    visible: (ctx) => ctx.isDesktop,
+  },
+  {
+    anchor: 'notification-inbox',
+    keywords: ['inbox', 'in-app notification'],
+    labelKey: 'notification.inbox.title',
+    tab: SettingsTabs.Notification,
+  },
   {
     anchor: 'notification-email',
     keywords: ['email'],

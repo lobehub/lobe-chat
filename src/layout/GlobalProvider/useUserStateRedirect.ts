@@ -9,12 +9,18 @@ import { buildOnboardingRedirectUrl } from '@/utils/onboardingRedirect';
 
 const DEFER_REDIRECT_PREFIXES = ['/invite'];
 
+// `/a/:slugOrId` (agent-share visitor page) is deliberately NOT listed: a
+// user who followed a share link should reach the shared agent, not be
+// bounced into onboarding first.
 const RESERVED_FIRST_SEGMENTS = new Set([
   'agent',
+  'apps',
   'community',
   'desktop-onboarding',
   'devtools',
   'eval',
+  'goal',
+  'goals',
   'group',
   'image',
   'me',
@@ -22,6 +28,7 @@ const RESERVED_FIRST_SEGMENTS = new Set([
   'next-auth',
   'onboarding',
   'page',
+  'projects',
   'resource',
   'settings',
   'share',

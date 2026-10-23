@@ -48,12 +48,16 @@ const pendingTool = {
 
 describe('requestHumanApprove', () => {
   let createToolMessage: ReturnType<typeof vi.fn>;
+  let deleteMessage: ReturnType<typeof vi.fn>;
   let query: ReturnType<typeof vi.fn>;
+  let updateToolIntervention: ReturnType<typeof vi.fn>;
   let host: AgentRuntimeHost;
 
   beforeEach(() => {
     createToolMessage = vi.fn().mockResolvedValue({ id: 'tool-msg-1' });
+    deleteMessage = vi.fn().mockResolvedValue(undefined);
     query = vi.fn().mockResolvedValue([]);
+    updateToolIntervention = vi.fn().mockResolvedValue(undefined);
 
     host = {
       lifecycle: { dispatch: vi.fn().mockResolvedValue(undefined) },
@@ -64,7 +68,7 @@ describe('requestHumanApprove', () => {
         topicId: 'topic-1',
       },
       transports: {
-        messages: { createToolMessage, query },
+        messages: { createToolMessage, deleteMessage, query, updateToolIntervention },
         stream: { publishChunk: vi.fn(), publishEvent: vi.fn() },
       },
     } as unknown as AgentRuntimeHost;
@@ -158,5 +162,145 @@ describe('requestHumanApprove', () => {
     expect(
       (host.transports.stream.publishChunk as ReturnType<typeof vi.fn>).mock.calls[0][0],
     ).toMatchObject({ toolMessageIds: { call_ask_1: 'tool-msg-existing' } });
+    expect(updateToolIntervention).toHaveBeenCalledWith('tool-msg-existing', {
+      batchId: 'op-1:1:assistant-current',
+      itemIndex: 0,
+      operationId: 'op-1',
+      status: 'pending',
+      stepIndex: 1,
+    });
+  });
+
+  it('carries the exact previous sealed batch when pending siblings are rebound', async () => {
+    const secondPendingTool = {
+      ...pendingTool,
+      id: 'call_ask_2',
+      intervention: {
+        batchId: 'old-op:0:assistant-current',
+        operationId: 'old-op',
+        status: 'pending' as const,
+      },
+    };
+    const firstPendingTool = {
+      ...pendingTool,
+      intervention: {
+        batchId: 'old-op:0:assistant-current',
+        operationId: 'old-op',
+        status: 'pending' as const,
+      },
+    };
+    query.mockResolvedValue([
+      { id: 'tool-msg-existing-1', role: 'tool', tool_call_id: 'call_ask_1' },
+      { id: 'tool-msg-existing-2', role: 'tool', tool_call_id: 'call_ask_2' },
+    ]);
+
+    const result = await requestHumanApprove(host)(
+      {
+        parentMessageId: 'assistant-current',
+        pendingToolsCalling: [firstPendingTool, secondPendingTool],
+        skipCreateToolMessage: true,
+        type: 'request_human_approve',
+      },
+      createState(),
+    );
+
+    expect(result.newState.pendingApprovalBatch).toEqual({
+      assistantMessageId: 'assistant-current',
+      id: 'op-1:1:assistant-current',
+      sealed: true,
+      stepIndex: 1,
+      supersedes: {
+        batchId: 'old-op:0:assistant-current',
+        operationId: 'old-op',
+        toolCallIds: ['call_ask_1', 'call_ask_2'],
+      },
+    });
+  });
+
+  it('fails closed instead of superseding a partial or mixed durable batch', async () => {
+    await expect(
+      requestHumanApprove(host)(
+        {
+          parentMessageId: 'assistant-current',
+          pendingToolsCalling: [
+            {
+              ...pendingTool,
+              intervention: { batchId: 'old-batch', operationId: 'old-op', status: 'pending' },
+            },
+            { ...pendingTool, id: 'call_ask_2' },
+          ],
+          skipCreateToolMessage: true,
+          type: 'request_human_approve',
+        },
+        createState(),
+      ),
+    ).rejects.toThrow(/partial or mixed durable intervention batch/);
+    expect(updateToolIntervention).not.toHaveBeenCalled();
+  });
+
+  it('fails closed when a resumed batch cannot locate every durable tool row', async () => {
+    const instruction: Extract<AgentInstruction, { type: 'request_human_approve' }> = {
+      parentMessageId: 'assistant-current',
+      pendingToolsCalling: [pendingTool],
+      skipCreateToolMessage: true,
+      type: 'request_human_approve',
+    };
+
+    await expect(requestHumanApprove(host)(instruction, createState())).rejects.toThrow(
+      /Missing durable tool message/,
+    );
+    expect(updateToolIntervention).not.toHaveBeenCalled();
+  });
+
+  describe('unconsumed assistant placeholder', () => {
+    // A resume op (approve / answer) seeds an assistant placeholder so the UI
+    // shows a spinner, and the first `call_llm` claims it. Parking here means no
+    // `call_llm` ran — the approved tool executed and the batch still has
+    // unresolved siblings — so the placeholder would linger as an empty "…"
+    // assistant hanging off the tool that was just settled.
+    const instruction = {
+      parentMessageId: 'assistant-msg-1',
+      pendingToolsCalling: [pendingTool],
+      skipCreateToolMessage: true,
+      type: 'request_human_approve',
+    } as unknown as AgentInstruction;
+
+    beforeEach(() => {
+      query.mockResolvedValue([
+        { id: 'tool-msg-existing', role: 'tool', tool_call_id: 'call_ask_1' },
+      ]);
+    });
+
+    it('retires the seeded placeholder when the run parks without calling the LLM', async () => {
+      const result = await requestHumanApprove(host)(
+        instruction,
+        createState({ pendingAssistantMessageId: 'assistant-placeholder-1' }),
+        undefined as any,
+      );
+
+      expect(deleteMessage).toHaveBeenCalledWith('assistant-placeholder-1');
+      expect(result.newState.pendingAssistantMessageId).toBeUndefined();
+      expect(result.newState.status).toBe('waiting_for_human');
+    });
+
+    it('parks normally when no placeholder was seeded', async () => {
+      const result = await requestHumanApprove(host)(instruction, createState(), undefined as any);
+
+      expect(deleteMessage).not.toHaveBeenCalled();
+      expect(result.newState.status).toBe('waiting_for_human');
+    });
+
+    it('still parks when retiring the placeholder fails', async () => {
+      deleteMessage.mockRejectedValue(new Error('db down'));
+
+      const result = await requestHumanApprove(host)(
+        instruction,
+        createState({ pendingAssistantMessageId: 'assistant-placeholder-1' }),
+        undefined as any,
+      );
+
+      expect(result.newState.status).toBe('waiting_for_human');
+      expect(result.newState.pendingToolsCalling).toEqual([pendingTool]);
+    });
   });
 });

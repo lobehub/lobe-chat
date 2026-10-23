@@ -19,16 +19,15 @@ const deepseekChatModels: AIChatModelCard[] = [
     maxOutput: 393_216,
     pricing: {
       currency: 'CNY',
-      // Official cache-hit input price is permanently reduced to 1/10 of the launch price.
       units: [
-        { name: 'textInput_cacheRead', rate: 0.02, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
-    releasedAt: '2026-04-24',
+    releasedAt: '2026-07-31',
     settings: {
-      extendParams: ['deepseekV4ReasoningEffort'],
+      extendParams: ['deepseekV4GAReasoningEffort'],
     },
     type: 'chat',
   },
@@ -49,17 +48,45 @@ const deepseekChatModels: AIChatModelCard[] = [
     maxOutput: 393_216,
     pricing: {
       currency: 'CNY',
-      // Official cache-hit input price is permanently reduced to 1/10 of the launch price.
-      // DeepSeek V4 Pro limited-time 75% off discount is valid until 2026-05-05 23:59 Beijing time.
       units: [
-        { name: 'textInput_cacheRead', rate: 0.025, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 6, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 4.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 13.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
-    releasedAt: '2026-04-24',
+    releasedAt: '2026-08-13',
     settings: {
-      extendParams: ['deepseekV4ReasoningEffort'],
+      extendParams: ['deepseekV4GAReasoningEffort'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      structuredOutput: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_048_576,
+    description:
+      'DeepSeek V4 Flash Vision Exp is an experimental multimodal model built on V4 Flash. It matches V4 Flash on text and adds native image understanding for visual agent workflows, billed at the same rates.',
+    displayName: 'DeepSeek V4 Flash Vision Exp',
+    enabled: true,
+    family: 'deepseek',
+    generation: 'deepseek-v4',
+    id: 'deepseek-v4-flash-vision-exp',
+    maxOutput: 393_216,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2026-08-21',
+    settings: {
+      extendParams: ['deepseekV4GAReasoningEffort'],
     },
     type: 'chat',
   },

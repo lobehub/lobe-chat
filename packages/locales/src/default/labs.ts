@@ -16,9 +16,24 @@ export default {
   'features.claudeCodeSdk.desc':
     'Run Claude Code sessions through the Claude Agent SDK instead of spawning the CLI. Enables richer streaming and session control.',
   'features.claudeCodeSdk.title': 'Claude Code SDK Runtime',
+  'features.codexAppServer.desc':
+    'Run Codex sessions through the local app-server instead of one-shot CLI processes. Enables token streaming and native turn control.',
+  'features.codexAppServer.title': 'Codex App Server Runtime',
+  'features.desktopSplitView.desc':
+    'Show two desktop tabs side by side, with independent navigation and a resizable divider.',
+  'features.desktopSplitView.title': 'Split Tab View',
   'features.heteroSessionImport.desc':
     'Add an "Import Local Agent Sessions" entry to the topic list menu: scan local Claude Code / Codex CLI transcripts and import them as topics, with incremental sync on re-import.',
+  'features.evalCapture.desc':
+    'Adds a message action that captures a conversation turn — its prior context, input and the answer it produced — as an evaluation test case.',
+  'features.evalCapture.title': 'Save a turn as an eval case',
+  'features.deviceTunnel.desc':
+    'Give a port on the working device a link, so a dev server running there can be opened from here. The link only works for people who can reach that device.',
+  'features.deviceTunnel.title': 'Remote Port Links',
   'features.heteroSessionImport.title': 'Local Agent Session Import',
+  'features.goals.desc':
+    'Hand the agent a goal: it breaks the goal into tasks, tracks progress, and delivers the result for you to review.',
+  'features.goals.title': 'Goals',
   'features.imessage.desc':
     'Connect agents to iMessage through the local LobeHub Desktop BlueBubbles bridge.',
   'features.imessage.title': 'iMessage Channel',
@@ -29,6 +44,9 @@ export default {
   'features.groupChat.title': 'Group Chat (Multi-Agent)',
   'features.inputMarkdown.desc':
     'Render Markdown in the input area in real time (bold text, code blocks, tables, etc.).',
+  'features.integrations.desc':
+    'Show the Integrations settings page: connect the GitHub App so merged pull requests accept deliveries and failing checks or reviews reach the agent that opened them. Hidden by default.',
+  'features.integrations.title': 'Integrations',
   'features.inputMarkdown.title': 'Input Markdown Rendering',
   'features.messageTextSelectionActions.desc':
     'Show a quick action when selecting text in chat messages so the selected text can be added to the next conversation context.',
@@ -36,16 +54,29 @@ export default {
   'features.oauthApps.desc':
     'Show OAuth app management in personal and workspace settings. This feature is hidden by default.',
   'features.oauthApps.title': 'OAuth Apps',
-  'features.platformAgent.desc':
-    'Show the "Connect Agent" entry in the create menu. Connected agents (e.g. OpenClaw, Hermes) run on your own devices and communicate back via lh connect.',
-  'features.platformAgent.title': 'Connect Agent',
+  'features.persistentSandbox.desc':
+    'Keep files the cloud sandbox writes. Its working directory survives session recycling and is shared across your topics, instead of being discarded with the sandbox. Requires a paid plan; large downloads and dependencies still belong in /tmp.',
+  'features.persistentSandbox.title': 'Persistent Sandbox',
+  'features.projects.desc':
+    'Organize long-running goals into dedicated workspaces with their own agents, knowledge bases, and tasks.',
+  'features.projects.title': 'Project Workspaces',
   'features.taskVerify.desc':
-    'Add a delivery-acceptance section to the task detail: describe acceptance in one sentence and let AI generate editable verify criteria.',
-  'features.taskVerify.title': 'Task Delivery Acceptance',
-  'features.topicAcceptance.desc':
-    'Author a delivery checklist for the current topic right above the composer, so the conversation is held to standards you can edit any time.',
-  'features.topicAcceptance.title': 'Topic Acceptance',
+    'Add an Acceptance section to the task detail: describe acceptance in one sentence and let AI generate editable verify criteria.',
+  'features.taskVerify.title': 'Acceptance',
+  'features.selfLearning.desc':
+    'Let every agent learn from your conversations in the background: it remembers facts, refines skills, collects lessons, and reviews its day each night. Rounds you send back become rules. Each nightly review covers at most 50 conversations. See it all under Memory → Self-evolving.',
+  'features.selfLearning.title': 'Self-evolving',
+  'features.topicBugReport.desc':
+    'Adds Report Bug to the topic menu. Send the topic’s IDs, your app environment, and optional attachments to the LobeHub support team.',
+  'features.topicBugReport.title': 'Report Bug',
   'group.desktop': 'Desktop',
   'group.general': 'General',
+  'group.workspace': 'Workspace',
+  'stage.alpha.desc':
+    'Internal testing only. Not recommended for daily use yet — it may change or break at any time.',
+  'stage.alpha.label': 'Alpha',
+  'stage.beta.desc':
+    'Relatively usable. The core flow works, while details are still being polished.',
+  'stage.beta.label': 'Beta',
   'title': 'Labs',
 };

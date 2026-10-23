@@ -1,36 +1,56 @@
-import { type MenuProps } from '@lobehub/ui';
-import { Icon } from '@lobehub/ui';
-import { confirmModal } from '@lobehub/ui/base-ui';
-import { PencilLine, Trash } from 'lucide-react';
+import { type DropdownItem } from '@lobehub/ui';
+import { confirmModal, Icon } from '@lobehub/ui';
+import { PanelRight, PencilLine, Trash } from 'lucide-react';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { openRenameModal } from '@/components/RenameModal';
 import { usePermission } from '@/hooks/usePermission';
 import { useChatStore } from '@/store/chat';
 
 interface ThreadItemDropdownMenuProps {
   id: string;
-  toggleEditing: (visible?: boolean) => void;
+  sourceMessageId?: string;
+  title: string;
 }
 
 export const useThreadItemDropdownMenu = ({
   id,
-  toggleEditing,
-}: ThreadItemDropdownMenuProps): (() => MenuProps['items']) => {
+  sourceMessageId,
+  title,
+}: ThreadItemDropdownMenuProps): (() => DropdownItem[]) => {
   const { t } = useTranslation(['thread', 'common']);
   const { allowed: canEditThread } = usePermission('edit_own_content');
 
-  const [removeThread] = useChatStore((s) => [s.removeThread]);
+  const [removeThread, openThreadInPortal, updateThreadTitle] = useChatStore((s) => [
+    s.removeThread,
+    s.openThreadInPortal,
+    s.updateThreadTitle,
+  ]);
 
   return useCallback(() => {
     return [
+      {
+        icon: <Icon icon={PanelRight} />,
+        key: 'openOnRight',
+        label: t('openOnRight', { ns: 'common' }),
+        onClick: () => {
+          openThreadInPortal(id, sourceMessageId);
+        },
+      },
+      {
+        type: 'divider' as const,
+      },
       {
         disabled: !canEditThread,
         icon: <Icon icon={PencilLine} />,
         key: 'rename',
         label: t('rename', { ns: 'common' }),
         onClick: () => {
-          toggleEditing(true);
+          openRenameModal({
+            defaultValue: title,
+            onSave: (newTitle) => updateThreadTitle(id, newTitle),
+          });
         },
         sfSymbol: 'pencil',
       },
@@ -57,6 +77,15 @@ export const useThreadItemDropdownMenu = ({
         },
         sfSymbol: 'trash',
       },
-    ].filter(Boolean) as MenuProps['items'];
-  }, [id, canEditThread, removeThread, toggleEditing, t]);
+    ].filter(Boolean) as DropdownItem[];
+  }, [
+    id,
+    sourceMessageId,
+    canEditThread,
+    removeThread,
+    openThreadInPortal,
+    title,
+    updateThreadTitle,
+    t,
+  ]);
 };

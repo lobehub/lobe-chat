@@ -2,9 +2,37 @@ import type { Command } from 'commander';
 import pc from 'picocolors';
 
 import { getTrpcClient } from '../../api/client';
-import { getAuthInfo } from '../../api/http';
-import { streamAgentEvents } from '../../utils/agentStream';
+import { AGENT_RUN_EXIT_CODES } from '../../utils/agentRunOutcome';
+import { resolveLocalDeviceId } from '../../utils/device';
+import { outputJson } from '../../utils/format';
 import { log } from '../../utils/logger';
+import { followAgentRun } from '../agent/followRun';
+import { pollAgentRunStatus, RUN_POLL_INTERVAL_MS } from '../agent/runStatus';
+import { resolveUrlBuilder, resourcePath } from '../resourceUrl';
+
+type LifecycleClient = Awaited<ReturnType<typeof getTrpcClient>>;
+
+/**
+ * Follow a task run, degrading to status polling whenever the live stream cannot
+ * be used — a gateway that is unreachable, or a server predating the CLI's agent
+ * event journal (the CLI ships independently of the server). Without this the
+ * task would exit 3 having printed nothing.
+ */
+const followTaskRun = async (
+  client: LifecycleClient,
+  operationId: string,
+  options: { json?: boolean; verbose?: boolean },
+) => {
+  try {
+    return await followAgentRun(operationId, { json: options.json, verbose: options.verbose });
+  } catch (error) {
+    const reason = error instanceof Error ? error.message : String(error);
+    log.warn(
+      `Live stream unavailable (${reason}). Polling run status every ${RUN_POLL_INTERVAL_MS / 1000}s…`,
+    );
+    return pollAgentRunStatus(client, operationId, { json: options.json });
+  }
+};
 
 export function registerLifecycleCommands(task: Command) {
   // ── start ──────────────────────────────────────────────
@@ -71,13 +99,16 @@ export function registerLifecycleCommands(task: Command) {
           return;
         }
 
-        const { serverUrl, headers } = await getAuthInfo();
-        const streamUrl = `${serverUrl}/api/agent/stream?operationId=${encodeURIComponent(result.operationId)}`;
-
-        await streamAgentEvents(streamUrl, headers, {
+        const outcome = await followTaskRun(client, result.operationId, {
           json: options.json,
           verbose: options.verbose,
         });
+        // The stream helper reports an `error` event as a failed outcome rather
+        // than exiting; keep this command's contract of failing on it.
+        if (outcome.kind !== 'completed') {
+          process.exitCode = AGENT_RUN_EXIT_CODES[outcome.kind];
+          return;
+        }
 
         // Send heartbeat after completion
         try {
@@ -95,10 +126,14 @@ export function registerLifecycleCommands(task: Command) {
     .description('Run a task — trigger agent execution')
     .option('-p, --prompt <text>', 'Additional context for the agent')
     .option('-c, --continue <topicId>', 'Continue running on an existing topic')
+    .option(
+      '--device <target>',
+      'Target device ID, or use "local" for the current connected device',
+    )
     .option('-f, --follow', 'Follow agent output in real-time (default: run in background)')
     .option('--topics <n>', 'Run N topics in sequence (default: 1, implies --follow)', '1')
     .option('--delay <s>', 'Delay between topics in seconds', '0')
-    .option('--json', 'Output full JSON event stream')
+    .option('--json', 'Output startup result as JSON, or full event stream with --follow')
     .option('-v, --verbose', 'Show detailed tool call info')
     .action(
       async (
@@ -106,6 +141,7 @@ export function registerLifecycleCommands(task: Command) {
         options: {
           continue?: string;
           delay?: string;
+          device?: string;
           follow?: boolean;
           json?: boolean;
           prompt?: string;
@@ -115,6 +151,20 @@ export function registerLifecycleCommands(task: Command) {
       ) => {
         const topicCount = Number.parseInt(options.topics || '1', 10);
         const delaySec = Number.parseInt(options.delay || '0', 10);
+
+        let deviceId: string | undefined;
+        if (options.device === 'local') {
+          deviceId = resolveLocalDeviceId();
+          if (!deviceId) {
+            log.error(
+              "No local device found. Run 'lh connect' first, then retry with --device local.",
+            );
+            process.exitCode = 1;
+            return;
+          }
+        } else {
+          deviceId = options.device;
+        }
 
         // --topics > 1 implies --follow
         const shouldFollow = options.follow || topicCount > 1;
@@ -143,6 +193,7 @@ export function registerLifecycleCommands(task: Command) {
           // Only pass extra prompt and continue on first topic
           const result = (await client.task.run.mutate({
             id,
+            ...(deviceId && { deviceId }),
             ...(i === 0 && options.prompt && { prompt: options.prompt }),
             ...(i === 0 && options.continue && { continueTopicId: options.continue }),
           })) as any;
@@ -153,6 +204,19 @@ export function registerLifecycleCommands(task: Command) {
           }
 
           const operationId = result.operationId;
+          if (!shouldFollow && options.json) {
+            const toUrl = await resolveUrlBuilder(client);
+            outputJson({
+              taskUrl: toUrl(resourcePath.task({ identifier: result.taskIdentifier })),
+              autoStarted: result.autoStarted,
+              operationId,
+              status: result.status,
+              taskId: result.taskId,
+              taskIdentifier: result.taskIdentifier,
+              topicId: result.topicId,
+            });
+            return;
+          }
           if (i === 0) {
             log.info(`Task ${pc.bold(result.taskIdentifier)} running`);
           }
@@ -165,14 +229,16 @@ export function registerLifecycleCommands(task: Command) {
             return;
           }
 
-          // Connect to SSE stream and wait for completion
-          const { serverUrl, headers } = await getAuthInfo();
-          const streamUrl = `${serverUrl}/api/agent/stream?operationId=${encodeURIComponent(operationId)}`;
-
-          await streamAgentEvents(streamUrl, headers, {
+          // Connect to the gateway WebSocket and wait for completion
+          const outcome = await followTaskRun(client, operationId, {
             json: options.json,
             verbose: options.verbose,
           });
+          // A failed run stops the sequence, as the stream helper used to exit on it.
+          if (outcome.kind !== 'completed') {
+            process.exitCode = AGENT_RUN_EXIT_CODES[outcome.kind];
+            return;
+          }
 
           // Update heartbeat after each topic
           try {
@@ -192,7 +258,23 @@ export function registerLifecycleCommands(task: Command) {
     .requiredOption('-m, --message <text>', 'Comment content')
     .action(async (id: string, options: { message: string }) => {
       const client = await getTrpcClient();
-      await client.task.addComment.mutate({ content: options.message, id });
+      const topicId = process.env.LOBEHUB_TOPIC_ID?.trim() || undefined;
+      const authorAgentId = process.env.LOBEHUB_AGENT_ID?.trim() || undefined;
+
+      // The executing agent can differ from the topic owner or task assignee.
+      // Use only the identity injected by the run launcher, even after JWT fallback.
+      if (!authorAgentId && (topicId || process.env.LOBEHUB_OPERATION_ID)) {
+        throw new Error(
+          'Cannot determine the agent author for this run. Refusing to post a task comment as the user. Update and restart the connector or desktop app, then start a new run.',
+        );
+      }
+
+      await client.task.addComment.mutate({
+        authorAgentId,
+        content: options.message,
+        id,
+        topicId,
+      });
       log.info('Comment added.');
     });
 
@@ -225,7 +307,20 @@ export function registerLifecycleCommands(task: Command) {
     .description('Mark a task as completed')
     .action(async (id: string) => {
       const client = await getTrpcClient();
-      const result = (await client.task.updateStatus.mutate({ id, status: 'completed' })) as any;
+      // Inside an agent run, completing the task being executed is deferred to
+      // the end of the run instead of interrupting it.
+      const operationId = process.env.LOBEHUB_OPERATION_ID?.trim() || undefined;
+      const result = (await client.task.updateStatus.mutate({
+        id,
+        operationId,
+        status: 'completed',
+      })) as any;
+      if (result.completionDeferred) {
+        log.info(
+          `Task ${pc.bold(result.data.identifier)} completion requested. It will be finalized when the current run finishes.`,
+        );
+        return;
+      }
       log.info(`Task ${pc.bold(result.data.identifier)} completed.`);
       if (result.unlocked?.length > 0) {
         log.info(`Unlocked: ${result.unlocked.map((id: string) => pc.bold(id)).join(', ')}`);

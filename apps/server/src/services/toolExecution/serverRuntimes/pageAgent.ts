@@ -4,13 +4,15 @@ import {
   type PageAgentInvocationContext,
   type PageAgentRuntimeService,
 } from '@lobechat/builtin-tool-page-agent/executionRuntime';
-import { EditorRuntime } from '@lobechat/editor-runtime';
-import { createHeadlessEditor, type HeadlessEditor } from '@lobehub/editor/headless';
+import { HTML_DOCUMENT_FILE_TYPE } from '@lobechat/const';
+import { EditorRuntime, formatModifyNodesResult } from '@lobechat/editor-runtime';
+import { type HeadlessEditor } from '@lobehub/editor/headless';
 import type { SerializedEditorState, SerializedLexicalNode } from 'lexical';
 
 import { DocumentModel } from '@/database/models/document';
 import { type LobeChatDatabase } from '@/database/type';
 import { isValidEditorData } from '@/libs/editor/isValidEditorData';
+import { createDocumentHeadlessEditor } from '@/server/services/agentDocuments/headlessEditor';
 import { DocumentService } from '@/server/services/document';
 
 import type { ServerRuntimeRegistration } from './types';
@@ -22,8 +24,13 @@ type EditorRuntimeEditorParam = Parameters<EditorRuntime['setEditor']>[0];
 interface DocumentSnapshot {
   content: string;
   editorData: Record<string, unknown> | null;
+  fileType: string;
   title: string;
 }
+
+const HTML_PAGE_UNSUPPORTED =
+  'This page is an HTML page: its body is one self-contained HTML document, not a node tree, ' +
+  'so the page tools cannot read or edit it.';
 
 interface InvocationEnv {
   getTitle: () => string;
@@ -122,12 +129,13 @@ const loadSnapshot = async (
   return {
     content: doc.content ?? '',
     editorData: (doc.editorData ?? null) as Record<string, unknown> | null,
+    fileType: doc.fileType,
     title: doc.title ?? 'Untitled',
   };
 };
 
 const buildEnv = (snapshot: DocumentSnapshot, documentId: string): InvocationEnv => {
-  const headless = createHeadlessEditor();
+  const headless = createDocumentHeadlessEditor();
   let title = snapshot.title;
 
   if (isValidEditorData(snapshot.editorData)) {
@@ -206,6 +214,9 @@ const withEditor = async (
   // (persist: false) never write, so they skip the lock.
   const run = async (lockOwnerId?: string): Promise<HandlerOutput> => {
     const snapshot = await loadSnapshot(documentModel, documentId);
+    // Hydrating an HTML page as Markdown and writing the export back would
+    // replace the page with Markdown; node APIs never run on one.
+    if (snapshot.fileType === HTML_DOCUMENT_FILE_TYPE) throw new Error(HTML_PAGE_UNSUPPORTED);
     const env = buildEnv(snapshot, documentId);
 
     try {
@@ -345,21 +356,8 @@ const buildService = (
     modifyNodes: (args, ctx) =>
       withEditor(serviceCtx, 'modifyNodes', ctx, async ({ runtime }) => {
         const result = await runtime.modifyNodes(args);
-        const operations = Array.isArray(args.operations)
-          ? args.operations
-          : args.operations
-            ? [args.operations]
-            : [];
-        const actionSummary = operations.reduce<Record<string, number>>((acc, op) => {
-          if (!op) return acc;
-          acc[op.action] = (acc[op.action] || 0) + 1;
-          return acc;
-        }, {});
-        const summary = Object.entries(actionSummary)
-          .map(([action, count]) => `${count} ${action}${count > 1 ? 's' : ''}`)
-          .join(', ');
         return {
-          content: `Successfully executed ${summary} (${result.successCount}/${result.totalCount} operations succeeded).`,
+          content: formatModifyNodesResult(result),
           state: {
             results: result.results,
             successCount: result.successCount,

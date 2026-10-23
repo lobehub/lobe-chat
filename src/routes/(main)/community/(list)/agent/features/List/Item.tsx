@@ -1,5 +1,4 @@
-import { Avatar, Block, Flexbox, Icon, Tag, Text } from '@lobehub/ui';
-import { createStaticStyles } from 'antd-style';
+import { Avatar, Block, createStaticStyles, Flexbox, Icon, Tag, Text } from '@lobehub/ui';
 import { ClockIcon } from 'lucide-react';
 import qs from 'query-string';
 import React, { memo, useCallback } from 'react';

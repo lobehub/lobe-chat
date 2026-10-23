@@ -1,6 +1,6 @@
 import { type FlexboxProps, type IconProps } from '@lobehub/ui';
-import { Flexbox, Icon, Text } from '@lobehub/ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import { createStaticStyles, cssVar, cx, Flexbox, Icon, Spin, Text } from '@lobehub/ui';
+import { ChevronDownIcon, ChevronRightIcon } from 'lucide-react';
 import { type ReactNode } from 'react';
 import { memo, Suspense, useState } from 'react';
 
@@ -10,8 +10,19 @@ import { homeType } from '../homeType';
 interface GroupBlockProps extends Omit<FlexboxProps, 'title'> {
   action?: ReactNode;
   actionAlwaysVisible?: boolean;
+  /**
+   * Folds the body away, leaving the title row. Only rendered as a control when
+   * `onCollapsedChange` is supplied — a block nobody can re-open must not fold.
+   */
+  collapsed?: boolean;
   count?: number;
   icon?: IconProps['icon'];
+  /**
+   * The rows on screen are the local copy and a refresh is in flight: a small
+   * spinner beside the count, so the user knows newer data may still arrive.
+   */
+  loading?: boolean;
+  onCollapsedChange?: (collapsed: boolean) => void;
   title?: ReactNode;
 }
 
@@ -27,10 +38,26 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
   actionVisible: css`
     opacity: 1;
   `,
+  // The whole heading is the hit target, not just the chevron — a 14px glyph is
+  // a poor thing to ask someone to aim at, and the label is already there.
+  heading: css`
+    cursor: pointer;
+  `,
 }));
 
 const GroupBlock = memo<GroupBlockProps>(
-  ({ title, action, actionAlwaysVisible, children, count, icon, ...rest }) => {
+  ({
+    title,
+    action,
+    actionAlwaysVisible,
+    children,
+    collapsed = false,
+    count,
+    icon,
+    loading,
+    onCollapsedChange,
+    ...rest
+  }) => {
     const [isHovered, setIsHovered] = useState(false);
 
     return (
@@ -44,16 +71,29 @@ const GroupBlock = memo<GroupBlockProps>(
           <Flexbox
             horizontal
             align={'center'}
+            aria-expanded={onCollapsedChange ? !collapsed : undefined}
+            className={cx(onCollapsedChange && styles.heading)}
             flex={1}
             gap={6}
             justify={'flex-start'}
+            role={onCollapsedChange ? 'button' : undefined}
             style={{ overflow: 'hidden' }}
+            tabIndex={onCollapsedChange ? 0 : undefined}
+            onClick={onCollapsedChange ? () => onCollapsedChange(!collapsed) : undefined}
           >
             {icon && <Icon color={cssVar.colorTextDescription} icon={icon} size={16} />}
             <Text ellipsis className={homeType.sectionLabel}>
               {title}
             </Text>
             {count !== undefined && <CountBadge count={count} />}
+            {loading && <Spin size="small" variant="network" />}
+            {onCollapsedChange && (
+              <Icon
+                color={cssVar.colorTextQuaternary}
+                icon={collapsed ? ChevronRightIcon : ChevronDownIcon}
+                size={14}
+              />
+            )}
           </Flexbox>
           <Flexbox
             horizontal
@@ -69,7 +109,7 @@ const GroupBlock = memo<GroupBlockProps>(
             {action}
           </Flexbox>
         </Flexbox>
-        <Suspense fallback={'loading'}>{children}</Suspense>
+        {!collapsed && <Suspense fallback={'loading'}>{children}</Suspense>}
       </Flexbox>
     );
   },

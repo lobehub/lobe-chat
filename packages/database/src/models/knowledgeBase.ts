@@ -112,7 +112,7 @@ export class KnowledgeBaseModel {
 
       await this.db
         .update(documents)
-        .set({ updatedAt: now, visibility: kb.visibility })
+        .set({ visibility: kb.visibility })
         .where(
           and(
             documentLink,
@@ -254,11 +254,30 @@ export class KnowledgeBaseModel {
   };
 
   // update
-  update = async (id: string, value: Partial<KnowledgeBaseItem>) =>
-    this.db
+  update = async (id: string, value: Partial<KnowledgeBaseItem>) => {
+    // Identity and scope columns never travel through the generic update. The
+    // ownership predicate spans every knowledge base visible in the workspace,
+    // and shared libraries are editable by any member holding `edit` access, so
+    // without stripping these a member could reassign another member's library,
+    // move it to a different workspace, or take it private. Ignored rather than
+    // rejected so a client that sends an extra field still gets its real edit
+    // applied. Transfer and publish/make-private have their own guarded paths
+    // and write these columns directly.
+    // `workspaceId` is not on `KnowledgeBaseItem`, but a JSON payload can still
+    // carry it into the spread at runtime, so widen the type to strip it by name.
+    const {
+      id: _id,
+      userId: _userId,
+      visibility: _visibility,
+      workspaceId: _workspaceId,
+      ...safe
+    } = value as Partial<KnowledgeBaseItem> & { workspaceId?: string | null };
+
+    return this.db
       .update(knowledgeBases)
-      .set({ ...value, updatedAt: new Date() })
+      .set({ ...safe, updatedAt: new Date() })
       .where(and(eq(knowledgeBases.id, id), this.ownership()));
+  };
 
   /**
    * Publish a private knowledge base into the workspace. Thin wrapper around
@@ -326,6 +345,7 @@ export class KnowledgeBaseModel {
               inArray(files.id, linkedFileIds),
               eq(files.userId, this.userId),
               buildWorkspaceWhere(creatorScope, {
+                isDeleted: files.isDeleted,
                 userId: files.userId,
                 workspaceId: files.workspaceId,
               }),
@@ -340,12 +360,13 @@ export class KnowledgeBaseModel {
 
       await trx
         .update(documents)
-        .set({ updatedAt: now, visibility })
+        .set({ visibility })
         .where(
           and(
             documentLink,
             eq(documents.userId, this.userId),
             buildWorkspaceWhere(creatorScope, {
+              isDeleted: documents.isDeleted,
               userId: documents.userId,
               workspaceId: documents.workspaceId,
             }),
@@ -480,7 +501,7 @@ export class KnowledgeBaseModel {
 
       await trx
         .update(documents)
-        .set({ ...ownershipUpdate, ...visibilityUpdate, updatedAt: now })
+        .set({ ...ownershipUpdate, ...visibilityUpdate })
         .where(documentWhere);
 
       return { id };

@@ -11,20 +11,30 @@ const { acceptanceRecomputeStatus, runFindByOperation, runUpdateStatus, resultLi
     runUpdateStatus: vi.fn(),
   }));
 
+vi.mock('../goalLoop', () => ({
+  maybeContinueGoalLoop: vi.fn().mockResolvedValue('spawn-failed'),
+  syncGoalToolState: vi.fn(),
+}));
 vi.mock('../acceptanceService', () => ({
-  AcceptanceService: vi.fn(() => ({
-    recomputeStatus: acceptanceRecomputeStatus,
-  })),
+  AcceptanceService: vi.fn(function () {
+    return {
+      recomputeStatus: acceptanceRecomputeStatus,
+    };
+  }),
 }));
 
 vi.mock('@/database/models/verifyRun', () => ({
-  VerifyRunModel: vi.fn(() => ({
-    findByOperation: runFindByOperation,
-    updateStatus: runUpdateStatus,
-  })),
+  VerifyRunModel: vi.fn(function () {
+    return {
+      findByOperation: runFindByOperation,
+      updateStatus: runUpdateStatus,
+    };
+  }),
 }));
 vi.mock('@/database/models/verifyCheckResult', () => ({
-  VerifyCheckResultModel: vi.fn(() => ({ listByRun: resultListByRun })),
+  VerifyCheckResultModel: vi.fn(function () {
+    return { listByRun: resultListByRun };
+  }),
 }));
 
 const db = {} as any;

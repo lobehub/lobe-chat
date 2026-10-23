@@ -1,8 +1,8 @@
-import type { GatewayConnectionStatus } from '@lobechat/electron-client-ipc';
+import { isDesktop } from '@lobechat/const';
+import type { GatewayConnectionState } from '@lobechat/electron-client-ipc';
 import { type SWRResponse } from 'swr';
 import useSWR from 'swr';
 
-import { mutate } from '@/libs/swr';
 import { electronKeys } from '@/libs/swr/keys';
 import { gatewayConnectionService } from '@/services/electron/gatewayConnection';
 import { type StoreSetter } from '@/store/types';
@@ -14,10 +14,8 @@ export const gatewaySlice = (set: Setter, get: () => ElectronStore, _api?: unkno
   new ElectronGatewayActionImpl(set, get, _api);
 
 export interface GatewayDeviceInfo {
-  description: string;
   deviceId: string;
   hostname: string;
-  name: string;
   platform: string;
 }
 
@@ -27,16 +25,18 @@ export class ElectronGatewayActionImpl {
 
   constructor(set: Setter, get: () => ElectronStore, _api?: unknown) {
     void _api;
-    this.#set = set;
     this.#get = get;
+    this.#set = set;
   }
 
   connectGateway = async (): Promise<void> => {
-    this.#set({ gatewayConnectionStatus: 'connecting' });
+    this.#set({ gatewayConnectionError: undefined, gatewayConnectionStatus: 'connecting' });
     try {
       const result = await gatewayConnectionService.connect();
       if (!result.success) {
-        this.#set({ gatewayConnectionStatus: 'disconnected' });
+        // The main process owns the outcome (and its reason); a superseded
+        // attempt may already be connecting again, so take its state as is.
+        this.setGatewayConnectionState(await gatewayConnectionService.getConnectionStatus());
       }
     } catch (error) {
       console.error('Gateway connect failed:', error);
@@ -47,41 +47,50 @@ export class ElectronGatewayActionImpl {
   disconnectGateway = async (): Promise<void> => {
     try {
       await gatewayConnectionService.disconnect();
-      this.#set({ gatewayConnectionStatus: 'disconnected' });
+      this.#set({ gatewayConnectionError: undefined, gatewayConnectionStatus: 'disconnected' });
     } catch (error) {
       console.error('Gateway disconnect failed:', error);
     }
   };
 
-  refreshGatewayDeviceInfo = async (): Promise<void> => {
-    await mutate(electronKeys.gatewayDeviceInfo());
+  setGatewayConnectionState = ({ error, status }: GatewayConnectionState): void => {
+    this.#set(
+      { gatewayConnectionError: error, gatewayConnectionStatus: status },
+      false,
+      'setGatewayConnectionState',
+    );
   };
 
-  setGatewayConnectionStatus = (status: GatewayConnectionStatus): void => {
-    this.#set({ gatewayConnectionStatus: status }, false, 'setGatewayConnectionStatus');
-  };
-
-  updateDeviceDescription = async (description: string): Promise<void> => {
+  /**
+   * This desktop's stable device id, for writes that pin a topic's cwd to it.
+   *
+   * Asked over IPC every time rather than read from `gatewayDeviceInfo`: before
+   * the gateway connects, that holds the install's fallback UUID, which stops
+   * naming this machine once the user-scoped identity is derived. The IPC
+   * derives that identity locally — no network on the send path — and returns
+   * nothing while signed out, so no pin is written rather than a stale one.
+   * A differing cached id is corrected too, so "this device" comparisons agree
+   * with the pins written here.
+   */
+  resolveGatewayDeviceId = async (): Promise<string | undefined> => {
+    if (!isDesktop) return;
     try {
-      await gatewayConnectionService.setDeviceDescription(description);
-      await this.#get().refreshGatewayDeviceInfo();
+      const deviceId = (await gatewayConnectionService.getStableDeviceId()) ?? undefined;
+      const cached = this.#get().gatewayDeviceInfo;
+      if (deviceId && cached && cached.deviceId !== deviceId) {
+        this.#set({ gatewayDeviceInfo: { ...cached, deviceId } }, false, 'setGatewayDeviceInfo');
+      }
+      return deviceId;
     } catch (error) {
-      console.error('Update device description failed:', error);
-    }
-  };
-
-  updateDeviceName = async (name: string): Promise<void> => {
-    try {
-      await gatewayConnectionService.setDeviceName(name);
-      await this.#get().refreshGatewayDeviceInfo();
-    } catch (error) {
-      console.error('Update device name failed:', error);
+      console.error('Gateway device id lookup failed:', error);
+      return;
     }
   };
 
   useFetchGatewayDeviceInfo = (): SWRResponse<GatewayDeviceInfo> => {
     return useSWR<GatewayDeviceInfo>(
-      electronKeys.gatewayDeviceInfo(),
+      // Desktop-only IPC: on web there is no electronAPI, so never fetch off-desktop.
+      isDesktop ? electronKeys.gatewayDeviceInfo() : null,
       async () => gatewayConnectionService.getDeviceInfo() as Promise<GatewayDeviceInfo>,
       {
         onSuccess: (data) => {
@@ -91,15 +100,11 @@ export class ElectronGatewayActionImpl {
     );
   };
 
-  useFetchGatewayStatus = (): SWRResponse<{ status: GatewayConnectionStatus }> => {
-    return useSWR<{ status: GatewayConnectionStatus }>(
-      'electron:getGatewayConnectionStatus',
+  useFetchGatewayStatus = (): SWRResponse<GatewayConnectionState> => {
+    return useSWR<GatewayConnectionState>(
+      isDesktop ? 'electron:getGatewayConnectionStatus' : null,
       async () => gatewayConnectionService.getConnectionStatus(),
-      {
-        onSuccess: (data) => {
-          this.#set({ gatewayConnectionStatus: data.status }, false, 'setGatewayConnectionStatus');
-        },
-      },
+      { onSuccess: (data) => this.setGatewayConnectionState(data) },
     );
   };
 }

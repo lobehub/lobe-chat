@@ -6,7 +6,9 @@ import type {
 } from '@lobechat/types';
 import { and, count, eq, inArray, isNotNull, like, or, sql } from 'drizzle-orm';
 
-import { messagePlugins, messages, threads, topics } from '../../schemas';
+import { clampToolIdentifier } from '@/utils/clampToolIdentifier';
+
+import { agents, messagePlugins, messages, threads, topics } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
 import { idGenerator } from '../../utils/idGenerator';
 import { buildWorkspaceWhere } from '../../utils/workspace';
@@ -56,13 +58,40 @@ export class HeteroSessionImporterRepo {
   private scopeWhere = (cols: { userId: any; workspaceId: any }) =>
     buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, cols);
 
+  /**
+   * Identity probes must see trashed rows because clientId uniqueness still
+   * covers them. This never feeds a product read; it only prevents a retry
+   * from treating an existing database identity as insertable.
+   */
+  private identityScopeWhere = (cols: { userId: any; workspaceId: any }) =>
+    buildWorkspaceWhere(
+      { includeTrashed: true, userId: this.userId, workspaceId: this.workspaceId },
+      cols,
+    );
+
+  /**
+   * The agent's heterogeneous runtime type (`claude-code`, `codex`, …), pinned
+   * onto every topic this importer creates. Resolved once per batch: it is the
+   * same agent for the whole call, and every reader that attributes a topic to
+   * a CLI runtime goes through `topics.provider`.
+   */
+  private resolveHeteroType = async (agentId: string): Promise<string | null> => {
+    const [agent] = await this.db
+      .select({ agencyConfig: agents.agencyConfig })
+      .from(agents)
+      .where(eq(agents.id, agentId));
+
+    return agent?.agencyConfig?.heterogeneousProvider?.type ?? null;
+  };
+
   importSessions = async (
     params: ImportHeteroSessionsParams,
   ): Promise<HeteroSessionImportResult[]> => {
     const results: HeteroSessionImportResult[] = [];
+    const heteroType = await this.resolveHeteroType(params.agentId);
     // one transaction per session: a corrupt session must not roll back the batch
     for (const session of params.sessions) {
-      results.push(await this.importSession(session, params.agentId, params.groupId));
+      results.push(await this.importSession(session, params.agentId, params.groupId, heteroType));
     }
     return results;
   };
@@ -71,6 +100,7 @@ export class HeteroSessionImporterRepo {
     session: HeteroSessionImportPayload,
     agentId: string,
     groupId?: string | null,
+    heteroType?: string | null,
   ): Promise<HeteroSessionImportResult> =>
     this.db.transaction(async (tx) => {
       // the source transcript's last raw-record timestamp — the picker compares it
@@ -92,9 +122,15 @@ export class HeteroSessionImporterRepo {
 
       // 1. find or create the topic by clientId within the active scope
       const [existingTopic] = await tx
-        .select({ id: topics.id, metadata: topics.metadata })
+        .select({ id: topics.id, isDeleted: topics.isDeleted, metadata: topics.metadata })
         .from(topics)
-        .where(and(eq(topics.clientId, session.topicClientId), this.scopeWhere(topics)));
+        .where(and(eq(topics.clientId, session.topicClientId), this.identityScopeWhere(topics)));
+
+      if (existingTopic?.isDeleted === true) {
+        throw new Error(
+          `session ${session.sessionId} is already imported into a trashed topic; restore it before syncing`,
+        );
+      }
 
       // the (clientId, userId) unique index makes one session = one topic per
       // user GLOBALLY — if it exists outside the active scope, appending there
@@ -130,6 +166,11 @@ export class HeteroSessionImporterRepo {
           groupId: groupId || null,
           id: topicId,
           metadata: { ...session.metadata, ...metadataPatch },
+          // An imported CLI session has no pinned model — the transcript's own
+          // records carry it per message — but the runtime is known, and a topic
+          // left with a NULL provider reads as "not a hetero session" to every
+          // provider-scoped query.
+          provider: heteroType ?? null,
           title: session.title || 'Imported Session',
           userId: this.userId,
           workspaceId: this.workspaceId ?? null,
@@ -146,7 +187,7 @@ export class HeteroSessionImporterRepo {
               threadId: messages.threadId,
             })
             .from(messages)
-            .where(and(eq(messages.topicId, topicId), this.scopeWhere(messages)))
+            .where(and(eq(messages.topicId, topicId), this.identityScopeWhere(messages)))
         : [];
       const clientIdToDbId = new Map<string, string>();
       for (const row of existingRows) if (row.clientId) clientIdToDbId.set(row.clientId, row.id);
@@ -178,7 +219,7 @@ export class HeteroSessionImporterRepo {
         const [existingThread] = await tx
           .select({ id: threads.id })
           .from(threads)
-          .where(and(eq(threads.clientId, thread.clientId), this.scopeWhere(threads)));
+          .where(and(eq(threads.clientId, thread.clientId), this.identityScopeWhere(threads)));
 
         let threadId = existingThread?.id;
         if (!threadId) {
@@ -280,11 +321,11 @@ export class HeteroSessionImporterRepo {
     const pluginRows = fresh
       .filter((m) => m.plugin || m.toolCallId)
       .map((m) => ({
-        apiName: m.plugin?.apiName ?? null,
+        apiName: clampToolIdentifier(m.plugin?.apiName) ?? null,
         arguments: m.plugin?.arguments ?? null,
         clientId: m.clientId,
         id: clientIdToDbId.get(m.clientId)!,
-        identifier: m.plugin?.identifier ?? null,
+        identifier: clampToolIdentifier(m.plugin?.identifier) ?? null,
         state: m.pluginState ?? null,
         toolCallId: m.toolCallId ?? null,
         type: m.plugin?.type ?? null,

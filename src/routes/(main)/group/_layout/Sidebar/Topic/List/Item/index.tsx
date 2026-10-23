@@ -1,9 +1,19 @@
 import { GROUP_CHAT_TOPIC_URL } from '@lobechat/const';
 import type { ChatTopicStatus } from '@lobechat/types';
-import { Flexbox, Icon, Skeleton, Tag, Text, Tooltip } from '@lobehub/ui';
-import { createStaticStyles, cssVar, useTheme } from 'antd-style';
+import {
+  createStaticStyles,
+  cssVar,
+  Flexbox,
+  Icon,
+  Skeleton,
+  Tag,
+  Text,
+  Tooltip,
+  useTheme,
+} from '@lobehub/ui';
 import { HashIcon, MessageSquareDashed } from 'lucide-react';
-import { AnimatePresence, m } from 'motion/react';
+import { AnimatePresence } from 'motion/react';
+import * as m from 'motion/react-m';
 import { memo, Suspense, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -12,6 +22,7 @@ import DotsLoading from '@/components/DotsLoading';
 import { TOPIC_STATUS_VISUALS } from '@/components/ExecutionStatus';
 import RingLoadingIcon from '@/components/RingLoading';
 import { isDesktop } from '@/const/version';
+import { TopicMigrationIndicator } from '@/features/AgentTransferMigration';
 import { useHasDraft } from '@/features/ChatInput/draftStorage';
 import NavItem from '@/features/NavPanel/components/NavItem';
 import TopicCreatorAvatar, { useTopicCreator } from '@/features/TopicCreatorAvatar';
@@ -119,7 +130,7 @@ const TopicItem = memo<TopicItemProps>(({ id, title, fav, active, threadId, stat
 
   const [editing, isLoading] = useChatStore((s) => [
     id ? s.topicRenamingId === id : false,
-    id ? s.topicLoadingIds.includes(id) : false,
+    id ? operationSelectors.isTopicVisiblyRunning(id)(s) : false,
   ]);
 
   const isUnreadCompleted = useChatStore(
@@ -320,6 +331,10 @@ const TopicItem = memo<TopicItemProps>(({ id, title, fav, active, threadId, stat
         active={active && !threadId}
         contextMenuItems={dropdownMenu}
         disabled={editing}
+        // A conversation whose history is still being migrated/copied stays
+        // listed (hiding it would read as data loss) and shows a spinner;
+        // opening it jumps it to the front of the backfill queue.
+        extra={<TopicMigrationIndicator groupId={activeGroupId} topicId={id} />}
         href={!editing ? href : undefined}
         title={title === '...' ? <DotsLoading gap={3} size={4} /> : title}
         titleColor={cssVar.colorText}
@@ -347,8 +362,8 @@ const TopicItem = memo<TopicItemProps>(({ id, title, fav, active, threadId, stat
         <Suspense
           fallback={
             <Flexbox gap={8} paddingBlock={8} paddingInline={24} width={'100%'}>
-              <Skeleton.Button active size={'small'} style={{ height: 18, width: '100%' }} />
-              <Skeleton.Button active size={'small'} style={{ height: 18, width: '100%' }} />
+              <Skeleton height={18} width={'100%'} />
+              <Skeleton height={18} width={'100%'} />
             </Flexbox>
           }
         >

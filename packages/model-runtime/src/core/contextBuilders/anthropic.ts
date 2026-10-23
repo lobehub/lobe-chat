@@ -1,8 +1,10 @@
 import type Anthropic from '@anthropic-ai/sdk';
-import { imageUrlToBase64, resolveImageMimeTypeFromBase64 } from '@lobechat/utils';
+import { imageUrlToBase64 } from '../../utils/imageToBase64';
+import { resolveImageMimeTypeFromBase64 } from '../../utils/imageMimeType';
 import type OpenAI from 'openai';
 
 import type { OpenAIChatMessage, UserMessageContentPart } from '../../types';
+import { normalizeAnthropicToolSchema } from '../../utils/anthropicToolSchema';
 import { parseDataUri } from '../../utils/uriParser';
 
 const ANTHROPIC_SUPPORTED_IMAGE_TYPES = new Set([
@@ -45,9 +47,10 @@ export const buildAnthropicBlock = async (
   Anthropic.ContentBlock | Anthropic.ImageBlockParam | AnthropicVideoBlockParam | undefined
 > => {
   switch (content.type) {
+    case 'redacted_thinking':
     case 'thinking': {
       // just pass-through the content
-      return content as any;
+      return content;
     }
 
     case 'text': {
@@ -469,7 +472,7 @@ export const buildAnthropicTools = (
           ? { type: 'ephemeral' }
           : undefined,
       description: fn.description,
-      input_schema: fn.parameters as Anthropic.Tool.InputSchema,
+      input_schema: normalizeAnthropicToolSchema(fn.parameters) as Anthropic.Tool.InputSchema,
       name: fn.name,
     };
   });

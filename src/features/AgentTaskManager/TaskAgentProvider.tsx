@@ -5,26 +5,33 @@ import type { ReactNode } from 'react';
 import { createContext, memo, use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useMatch, useSearchParams } from 'react-router';
 
-import Loading from '@/components/Loading/BrandTextLoading';
+import ConversationSegmentSkeleton from '@/components/Skeleton/Conversation/Segment';
 import { ConversationProvider } from '@/features/Conversation';
 import { useInitBuiltinAgent } from '@/hooks/useInitBuiltinAgent';
 import { useOperationState } from '@/hooks/useOperationState';
 import { useAgentStore } from '@/store/agent';
 import { builtinAgentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
-import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 
 import { resolveTaskHandoffTopic } from './taskHandoff';
 
 interface TaskAgentProviderProps {
   children: ReactNode;
+  preferredAgentId?: string;
+  viewedTaskId?: string;
+}
+
+interface ScopedAgentSelection {
+  agentId?: string;
+  scopeAgentId?: string;
 }
 
 const TaskAgentSelectionContext = createContext<(agentId: string) => void>(() => {});
 
 export const useTaskAgentSelection = () => use(TaskAgentSelectionContext);
 
-export const TaskAgentProvider = memo<TaskAgentProviderProps>(({ children }) => {
+export const TaskAgentProvider = memo<TaskAgentProviderProps>((props) => {
+  const { children, preferredAgentId, viewedTaskId } = props;
   useInitBuiltinAgent(BUILTIN_AGENT_SLUGS.inbox);
   useInitBuiltinAgent(BUILTIN_AGENT_SLUGS.taskAgent);
 
@@ -36,19 +43,29 @@ export const TaskAgentProvider = memo<TaskAgentProviderProps>(({ children }) => 
   const routedAgentId = searchParams.get('agentId') || undefined;
   const routedTopicId = searchParams.get('topicId') || undefined;
   const syncedContextRef = useRef<string | undefined>(undefined);
-  const [scopedSelectedAgentId, setScopedSelectedAgentId] = useState<string | undefined>(
-    routedAgentId,
+  const [scopedSelection, setScopedSelection] = useState<ScopedAgentSelection>(() => ({
+    agentId: preferredAgentId || routedAgentId,
+    scopeAgentId: preferredAgentId,
+  }));
+
+  // `:slug?` is the readable title tail the detail route appends; it never
+  // participates in resolution, so the match must tolerate it being absent.
+  const detailMatch = useMatch('/task/:taskId/:slug?');
+  const resolvedViewedTaskId = viewedTaskId || detailMatch?.params.taskId;
+
+  const scopedSelectedAgentId =
+    scopedSelection.scopeAgentId === preferredAgentId
+      ? scopedSelection.agentId
+      : preferredAgentId || routedAgentId;
+  const selectedAgentId = scopedSelectedAgentId || preferredAgentId || taskAgentId;
+
+  const selectTaskAgent = useCallback(
+    (agentId: string) => {
+      if (!agentId || isChatGroupSessionId(agentId)) return;
+      setScopedSelection({ agentId, scopeAgentId: preferredAgentId });
+    },
+    [preferredAgentId],
   );
-
-  const detailMatch = useMatch('/task/:taskId');
-  const viewedTaskId = detailMatch?.params.taskId;
-
-  const selectedAgentId = scopedSelectedAgentId || taskAgentId;
-
-  const selectTaskAgent = useCallback((agentId: string) => {
-    if (!agentId || isChatGroupSessionId(agentId)) return;
-    setScopedSelectedAgentId(agentId);
-  }, []);
 
   useEffect(() => {
     if (!selectedAgentId) return;
@@ -93,29 +110,20 @@ export const TaskAgentProvider = memo<TaskAgentProviderProps>(({ children }) => 
       defaultTaskAssigneeAgentId: inboxAgentId,
       scope: 'task',
       topicId: activeTopicId,
-      viewedTask: viewedTaskId ? { taskId: viewedTaskId, type: 'detail' } : { type: 'list' },
+      viewedTask: resolvedViewedTaskId
+        ? { taskId: resolvedViewedTaskId, type: 'detail' }
+        : { type: 'list' },
     }),
-    [activeTopicId, inboxAgentId, selectedAgentId, viewedTaskId],
+    [activeTopicId, inboxAgentId, resolvedViewedTaskId, selectedAgentId],
   );
 
-  const chatKey = useMemo(() => messageMapKey(context), [context]);
-  const replaceMessages = useChatStore((s) => s.replaceMessages);
-  const messages = useChatStore((s) => s.dbMessagesMap[chatKey]);
   const operationState = useOperationState(context);
 
-  if (!taskAgentId) return <Loading debugId="TaskAgentProvider" />;
+  if (!taskAgentId) return <ConversationSegmentSkeleton />;
 
   return (
     <TaskAgentSelectionContext value={selectTaskAgent}>
-      <ConversationProvider
-        context={context}
-        hasInitMessages={!!messages}
-        messages={messages}
-        operationState={operationState}
-        onMessagesChange={(msgs, ctx) => {
-          replaceMessages(msgs, { context: ctx });
-        }}
-      >
+      <ConversationProvider context={context} operationState={operationState}>
         {children}
       </ConversationProvider>
     </TaskAgentSelectionContext>

@@ -1,9 +1,15 @@
 'use client';
 
 import { type FlexboxProps } from '@lobehub/ui';
-import { Flexbox, Icon, Tag } from '@lobehub/ui';
-import { Button } from '@lobehub/ui/base-ui';
-import { createStaticStyles, responsive, useResponsive } from 'antd-style';
+import {
+  Button,
+  createStaticStyles,
+  Flexbox,
+  Icon,
+  responsive,
+  Tag,
+  useResponsive,
+} from '@lobehub/ui';
 import { ChevronRight } from 'lucide-react';
 import { type ReactNode } from 'react';
 import { memo } from 'react';

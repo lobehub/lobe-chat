@@ -2,24 +2,37 @@ import {
   AGENT_DOCUMENT_CATEGORY,
   AGENT_DOCUMENT_WEB_CATEGORY,
   buildAgentSkillIdentifier,
+  EMPTY_ARRAY,
 } from '@lobechat/const';
-import { ActionIcon, Center, Empty, Flexbox, Text } from '@lobehub/ui';
-import { confirmModal, toast } from '@lobehub/ui/base-ui';
+import {
+  ActionIcon,
+  Center,
+  confirmModal,
+  createStaticStyles,
+  cx,
+  Empty,
+  Flexbox,
+  Spin,
+  Text,
+  toast,
+} from '@lobehub/ui';
 import { SkillsIcon } from '@lobehub/ui/icons';
-import { createStaticStyles, cx } from 'antd-style';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import type { LucideIcon } from 'lucide-react';
 import { EyeIcon, FileTextIcon, GlobeIcon, PencilIcon, Trash2Icon } from 'lucide-react';
-import type { CSSProperties, MouseEvent } from 'react';
-import { memo, useEffect, useMemo, useState } from 'react';
+import type { CSSProperties, DragEvent, MouseEvent } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
 
 import AsyncError from '@/components/AsyncError';
-import NeuralNetworkLoading from '@/components/NeuralNetworkLoading';
+import { withErrorBoundary } from '@/components/ErrorBoundary';
 import { buildAgentDocumentPath } from '@/features/AgentDocumentPage/navigation';
-import { DocumentExplorerTree } from '@/features/AgentDocumentsExplorer';
+import {
+  type AgentDocumentListMutator,
+  DocumentExplorerTree,
+} from '@/features/AgentDocumentsExplorer';
 import { startSkillDrag } from '@/features/ChatInput/InputEditor/ActionTag/skillDragData';
 import {
   openRenameSkillModal,
@@ -30,10 +43,14 @@ import {
   useProjectSkills,
 } from '@/features/SkillsList';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
-import { useClientDataSWR } from '@/libs/swr';
-import { agentDocumentService, agentDocumentSWRKeys } from '@/services/agentDocument';
+import { agentDocumentService } from '@/services/agentDocument';
 import { useAgentStore } from '@/store/agent';
 import { chatConfigByIdSelectors } from '@/store/agent/selectors';
+import {
+  agentDocumentActions,
+  agentDocumentSelectors,
+  useAgentDocumentStore,
+} from '@/store/agentDocument';
 import { useChatStore } from '@/store/chat';
 import { standardizeIdentifier } from '@/utils/identifier';
 
@@ -175,6 +192,7 @@ const DocumentItem = memo<DocumentItemProps>(
               agentId,
               documentId: document.documentId,
               id: document.id,
+              withChildren: true,
             });
             await mutate();
             if (isActive) onCurrentDeleted?.();
@@ -328,13 +346,16 @@ const AgentDocumentsGroup = memo<AgentDocumentsGroupProps>(
     }, [controlledFilter, isDocumentMode]);
 
     // Local desktop reads skills over IPC; a bound device reads over RPC.
+    // `enabled` is false while the pane sits hidden behind `<Activity>`. Without it
+    // a closed panel still ran the filesystem skill scan and mounted a row subtree
+    // per skill — thousands of zero-box components the user never sees.
     const showProjectSkills =
-      (showLocalProjectSkills || isLocalEnabled || !!deviceId) && !!workingDirectory;
+      enabled && (showLocalProjectSkills || isLocalEnabled || !!deviceId) && !!workingDirectory;
 
     // Mirror what each child component reads so the parent can decide the
     // section layout (flat when a single source has items, sectioned otherwise).
     // Both hooks are SWR-deduped against their respective child fetches.
-    const userSkillItems = useUserSkills();
+    const userSkillItems = useUserSkills(enabled);
     const {
       deviceItems: deviceSkillItems,
       error: projectSkillsError,
@@ -342,14 +363,20 @@ const AgentDocumentsGroup = memo<AgentDocumentsGroupProps>(
       projectItems: projectSkillItems,
     } = useProjectSkills(showProjectSkills ? workingDirectory : undefined, deviceId);
 
-    const {
-      data = [],
-      error,
-      isLoading,
-      mutate,
-    } = useClientDataSWR(
-      enabled && agentId ? agentDocumentSWRKeys.documentsList(agentId) : null,
-      () => agentDocumentService.listDocuments({ agentId: agentId! }),
+    // The agent's document-list replica: on a reload the persisted list paints
+    // the panel at once and the network only confirms it.
+    const { error: listError } = agentDocumentActions.useFetchDocumentList(agentId, { enabled });
+    const list = useAgentDocumentStore(agentDocumentSelectors.getDocumentList(agentId));
+    const data = list ?? EMPTY_ARRAY;
+    // Loading / error take over the panel only while there is nothing to show.
+    const isLoading = !list && !listError;
+    const error = list ? undefined : listError;
+    const mutate = useCallback<AgentDocumentListMutator>(
+      (edit, options) =>
+        agentId
+          ? agentDocumentActions.mutateDocumentList(agentId, edit, options)
+          : Promise.resolve(),
+      [agentId],
     );
 
     const webData = useMemo(
@@ -376,12 +403,150 @@ const AgentDocumentsGroup = memo<AgentDocumentsGroupProps>(
       [skillBundleViews],
     );
 
+    const openAgentDocument = useCallback(
+      (documentId: string, agentDocumentId?: string) => {
+        if (!agentId) return;
+        if (resolvedOpenMode === 'portal') {
+          openDocument(
+            documentId,
+            agentDocumentId ?? data.find((doc) => doc.documentId === documentId)?.id,
+          );
+          return;
+        }
+        navigate(buildAgentDocumentPath(agentId, documentId));
+      },
+      [agentId, data, navigate, openDocument, resolvedOpenMode],
+    );
+
+    // Open the SKILL.md (skills/index child) when present; fall back to the
+    // bundle itself (orphan bundles surface for recovery).
+    const openAgentSkill = useCallback(
+      (item: SkillListItem) => {
+        const view = skillBundleViews.find((v) => v.bundle.documentId === item.id);
+        const indexChild = data.find((doc) => doc.parentId === item.id && doc.isSkillIndex);
+        const targetDocId = indexChild?.documentId ?? view?.bundle.documentId ?? item.id;
+        openAgentDocument(targetDocId);
+      },
+      [data, openAgentDocument, skillBundleViews],
+    );
+
+    const openAgentSkillFile = useCallback(
+      (item: SkillListItem, relativePath: string) => {
+        const view = skillBundleViews.find((v) => v.bundle.documentId === item.id);
+        const childDocId = view?.pathToDocumentId.get(relativePath);
+        if (!childDocId) return;
+        openAgentDocument(childDocId);
+      },
+      [openAgentDocument, skillBundleViews],
+    );
+
+    // The runtime resolves these via the `agent-skills:<filename>` identifier
+    // (built from the shared const helper so the prefix stays in lockstep with
+    // the server-side resolver). Display label keeps the human-readable title.
+    const handleAgentSkillDragStart = useCallback(
+      (item: SkillListItem, event: DragEvent) => {
+        const view = skillBundleViews.find((v) => v.bundle.documentId === item.id);
+        const filename = view?.bundle.filename;
+        if (!filename) return;
+        startSkillDrag(event, {
+          category: 'agentSkill',
+          label: item.name,
+          type: buildAgentSkillIdentifier(filename),
+        });
+      },
+      [skillBundleViews],
+    );
+
+    // Agent skills are document bundles, so view / rename / delete map onto the
+    // agent-document service (`item.id` is the bundle's documentId; the service
+    // keys off the row id carried on the bundle).
+    const getAgentSkillActions = useCallback(
+      (item: SkillListItem): SkillRowAction[] => {
+        const view = skillBundleViews.find((v) => v.bundle.documentId === item.id);
+        const rowId = view?.bundle.id;
+        return [
+          {
+            icon: EyeIcon,
+            key: 'view',
+            label: t('workingPanel.skills.actions.view'),
+            onClick: openAgentSkill,
+            sfSymbol: 'eye',
+          },
+          {
+            disabled: !rowId,
+            icon: PencilIcon,
+            key: 'rename',
+            label: t('workingPanel.skills.actions.rename'),
+            onClick: () => {
+              if (!rowId) return;
+              openRenameSkillModal({
+                currentName: item.name,
+                onSubmit: async (newName) => {
+                  try {
+                    await agentDocumentService.renameDocument({
+                      agentId: agentId!,
+                      id: rowId,
+                      newTitle: newName,
+                    });
+                    await mutate();
+                    return undefined;
+                  } catch (error) {
+                    return error instanceof Error
+                      ? error.message
+                      : t('workingPanel.skills.rename.error');
+                  }
+                },
+              });
+            },
+            sfSymbol: 'pencil',
+          },
+          {
+            danger: true,
+            disabled: !rowId,
+            icon: Trash2Icon,
+            key: 'delete',
+            label: t('workingPanel.skills.actions.delete'),
+            onClick: () => {
+              if (!rowId) return;
+              confirmModal({
+                cancelText: tCommon('cancel'),
+                content: t('workingPanel.skills.delete.agentConfirm', { name: item.name }),
+                okButtonProps: { danger: true },
+                okText: tCommon('delete'),
+                onOk: async () => {
+                  try {
+                    // A skill bundle always holds its SKILL.md and resources.
+                    await agentDocumentService.removeDocument({
+                      agentId: agentId!,
+                      id: rowId,
+                      withChildren: true,
+                    });
+                    await mutate();
+                    toast.success(t('workingPanel.skills.delete.success'));
+                  } catch (error) {
+                    toast.error(
+                      error instanceof Error
+                        ? error.message
+                        : t('workingPanel.skills.delete.error'),
+                    );
+                  }
+                },
+                title: t('workingPanel.skills.delete.title'),
+              });
+            },
+            sfSymbol: 'trash',
+          },
+        ];
+      },
+      [agentId, mutate, openAgentSkill, skillBundleViews, t, tCommon],
+    );
+
     if (!agentId) return null;
 
     if (isLoading) {
       return (
         <Center flex={1} paddingBlock={24}>
-          <NeuralNetworkLoading size={32} />
+          <Spin size="large" />
         </Center>
       );
     }
@@ -400,131 +565,18 @@ const AgentDocumentsGroup = memo<AgentDocumentsGroupProps>(
       );
     }
 
-    const openAgentDocument = (documentId: string, agentDocumentId?: string) => {
-      if (!agentId) return;
-      if (resolvedOpenMode === 'portal') {
-        openDocument(
-          documentId,
-          agentDocumentId ?? data.find((doc) => doc.documentId === documentId)?.id,
-        );
-        return;
-      }
-      navigate(buildAgentDocumentPath(agentId, documentId));
-    };
-
     const backToChat = () => {
       if (!agentId) return;
       navigate(`/agent/${agentId}`);
-    };
-
-    // Open the SKILL.md (skills/index child) when present; fall back to the
-    // bundle itself (orphan bundles surface for recovery).
-    const openAgentSkill = (item: SkillListItem) => {
-      const view = skillBundleViews.find((v) => v.bundle.documentId === item.id);
-      const indexChild = data.find((doc) => doc.parentId === item.id && doc.isSkillIndex);
-      const targetDocId = indexChild?.documentId ?? view?.bundle.documentId ?? item.id;
-      openAgentDocument(targetDocId);
-    };
-
-    // Agent skills are document bundles, so view / rename / delete map onto the
-    // agent-document service (`item.id` is the bundle's documentId; the service
-    // keys off the row id carried on the bundle).
-    const getAgentSkillActions = (item: SkillListItem): SkillRowAction[] => {
-      const view = skillBundleViews.find((v) => v.bundle.documentId === item.id);
-      const rowId = view?.bundle.id;
-      return [
-        {
-          icon: EyeIcon,
-          key: 'view',
-          label: t('workingPanel.skills.actions.view'),
-          onClick: openAgentSkill,
-          sfSymbol: 'eye',
-        },
-        {
-          disabled: !rowId,
-          icon: PencilIcon,
-          key: 'rename',
-          label: t('workingPanel.skills.actions.rename'),
-          onClick: () => {
-            if (!rowId) return;
-            openRenameSkillModal({
-              currentName: item.name,
-              onSubmit: async (newName) => {
-                try {
-                  await agentDocumentService.renameDocument({
-                    agentId: agentId!,
-                    id: rowId,
-                    newTitle: newName,
-                  });
-                  await mutate();
-                  return undefined;
-                } catch (error) {
-                  return error instanceof Error
-                    ? error.message
-                    : t('workingPanel.skills.rename.error');
-                }
-              },
-            });
-          },
-          sfSymbol: 'pencil',
-        },
-        {
-          danger: true,
-          disabled: !rowId,
-          icon: Trash2Icon,
-          key: 'delete',
-          label: t('workingPanel.skills.actions.delete'),
-          onClick: () => {
-            if (!rowId) return;
-            confirmModal({
-              cancelText: tCommon('cancel'),
-              content: t('workingPanel.skills.delete.agentConfirm', { name: item.name }),
-              okButtonProps: { danger: true },
-              okText: tCommon('delete'),
-              onOk: async () => {
-                try {
-                  await agentDocumentService.removeDocument({ agentId: agentId!, id: rowId });
-                  await mutate();
-                  toast.success(t('workingPanel.skills.delete.success'));
-                } catch (error) {
-                  toast.error(
-                    error instanceof Error ? error.message : t('workingPanel.skills.delete.error'),
-                  );
-                }
-              },
-              title: t('workingPanel.skills.delete.title'),
-            });
-          },
-          sfSymbol: 'trash',
-        },
-      ];
     };
 
     const renderAgentSkillsList = () => (
       <SkillsList
         getRowActions={getAgentSkillActions}
         items={skillItems}
+        onOpenFile={openAgentSkillFile}
         onOpenSkill={openAgentSkill}
-        onOpenFile={(item, relativePath) => {
-          const view = skillBundleViews.find((v) => v.bundle.documentId === item.id);
-          const docId = view?.pathToDocumentId.get(relativePath);
-          if (!docId) return;
-          openAgentDocument(docId);
-        }}
-        onSkillDragStart={(item, event) => {
-          // The runtime resolves these via the `agent-skills:<filename>`
-          // identifier (built from the shared const helper so the prefix stays
-          // in lockstep with the server-side resolver). Display label keeps
-          // the human-readable title.
-          const view = skillBundleViews.find((v) => v.bundle.documentId === item.id);
-          const filename = view?.bundle.filename;
-          if (!filename) return;
-          startSkillDrag(event, {
-            category: 'agentSkill',
-            label: item.name,
-            type: buildAgentSkillIdentifier(filename),
-          });
-        }}
+        onSkillDragStart={handleAgentSkillDragStart}
       />
     );
 
@@ -556,7 +608,7 @@ const AgentDocumentsGroup = memo<AgentDocumentsGroupProps>(
         if (showProjectSkills && isProjectSkillsLoading) {
           return (
             <Center flex={1} paddingBlock={24}>
-              <NeuralNetworkLoading size={32} />
+              <Spin size="large" />
             </Center>
           );
         }
@@ -672,4 +724,4 @@ const AgentDocumentsGroup = memo<AgentDocumentsGroupProps>(
 
 AgentDocumentsGroup.displayName = 'AgentDocumentsGroup';
 
-export default AgentDocumentsGroup;
+export default withErrorBoundary(AgentDocumentsGroup, { variant: 'alert' });

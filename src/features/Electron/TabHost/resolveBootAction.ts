@@ -1,4 +1,8 @@
-import { isSameTabTarget } from '@/features/Electron/titlebar/TabBar/scope';
+import {
+  isSameTabTarget,
+  resolveTabScope,
+  tabScopeHomeUrl,
+} from '@/features/Electron/titlebar/TabBar/scope';
 import { type TabItem } from '@/features/Electron/titlebar/TabBar/types';
 import { normalizeTabUrl } from '@/features/Electron/titlebar/TabBar/url';
 
@@ -10,7 +14,10 @@ export const resolveBootAction = (
   activeTabId: string | null,
   bootUrl: string,
 ): BootAction => {
-  const isDefaultLaunch = normalizeTabUrl(bootUrl) === '/';
+  // A scope-root boot url (`/`, or `/{slug}` when the main process restores the
+  // last workspace) is a plain launch, not a deep link: keep the scope's last
+  // active tab instead of forcing its home tab to the front.
+  const isDefaultLaunch = normalizeTabUrl(bootUrl) === tabScopeHomeUrl(resolveTabScope(bootUrl));
   const activeTabExists = !!activeTabId && tabs.some((tab) => tab.id === activeTabId);
 
   if (isDefaultLaunch && activeTabExists) return { type: 'keep' };

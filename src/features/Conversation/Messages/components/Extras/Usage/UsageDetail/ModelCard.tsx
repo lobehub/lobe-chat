@@ -1,13 +1,11 @@
 import { getCachedTextInputUnitRate, getWriteCacheInputUnitRate } from '@lobechat/utils';
-import { ModelIcon } from '@lobehub/icons';
-import { Flexbox, Icon, Tooltip } from '@lobehub/ui';
-import { Tabs } from '@lobehub/ui/base-ui';
-import { createStaticStyles } from 'antd-style';
+import { createStaticStyles, Flexbox, Icon, Tabs, Tooltip } from '@lobehub/ui';
 import { ArrowDownToDot, ArrowUpFromDot, BookUp2Icon, CircleFadingArrowUp } from 'lucide-react';
 import { type LobeDefaultAiModelListItem } from 'model-bank';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { ModelIcon } from '@/components/LobeIcons';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 

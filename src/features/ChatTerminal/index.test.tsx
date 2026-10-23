@@ -12,12 +12,17 @@ vi.mock('@lobechat/const', async (importOriginal) => ({
   isDesktop: true,
 }));
 
-vi.mock('@lobehub/ui', () => ({
+vi.mock('@lobehub/ui', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
   DraggablePanel: ({ children, expand }: { children?: ReactNode; expand?: boolean }) => (
     <div data-expand={String(expand)} data-testid="terminal-panel">
       {children}
     </div>
   ),
+}));
+
+vi.mock('@/hooks/useHotkeys', () => ({
+  useToggleTerminalPanelHotkey: vi.fn(),
 }));
 
 vi.mock('./Content', () => ({

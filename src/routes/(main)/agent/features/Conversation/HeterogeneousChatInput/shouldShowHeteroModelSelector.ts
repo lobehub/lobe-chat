@@ -1,4 +1,5 @@
 import type { DeviceExecutionTarget, HeterogeneousProviderConfig } from '@lobechat/types';
+import { getHeteroSelectorCapability } from '@lobechat/types';
 
 interface ShouldShowHeteroModelSelectorParams {
   boundDeviceId?: string;
@@ -13,10 +14,14 @@ export const shouldShowHeteroModelSelector = ({
   isDesktopClient,
   providerType,
 }: ShouldShowHeteroModelSelectorParams): boolean => {
-  // OpenCode has no cloud-side model list — its selector needs a concrete
-  // runtime to discover models from: the desktop itself, or an explicit bound
-  // device that answers listHeterogeneousAgentModels.
-  if (providerType === 'opencode') {
+  // Codex keeps its saved/built-in model fallback and effort controls even when
+  // discovery has no concrete target (for example auto routing or a sandbox).
+  if (providerType === 'codex') return true;
+
+  // Catalog providers have no cloud-side model list — their selectors need a
+  // concrete runtime to discover models from: the desktop itself, or an explicit
+  // bound device that answers listHeterogeneousAgentModels.
+  if (getHeteroSelectorCapability(providerType)?.model?.source === 'catalog') {
     if (executionTarget === 'local') return isDesktopClient;
     return executionTarget === 'device' && !!boundDeviceId;
   }

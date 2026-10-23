@@ -6,10 +6,13 @@ import {
   type DropdownMenuProps,
   type MenuInfo,
   type MenuItemType,
-  type MenuProps,
   type PopoverTrigger,
 } from '@lobehub/ui';
 import {
+  createGlobalStyle,
+  createStaticStyles,
+  cssVar,
+  cx,
   DropdownMenuPopup,
   DropdownMenuPortal,
   DropdownMenuPositioner,
@@ -17,7 +20,6 @@ import {
   DropdownMenuTrigger,
   renderDropdownMenuItems,
 } from '@lobehub/ui';
-import { createGlobalStyle, createStaticStyles, cssVar, cx } from 'antd-style';
 import { type CSSProperties, type ReactNode } from 'react';
 import {
   isValidElement,
@@ -33,12 +35,9 @@ import {
 import DebugNode from '@/components/DebugNode';
 import { useIsMobile } from '@/hooks/useIsMobile';
 
+import { type MenuOpenChangeDetails, shouldVetoMenuClose } from './menuCloseVeto';
+
 const styles = createStaticStyles(({ css, cssVar }) => ({
-  dropdownMenu: css`
-    .ant-avatar {
-      margin-inline-end: var(--ant-margin-xs);
-    }
-  `,
   trigger: css`
     outline: none;
 
@@ -168,10 +167,10 @@ const MenuItemsHost = memo<MenuItemsHostProps>(({ close, decorate, useItems }) =
 
 MenuItemsHost.displayName = 'ActionDropdownMenuItemsHost';
 
-type ActionDropdownMenu = Omit<
-  Pick<MenuProps<ActionDropdownMenuItem>, 'className' | 'onClick' | 'style'>,
-  'items'
-> & {
+type ActionDropdownMenu = {
+  className?: string;
+  onClick?: (info: MenuInfo) => void;
+  style?: CSSProperties;
   items?: ActionDropdownMenuItems | (() => ActionDropdownMenuItems);
   /**
    * Hook form of `items`, invoked from inside the popup so it only runs while the
@@ -229,8 +228,12 @@ const ActionDropdown = memo<ActionDropdownProps>(
 
     const handleOpenChange = useCallback(
       (nextOpen: boolean, details: Parameters<NonNullable<typeof onOpenChange>>[1]) => {
-        if (!nextOpen && (details as { reason?: string })?.reason === 'sibling-open') {
-          (details as { cancel?: () => void })?.cancel?.();
+        if (
+          !nextOpen &&
+          ((details as MenuOpenChangeDetails)?.reason === 'sibling-open' ||
+            shouldVetoMenuClose(details as MenuOpenChangeDetails))
+        ) {
+          (details as MenuOpenChangeDetails)?.cancel?.();
           return;
         }
         onOpenChange?.(nextOpen, details);
@@ -255,9 +258,8 @@ const ActionDropdown = memo<ActionDropdownProps>(
       return trigger === 'hover';
     }, [trigger]);
     const resolvedTriggerProps = useMemo(() => {
-      if (openOnHover === undefined) return { nativeButton: false, ...triggerProps };
+      if (openOnHover === undefined) return { ...triggerProps };
       return {
-        nativeButton: false,
         ...triggerProps,
         openOnHover,
       };
@@ -286,9 +288,19 @@ const ActionDropdown = memo<ActionDropdownProps>(
           // Any item carrying a `children` key is a submenu (children may be optional);
           // route them all here so plain items never inherit a submenu's click signature.
           if ('children' in item) {
+            const itemOnOpenChange = (
+              item as { onOpenChange?: (open: boolean, details?: MenuOpenChangeDetails) => void }
+            ).onOpenChange;
             return {
               ...item,
               children: item.children ? decorateMenuItems(item.children) : item.children,
+              onOpenChange: (open: boolean, details?: MenuOpenChangeDetails) => {
+                if (!open && shouldVetoMenuClose(details)) {
+                  details?.cancel?.();
+                  return;
+                }
+                itemOnOpenChange?.(open, details);
+              },
               type: 'submenu',
               // `children` is re-widened to the full item union; cast back to satisfy
               // the mixed rc-menu / Base UI submenu types in `BaseMenuItemType`.
@@ -358,9 +370,9 @@ const ActionDropdown = memo<ActionDropdownProps>(
     const resolvedPopupClassName = useMemo<DropdownMenuPopupProps['className']>(() => {
       const popupClassName = popupProps?.className;
       if (typeof popupClassName === 'function') {
-        return (state) => cx(styles.dropdownMenu, menu.className, popupClassName(state));
+        return (state) => cx(menu.className, popupClassName(state));
       }
-      return cx(styles.dropdownMenu, menu.className, popupClassName);
+      return cx(menu.className, popupClassName);
     }, [menu.className, popupProps?.className]);
 
     const resolvedPopupStyle = useMemo<DropdownMenuPopupProps['style']>(() => {

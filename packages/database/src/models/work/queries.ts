@@ -9,10 +9,12 @@ import {
   type WorkVersionEventItem,
   type WorkVersionEventMap,
   type WorkVersionItem,
+  type WorkVisibility,
 } from '@lobechat/types';
 import type { SQL } from 'drizzle-orm';
 import { and, desc, eq, inArray, isNull, lt, or } from 'drizzle-orm';
 
+import { documents } from '../../schemas/file';
 import { tasks } from '../../schemas/task';
 import { topics } from '../../schemas/topic';
 import { works, workVersions } from '../../schemas/work';
@@ -23,6 +25,9 @@ import {
   currentVersionEventSelection,
   currentVersions,
   currentWorkListFields,
+  documentSummaryJoin,
+  resourceDeletedField,
+  resourceLiveFilter,
   taskSummaryJoin,
 } from './internal';
 import {
@@ -163,6 +168,7 @@ export const listSummariesByRootOperations = async (
     .select({
       event: currentVersionEventSelection,
       ...currentTaskSummaryFields,
+      resourceDeleted: resourceDeletedField,
       version: {
         createdAt: currentVersions.createdAt,
         id: currentVersions.id,
@@ -173,6 +179,11 @@ export const listSummariesByRootOperations = async (
     .from(works)
     .innerJoin(currentVersions, eq(works.currentVersionId, currentVersions.id))
     .leftJoin(tasks, taskSummaryJoin(ctx))
+    // LEFT JOIN, like the tasks one: an orphaned document Work (backing row
+    // hard-deleted outside the tool path) must still surface, so the UI can
+    // render it as "document deleted" and offer removal instead of showing a
+    // live-looking card that 404s on click.
+    .leftJoin(documents, documentSummaryJoin)
     .where(and(workOwnership(ctx), inArray(works.id, Array.from(anchorByWorkId.keys()))))
     .orderBy(desc(works.updatedAt), desc(works.id));
 
@@ -260,9 +271,13 @@ export interface ListByWorkspaceParams {
   /** Opt-in gate for the `file` work type; see {@link resolveAllowedWorkTypes}. */
   includeFileWorks?: boolean;
   limit?: number;
+  /** Narrow results to Works first produced by one agent. */
+  originAgentId?: string | null;
   /** Narrow the `external` type to a single skill provider's resource types. */
   provider?: WorkSkillProvider | null;
   type?: WorkType | null;
+  /** Narrow the Resources gallery to Private or Workspace rows. */
+  visibility?: WorkVisibility;
 }
 
 // Not exported: only used as this module's own return-type annotation. The
@@ -314,8 +329,13 @@ export const listByWorkspace = async (
     // Row-level gate: un-opted-in requests never see `file` works, even in the
     // combined (no `type`) view (see resolveAllowedWorkTypes).
     inArray(works.type, resolveAllowedWorkTypes(params.includeFileWorks)),
+    // Orphaned Works (backing resource deleted or trashed) are hidden here
+    // rather than shown as dead cards; see resourceLiveFilter.
+    resourceLiveFilter,
   ];
   if (params.type) filters.push(eq(works.type, params.type));
+  if (params.originAgentId) filters.push(eq(works.originAgentId, params.originAgentId));
+  if (ctx.workspaceId && params.visibility) filters.push(eq(works.visibility, params.visibility));
   // User-visible gallery tabs stay per-provider (Linear / GitHub) but filter by
   // provider — its resource types — over the unified `external` Work type.
   if (params.provider) {
@@ -346,6 +366,7 @@ export const listByWorkspace = async (
       // Joined for the gallery's group-by-conversation headers; null once the
       // origin topic is deleted (originTopicId is set-null on topic deletion).
       originTopicTitle: topics.title,
+      resourceDeleted: resourceDeletedField,
       version: {
         createdAt: currentVersions.createdAt,
         id: currentVersions.id,
@@ -355,7 +376,10 @@ export const listByWorkspace = async (
     })
     .from(works)
     .innerJoin(currentVersions, eq(works.currentVersionId, currentVersions.id))
+    // LEFT JOINs feed resourceLiveFilter, which drops rows whose backing
+    // task / document is gone instead of surfacing them as orphans.
     .leftJoin(tasks, taskSummaryJoin(ctx))
+    .leftJoin(documents, documentSummaryJoin)
     .leftJoin(topics, eq(works.originTopicId, topics.id))
     .where(and(...filters))
     .orderBy(desc(works.updatedAt), desc(works.id))

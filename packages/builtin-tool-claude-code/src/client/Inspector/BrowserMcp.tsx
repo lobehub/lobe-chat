@@ -2,7 +2,7 @@
 
 import { inspectorTextStyles, shinyTextStyles } from '@lobechat/shared-tool-ui/styles';
 import type { BuiltinInspector, BuiltinInspectorProps } from '@lobechat/types';
-import { createStaticStyles, cx } from 'antd-style';
+import { createStaticStyles, cx } from '@lobehub/ui';
 import type { LucideIcon } from 'lucide-react';
 import {
   Camera,
@@ -141,8 +141,10 @@ const BrowserMcpInspector = memo<BuiltinInspectorProps<BrowserMcpArgs>>(
     const isShiny = isArgumentsStreaming || isLoading;
 
     return (
-      <div className={cx(inspectorTextStyles.root, isShiny && shinyTextStyles.shinyText)}>
-        <span>{value ? `${label}:` : label}</span>
+      <div className={inspectorTextStyles.root}>
+        <span className={cx(isShiny && shinyTextStyles.shinyText)}>
+          {value ? `${label}:` : label}
+        </span>
         {value && (
           <span className={styles.chip}>
             <Icon className={styles.icon} size={14} />

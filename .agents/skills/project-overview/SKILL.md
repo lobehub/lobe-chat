@@ -1,6 +1,6 @@
 ---
 name: project-overview
-description: 'LobeHub open-source monorepo architecture map. Use when locating code layers, understanding apps/packages/src layout, business stubs, project structure, or onboarding to the repository.'
+description: 'Use for the OSS repository map, code-layer lookup, apps/packages/src ownership and business stubs.'
 user-invocable: false
 ---
 
@@ -30,8 +30,8 @@ This repo is the **open-source root** (`github.com/lobehub/lobehub`, package `@l
 | Framework     | Next.js 16 + React 19                      |
 | Routing       | SPA inside Next.js with `react-router-dom` |
 | Language      | TypeScript                                 |
-| UI Components | `@lobehub/ui`, antd                        |
-| CSS-in-JS     | antd-style                                 |
+| UI Components | `@lobehub/ui`                              |
+| CSS-in-JS     | `@lobehub/ui` `createStaticStyles`         |
 | Icons         | lucide-react, `@ant-design/icons`          |
 | i18n          | react-i18next                              |
 | State         | zustand                                    |
@@ -56,8 +56,10 @@ git submodules.
 ├── apps/
 │   ├── cli/                  # LobeHub CLI
 │   ├── desktop/              # Electron desktop app
-│   ├── device-gateway/       # Device gateway service
-│   └── server/               # Next.js-backed server: featureFlags, globalConfig, modules, routers, services, utils, workflows (`@/server/*` alias)
+│   └── server/               # Next.js-backed server (`@/server/*` alias)
+│       └── src/
+│           ├── router-hono/  # Hono endpoint routers and standalone runtime
+│           └── ...           # featureFlags, globalConfig, modules, routers, services, utils, workflows
 ├── docs/                     # changelog, development, self-hosting, usage
 ├── locales/                  # en-US, zh-CN, ...
 ├── packages/                 # ~80 @lobechat/* workspace packages — `ls` for the full set. Key ones:
@@ -89,7 +91,6 @@ git submodules.
     ├── business/             # Open-source stubs (client/server) — cloud repo provides real impls
     ├── features/             # Domain business components
     ├── store/                # ~30 zustand stores — `ls` for the full set
-    ├── server/               # standalone-Hono server pieces only: agent-hono, workflows-hono (main backend lives in `apps/server`)
     └── ...                   # components, hooks, layout, libs, services, types, utils
 ```
 

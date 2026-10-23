@@ -1,8 +1,6 @@
 'use client';
 
-import { ActionIcon, Flexbox } from '@lobehub/ui';
-import { Drawer } from 'antd';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { ActionIcon, createStaticStyles, cssVar, Drawer, Flexbox } from '@lobehub/ui';
 import { MenuIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 
@@ -60,32 +58,27 @@ const Nav = memo(() => {
       </Flexbox>
 
       <Drawer
-        headerStyle={{ display: 'none' }}
+        noHeader
+        closable={false}
         open={open}
         placement={'left'}
-        rootStyle={{ position: 'absolute' }}
         width={260}
         zIndex={10}
-        bodyStyle={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 20,
-          justifyContent: 'space-between',
-          padding: 16,
-        }}
         style={{
           background: cssVar.colorBgLayout,
           borderRight: `1px solid ${cssVar.colorSplit}`,
           paddingTop: 44,
         }}
-        onClick={() => setOpen(false)}
+        styles={{
+          bodyContent: { gap: 20, justifyContent: 'space-between', padding: 16 },
+        }}
         onClose={() => setOpen(false)}
       >
         <Menu
           compact
           selectable
+          activeKey={activeKey}
           items={items}
-          selectedKeys={[activeKey]}
           onClick={({ key }) => {
             scrollToTop();
             if (key === DiscoverTab.Home) {
@@ -93,6 +86,7 @@ const Nav = memo(() => {
             } else {
               navigate(`/community/${key}`);
             }
+            setOpen(false);
           }}
         />
       </Drawer>

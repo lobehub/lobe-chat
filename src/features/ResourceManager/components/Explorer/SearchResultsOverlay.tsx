@@ -1,8 +1,7 @@
 'use client';
 
-import { Center, Checkbox, Flexbox } from '@lobehub/ui';
+import { Center, Checkbox, cssVar, Flexbox, Spin } from '@lobehub/ui';
 import { VirtuosoMasonry } from '@virtuoso.dev/masonry';
-import { cssVar } from 'antd-style';
 import { SearchIcon } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,19 +9,23 @@ import { Virtuoso } from 'react-virtuoso';
 
 import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import AsyncError from '@/components/AsyncError';
-import NeuralNetworkLoading from '@/components/NeuralNetworkLoading';
-import { useClientDataSWR } from '@/libs/swr';
-import { resourceKeys } from '@/libs/swr/keys';
-import { useResourceManagerStore } from '@/routes/(main)/resource/features/store';
-import { getResourceQueryVisibility } from '@/routes/(main)/resource/features/store/selectors';
-import { resourceService } from '@/services/resource';
+import { useResourceManagerStore } from '@/features/ResourceManager/store';
+import {
+  DEFAULT_SEARCH_PAGE_SIZE,
+  type ExplorerSearchParams,
+  explorerSearchResource,
+} from '@/features/ResourceManager/store/projection';
+import {
+  getResourceQueryVisibility,
+  getResourceSourceFilter,
+} from '@/features/ResourceManager/store/selectors';
 import { useGlobalStore } from '@/store/global';
 import {
   DEFAULT_RESOURCE_MANAGER_COLUMN_WIDTHS,
   INITIAL_STATUS,
 } from '@/store/global/initialState';
 import type { AsyncTaskStatus } from '@/types/asyncTask';
-import type { FileListItem } from '@/types/files';
+import { type FileListItem } from '@/types/files';
 
 import { useExplorerSelectionEligibility } from './hooks/useExplorerSelection';
 import FileListItemComponent from './ListView/ListItem';
@@ -32,9 +35,15 @@ import { useMasonryColumnCount } from './useMasonryColumnCount';
 
 const SearchResultsOverlay = memo(() => {
   const { t } = useTranslation('components');
-  const [searchQuery, libraryId, category, viewMode, listVisibility] = useResourceManagerStore(
-    (s) => [s.searchQuery, s.libraryId, s.category, s.viewMode, s.listVisibility],
-  );
+  const [searchQuery, libraryId, category, viewMode, listVisibility, sourceFilter] =
+    useResourceManagerStore((s) => [
+      s.searchQuery,
+      s.libraryId,
+      s.category,
+      s.viewMode,
+      s.listVisibility,
+      getResourceSourceFilter(s),
+    ]);
 
   const [selectedFileIds, setSelectedFileIds] = useState<string[]>([]);
   const { isItemSelectable } = useExplorerSelectionEligibility();
@@ -52,33 +61,40 @@ const SearchResultsOverlay = memo(() => {
   const showUploader = !!activeWorkspaceId && (!!libraryId || listVisibility !== 'private');
   const visibility = getResourceQueryVisibility(libraryId, listVisibility);
 
-  const {
-    data: rawData,
-    isLoading,
-    error,
-    mutate,
-  } = useClientDataSWR(
-    isActive
-      ? resourceKeys.search({
-          category: libraryId ? undefined : category,
-          libraryId,
-          q: searchQuery,
-          visibility,
-        })
-      : null,
-    async ([, params]: [
-      string,
-      { category?: string; libraryId?: string; q: string; visibility?: 'private' | 'public' },
-    ]) => {
-      const response = await resourceService.queryResources({
-        ...params,
-        limit: 50,
-        offset: 0,
-        showFilesInKnowledgeBase: false,
-      } as any);
-      return response.items;
-    },
+  // Search results are a `@lobechat/replica` entry owned by the ResourceManager
+  // store: the head page is persisted, so re-opening a search paints the rows it
+  // had before the request lands. The keyword is part of the query identity, so
+  // the painted rows are only used while they still answer the request on screen.
+  const searchParams = useMemo<ExplorerSearchParams | null>(
+    () =>
+      isActive
+        ? {
+            category: libraryId ? undefined : category,
+            includeContentPreview: viewMode === 'masonry',
+            libraryId,
+            pageSize: DEFAULT_SEARCH_PAGE_SIZE,
+            q: searchQuery!,
+            sourceFilter,
+            visibility,
+          }
+        : null,
+    [isActive, category, libraryId, searchQuery, sourceFilter, viewMode, visibility],
   );
+
+  const { error, revalidate } = useResourceManagerStore((s) => s.useFetchExplorerSearch)(
+    searchParams,
+  );
+  const explorerSearchEntries = useResourceManagerStore((s) => s.explorerSearchEntries);
+
+  // One entry per query: the entry key IS the query identity, so the rows read
+  // here always answer the request on screen.
+  const current = searchParams
+    ? explorerSearchEntries[explorerSearchResource.key(searchParams)]
+    : undefined;
+
+  const rawData = current?.items;
+  const isLoading = !current && !error;
+  const mutate = revalidate;
 
   const data: FileListItem[] | undefined = useMemo(
     () =>
@@ -133,7 +149,7 @@ const SearchResultsOverlay = memo(() => {
     >
       {isLoading ? (
         <Center height="100%">
-          <NeuralNetworkLoading size={48} />
+          <Spin size="large" />
         </Center>
       ) : error && (!data || data.length === 0) ? (
         // A failed search fetch used to fall through to the "no results" state, telling

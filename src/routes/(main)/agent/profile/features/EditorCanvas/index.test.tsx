@@ -128,7 +128,8 @@ vi.mock('@/components/InfoTooltip', () => ({
   ),
 }));
 
-vi.mock('@lobehub/ui/base-ui', () => ({
+vi.mock('@lobehub/ui', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
   toast: {
     error: (...args: unknown[]) => messageError(...args),
   },
@@ -177,10 +178,6 @@ vi.mock('./TypoBar', () => ({
 
 vi.mock('./useSlashItems', () => ({
   useSlashItems: () => [],
-}));
-
-vi.mock('react-i18next', () => ({
-  useTranslation: () => ({ t: (key: string) => key }),
 }));
 
 describe('Agent profile EditorCanvas', () => {
@@ -354,7 +351,7 @@ describe('Agent profile EditorCanvas', () => {
   it('does not bubble mode-switch clicks to the click-to-focus wrapper', () => {
     // The profile page wraps the canvas in a click-to-focus area; a bubbled
     // toggle click would focus the editor and scroll to the caret at the
-    // document end. See LOBE-12593.
+    // document end.
     const onWrapperClick = vi.fn();
     render(
       <div onClick={onWrapperClick}>

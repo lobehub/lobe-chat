@@ -6,6 +6,7 @@ import React, { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useConversationStore } from '@/features/Conversation';
+import ToolAuthAlert from '@/features/Conversation/AgentWelcome/ToolAuthAlert';
 import { contextSelectors } from '@/features/Conversation/store';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import SupervisorAvatar from '@/routes/(main)/group/features/GroupAvatar';
@@ -16,7 +17,6 @@ import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
 import OpeningQuestions from './OpeningQuestions';
-import ToolAuthAlert from './ToolAuthAlert';
 
 const InboxWelcome = memo(() => {
   const { t } = useTranslation(['welcome', 'chat']);

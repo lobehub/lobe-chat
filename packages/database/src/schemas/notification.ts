@@ -1,5 +1,6 @@
+import type { NotificationMetadata } from '@lobechat/types';
 import { sql } from 'drizzle-orm';
-import { boolean, index, pgTable, text, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
+import { boolean, index, jsonb, pgTable, text, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
 
 import { createdAt, timestamptz, updatedAt } from './_helpers';
 import { users } from './user';
@@ -33,6 +34,9 @@ export const notifications = pgTable(
     content: text('content').notNull(),
     /** Optional secondary context shown in inbox surfaces */
     context: text('context'),
+
+    /** Structured extras for inbox rendering, e.g. the triggering user (`actor`) */
+    metadata: jsonb('metadata').$type<NotificationMetadata>(),
 
     /** Idempotency key — same (userId, dedupeKey) pair prevents duplicate notifications */
     dedupeKey: text('dedupe_key'),
@@ -82,8 +86,8 @@ export const notificationDeliveries = pgTable(
       .references(() => notifications.id, { onDelete: 'cascade' })
       .notNull(),
 
-    /** Delivery channel: `inbox` | `email` | `push` */
-    channel: text('channel').$type<'email' | 'inbox' | 'push'>().notNull(),
+    /** Delivery channel: `inbox` | `email` | `push` | `im` (messenger DM) */
+    channel: text('channel').$type<'email' | 'im' | 'inbox' | 'push'>().notNull(),
     /** Lifecycle status: `pending` | `sent` | `delivered` | `failed` */
     status: text('status').$type<'delivered' | 'failed' | 'pending' | 'sent'>().notNull(),
 

@@ -225,7 +225,7 @@ describe('computeChatPricing', () => {
 
     it.each(hostedPricingCases)(
       'applies LobeHub-hosted official pricing for $modelId',
-      ({ expectedCredits, expectedUnits, modelId }) => {
+      ({ expectedCredits, expectedUnits }) => {
         const pricing: Pricing = { units: expectedUnits };
 
         const result = computeChatCost(pricing, usage);
@@ -254,9 +254,9 @@ describe('computeChatPricing', () => {
       expect(pricing).toEqual({
         currency: 'CNY',
         units: [
-          { name: 'textInput_cacheRead', rate: 0.02, strategy: 'fixed', unit: 'millionTokens' },
-          { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
-          { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+          { name: 'textInput_cacheRead', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
+          { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+          { name: 'textOutput', rate: 4.5, strategy: 'fixed', unit: 'millionTokens' },
         ],
       });
     });
@@ -292,8 +292,8 @@ describe('computeChatPricing', () => {
       // Verify cached tokens
       const cached = breakdown.find((item) => item.unit.name === 'textInput_cacheRead');
       expect(cached?.quantity).toBe(253_891);
-      expect(cached?.credits).toBe(158_682); // ceil(253891 * 0.625) = 158682
-      expect(cached?.segments).toEqual([{ quantity: 253_891, rate: 0.625, credits: 158_681.875 }]);
+      expect(cached?.credits).toBe(63_473); // ceil(253891 * 0.25) = 63473
+      expect(cached?.segments).toEqual([{ quantity: 253_891, rate: 0.25, credits: 63_472.75 }]);
 
       // Verify input cache miss tokens
       const input = breakdown.find((item) => item.unit.name === 'textInput');
@@ -308,8 +308,8 @@ describe('computeChatPricing', () => {
       expect(output?.segments).toEqual([{ quantity: 3_063, rate: 15, credits: 45_945 }]);
 
       // Verify totals
-      expect(totalCredits).toBe(215_315); // 158682 + 10688 + 45945 = 215315
-      expect(totalCost).toBeCloseTo(0.215315, 6);
+      expect(totalCredits).toBe(120_106); // 63473 + 10688 + 45945 = 120106
+      expect(totalCost).toBeCloseTo(0.120106, 6);
     });
 
     it('supports multi-modal fixed units for Gemini 2.5 Flash Image Preview', () => {
@@ -455,6 +455,195 @@ describe('computeChatPricing', () => {
       expect(breakdown.find((item) => item.unit.name === 'textOutput')?.credits).toBe(30);
     });
 
+    it('falls Google audio tokens back to text input when no audio unit exists', () => {
+      const pricing: Pricing = {
+        units: [{ name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' }],
+      };
+      const usage: ModelTokensUsage = {
+        inputAudioTokens: 20,
+        inputTextTokens: 80,
+        totalInputTokens: 100,
+        totalTokens: 100,
+      };
+
+      const result = computeChatCost(pricing, usage);
+
+      expect(result?.breakdown.find((item) => item.unit.name === 'textInput')?.quantity).toBe(100);
+      expect(result?.totalCost).toBe(0.000_1);
+    });
+
+    it('removes dedicated audio from aggregate cache-miss input before text billing', () => {
+      const pricing: Pricing = {
+        units: [
+          { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+          { name: 'audioInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        ],
+      };
+      const usage: ModelTokensUsage = {
+        inputAudioTokens: 20,
+        inputCacheMissTokens: 100,
+        inputTextTokens: 80,
+        totalInputTokens: 100,
+        totalTokens: 100,
+      };
+
+      const result = computeChatCost(pricing, usage);
+
+      expect(result?.breakdown.find((item) => item.unit.name === 'textInput')?.quantity).toBe(80);
+      expect(result?.breakdown.find((item) => item.unit.name === 'audioInput')?.quantity).toBe(20);
+      expect(result?.totalCost).toBe(0.000_28);
+    });
+
+    it('does not produce a cost when aggregate cache usage omits the cached audio split', () => {
+      const pricing: Pricing = {
+        units: [
+          { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+          {
+            name: 'textInput_cacheRead',
+            rate: 0.1,
+            strategy: 'fixed',
+            unit: 'millionTokens',
+          },
+          { name: 'audioInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+          {
+            name: 'audioInput_cacheRead',
+            rate: 1,
+            strategy: 'fixed',
+            unit: 'millionTokens',
+          },
+        ],
+      };
+      const usage: ModelTokensUsage = {
+        inputAudioTokens: 80,
+        inputCachedTokens: 40,
+        inputCacheMissTokens: 60,
+        inputTextTokens: 20,
+        totalInputTokens: 100,
+        totalTokens: 100,
+      };
+
+      const result = computeChatCost(pricing, usage);
+
+      expect(result).toBeUndefined();
+    });
+
+    it('continues when the provider explicitly reports zero audio tokens', () => {
+      const pricing: Pricing = {
+        units: [
+          { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+          {
+            name: 'textInput_cacheRead',
+            rate: 0.1,
+            strategy: 'fixed',
+            unit: 'millionTokens',
+          },
+          { name: 'audioInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+          {
+            name: 'audioInput_cacheRead',
+            rate: 1,
+            strategy: 'fixed',
+            unit: 'millionTokens',
+          },
+        ],
+      };
+      const usage: ModelTokensUsage = {
+        inputAudioTokens: 0,
+        inputCachedTokens: 40,
+        inputCacheMissTokens: 60,
+        inputTextTokens: 100,
+        totalInputTokens: 100,
+        totalTokens: 100,
+      };
+
+      const result = computeChatCost(pricing, usage);
+
+      expect(result).toBeDefined();
+      expect(result?.breakdown.find((item) => item.unit.name === 'textInput')?.quantity).toBe(60);
+      expect(
+        result?.breakdown.find((item) => item.unit.name === 'textInput_cacheRead')?.quantity,
+      ).toBe(40);
+      expect(result?.breakdown.find((item) => item.unit.name === 'audioInput')?.quantity).toBe(0);
+    });
+
+    it('continues when the provider explicitly reports zero cached audio tokens', () => {
+      const pricing: Pricing = {
+        units: [
+          { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+          {
+            name: 'textInput_cacheRead',
+            rate: 0.1,
+            strategy: 'fixed',
+            unit: 'millionTokens',
+          },
+          { name: 'audioInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+          {
+            name: 'audioInput_cacheRead',
+            rate: 1,
+            strategy: 'fixed',
+            unit: 'millionTokens',
+          },
+        ],
+      };
+      const usage: ModelTokensUsage = {
+        inputAudioTokens: 20,
+        inputCachedAudioTokens: 0,
+        inputCachedTextTokens: 40,
+        inputCachedTokens: 40,
+        inputCacheMissTokens: 60,
+        inputTextTokens: 80,
+        totalInputTokens: 100,
+        totalTokens: 100,
+      };
+
+      const result = computeChatCost(pricing, usage);
+
+      expect(result).toBeDefined();
+      expect(result?.breakdown.find((item) => item.unit.name === 'textInput')?.quantity).toBe(40);
+      expect(result?.breakdown.find((item) => item.unit.name === 'audioInput')?.quantity).toBe(20);
+      expect(
+        result?.breakdown.find((item) => item.unit.name === 'audioInput_cacheRead')?.quantity,
+      ).toBe(0);
+    });
+
+    it('does not change legacy image/video fallback allocation when adding audio support', () => {
+      const pricing: Pricing = {
+        units: [{ name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' }],
+      };
+      const usage: ModelTokensUsage = {
+        inputImageTokens: 10,
+        inputTextTokens: 80,
+        inputVideoTokens: 10,
+        totalInputTokens: 100,
+        totalTokens: 100,
+      };
+
+      const result = computeChatCost(pricing, usage);
+
+      expect(result?.breakdown.find((item) => item.unit.name === 'textInput')?.quantity).toBe(80);
+    });
+
+    it('does not subtract image/video from aggregate cache misses', () => {
+      const pricing: Pricing = {
+        units: [
+          { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+          { name: 'imageInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+          { name: 'videoInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        ],
+      };
+      const usage: ModelTokensUsage = {
+        inputCacheMissTokens: 100,
+        inputImageTokens: 10,
+        inputTextTokens: 80,
+        inputVideoTokens: 10,
+        totalInputTokens: 100,
+        totalTokens: 100,
+      };
+
+      const result = computeChatCost(pricing, usage);
+
+      expect(result?.breakdown.find((item) => item.unit.name === 'textInput')?.quantity).toBe(100);
+    });
+
     it('charges multimodal input units for custom Gemini Pro pricing', () => {
       const pricing: Pricing = {
         units: [
@@ -524,6 +713,41 @@ describe('computeChatPricing', () => {
       expect(breakdown.find((item) => item.unit.name === 'textInput')?.quantity).toBe(30);
       expect(breakdown.find((item) => item.unit.name === 'videoInput')?.quantity).toBe(10);
       expect(totalCredits).toBe(232);
+    });
+
+    it('bills Gemini Omni video output separately from input and text output', () => {
+      const pricing: Pricing = {
+        units: [
+          { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+          { name: 'imageInput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+          { name: 'videoInput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+          { name: 'textOutput', rate: 9, strategy: 'fixed', unit: 'millionTokens' },
+          { name: 'videoGeneration', rate: 17.5, strategy: 'fixed', unit: 'millionTokens' },
+        ],
+      };
+
+      // A real conversational edit: the source video is billed as input.
+      const usage: ModelTokensUsage = {
+        inputTextTokens: 43,
+        inputVideoTokens: 58_511,
+        outputReasoningTokens: 383,
+        outputTextTokens: 1025,
+        outputVideoTokens: 57_920,
+        totalInputTokens: 58_554,
+        totalOutputTokens: 59_328,
+        totalTokens: 117_882,
+      };
+
+      const result = computeChatCost(pricing, usage);
+
+      expect(result?.issues).toHaveLength(0);
+      const breakdown = result!.breakdown;
+      expect(breakdown.find((item) => item.unit.name === 'textInput')?.quantity).toBe(43);
+      expect(breakdown.find((item) => item.unit.name === 'videoInput')?.quantity).toBe(58_511);
+      expect(breakdown.find((item) => item.unit.name === 'textOutput')?.quantity).toBe(1408);
+      expect(breakdown.find((item) => item.unit.name === 'videoGeneration')?.quantity).toBe(57_920);
+      expect(breakdown.find((item) => item.unit.name === 'imageInput')).toBeUndefined();
+      expect(result?.totalCost).toBe(1.114104);
     });
 
     it('splits cache reads by modality when dedicated modality cache units exist', () => {
@@ -675,8 +899,8 @@ describe('computeChatPricing', () => {
       // Verify cached tokens
       const cached = breakdown.find((item) => item.unit.name === 'textInput_cacheRead');
       expect(cached?.quantity).toBe(257_955);
-      expect(cached?.credits).toBe(161_222); // ceil(257955 * 0.625) = 161222
-      expect(cached?.segments).toEqual([{ quantity: 257_955, rate: 0.625, credits: 161_221.875 }]);
+      expect(cached?.credits).toBe(64_489); // ceil(257955 * 0.25) = 64489
+      expect(cached?.segments).toEqual([{ quantity: 257_955, rate: 0.25, credits: 64_488.75 }]);
 
       // Verify input cache miss tokens
       const input = breakdown.find((item) => item.unit.name === 'textInput');
@@ -691,8 +915,8 @@ describe('computeChatPricing', () => {
       expect(output?.segments).toEqual([{ quantity: 1_744, rate: 15, credits: 26_160 }]);
 
       // Verify totals
-      expect(totalCredits).toBe(199_895); // 161222 + 12513 + 26160 = 199895
-      expect(totalCost).toBeCloseTo(0.199895, 6);
+      expect(totalCredits).toBe(103_162); // 64489 + 12513 + 26160 = 103162
+      expect(totalCost).toBeCloseTo(0.103162, 6);
     });
 
     it('bills tool-use (grounding) tokens at textInput rate when no explicit cache', () => {
@@ -1036,9 +1260,9 @@ describe('computeChatPricing', () => {
   });
 
   describe('Anthropic', () => {
-    it('handles lookup pricing with TTL for Claude Opus 4.1', () => {
+    it('handles lookup pricing with TTL for Claude Opus 4.6', () => {
       const pricing = anthropicChatModels.find(
-        (model: { id: string }) => model.id === 'claude-opus-4-1-20250805',
+        (model: { id: string }) => model.id === 'claude-opus-4-6',
       )?.pricing;
       expect(pricing).toBeDefined();
 
@@ -1052,19 +1276,19 @@ describe('computeChatPricing', () => {
       const result = computeChatCost(pricing, usage, { lookupParams: { ttl: '5m' } });
       expect(result).toBeDefined();
       expect(result?.issues).toHaveLength(0);
-      expect(result?.totalCredits).toBe(58_425);
-      expect(result?.totalCost).toBeCloseTo(0.058425, 10);
+      expect(result?.totalCredits).toBe(19_475);
+      expect(result?.totalCost).toBeCloseTo(0.019475, 10);
 
       const cacheWrite = result?.breakdown.find(
         (item) => item.unit.name === 'textInput_cacheWrite',
       );
       expect(cacheWrite?.lookupKey).toBe('5m');
-      expect(cacheWrite?.credits).toBe(5_625);
+      expect(cacheWrite?.credits).toBe(1_875);
     });
 
     it('handles lookup pricing with missing key and adds issue', () => {
       const pricing = anthropicChatModels.find(
-        (model: { id: string }) => model.id === 'claude-opus-4-1-20250805',
+        (model: { id: string }) => model.id === 'claude-opus-4-6',
       )?.pricing;
       expect(pricing).toBeDefined();
 
@@ -1088,9 +1312,9 @@ describe('computeChatPricing', () => {
       expect(cacheWrite?.credits).toBe(0); // No credits when lookup fails
     });
 
-    it('handles lookup pricing with missing lookup params and adds issue', () => {
+    it('prices a cache write without lookup params at the default TTL', () => {
       const pricing = anthropicChatModels.find(
-        (model: { id: string }) => model.id === 'claude-opus-4-1-20250805',
+        (model: { id: string }) => model.id === 'claude-opus-4-6',
       )?.pricing;
       expect(pricing).toBeDefined();
 
@@ -1100,22 +1324,21 @@ describe('computeChatPricing', () => {
         outputTextTokens: 500,
       };
 
-      // Don't provide lookup params at all
+      // Don't provide lookup params at all: the write is priced at the default 5-minute TTL
       const result = computeChatCost(pricing, usage);
       expect(result).toBeDefined();
-      expect(result?.issues).toHaveLength(1);
-      expect(result?.issues[0].reason).toContain('Missing lookup params');
-      expect(result?.issues[0].reason).toContain('ttl');
+      expect(result?.issues).toHaveLength(0);
 
       const cacheWrite = result?.breakdown.find(
         (item) => item.unit.name === 'textInput_cacheWrite',
       );
-      expect(cacheWrite?.credits).toBe(0); // No credits when lookup params missing
+      expect(cacheWrite?.lookupKey).toBe('5m');
+      expect(cacheWrite?.credits).toBe(1_875);
     });
 
-    it('handles lookup pricing with undefined lookup params and adds issue', () => {
+    it('prices a cache write with a null TTL at the default TTL', () => {
       const pricing = anthropicChatModels.find(
-        (model: { id: string }) => model.id === 'claude-opus-4-1-20250805',
+        (model: { id: string }) => model.id === 'claude-opus-4-6',
       )?.pricing;
       expect(pricing).toBeDefined();
 
@@ -1125,17 +1348,52 @@ describe('computeChatPricing', () => {
         outputTextTokens: 500,
       };
 
-      // Provide null value for TTL (simulating missing/invalid value)
+      // A null TTL also falls back to the default 5-minute price
       const result = computeChatCost(pricing, usage, { lookupParams: { ttl: null as any } });
       expect(result).toBeDefined();
-      expect(result?.issues).toHaveLength(1);
-      expect(result?.issues[0].reason).toContain('Missing lookup params');
-      expect(result?.issues[0].reason).toContain('ttl');
+      expect(result?.issues).toHaveLength(0);
 
       const cacheWrite = result?.breakdown.find(
         (item) => item.unit.name === 'textInput_cacheWrite',
       );
-      expect(cacheWrite?.credits).toBe(0); // No credits when lookup params undefined
+      expect(cacheWrite?.lookupKey).toBe('5m');
+      expect(cacheWrite?.credits).toBe(1_875);
+    });
+
+    describe('Claude Haiku 5.5 prompt-length pricing', () => {
+      const pricing = anthropicChatModels.find(
+        (model: { id: string }) => model.id === 'claude-haiku-5-5',
+      )?.pricing;
+
+      it('bills a prompt of exactly 100K tokens at the base tier', () => {
+        const usage: ModelTokensUsage = {
+          inputCacheMissTokens: 60_000,
+          inputCachedTokens: 30_000,
+          inputWriteCacheTokens: 10_000,
+          outputTextTokens: 2_000,
+          totalInputTokens: 100_000,
+        };
+
+        const result = computeChatCost(pricing, usage);
+        expect(result?.issues).toHaveLength(0);
+        // 60K × $0.10 + 30K × $0.01 + 10K × $0.125 + 2K × $0.50 (per million tokens)
+        expect(result?.totalCredits).toBe(8_550);
+      });
+
+      it('bills every unit at the higher tier once the prompt, cache included, exceeds 100K', () => {
+        const usage: ModelTokensUsage = {
+          inputCacheMissTokens: 60_000,
+          inputCachedTokens: 30_000,
+          inputWriteCacheTokens: 20_000,
+          outputTextTokens: 2_000,
+          totalInputTokens: 110_000,
+        };
+
+        const result = computeChatCost(pricing, usage);
+        expect(result?.issues).toHaveLength(0);
+        // 60K × $0.50 + 30K × $0.05 + 20K × $0.625 + 2K × $2.50 (per million tokens)
+        expect(result?.totalCredits).toBe(49_000);
+      });
     });
   });
 

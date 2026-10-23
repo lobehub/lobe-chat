@@ -27,6 +27,60 @@ describe('getWorkTypeDescriptor', () => {
     expect(descriptor.getOpenTarget(item)).toBeNull();
   });
 
+  describe('file open target', () => {
+    const baseFileItem = {
+      description: '/tmp/deck/slides.pptx',
+      id: 'work-file-1',
+      identifier: 'slides.pptx',
+      resourceId: 'user:topic:/tmp/deck/slides.pptx',
+      title: 'slides.pptx',
+      type: 'file',
+    };
+
+    it('prefers the in-app file preview when the summary metadata carries a fileId', () => {
+      const item = {
+        ...baseFileItem,
+        event: { metadata: { fileId: 'file-1', fileUrl: 'https://cdn.example.com/f/1' } },
+        url: 'https://cdn.example.com/f/1',
+      } as any;
+
+      expect(getWorkTypeDescriptor(item).getOpenTarget(item)).toEqual({
+        fileId: 'file-1',
+        kind: 'filePreview',
+        url: 'https://cdn.example.com/f/1',
+      });
+    });
+
+    it('omits the url fallback when the persisted url is not http(s)', () => {
+      const item = {
+        ...baseFileItem,
+        event: { metadata: { fileId: 'file-1', fileUrl: 'javascript:alert(1)' } },
+        url: null,
+      } as any;
+
+      expect(getWorkTypeDescriptor(item).getOpenTarget(item)).toEqual({
+        fileId: 'file-1',
+        kind: 'filePreview',
+        url: undefined,
+      });
+    });
+
+    it('falls back to the external url for list rows without version metadata', () => {
+      const item = { ...baseFileItem, url: 'https://cdn.example.com/f/1' } as any;
+
+      expect(getWorkTypeDescriptor(item).getOpenTarget(item)).toEqual({
+        kind: 'external',
+        url: 'https://cdn.example.com/f/1',
+      });
+    });
+
+    it('yields no target when neither fileId nor a safe url exists', () => {
+      const item = { ...baseFileItem, url: null } as any;
+
+      expect(getWorkTypeDescriptor(item).getOpenTarget(item)).toBeNull();
+    });
+  });
+
   it('still resolves a known type to its concrete descriptor', () => {
     const item = {
       description: 'Doc body',
@@ -42,6 +96,37 @@ describe('getWorkTypeDescriptor', () => {
       agentDocumentId: undefined,
       documentId: 'doc-1',
       kind: 'document',
+    });
+  });
+
+  describe('canvas open target', () => {
+    const canvasItem = (eventVersion: number, currentVersion: number) =>
+      ({
+        event: { version: eventVersion },
+        id: 'work-canvas-1',
+        resourceId: 'cvs_1',
+        title: 'Report',
+        type: 'canvas',
+        version: { version: currentVersion },
+      }) as any;
+
+    it('follows the latest version when the card is the current version', () => {
+      const item = canvasItem(2, 2);
+
+      expect(getWorkTypeDescriptor(item).getOpenTarget(item)).toEqual({
+        canvasId: 'cvs_1',
+        kind: 'canvas',
+      });
+    });
+
+    it('pins the version when the card shows an older version', () => {
+      const item = canvasItem(1, 2);
+
+      expect(getWorkTypeDescriptor(item).getOpenTarget(item)).toEqual({
+        canvasId: 'cvs_1',
+        kind: 'canvas',
+        version: 1,
+      });
     });
   });
 });

@@ -1,19 +1,33 @@
-import type { TaskDetailData, TaskDetailSubtask } from '@lobechat/types';
-import { toast } from '@lobehub/ui/base-ui';
+import type { TaskDetailActivityAuthor, TaskDetailData, TaskDetailSubtask } from '@lobechat/types';
+import {
+  clearTaskReposSelection,
+  readTaskExecutionConfig,
+  toTaskExecutionConfigPatch,
+} from '@lobechat/types';
+import { toast } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
 
-import { mutate, useClientDataSWR } from '@/libs/swr';
-import { taskKeys } from '@/libs/swr/keys';
+import { createReplicaSlice, recordLens, revalidateReplica } from '@/libs/replica';
 import { taskService } from '@/services/task';
 import { workService } from '@/services/work';
+import { goalGraphResource } from '@/store/goal/projection';
 import type { StoreSetter } from '@/store/types';
+import { useUserStore } from '@/store/user';
+import { userProfileSelectors } from '@/store/user/selectors';
 import { runMutation } from '@/store/utils/runMutation';
 import { saveToast } from '@/store/utils/saveToast';
 import type { SaveStatus } from '@/types/saveState';
 
 import type { TaskStore } from '../../store';
 import { useTaskStore } from '../../store';
+import {
+  appendOptimisticPropertyActivity,
+  buildOptimisticAssignmentActivities,
+  buildOptimisticCommentActivity,
+  buildOptimisticPropertyActivity,
+} from './optimisticActivity';
+import { taskDetailResource } from './projection';
 import type { TaskDetailDispatch } from './reducer';
 import { findSubtaskParentId, taskDetailReducer } from './reducer';
 
@@ -27,6 +41,7 @@ type DeletedTask = NonNullable<Awaited<ReturnType<typeof taskService.delete>>['d
 // - heartbeat config will get a dedicated action once the upstream task scheduler infra is complete
 export interface TaskUpdatePayload {
   assigneeAgentId?: string | null;
+  assigneeUserId?: string | null;
   description?: string;
   editorData?: unknown;
   instruction?: string;
@@ -36,6 +51,26 @@ export interface TaskUpdatePayload {
 }
 
 export interface TaskUpdateOptions {
+  /**
+   * The agent making the change when the task tool runs in the browser
+   * (client-first runtime), so the server attributes the activity to it. No
+   * row is synthesized in that case — the store cannot name the agent — the
+   * refetch shows it.
+   */
+  actorAgentId?: string;
+  /**
+   * Display metadata for the assignee being set, so the activity feed can show
+   * the row immediately instead of after the detail refetch. Supplied by the
+   * picker, which already holds the chosen item — the store deliberately does
+   * not resolve members itself (that source is a business-layer hook).
+   */
+  optimisticAssignee?: TaskDetailActivityAuthor;
+  /**
+   * Replaces the failure toast's Retry when this update is one step of a larger
+   * action (e.g. assign-then-run), so Retry repeats the whole action instead of
+   * only this write.
+   */
+  retry?: () => void;
   /**
    * The mounted editor marks its own autosaves so they do not request an
    * external-content reload. Tool calls and refetches are authoritative by default.
@@ -85,11 +120,24 @@ export const createTaskDetailSlice = (set: Setter, get: () => TaskStore, _api?: 
 export class TaskDetailSliceActionImpl {
   readonly #get: () => TaskStore;
   readonly #set: Setter;
+  readonly #detail;
 
   constructor(set: Setter, get: () => TaskStore, _api?: unknown) {
     void _api;
     this.#set = set;
     this.#get = get;
+    this.#detail = createReplicaSlice(taskDetailResource, {
+      actionPrefix: 'taskDetail',
+      // Writes the entry (and its identifier alias) through
+      // `internal_dispatchTaskDetail`, which also tracks instruction revisions;
+      // the sync then confirms and persists the same value.
+      fetcher: (id) => this.fetchTaskDetail(id),
+      get,
+      merge: (incoming, confirmed) => (isEqual(incoming, confirmed) ? undefined : incoming),
+      set,
+      stateKey: 'taskDetailReplica',
+      view: recordLens<TaskStore, TaskDetailData>('taskDetailMap'),
+    });
   }
 
   // ── Public Actions ──
@@ -104,7 +152,59 @@ export class TaskDetailSliceActionImpl {
       topicId?: string;
     },
   ): Promise<Awaited<ReturnType<typeof taskService.addComment>>> => {
-    const result = await taskService.addComment(taskId, content, opts);
+    // Same treatment as the assignee chip: the row appears on send, not after
+    // the mutation *and* the detail refetch. A comment posted on an agent's
+    // behalf (client-first runtime) is left to the refetch — the store has no
+    // agent identity to attribute it to.
+    const current = this.#get().taskDetailMap[taskId];
+    const userState = useUserStore.getState();
+    const actorId = userProfileSelectors.userId(userState);
+    const optimistic =
+      current && !opts?.authorAgentId
+        ? buildOptimisticCommentActivity({
+            actor: actorId
+              ? {
+                  avatar: userProfileSelectors.userAvatar(userState) || null,
+                  id: actorId,
+                  name: userProfileSelectors.displayUserName(userState) || null,
+                  type: 'user',
+                }
+              : undefined,
+            content,
+            editorData: opts?.editorData,
+            now: new Date().toISOString(),
+            topicId: opts?.topicId,
+          })
+        : undefined;
+    if (optimistic) {
+      this.internal_dispatchTaskDetail({
+        id: taskId,
+        type: 'updateTaskDetail',
+        value: { activities: [...(current?.activities ?? []), optimistic] },
+      });
+    }
+
+    let result: Awaited<ReturnType<typeof taskService.addComment>>;
+    try {
+      result = await taskService.addComment(taskId, content, opts);
+    } catch (error) {
+      // The send failed, so the row must go even if the network is down and
+      // the server-truth refetch below cannot run — otherwise an unsaved
+      // comment keeps looking posted until something else refreshes.
+      if (optimistic) {
+        const latest = this.#get().taskDetailMap[taskId];
+        this.internal_dispatchTaskDetail({
+          id: taskId,
+          type: 'updateTaskDetail',
+          value: {
+            activities: (latest?.activities ?? []).filter((a) => a.id !== optimistic.id),
+          },
+        });
+        await this.internal_refreshTaskDetail(taskId).catch(() => {});
+      }
+      throw error;
+    }
+    // Post-success refresh failing is not the comment failing: it is saved.
     await this.internal_refreshTaskDetail(taskId);
     return result;
   };
@@ -177,19 +277,49 @@ export class TaskDetailSliceActionImpl {
       );
     }
 
+    // Reconcile at the server-read boundary, even when the live chat panel has
+    // unmounted. A missing running marker alone is not proof of completion.
+    const terminalActivities = detail.activities?.filter(
+      (activity) =>
+        activity.type === 'topic' &&
+        activity.id &&
+        activity.operationId &&
+        ['completed', 'failed', 'canceled', 'timeout'].includes(activity.status ?? '') &&
+        activity.runningOperation?.operationId !== activity.operationId,
+    );
+    if (terminalActivities?.length) {
+      const { getChatStoreState } = await import('@/store/chat');
+      for (const activity of terminalActivities) {
+        getChatStoreState().reconcileServerOperation({
+          operationId: activity.operationId!,
+          status:
+            activity.status === 'completed'
+              ? 'completed'
+              : activity.status === 'canceled'
+                ? 'cancelled'
+                : 'failed',
+          topicId: activity.id!,
+        });
+      }
+    }
+
     return detail;
   };
 
   createTask = async (params: {
     assigneeAgentId?: string;
+    assigneeUserId?: string;
     automationMode?: 'heartbeat' | 'schedule';
+    config?: Record<string, unknown>;
     createdByAgentId?: string;
     description?: string;
     editorData?: unknown;
+    /** Bind a goal entity (`goals` row) to the created task. */
     instruction: string;
     name?: string;
     parentTaskId?: string;
     priority?: number;
+    projectId?: string;
     schedulePattern?: string;
     scheduleTimezone?: string;
     visibility?: 'private' | 'public';
@@ -230,13 +360,9 @@ export class TaskDetailSliceActionImpl {
       }
       return result.data ?? null;
     } catch (error) {
-      if (snapshot) {
-        this.internal_dispatchTaskDetail({
-          id: identifier,
-          type: 'setTaskDetail',
-          value: snapshot,
-        });
-      }
+      // The optimistic delete also dropped the persisted row; restore the
+      // confirmed snapshot through `replace` so it is persisted again.
+      if (snapshot) this.#detail.replace(identifier, snapshot);
       throw error;
     } finally {
       this.#set({ isDeletingTask: false }, false, 'deleteTask/end');
@@ -264,6 +390,7 @@ export class TaskDetailSliceActionImpl {
       {
         activeTaskId: taskId,
         activeTopicDrawerAgentId: undefined,
+        activeTopicDrawerFocusRequest: undefined,
         activeTopicDrawerTitle: undefined,
         activeTopicDrawerTopicId: undefined,
       },
@@ -275,13 +402,23 @@ export class TaskDetailSliceActionImpl {
   /**
    * `topic` carries the agent and title for a run opened outside a task detail
    * (the home inbox lists plain topics too) — the drawer falls back to it when
-   * no task detail is loaded to read them from.
+   * no task detail is loaded to read them from. `autoFocus` marks openings made
+   * with conversational intent (the brief's "Continue chat"); each one bumps
+   * the focus request so the body expands and focuses its reply composer, even
+   * when the drawer already shows this topic.
    */
-  openTopicDrawer = (topicId: string, topic?: { agentId?: string; title?: string }): void => {
-    if (this.#get().activeTopicDrawerTopicId === topicId) return;
+  openTopicDrawer = (
+    topicId: string,
+    topic?: { agentId?: string; autoFocus?: boolean; title?: string },
+  ): void => {
+    const current = this.#get();
+    if (current.activeTopicDrawerTopicId === topicId && !topic?.autoFocus) return;
     this.#set(
       {
         activeTopicDrawerAgentId: topic?.agentId,
+        activeTopicDrawerFocusRequest: topic?.autoFocus
+          ? (current.activeTopicDrawerFocusRequest ?? 0) + 1
+          : undefined,
         activeTopicDrawerTitle: topic?.title,
         activeTopicDrawerTopicId: topicId,
       },
@@ -295,6 +432,7 @@ export class TaskDetailSliceActionImpl {
     this.#set(
       {
         activeTopicDrawerAgentId: undefined,
+        activeTopicDrawerFocusRequest: undefined,
         activeTopicDrawerTitle: undefined,
         activeTopicDrawerTopicId: undefined,
       },
@@ -347,7 +485,7 @@ export class TaskDetailSliceActionImpl {
     data: TaskUpdatePayload,
     options?: TaskUpdateOptions,
   ): Promise<void> => {
-    const { assigneeAgentId, ...rest } = data;
+    const { assigneeAgentId, assigneeUserId, ...rest } = data;
     const optimisticRest = { ...rest };
     delete optimisticRest.parentTaskId;
     // editTask may send only instruction while the detail store still holds old rich editorData.
@@ -355,10 +493,72 @@ export class TaskDetailSliceActionImpl {
     if (optimisticRest.instruction !== undefined && optimisticRest.editorData === undefined) {
       optimisticRest.editorData = null;
     }
+    // The assignee chip flips on this dispatch; the feed row it explains must
+    // land in the same beat, not after the mutation *and* the detail refetch.
+    const current = this.#get().taskDetailMap[id];
+    const userState = useUserStore.getState();
+    const actorId = options?.actorAgentId ? undefined : userProfileSelectors.userId(userState);
+    const optimisticActivities = current
+      ? buildOptimisticAssignmentActivities({
+          actor: actorId
+            ? {
+                avatar: userProfileSelectors.userAvatar(userState) || null,
+                id: actorId,
+                name: userProfileSelectors.displayUserName(userState) || null,
+                type: 'user',
+              }
+            : undefined,
+          assigneeAgentId,
+          assigneeUserId,
+          current: { agentId: current.agentId, userId: current.userId },
+          now: new Date().toISOString(),
+          target: options?.optimisticAssignee,
+        })
+      : [];
+    // Priority rides the same dispatch as the assignee rows.
+    const priorityRow =
+      current && rest.priority !== undefined && rest.priority !== (current.priority ?? null)
+        ? buildOptimisticPropertyActivity({
+            actor: actorId
+              ? {
+                  avatar: userProfileSelectors.userAvatar(userState) || null,
+                  id: actorId,
+                  name: userProfileSelectors.displayUserName(userState) || null,
+                  type: 'user',
+                }
+              : undefined,
+            change: { field: 'priority', from: current.priority ?? null, to: rest.priority },
+            now: new Date().toISOString(),
+          })
+        : undefined;
+    const activities = appendOptimisticPropertyActivity(
+      [...(current?.activities ?? []), ...optimisticActivities],
+      priorityRow,
+    );
+    // Mirror the server's reassign rule (`TaskModel.updateWithLog`) so the
+    // run-location cluster stops showing the previous agent's repos the moment
+    // the assignee flips, instead of one refetch later: `repos` belong to the
+    // assignee's provider env, and the run those repos imply is the sandbox
+    // directory the new agent may not be able to open. Same helper as the
+    // server, so the two cannot drift.
+    const reassignedAgent =
+      assigneeAgentId !== undefined && !!current?.agentId && assigneeAgentId !== current.agentId;
+    const currentExecution = reassignedAgent ? readTaskExecutionConfig(current?.config) : undefined;
+    const clearedExecution = reassignedAgent
+      ? clearTaskReposSelection(currentExecution)
+      : undefined;
+    const clearedConfig =
+      reassignedAgent && clearedExecution !== currentExecution
+        ? { ...current?.config, execution: toTaskExecutionConfigPatch(clearedExecution) }
+        : undefined;
     const optimistic: Partial<TaskDetailData> = {
       ...optimisticRest,
       ...(assigneeAgentId !== undefined ? { agentId: assigneeAgentId } : {}),
+      ...(assigneeUserId !== undefined ? { userId: assigneeUserId } : {}),
+      ...(clearedConfig ? { config: clearedConfig } : {}),
+      ...(optimisticActivities.length > 0 || priorityRow ? { activities } : {}),
     };
+    const payload = options?.actorAgentId ? { ...data, actorAgentId: options.actorAgentId } : data;
 
     // Snapshot every map entry the optimistic patch will touch BEFORE dispatch.
     // activeTaskId can change mid-flight, and the patch can mutate a parent's
@@ -381,7 +581,7 @@ export class TaskDetailSliceActionImpl {
     );
 
     await runMutation(this.#set, this.#get, {
-      mutate: () => taskService.update(id, data),
+      mutate: () => taskService.update(id, payload),
       name: 'updateTask',
       // Rollback is a server-truth refetch (not a local snapshot), so the
       // optimistic dispatch above is reconciled from the source of record.
@@ -392,18 +592,38 @@ export class TaskDetailSliceActionImpl {
          * content. Treating Retry as another editor echo would update only the
          * Store and server, leaving the mounted editor on the rollback snapshot.
          */
-        const retry = () =>
-          void this.#get().updateTask(id, data, {
-            ...options,
-            source: 'external',
-          });
+        const retry =
+          options?.retry ??
+          (() =>
+            void this.#get().updateTask(id, data, {
+              ...options,
+              source: 'external',
+            }));
         saveToast(error, { retry });
       },
       setStatus: (status) => this.#get().internal_setTaskSaveStatus(id, status),
     });
 
-    if (assigneeAgentId !== undefined || data.parentTaskId !== undefined) {
-      await Promise.all([this.#get().refreshTaskList(), refreshPatchedTargets()]).catch(() => {});
+    // Saved: the edited detail is now the server's value, so a reload must
+    // paint it rather than the pre-edit snapshot.
+    this.internal_persistTaskDetail(id);
+    if (patchedParentId) this.internal_persistTaskDetail(patchedParentId);
+
+    if (
+      assigneeAgentId !== undefined ||
+      assigneeUserId !== undefined ||
+      data.parentTaskId !== undefined ||
+      data.priority !== undefined
+    ) {
+      await Promise.all([
+        this.#get().refreshTaskList(),
+        refreshPatchedTargets(),
+        // A goal page names each task's executor from its own graph snapshot,
+        // and only polls while the goal is advancing — a paused or finished
+        // goal would keep showing the old assignee. The task does not know its
+        // goal, so revalidate every goal graph; only mounted ones refetch.
+        assigneeAgentId !== undefined ? revalidateReplica(goalGraphResource) : undefined,
+      ]).catch(() => {});
     }
   };
 
@@ -417,11 +637,17 @@ export class TaskDetailSliceActionImpl {
       return hasInFlightActivity(detail);
     });
 
-    return useClientDataSWR(
-      taskId ? taskKeys.detail(taskId) : null,
-      async ([, id]: [string, string]) => this.fetchTaskDetail(id),
-      { refreshInterval: shouldPoll ? TASK_DETAIL_POLL_INTERVAL : 0 },
-    );
+    const sync = this.#detail.useSync(taskId, {
+      // A resolved not-found is definitive (the task was deleted elsewhere):
+      // drop the cached copy so the page can settle on its 404. Transient
+      // failures keep the cached detail on screen.
+      onError: (error) => {
+        if (taskId && (error as { code?: string } | undefined)?.code === 'TASK_NOT_FOUND')
+          this.internal_dispatchTaskDetail({ id: taskId, type: 'deleteTaskDetail' });
+      },
+      refreshInterval: shouldPoll ? TASK_DETAIL_POLL_INTERVAL : 0,
+    });
+    return { ...sync, mutate: sync.revalidate };
   };
 
   // ── Internal Actions ──
@@ -437,6 +663,11 @@ export class TaskDetailSliceActionImpl {
     );
   };
 
+  /**
+   * Apply a detail change (subtasks are patched inside their parent's entry
+   * too) and write every changed entry through the replica. In memory only:
+   * the confirmed server value is persisted by the detail sync.
+   */
   internal_dispatchTaskDetail = (
     payload: TaskDetailDispatch,
     options?: { instructionSource?: 'external' },
@@ -451,18 +682,18 @@ export class TaskDetailSliceActionImpl {
       payload.type === 'deleteTaskDetail' &&
       state.taskInstructionRevisionMap[payload.id] !== undefined;
 
-    if (
-      isEqual(nextMap, currentMap) &&
-      !shouldIncrementInstructionRevision &&
-      !shouldDeleteInstructionRevision
-    ) {
-      return;
+    if (payload.type === 'deleteTaskDetail') {
+      if (currentMap[payload.id]) this.#detail.remove(payload.id);
+    } else {
+      for (const id of new Set([...Object.keys(currentMap), ...Object.keys(nextMap)])) {
+        if (currentMap[id] === nextMap[id] || isEqual(currentMap[id], nextMap[id])) continue;
+        this.#detail.update(id, () => nextMap[id], { persist: false });
+      }
     }
 
     if (shouldIncrementInstructionRevision) {
       this.#set(
         {
-          taskDetailMap: nextMap,
           taskInstructionRevisionMap: {
             ...state.taskInstructionRevisionMap,
             [payload.id]: (state.taskInstructionRevisionMap[payload.id] ?? 0) + 1,
@@ -471,25 +702,27 @@ export class TaskDetailSliceActionImpl {
         false,
         `internal_dispatchTaskDetail/${payload.type}`,
       );
-      return;
-    }
-
-    if (shouldDeleteInstructionRevision) {
+    } else if (shouldDeleteInstructionRevision) {
       const taskInstructionRevisionMap = { ...state.taskInstructionRevisionMap };
       delete taskInstructionRevisionMap[payload.id];
       this.#set(
-        { taskDetailMap: nextMap, taskInstructionRevisionMap },
+        { taskInstructionRevisionMap },
         false,
         `internal_dispatchTaskDetail/${payload.type}`,
       );
-      return;
     }
+  };
 
-    this.#set({ taskDetailMap: nextMap }, false, `internal_dispatchTaskDetail/${payload.type}`);
+  /**
+   * Persist a task's detail as it is shown now — called once a save settles
+   * (committed, or rolled back), since edits stay in memory while in flight.
+   */
+  internal_persistTaskDetail = (id: string): void => {
+    this.#detail.update(id, (detail) => detail && { ...detail });
   };
 
   internal_refreshTaskDetail = async (id: string): Promise<void> => {
-    await mutate(taskKeys.detail(id));
+    await this.#detail.revalidate(id);
   };
 }
 

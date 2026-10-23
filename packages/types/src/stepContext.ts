@@ -232,6 +232,12 @@ export interface RuntimeInitialContext {
    */
   activeTopicDocument?: RuntimeActiveTopicDocumentContext;
   /**
+   * Goal progress overview, built from the goal detail page the user is
+   * currently viewing. Injected into the last user message so the LLM can
+   * answer progress questions about the goal without extra tool calls.
+   */
+  goalOverview?: InitialGoalOverviewContext;
+  /**
    * Ad-hoc tool manifests injected by callers for the current request.
    * Merged into the tool resolution output without passing through ToolsEngine.
    * Deduplication: manifests whose identifier already appears in enabledToolIds are skipped.
@@ -248,6 +254,11 @@ export interface RuntimeInitialContext {
    * Contains markdown content and metadata captured at operation start
    */
   pageEditor?: InitialPageEditorContext;
+  /**
+   * Live project context (members, knowledge, open tasks) for a run inside a
+   * project, rebuilt each turn so renames and membership changes never go stale.
+   */
+  projectContext?: InitialProjectContext;
   /**
    * Skills explicitly selected by the user for the current request
    * This is ephemeral runtime context and is not persisted to chat history
@@ -266,7 +277,41 @@ export interface RuntimeInitialContext {
   taskManager?: InitialTaskManagerContext;
 }
 
+export interface InitialProjectContext {
+  /** Prebuilt prompt describing the project the run belongs to. */
+  contextPrompt: string;
+}
+
 export interface InitialTaskManagerContext {
   /** Prebuilt prompt describing the tasks shown on the page. */
   contextPrompt: string;
+}
+
+export interface GoalOverviewTaskItem {
+  /** 1-based attempt count so far, when known. */
+  attempts?: number;
+  /** 1-based Task number as shown in the UI (#1, #2 …). */
+  seq?: number;
+  status: string;
+  title: string;
+}
+
+export interface GoalOverviewDecision {
+  question: string;
+}
+
+/**
+ * Structured snapshot of the goal the user is viewing. Producers (goal page /
+ * server pipeline) pass the data; the context-engine injector owns turning it
+ * into prompt text, so wording changes never touch the transports.
+ */
+export interface InitialGoalOverviewContext {
+  findings: string[];
+  goal: {
+    requirement?: string | null;
+    status: string;
+    title: string;
+  };
+  pendingDecisions: GoalOverviewDecision[];
+  tasks: GoalOverviewTaskItem[];
 }

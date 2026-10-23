@@ -2,8 +2,7 @@
  * @vitest-environment happy-dom
  */
 import { act, render, renderHook, screen } from '@testing-library/react';
-import type { ReactNode } from 'react';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { useMenu } from './useMenu';
 
@@ -16,9 +15,28 @@ const autoRenameTopicTitleMock = vi.hoisted(() => vi.fn());
 const removeTopicMock = vi.hoisted(() => vi.fn());
 const updateTopicTitleMock = vi.hoisted(() => vi.fn());
 const useLocationMock = vi.hoisted(() => vi.fn());
+const labState = vi.hoisted(() => ({ enableTopicBugReport: false }));
+const bugReportTargetMock = vi.hoisted(() => vi.fn());
 
 vi.mock('@/business/client/hooks/useAuthorInfo', () => ({
   useAuthorInfo: () => ({ fullName: 'Miao Miao' }),
+}));
+
+vi.mock('@/business/client/hooks/useTopicBugReportMenuItem', () => ({
+  useTopicBugReportMenuItem: (target: unknown) => {
+    bugReportTargetMock(target);
+    return { key: 'reportProblem', label: 'topic:actions.reportProblem' };
+  },
+}));
+
+vi.mock('@/store/user', () => ({
+  useUserStore: (selector: (state: typeof labState) => unknown) => selector(labState),
+}));
+
+vi.mock('@/store/user/selectors', () => ({
+  labPreferSelectors: {
+    enableTopicBugReport: (state: typeof labState) => state.enableTopicBugReport,
+  },
 }));
 
 vi.mock('@/components/RenameModal', () => ({
@@ -29,21 +47,24 @@ vi.mock('@/const/version', () => ({
   isDesktop: true,
 }));
 
-vi.mock('@lobehub/ui', () => ({
-  Block: ({ children }: { children?: ReactNode }) => <div>{children}</div>,
-  Flexbox: ({ children }: { children?: ReactNode }) => <div>{children}</div>,
-  Icon: () => null,
-  Text: ({ children }: { children?: ReactNode }) => <span>{children}</span>,
+vi.mock('@/features/Conversation/useAgentContext', () => ({
+  useAgentContext: () => ({ agentId: 'agent-1', topicId: 'topic-1' }),
 }));
 
-vi.mock('antd', () => ({
-  App: {
-    useApp: () => ({
-      message: { success: messageSuccessMock },
-      modal: { confirm: modalConfirmMock },
-    }),
-  },
-}));
+vi.mock('antd', async (importOriginal) => {
+  const actual = await importOriginal<{ App: Record<string, unknown> } & Record<string, unknown>>();
+
+  return {
+    ...actual,
+    App: {
+      ...actual.App,
+      useApp: () => ({
+        message: { success: messageSuccessMock },
+        modal: { confirm: modalConfirmMock },
+      }),
+    },
+  };
+});
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -58,8 +79,8 @@ vi.mock('react-router', () => ({
 
 vi.mock('@/store/chat/selectors', () => ({
   topicSelectors: {
-    currentActiveTopic: (state: Record<string, unknown>) => state.activeTopic,
-    currentTopicWorkingDirectory: (state: Record<string, unknown>) => state.workingDirectory,
+    getTopicById: (id: string) => (state: { topics: Record<string, unknown> }) => state.topics[id],
+    getTopicWorkingDirectory: () => (state: Record<string, unknown>) => state.workingDirectory,
   },
 }));
 
@@ -67,12 +88,19 @@ vi.mock('@/store/chat', () => ({
   useChatStore: (selector: (state: Record<string, unknown>) => unknown) =>
     selector({
       activeAgentId: 'agent-1',
-      activeTopic: {
-        favorite: false,
-        id: 'topic-1',
-        title: 'Topic 1',
-        updatedAt: '2026-05-27T00:15:00.000Z',
-        userId: 'user-1',
+      activeTopicId: 'topic-other-pane',
+      topics: {
+        'topic-1': {
+          favorite: false,
+          id: 'topic-1',
+          title: 'Topic 1',
+          updatedAt: '2026-05-27T00:15:00.000Z',
+          userId: 'user-1',
+        },
+        'topic-other-pane': {
+          id: 'topic-other-pane',
+          title: 'Other pane topic',
+        },
       },
       autoRenameTopicTitle: autoRenameTopicTitleMock,
       favoriteTopic: favoriteTopicMock,
@@ -106,6 +134,33 @@ const isActionItem = (
 } => !!item && typeof item === 'object' && 'key' in item;
 
 describe('Conversation header action menu', () => {
+  afterEach(() => {
+    labState.enableTopicBugReport = false;
+    vi.restoreAllMocks();
+    Reflect.deleteProperty(document, 'execCommand');
+  });
+
+  it('copies the displayed topic ID without the Clipboard API', async () => {
+    useLocationMock.mockReturnValue({ pathname: '/agent/agent-1' });
+    vi.spyOn(navigator, 'clipboard', 'get').mockReturnValue(undefined as never);
+    let copiedText: string | undefined;
+    const copy = vi.fn(() => {
+      copiedText = (document.activeElement as HTMLTextAreaElement).value;
+      return true;
+    });
+    Object.defineProperty(document, 'execCommand', { configurable: true, value: copy });
+    const { result } = renderHook(() => useMenu());
+    const item = result.current
+      .menuItems()
+      .find((item) => isActionItem(item) && item.key === 'copySessionId');
+    if (!isActionItem(item)) throw new Error('Expected copy action');
+
+    await item.onClick?.();
+
+    expect(copy).toHaveBeenCalledWith('copy');
+    expect(copiedText).toBe('topic-1');
+    expect(document.querySelector('textarea')).toBeNull();
+  });
   it('includes the desktop popup-window action for the active topic', () => {
     useLocationMock.mockReturnValue({ pathname: '/agent/agent-1' });
 
@@ -156,5 +211,24 @@ describe('Conversation header action menu', () => {
 
     expect(screen.getByText('topic:info.title')).toBeInTheDocument();
     expect(screen.getByText(/Miao Miao.*topic:info.updatedAt/)).toBeInTheDocument();
+  });
+
+  it('offers the problem report only when its lab is on', () => {
+    useLocationMock.mockReturnValue({ pathname: '/agent/agent-1' });
+    const findReportItem = (items: unknown[]) =>
+      items.find((item) => isActionItem(item) && item.key === 'reportProblem');
+
+    const { rerender, result } = renderHook(() => useMenu());
+    expect(findReportItem(result.current.menuItems())).toBeUndefined();
+
+    labState.enableTopicBugReport = true;
+    rerender();
+
+    expect(findReportItem(result.current.menuItems())).toBeDefined();
+    expect(bugReportTargetMock).toHaveBeenLastCalledWith({
+      agentId: 'agent-1',
+      threadId: undefined,
+      topicId: 'topic-1',
+    });
   });
 });

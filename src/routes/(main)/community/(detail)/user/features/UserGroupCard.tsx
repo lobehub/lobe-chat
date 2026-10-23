@@ -3,6 +3,8 @@
 import {
   Avatar,
   Block,
+  createStaticStyles,
+  cx,
   DropdownMenu,
   Flexbox,
   Icon,
@@ -13,7 +15,6 @@ import {
   Tooltip,
   TooltipGroup,
 } from '@lobehub/ui';
-import { createStaticStyles, cx } from 'antd-style';
 import {
   AlertTriangle,
   ClockIcon,

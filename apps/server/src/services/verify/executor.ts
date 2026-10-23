@@ -3,12 +3,20 @@ import { randomUUID } from 'node:crypto';
 import { TRACING_SCENARIOS } from '@lobechat/const';
 import type { TracingOptions } from '@lobechat/llm-generation-tracing';
 import { getModelPropertyWithFallback } from '@lobechat/model-runtime';
+import {
+  BATCH_VERDICT_JSON_SCHEMA,
+  chainVerifyJudge,
+  type JudgeEvidence,
+  SINGLE_VERDICT_JSON_SCHEMA,
+  VERIFY_JUDGE_PROMPT_VERSION,
+} from '@lobechat/prompts';
 import type {
   ToulminVerdict,
   VerifyCheckItem,
   VerifyCheckResultStatus,
   VerifyVerdict,
 } from '@lobechat/types';
+import { RequestTrigger } from '@lobechat/types';
 import debug from 'debug';
 
 import { AiModelModel } from '@/database/models/aiModel';
@@ -21,18 +29,14 @@ import type { LobeChatDatabase } from '@/database/type';
 import { AiGenerationService } from '@/server/services/aiGeneration';
 import { FileService } from '@/server/services/file';
 
-import { coverageGaps, readRequiredEvidence } from './evidenceCoverage';
+import { settledCarriedItemIds } from './carryForward';
+import { runEvidenceGaps } from './evidenceCoverage';
 import { planEvidenceVerification } from './evidencePlanner';
-import { buildJudgePrompt, type JudgeEvidence, VERIFY_JUDGE_PROMPT_VERSION } from './prompts';
+import { GIF_FRAME_SHEET_NOTE, isGifFrameSheet, resolveModelReadableFrameUrl } from './modelFrames';
 import { planItemToPendingResult } from './resultSnapshot';
-import {
-  BATCH_VERDICT_JSON_SCHEMA,
-  BatchVerdictSchema,
-  SINGLE_VERDICT_JSON_SCHEMA,
-  type SingleVerdict,
-  SingleVerdictSchema,
-} from './schema';
+import { BatchVerdictSchema, type SingleVerdict, SingleVerdictSchema } from './schema';
 import { VerifyStatusService } from './statusService';
+import { describeThrownError } from './verifierError';
 
 const log = debug('lobe-server:verify-executor');
 
@@ -114,6 +118,8 @@ export class VerifyExecutorService {
    * body lives in its linked document (the single source of truth).
    */
   private async resolveInstruction(item: VerifyCheckItem): Promise<string | undefined> {
+    if (item.definition || item.resourceSnapshot)
+      return JSON.stringify({ definition: item.definition, resources: item.resourceSnapshot });
     if (!item.documentId) return undefined;
     const doc = await this.documentModel.findById(item.documentId);
     return doc?.content ?? undefined;
@@ -137,13 +143,13 @@ export class VerifyExecutorService {
     }
 
     const verifyRunId = run.id;
-    const items = run.plan as VerifyCheckItem[];
+    const plan = run.plan as VerifyCheckItem[];
 
     // Idempotently create the pending result rows (skip ones already present —
     // an item may already have a row from evidence uploaded mid-run).
     const existing = await this.resultModel.listByRun(verifyRunId);
     const existingIds = new Set(existing.map((r) => r.checkItemId));
-    const toCreate = items
+    const toCreate = plan
       .filter((i) => !existingIds.has(i.id))
       .map((item) => planItemToPendingResult(verifyRunId, params.operationId, item));
     if (toCreate.length > 0) await this.resultModel.createMany(toCreate);
@@ -152,7 +158,24 @@ export class VerifyExecutorService {
 
     // Load run-captured evidence once, grouped by plan item — feeds both the
     // structural gate and the LLM judge.
-    const evidenceByItem = await this.loadEvidence(verifyRunId);
+    const evidenceRows = await this.evidenceModel.listByRun(verifyRunId);
+    const evidenceByItem = await this.loadEvidence(evidenceRows);
+
+    // A repair round carries the checks it was not asked to fix (see
+    // carryPassedResultsForward). Those keep their copied verdict; one the
+    // builder evidenced again is judged again on old and new evidence together.
+    const { reopened, settled } = settledCarriedItemIds(existing, evidenceRows);
+    for (const checkItemId of reopened) {
+      const result = existing.find((row) => row.checkItemId === checkItemId);
+      const { carriedFrom, ...metadata } = (result?.metadata ?? {}) as Record<string, unknown>;
+      await this.resultModel.updateByCheckItem(verifyRunId, checkItemId, {
+        completedAt: null,
+        metadata: { ...metadata, reopenedFrom: carriedFrom },
+        status: 'pending',
+        verdict: null,
+      });
+    }
+    const items = plan.filter((item) => !settled.has(item.id));
 
     // Structural gate (server, no LLM): an evidence-driven item missing any of
     // its declared evidence types is marked uncertain up front and excluded from
@@ -203,17 +226,22 @@ export class VerifyExecutorService {
     await this.statusService.recompute(params.operationId);
   }
 
-  /** Load a run's evidence rows grouped by the plan item id they back. */
-  private async loadEvidence(verifyRunId: string): Promise<EvidenceByItem> {
-    const rows = await this.evidenceModel.listByRun(verifyRunId);
+  /** Group a run's evidence rows by the plan item id they back. */
+  private async loadEvidence(
+    rows: Awaited<ReturnType<VerifyEvidenceModel['listByRun']>>,
+  ): Promise<EvidenceByItem> {
+    const documentIds = [
+      ...new Set(rows.flatMap((row) => (row.documentId ? [row.documentId] : []))),
+    ];
+    const documents = await this.documentModel.findByIds(documentIds);
+    const documentContent = new Map(documents.map((document) => [document.id, document.content]));
     const byItem: EvidenceByItem = new Map();
     for (const row of rows) {
       const list = byItem.get(row.checkItemId) ?? [];
-      // Keep `fileId` so the planner can route file-only text to an agent and
-      // agent verifiers can attach the actual artifact.
       list.push({
-        content: row.content,
+        content: row.documentId ? documentContent.get(row.documentId) : row.content,
         description: row.description,
+        documentId: row.documentId,
         fileId: row.fileId,
         type: row.type,
       });
@@ -228,9 +256,13 @@ export class VerifyExecutorService {
         if (!item.fileId || (item.type !== 'screenshot' && item.type !== 'gif')) return item;
         const file = await this.fileModel.findById(item.fileId);
         if (!file) return item;
+        const accessUrl = await resolveModelReadableFrameUrl(this.fileService, file);
         return {
           ...item,
-          accessUrl: await this.fileService.getFileAccessUrl({ id: file.id, url: file.url }),
+          accessUrl,
+          description: isGifFrameSheet(item.type, accessUrl)
+            ? [item.description, GIF_FRAME_SHEET_NOTE].filter(Boolean).join(' ')
+            : item.description,
         };
       }),
     );
@@ -261,13 +293,7 @@ export class VerifyExecutorService {
   ): Promise<Set<string>> {
     const gapIds = new Set<string>();
     for (const item of items) {
-      // Deliverable/task-artifact evidence is resolved by the verifier agent
-      // from the operation's associated documents/files. Only run evidence is
-      // expected to have been explicitly captured into verify_evidence rows.
-      const required = readRequiredEvidence(item.verifierConfig)?.filter(
-        (spec) => !spec.scope || spec.scope === 'run_evidence',
-      );
-      const gaps = coverageGaps(required, evidenceByItem.get(item.id) ?? []);
+      const gaps = runEvidenceGaps(item.verifierConfig, evidenceByItem.get(item.id) ?? []);
       if (gaps.length === 0) continue;
 
       gapIds.add(item.id);
@@ -276,7 +302,11 @@ export class VerifyExecutorService {
         completedAt: new Date(),
         confidence: 0,
         status: 'failed',
-        suggestion: `Capture and upload the missing evidence (${missing}) via \`lh verify upload-evidence\`.`,
+        // The repair that acts on this suggestion runs as a new operation with a
+        // round of its own, so the command targets the caller's operation, not
+        // this run: naming this (settled) run sent every repair's evidence one
+        // round behind the round its gate checks.
+        suggestion: `Capture and upload the missing evidence (${missing}) to your current run via \`lh acceptance run result submit --operation "$LOBEHUB_OPERATION_ID" --item ${item.id} --type ${gaps.length === 1 ? gaps[0] : `<${gaps.join('|')}>`} --file <path>${gaps.includes('video') ? ' --chapters <file>' : ''}\`.`,
         toulmin: { limitation: `Required evidence not provided: ${missing}.` },
         verdict: 'uncertain',
       });
@@ -336,7 +366,7 @@ export class VerifyExecutorService {
       await this.markUnfinishedErrored(
         verifyRunId,
         items,
-        `LLM judge failed: ${error instanceof Error ? error.message : String(error)}`,
+        `LLM judge failed: ${describeThrownError(error)}`,
       );
     }
   }
@@ -430,7 +460,7 @@ export class VerifyExecutorService {
         title: i.title,
       })),
     );
-    const { system, user } = buildJudgePrompt({
+    const chain = chainVerifyJudge({
       deliverable: params.deliverable,
       goal: params.goal,
       items: promptItems,
@@ -440,15 +470,13 @@ export class VerifyExecutorService {
     const ai = new AiGenerationService(this.db, this.userId);
     const raw = await ai.generateObject(
       {
-        messages: [
-          { content: system, role: 'system' as const },
-          { content: user, role: 'user' as const },
-        ],
+        ...chain,
         model: params.modelConfig.model,
         provider: params.modelConfig.provider,
         schema: BATCH_VERDICT_JSON_SCHEMA,
       },
       {
+        metadata: { trigger: RequestTrigger.Verify },
         tracing: {
           ...({
             promptVersion: VERIFY_JUDGE_PROMPT_VERSION,
@@ -503,7 +531,7 @@ export class VerifyExecutorService {
     const hydratedEvidence = multimodal
       ? await this.hydrateInlineMedia(evidenceByItem.get(item.id) ?? [])
       : evidenceByItem.get(item.id);
-    const { system, user } = buildJudgePrompt({
+    const chain = chainVerifyJudge({
       deliverable: params.deliverable,
       goal: params.goal,
       items: [
@@ -520,31 +548,13 @@ export class VerifyExecutorService {
     const ai = new AiGenerationService(this.db, this.userId);
     const raw = await ai.generateObject(
       {
-        messages: multimodal
-          ? [
-              { content: system, role: 'system' as const },
-              {
-                content: [
-                  { text: user, type: 'text' as const },
-                  ...(hydratedEvidence ?? [])
-                    .filter((evidence) => evidence.accessUrl)
-                    .map((evidence) => ({
-                      image_url: { detail: 'high' as const, url: evidence.accessUrl! },
-                      type: 'image_url' as const,
-                    })),
-                ],
-                role: 'user' as const,
-              },
-            ]
-          : [
-              { content: system, role: 'system' as const },
-              { content: user, role: 'user' as const },
-            ],
+        ...chain,
         model: params.modelConfig.model,
         provider: params.modelConfig.provider,
         schema: SINGLE_VERDICT_JSON_SCHEMA,
       },
       {
+        metadata: { trigger: RequestTrigger.Verify },
         tracing: {
           ...({
             promptVersion: VERIFY_JUDGE_PROMPT_VERSION,

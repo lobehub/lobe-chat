@@ -9,13 +9,17 @@ const build = (index: number, totalCount: number, pinned = false, pinnedCount = 
   buildTabContextMenuItems({
     id: 'tab-1',
     index,
+    inSplitView: false,
     onClose: vi.fn(),
     onCloseLeft: vi.fn(),
     onCloseOthers: vi.fn(),
     onCloseRight: vi.fn(),
+    onCloseSplitView: vi.fn(),
+    onOpenInSplitView: vi.fn(),
     onTogglePin: vi.fn(),
     pinned,
     pinnedCount,
+    splitViewEnabled: true,
     t: (key) => key,
     totalCount,
   });
@@ -33,8 +37,19 @@ describe('tab context menu ownership', () => {
     expect(toNativeTemplate(items).template).toMatchSnapshot();
   });
 
-  it('stays native-eligible in the fully disabled single-tab state', () => {
+  it('stays native-eligible in the single-tab state', () => {
     expect(canGoNative(build(0, 1))).toBe(true);
+  });
+});
+
+describe('close entries', () => {
+  it('lets a lone tab close itself while the bulk closes have nothing to reach', () => {
+    const items = build(0, 1);
+
+    expect(isDisabled(items, 'closeCurrentTab')).toBe(false);
+    expect(isDisabled(items, 'closeOtherTabs')).toBe(true);
+    expect(isDisabled(items, 'closeLeftTabs')).toBe(true);
+    expect(isDisabled(items, 'closeRightTabs')).toBe(true);
   });
 });
 
@@ -51,11 +66,67 @@ describe('pin entry', () => {
     expect(labelOf(true)).toBe('tab.unpin');
   });
 
-  it('stays available when closing is not — a lone tab can still be pinned', () => {
+  it('stays available for a lone tab', () => {
     const items = build(0, 1);
     const pin = items.find((item) => !!item && 'key' in item && item.key === 'togglePin');
 
     expect(pin && 'disabled' in pin ? pin.disabled : undefined).toBeFalsy();
+  });
+});
+
+describe('split view entry', () => {
+  it('hides split view while the alpha lab is disabled', () => {
+    const items = buildTabContextMenuItems({
+      id: 'tab-1',
+      inSplitView: false,
+      index: 0,
+      onClose: vi.fn(),
+      onCloseLeft: vi.fn(),
+      onCloseOthers: vi.fn(),
+      onCloseRight: vi.fn(),
+      onCloseSplitView: vi.fn(),
+      onOpenInSplitView: vi.fn(),
+      onTogglePin: vi.fn(),
+      pinned: false,
+      pinnedCount: 0,
+      splitViewEnabled: false,
+      t: (key) => key,
+      totalCount: 2,
+    });
+
+    expect(items.some((item) => item && 'key' in item && item.key === 'openInSplitView')).toBe(
+      false,
+    );
+  });
+
+  it('offers opening a tab in split view', () => {
+    const items = build(0, 2);
+    const entry = items.find((item) => !!item && 'key' in item && item.key === 'openInSplitView');
+
+    expect(entry && 'label' in entry ? entry.label : undefined).toBe('tab.openInSplitView');
+  });
+
+  it('offers closing split view for a tab already shown in a pane', () => {
+    const items = buildTabContextMenuItems({
+      id: 'tab-1',
+      inSplitView: true,
+      index: 0,
+      onClose: vi.fn(),
+      onCloseLeft: vi.fn(),
+      onCloseOthers: vi.fn(),
+      onCloseRight: vi.fn(),
+      onCloseSplitView: vi.fn(),
+      onOpenInSplitView: vi.fn(),
+      onTogglePin: vi.fn(),
+      pinned: false,
+      pinnedCount: 0,
+      splitViewEnabled: true,
+      t: (key) => key,
+      totalCount: 2,
+    });
+    const entry = items.find((item) => !!item && 'key' in item && item.key === 'closeSplitView');
+
+    expect(entry && 'label' in entry ? entry.label : undefined).toBe('tab.closeSplitView');
   });
 });
 

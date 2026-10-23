@@ -1,5 +1,5 @@
 import type { IconType } from '@icons-pack/react-simple-icons';
-import { SiCaldotcom, SiGithub, SiX } from '@icons-pack/react-simple-icons';
+import { SiCaldotcom, SiX } from '@icons-pack/react-simple-icons';
 
 export interface ComposioAppType {
   appSlug: string;
@@ -273,24 +273,12 @@ export const COMPOSIO_APP_TYPES: ComposioAppType[] = [
     author: 'Composio',
     authorUrl: 'https://composio.dev',
     description:
-      'X (Twitter) is a social media platform for sharing real-time updates, news, and engaging with your audience',
+      'X is a social media platform for sharing real-time updates, news, and engaging with your audience',
     icon: SiX,
     identifier: 'twitter',
-    label: 'X (Twitter)',
+    label: 'X',
     readme:
-      'Connect to X (Twitter) to post updates, manage your timeline, and engage with your audience. Create content, monitor mentions, and build your social media presence through conversational AI.',
-  },
-  {
-    appSlug: 'GITHUB',
-    author: 'Composio',
-    authorUrl: 'https://composio.dev',
-    description:
-      'GitHub is a platform for version control and collaboration, enabling developers to host, review, and manage code repositories',
-    icon: SiGithub,
-    identifier: 'github',
-    label: 'GitHub',
-    readme:
-      'Connect to GitHub to access your repositories, create and manage issues, review pull requests, and collaborate on code through natural conversation with your AI assistant.',
+      'Connect to X to post updates, manage your timeline, and engage with your audience. Create content, monitor mentions, and build your social media presence through conversational AI.',
   },
 ];
 

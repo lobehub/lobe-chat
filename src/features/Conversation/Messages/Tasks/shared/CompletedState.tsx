@@ -2,9 +2,8 @@
 
 import { type TaskDetail } from '@lobechat/types';
 import { type IconProps } from '@lobehub/ui';
-import { Flexbox, Icon, Tag } from '@lobehub/ui';
-import { createStaticStyles, cssVar } from 'antd-style';
-import { Footprints, Timer, Wrench } from 'lucide-react';
+import { createStaticStyles, cssVar, Flexbox, Icon, Tag } from '@lobehub/ui';
+import { BrainCircuit, Timer, Wrench } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -71,8 +70,8 @@ const MetricsRow = memo<MetricsRowProps>(
     // Build metrics array in order
     if (totalSteps !== undefined && totalSteps > 0) {
       metrics.push({
-        icon: Footprints,
-        label: t('task.metrics.stepsShort'),
+        icon: BrainCircuit,
+        label: t('task.metrics.llmCallsShort'),
         value: totalSteps,
       });
     }

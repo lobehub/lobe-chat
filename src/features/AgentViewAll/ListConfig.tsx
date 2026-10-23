@@ -1,9 +1,16 @@
 'use client';
 
-import { type FormItemProps } from '@lobehub/ui';
-import { ActionIcon, Flexbox, Form, Icon, Popover } from '@lobehub/ui';
-import { Select, Switch, Tabs } from '@lobehub/ui/base-ui';
-import { createStaticStyles } from 'antd-style';
+import {
+  ActionIcon,
+  createStaticStyles,
+  Flexbox,
+  Icon,
+  Popover,
+  Select,
+  Switch,
+  Tabs,
+} from '@lobehub/ui';
+import { Form, type FormFieldProps, useForm } from '@lobehub/ui/form';
 import {
   ArrowDownWideNarrow,
   ArrowUpNarrowWide,
@@ -32,7 +39,8 @@ interface ListConfigProps {
 const styles = createStaticStyles(({ css, cssVar }) => {
   return {
     form: css`
-      label {
+      label,
+      label * {
         font-size: 13px !important;
         color: ${cssVar.colorTextSecondary} !important;
       }
@@ -43,14 +51,18 @@ const styles = createStaticStyles(({ css, cssVar }) => {
 const ListConfig = memo<ListConfigProps>(
   ({ options, setOptions, setViewMode, showAuthor, viewMode }) => {
     const [open, setOpen] = useState(false);
+    const form = useForm();
     const { t } = useTranslation('common');
 
     const groupingOptions = useMemo<Array<{ label: string; value: AgentGroupBy }>>(
       () => [
         { label: t('agentViewAll.groupBy.none'), value: 'none' },
-        { label: t('agentViewAll.groupBy.author'), value: 'author' },
+        ...(showAuthor
+          ? [{ label: t('agentViewAll.groupBy.author'), value: 'author' as const }]
+          : []),
+        { label: t('agentViewAll.groupBy.label'), value: 'label' },
       ],
-      [t],
+      [showAuthor, t],
     );
     const orderOptions = useMemo<Array<{ label: string; value: AgentOrderBy }>>(
       () => [
@@ -63,25 +75,21 @@ const ListConfig = memo<ListConfigProps>(
       [showAuthor, t],
     );
 
-    const formItems: FormItemProps[] = [
-      ...(showAuthor
-        ? [
-            {
-              children: (
-                <Select
-                  options={groupingOptions}
-                  size={'small'}
-                  style={{ width: 150 }}
-                  value={options.groupBy}
-                  onChange={(value: AgentGroupBy) => {
-                    setOptions((prev) => ({ ...prev, groupBy: value }));
-                  }}
-                />
-              ),
-              label: t('agentViewAll.form.grouping'),
-            } satisfies FormItemProps,
-          ]
-        : []),
+    const formItems: FormFieldProps[] = [
+      {
+        children: (
+          <Select
+            options={groupingOptions}
+            size={'small'}
+            style={{ width: 150 }}
+            value={options.groupBy}
+            onChange={(value: AgentGroupBy) => {
+              setOptions((prev) => ({ ...prev, groupBy: value }));
+            }}
+          />
+        ),
+        label: t('agentViewAll.form.grouping'),
+      },
       {
         children: (
           <Flexbox horizontal align={'center'} gap={8}>
@@ -139,12 +147,12 @@ const ListConfig = memo<ListConfigProps>(
         />
         <Form
           className={styles.form}
+          form={form}
           items={formItems}
           itemsType={'flat'}
-          size={'small'}
           variant={'borderless'}
           styles={{
-            item: { padding: 0 },
+            item: { paddingBlock: 4, paddingInline: 0 },
           }}
         />
       </Flexbox>

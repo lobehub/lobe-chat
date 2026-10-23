@@ -1,5 +1,4 @@
-import { Flexbox, Icon, Popover, Tooltip } from '@lobehub/ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import { createStaticStyles, cssVar, cx, Flexbox, Icon, Popover, Tooltip } from '@lobehub/ui';
 import {
   ChevronDownIcon,
   FolderIcon,
@@ -13,6 +12,7 @@ import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useBusinessAgentModeSync } from '@/business/client/hooks/useBusinessAgentMode';
+import { SkeletonBar } from '@/components/Skeleton';
 import { useAgentId } from '@/features/ChatInput/hooks/useAgentId';
 import { useChatInputResourceAccess } from '@/features/ChatInput/hooks/useChatInputResourceAccess';
 import { useEffectiveAgentMode } from '@/features/ChatInput/hooks/useEffectiveAgentMode';
@@ -51,9 +51,9 @@ const styles = createStaticStyles(({ css }) => ({
     gap: 6px;
     align-items: center;
 
-    height: 28px;
-    padding-inline: 8px;
-    border-radius: 6px;
+    padding-block: 2px;
+    padding-inline: 4px;
+    border-radius: 4px;
 
     font-size: 12px;
     color: ${cssVar.colorTextSecondary};
@@ -63,7 +63,7 @@ const styles = createStaticStyles(({ css }) => ({
 
     &:hover {
       color: ${cssVar.colorText};
-      background: ${cssVar.colorFillSecondary};
+      background: ${cssVar.colorFillTertiary};
     }
   `,
   buttonDisabled: css`
@@ -251,7 +251,8 @@ const ModeSelector = memo(() => {
     </div>
   );
 
-  if (isPreferenceLoading) return null;
+  // Hold the pill's footprint (~70x23 settled) instead of collapsing the left cluster.
+  if (isPreferenceLoading) return <SkeletonBar height={22} radius={4} width={68} />;
 
   if (disabled)
     return (

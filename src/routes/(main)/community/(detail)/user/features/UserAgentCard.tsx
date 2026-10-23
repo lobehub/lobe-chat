@@ -3,6 +3,8 @@
 import {
   Avatar,
   Block,
+  createStaticStyles,
+  cx,
   DropdownMenu,
   Flexbox,
   Icon,
@@ -10,11 +12,10 @@ import {
   Tag as AntTag,
   Tag,
   Text,
+  toast,
   Tooltip,
   TooltipGroup,
 } from '@lobehub/ui';
-import { toast } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cx } from 'antd-style';
 import {
   AlertTriangle,
   ClockIcon,

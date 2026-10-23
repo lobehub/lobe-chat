@@ -1,5 +1,5 @@
 import type { GenerateContentResponse } from '@google/genai';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { serializeScopedSignature, type SignatureScope } from '../../../utils/signatureScope';
 import * as uuidModule from '../../../utils/uuid';
@@ -25,6 +25,10 @@ async function decodeStreamChunks(stream: ReadableStream): Promise<string[]> {
 }
 
 describe('GoogleGenerativeAIStream', () => {
+  beforeEach(() => {
+    vi.restoreAllMocks();
+  });
+
   describe('Basic functionality', () => {
     it('should transform Google Generative AI stream to protocol stream', async () => {
       vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1').mockReturnValueOnce('abcd1234');
@@ -1698,7 +1702,7 @@ describe('GoogleGenerativeAIStream', () => {
       expect(chunks).toEqual([
         'id: chat_1\n',
         'event: error\n',
-        `data: {"body":{"context":{"promptFeedback":{"blockReason":"PROHIBITED_CONTENT"}},"message":"The content may contain prohibited content. Please adjust it and try again.","provider":"google"},"type":"ProviderBizError"}\n\n`,
+        `data: {"body":{"context":{"promptFeedback":{"blockReason":"PROHIBITED_CONTENT"}},"message":"The content may contain prohibited content. Please adjust it and try again.","provider":"google"},"type":"ProviderContentPolicyViolation"}\n\n`,
       ]);
     });
 
@@ -1740,7 +1744,7 @@ describe('GoogleGenerativeAIStream', () => {
         `data: {"inputTextTokens":10,"outputImageTokens":0,"outputTextTokens":2,"totalInputTokens":10,"totalOutputTokens":2,"totalTokens":12}\n\n`,
         'id: chat_1\n',
         'event: error\n',
-        `data: {"body":{"context":{"finishMessage":"The model output could not be generated. This output contains sensitive words that violate policies.","finishReason":"PROHIBITED_CONTENT"},"message":"The content may contain prohibited content. Please adjust it and try again.","provider":"google"},"type":"ProviderBizError"}\n\n`,
+        `data: {"body":{"context":{"finishMessage":"The model output could not be generated. This output contains sensitive words that violate policies.","finishReason":"PROHIBITED_CONTENT"},"message":"The content may contain prohibited content. Please adjust it and try again.","provider":"google"},"type":"ProviderContentPolicyViolation"}\n\n`,
       ]);
     });
 

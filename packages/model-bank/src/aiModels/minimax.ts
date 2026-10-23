@@ -14,6 +14,37 @@ const minimaxChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 1_000_000,
     description:
+      'MiniMax M3.1 Flash is a fast, low-cost multimodal model with native image and video understanding and tunable thinking depth.',
+    displayName: 'MiniMax M3.1 Flash',
+    enabled: true,
+    family: 'minimax',
+    generation: 'minimax-m3.1',
+    id: 'MiniMax-M3.1-Flash',
+    maxOutput: 524_288,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2026-10-19',
+    settings: {
+      disabledParams: ['temperature'],
+      extendParams: ['gpt6ReasoningEffort'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      video: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_000_000,
+    description:
       "MiniMax M3 is MiniMax's first multimodal model, with native image and video understanding and strong coding and agentic capabilities.",
     displayName: 'MiniMax M3',
     enabled: true,
@@ -55,6 +86,7 @@ const minimaxChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2026-06-01',
     settings: {
+      disabledParams: ['temperature'],
       extendParams: ['enableReasoning'],
     },
     type: 'chat',
@@ -377,6 +409,41 @@ const minimaxImageModels: AIImageModelCard[] = [
 ];
 
 const minimaxVideoModels: AIVideoModelCard[] = [
+  {
+    description:
+      'A unified text-to-video, image-to-video, and reference-to-video model with enhanced motion, consistency, and native audio capabilities.',
+    displayName: 'MiniMax H3',
+    enabled: true,
+    id: 'MiniMax-H3',
+    parameters: {
+      aspectRatio: {
+        default: '16:9',
+        enum: ['21:9', '16:9', '4:3', '1:1', '3:4', '9:16'],
+      },
+      duration: { default: 6, max: 15, min: 4, step: 1 },
+      endImageUrl: {
+        default: null,
+      },
+      imageUrl: {
+        default: null,
+      },
+      imageUrls: {
+        default: [],
+        // The v2 API accepts at most 9 images in the reference pool. The UI's
+        // References mode submits only imageUrls (the frame slots are cleared),
+        // so the whole pool is available here.
+        maxCount: 9,
+      },
+      prompt: { default: '' },
+      resolution: {
+        default: '768P',
+        enum: ['768P', '2K'],
+      },
+      watermark: { default: false },
+    },
+    releasedAt: '2026-07-31',
+    type: 'video',
+  },
   {
     description:
       'Brand-new video generation model with comprehensive upgrades in body motion, physical realism, and instruction following.',

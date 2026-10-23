@@ -1,9 +1,16 @@
 'use client';
 
-import type { DropdownItem } from '@lobehub/ui';
-import { Block, Flexbox, Icon, Text } from '@lobehub/ui';
-import { confirmModal, type ModalInstance } from '@lobehub/ui/base-ui';
-import { toast } from '@lobehub/ui/base-ui';
+import {
+  Block,
+  confirmModal,
+  copyToClipboard,
+  type DropdownItem,
+  Flexbox,
+  Icon,
+  type ModalInstance,
+  Text,
+  toast,
+} from '@lobehub/ui';
 import {
   Clock3Icon,
   Copy,
@@ -21,9 +28,11 @@ import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router';
 
 import { useAuthorInfo } from '@/business/client/hooks/useAuthorInfo';
+import { useTopicBugReportMenuItem } from '@/business/client/hooks/useTopicBugReportMenuItem';
 import { openRenameModal } from '@/components/RenameModal';
 import { DOCUMENT_HISTORY_QUERY_LIST_LIMIT } from '@/const/documentHistory';
 import { isDesktop } from '@/const/version';
+import { useAgentContext } from '@/features/Conversation/useAgentContext';
 import { confirmRemoveTopic } from '@/features/DeleteTopicConfirm';
 import { openDocumentCompareModal } from '@/features/PageEditor/History/CompareModal';
 import { formatHistoryAbsoluteTime } from '@/features/PageEditor/History/formatHistoryDate';
@@ -37,6 +46,8 @@ import { topicSelectors } from '@/store/chat/selectors';
 import { useDocumentStore } from '@/store/document';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { labPreferSelectors } from '@/store/user/selectors';
 
 interface TopicInfoHeaderProps {
   authorName: string;
@@ -76,9 +87,11 @@ export const useMenu = (): { menuHeader?: ReactNode; menuItems: () => DropdownIt
   ]);
   const openTopicInNewWindow = useGlobalStore((s) => s.openTopicInNewWindow);
 
-  const activeAgentId = useChatStore((s) => s.activeAgentId);
-  const activeTopic = useChatStore(topicSelectors.currentActiveTopic);
-  const workingDirectory = useChatStore(topicSelectors.currentTopicWorkingDirectory);
+  const { agentId: activeAgentId, threadId, topicId: routeTopicId } = useAgentContext();
+  const activeTopic = useChatStore((s) =>
+    routeTopicId ? topicSelectors.getTopicById(routeTopicId)(s) : undefined,
+  );
+  const workingDirectory = useChatStore(topicSelectors.getTopicWorkingDirectory(routeTopicId));
   const [autoRenameTopicTitle, favoriteTopic, removeTopic, updateTopicTitle] = useChatStore((s) => [
     s.autoRenameTopicTitle,
     s.favoriteTopic,
@@ -124,7 +137,7 @@ export const useMenu = (): { menuHeader?: ReactNode; menuItems: () => DropdownIt
               `header-actions-history-${docId}`,
             );
 
-            editor.setDocument('json', JSON.stringify(result.editorData));
+            editor.setDocument('json', JSON.stringify(result.editorData), { keepId: true });
             markDirty(docId);
             await performSave(docId, undefined, {
               restoreFromHistoryId: item.id,
@@ -183,6 +196,14 @@ export const useMenu = (): { menuHeader?: ReactNode; menuItems: () => DropdownIt
   const topicId = activeTopic?.id;
   const topicTitle = activeTopic?.title ?? '';
   const isFavorite = !!activeTopic?.favorite;
+
+  const enableTopicBugReport = useUserStore(labPreferSelectors.enableTopicBugReport);
+  const bugReportItem = useTopicBugReportMenuItem({
+    agentId: activeAgentId,
+    threadId: threadId ?? undefined,
+    topicId,
+  });
+
   const menuHeader = useMemo<ReactNode | undefined>(() => {
     if (!authorInfo?.fullName || !topicId) return undefined;
 
@@ -277,11 +298,12 @@ export const useMenu = (): { menuHeader?: ReactNode; menuItems: () => DropdownIt
           icon: <Icon icon={Hash} />,
           key: 'copySessionId',
           label: t('actions.copySessionId', { ns: 'topic' }),
-          onClick: () => {
-            void navigator.clipboard.writeText(topicId);
+          onClick: async () => {
+            await copyToClipboard(topicId);
             toast.success(t('actions.copySessionIdSuccess', { ns: 'topic' }));
           },
         },
+        ...(enableTopicBugReport && bugReportItem ? [bugReportItem] : []),
         { type: 'divider' as const },
       );
     }
@@ -333,6 +355,8 @@ export const useMenu = (): { menuHeader?: ReactNode; menuItems: () => DropdownIt
   }, [
     topicId,
     topicTitle,
+    bugReportItem,
+    enableTopicBugReport,
     isFavorite,
     activeAgentId,
     pathname,

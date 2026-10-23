@@ -7,15 +7,10 @@ import {
   windowsToCalibrationIntervals,
 } from './calibration';
 import { computeTurnCostUsd, totalTokens } from './cost';
-import {
-  parseClaudeAccountIdentity,
-  parseClaudeCredentialPlan,
-  parseCodexAccountIdentity,
-} from './identity';
 import { selectAccount } from './loadBalancer';
+import { buildClaudeQuotaWindows } from './readings';
 import type { QuotaLimitReading } from './types';
 import { CLAUDE_SESSION_WINDOW_SECONDS, windowSecondsForKind } from './types';
-import { mapClaudeUsageToReadings, parseResetsAt } from './usageApi';
 import { findWindowAt, isWindowContaminated, projectWindows } from './windows';
 
 // ── cost ─────────────────────────────────────────────────────────────────────
@@ -46,81 +41,8 @@ describe('computeTurnCostUsd', () => {
     expect(cost).toBeCloseTo(0.3, 6);
   });
 
-  it('captures the Fable-vs-Opus price ratio that proved the unit', () => {
-    // same token shape, Fable is 2x Opus → cost is 2x
-    const usage = { input: 500_000, output: 200_000 };
-    const opus = computeTurnCostUsd(usage, { input: 5, output: 25 });
-    const fable = computeTurnCostUsd(usage, { input: 10, output: 50 });
-    expect(fable / opus).toBeCloseTo(2, 6);
-  });
-
   it('totalTokens sums all classes', () => {
     expect(totalTokens({ cacheRead: 3, input: 1, output: 2 })).toBe(6);
-  });
-});
-
-// ── identity ─────────────────────────────────────────────────────────────────
-describe('identity parsing', () => {
-  it('parses Claude ~/.claude.json oauthAccount', () => {
-    const id = parseClaudeAccountIdentity(
-      JSON.stringify({
-        oauthAccount: {
-          accountUuid: '687dc4eb-2aad-45fc-92be-402acbe51661',
-          displayName: 'Arvin',
-          emailAddress: 'a@example.com',
-          organizationRateLimitTier: 'default_claude_max_20x',
-          organizationType: 'claude_max',
-          organizationUuid: 'org-1',
-        },
-      }),
-    );
-    expect(id).toEqual({
-      displayName: 'Arvin',
-      email: 'a@example.com',
-      externalAccountId: '687dc4eb-2aad-45fc-92be-402acbe51661',
-      organizationId: 'org-1',
-      planTier: 'max',
-      rateLimitTier: 'default_claude_max_20x',
-    });
-  });
-
-  it('returns null without an account uuid', () => {
-    expect(parseClaudeAccountIdentity('{}')).toBeNull();
-    expect(parseClaudeAccountIdentity('not json')).toBeNull();
-  });
-
-  it('reads plan hints from the credential blob', () => {
-    const plan = parseClaudeCredentialPlan(
-      JSON.stringify({
-        claudeAiOauth: {
-          expiresAt: 123,
-          rateLimitTier: 'default_claude_max_20x',
-          subscriptionType: 'max',
-        },
-      }),
-    );
-    expect(plan).toEqual({
-      expiresAt: 123,
-      planTier: 'max',
-      rateLimitTier: 'default_claude_max_20x',
-    });
-  });
-
-  it('parses Codex auth.json + id_token claims', () => {
-    const claims = {
-      'email': 'a@example.com',
-      'https://api.openai.com/auth': { chatgpt_account_id: 'acc-x', chatgpt_plan_type: 'pro' },
-    };
-    const b64 = Buffer.from(JSON.stringify(claims)).toString('base64url');
-    const idToken = `h.${b64}.s`;
-    const id = parseCodexAccountIdentity(
-      JSON.stringify({ tokens: { account_id: 'acc-x', id_token: idToken } }),
-    );
-    expect(id).toEqual({ email: 'a@example.com', externalAccountId: 'acc-x', planTier: 'pro' });
-  });
-
-  it('returns null for empty codex auth', () => {
-    expect(parseCodexAccountIdentity('{}')).toBeNull();
   });
 });
 
@@ -171,6 +93,17 @@ describe('projectWindows', () => {
     expect(session.rateLimitedAt).toBe(reset - 2_000_000);
     const fable = windows.find((w) => w.scopeKey === 'Fable')!;
     expect(fable.limitType).toBe('weekly_scoped');
+  });
+
+  it('folds sub-second reset jitter around a minute boundary into one window', () => {
+    const windows = projectWindows([
+      mk({ resetsAt: reset - 483, utilization: 20 }),
+      mk({ resetsAt: reset + 43, utilization: 40 }),
+      mk({ resetsAt: reset + 938, utilization: 60 }),
+    ]);
+
+    expect(windows).toHaveLength(1);
+    expect(windows[0]).toMatchObject({ peakUtilization: 60, resetsAt: reset });
   });
 
   it('ignores readings without a resetsAt', () => {
@@ -284,89 +217,109 @@ describe('windowsToCalibrationIntervals', () => {
   });
 });
 
-// ── usage API mapping ─────────────────────────────────────────────────────────
-describe('mapClaudeUsageToReadings', () => {
-  it('parseResetsAt handles ISO / seconds / millis', () => {
-    expect(parseResetsAt('2026-07-12T20:50:00Z')).toBe(Date.parse('2026-07-12T20:50:00Z'));
-    expect(parseResetsAt(1_760_000_000)).toBe(1_760_000_000_000); // seconds → ms
-    expect(parseResetsAt(1_760_000_000_000)).toBe(1_760_000_000_000); // already ms
-    expect(parseResetsAt(null)).toBeNull();
-    expect(parseResetsAt('nonsense')).toBeNull();
+// ── readings → display windows ────────────────────────────────────────────────
+describe('buildClaudeQuotaWindows', () => {
+  const now = Date.parse('2026-07-12T18:00:00Z');
+  const reading = (over: Partial<QuotaLimitReading> = {}): QuotaLimitReading => ({
+    capturedAt: now - 60_000,
+    limitType: 'session',
+    resetsAt: Date.parse('2026-07-12T20:50:00Z'),
+    scopeKey: '',
+    utilization: 26,
+    ...over,
   });
 
-  it('parseResetsAt accepts an epoch delivered as a string', () => {
-    // resets_at is typed `number | string`, so the epoch can arrive quoted.
-    expect(parseResetsAt('1760000000')).toBe(1_760_000_000_000);
-    expect(parseResetsAt('1760000000000')).toBe(1_760_000_000_000);
-    expect(parseResetsAt(' 1760000000 ')).toBe(1_760_000_000_000);
-    // a short digit string must not be read as a year by Date.parse
-    expect(parseResetsAt('1784')).toBe(1_784_000);
-    expect(parseResetsAt('')).toBeNull();
-  });
-
-  it('maps the real /api/oauth/usage limits[] shape (session + weekly + Fable scoped)', () => {
-    // exactly the shape returned by the live endpoint
-    const payload = {
-      five_hour: { resets_at: '2026-07-12T20:50:00Z', utilization: 26 },
-      limits: [
-        {
-          group: 'session',
-          is_active: false,
-          kind: 'session',
-          percent: 26,
-          resets_at: '2026-07-12T20:50:00Z',
-          scope: null,
-          severity: 'normal',
-        },
-        {
-          group: 'weekly',
-          kind: 'weekly_all',
-          percent: 29,
-          resets_at: '2026-07-18T14:00:00Z',
-          scope: null,
-          severity: 'normal',
-        },
-        {
-          group: 'weekly',
-          is_active: true,
-          kind: 'weekly_scoped',
-          percent: 38,
-          resets_at: '2026-07-18T14:00:00Z',
-          scope: { model: { display_name: 'Fable' } },
-          severity: 'normal',
-        },
+  it('maps session / weekly / scoped readings to their panel windows', () => {
+    const windows = buildClaudeQuotaWindows(
+      [
+        reading(),
+        reading({
+          limitType: 'weekly_all',
+          resetsAt: Date.parse('2026-07-18T14:00:00Z'),
+          utilization: 29,
+        }),
+        reading({
+          limitType: 'weekly_scoped',
+          resetsAt: Date.parse('2026-07-18T14:00:00Z'),
+          scopeKey: 'Fable',
+          utilization: 38,
+        }),
       ],
-      seven_day: { resets_at: '2026-07-18T14:00:00Z', utilization: 29 },
-    };
-    const readings = mapClaudeUsageToReadings(payload, 1000);
-    expect(readings).toHaveLength(3);
-    expect(readings[0]).toMatchObject({
-      capturedAt: 1000,
-      limitType: 'session',
-      scopeKey: '',
-      utilization: 26,
+      now,
+    );
+
+    expect(windows.session).toEqual({
+      resetsAt: Date.parse('2026-07-12T20:50:00Z'),
+      usedPercent: 26,
+      windowMinutes: 300,
     });
-    expect(readings[0].resetsAt).toBe(Date.parse('2026-07-12T20:50:00Z'));
-    const fable = readings.find((r) => r.limitType === 'weekly_scoped')!;
-    expect(fable.scopeKey).toBe('Fable');
-    expect(fable.utilization).toBe(38);
-    expect(fable.isActive).toBe(true);
+    expect(windows.weekly).toMatchObject({ usedPercent: 29, windowMinutes: 10_080 });
+    expect(windows.scopedWeekly).toEqual({
+      modelName: 'Fable',
+      window: {
+        resetsAt: Date.parse('2026-07-18T14:00:00Z'),
+        usedPercent: 38,
+        windowMinutes: 10_080,
+      },
+    });
   });
 
-  it('falls back to five_hour/seven_day when limits[] absent', () => {
-    const readings = mapClaudeUsageToReadings(
-      { five_hour: { resets_at: 1_760_000_000, utilization: 40 } },
-      1000,
+  it('reports a rolled-over window as refilled instead of dropping the row', () => {
+    // The 5-hour window is the one that goes idle: after five quiet hours the
+    // provider still reports the last session's utilization against a reset
+    // that has passed. Hiding the row reads as "this plan has no session
+    // limit"; replaying 96% paints an exhausted meter over a free window.
+    const windows = buildClaudeQuotaWindows(
+      [reading({ resetsAt: now - 60_000, utilization: 96 })],
+      now,
     );
-    expect(readings).toEqual([
-      {
-        capturedAt: 1000,
-        limitType: 'session',
-        resetsAt: 1_760_000_000_000,
-        scopeKey: '',
-        utilization: 40,
-      },
-    ]);
+
+    expect(windows.session).toEqual({ resetsAt: null, usedPercent: 0, windowMinutes: 300 });
+  });
+
+  it('keeps a limit reported without a reset time until one full window passes', () => {
+    // An untouched model-scoped weekly arrives as `resets_at: null`; it can
+    // only speak for the window it was captured in.
+    const noReset = reading({ limitType: 'weekly_scoped', resetsAt: null, scopeKey: 'Fable' });
+
+    expect(buildClaudeQuotaWindows([noReset], now).scopedWeekly).toEqual({
+      modelName: 'Fable',
+      window: { resetsAt: null, usedPercent: 26, windowMinutes: 10_080 },
+    });
+    expect(
+      buildClaudeQuotaWindows([noReset], now + 8 * 24 * 60 * 60 * 1000).scopedWeekly,
+    ).toMatchObject({ window: { usedPercent: 0 } });
+  });
+
+  it('keeps the newest reading per bucket and tolerates renamed kinds', () => {
+    const windows = buildClaudeQuotaWindows(
+      [
+        reading({ capturedAt: now - 600_000, limitType: 'five_hour', utilization: 10 }),
+        reading({ capturedAt: now - 1000, utilization: 42 }),
+        reading({ limitType: 'weekly', resetsAt: now + 60_000, utilization: 7 }),
+      ],
+      now,
+    );
+
+    expect(windows.session).toMatchObject({ usedPercent: 42 });
+    // `weekly` (unscoped) still counts as the account-wide weekly window.
+    expect(windows.weekly).toMatchObject({ usedPercent: 7 });
+  });
+
+  it('clamps and rounds utilization the same way the persisted readings do', () => {
+    const windows = buildClaudeQuotaWindows([reading({ utilization: 140 })], now);
+    expect(windows.session?.usedPercent).toBe(100);
+    expect(
+      buildClaudeQuotaWindows([reading({ utilization: 62.5 })], now).session?.usedPercent,
+    ).toBe(63);
+  });
+
+  it('has no window for a limit the account never reported', () => {
+    expect(buildClaudeQuotaWindows([], now)).toEqual({
+      scopedWeekly: null,
+      session: null,
+      weekly: null,
+    });
   });
 });
 

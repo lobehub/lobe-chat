@@ -4,6 +4,7 @@
 import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { taskDetailPath } from '@/features/AgentTasks/shared/taskDetailPath';
 import type { SendButtonHandler } from '@/features/ChatInput/store/initialState';
 
 import { useSend } from './useSend';
@@ -17,10 +18,12 @@ const sendMessageMock = vi.hoisted(() => vi.fn());
 const clearContentMock = vi.hoisted(() => vi.fn());
 const clearChatUploadFileListMock = vi.hoisted(() => vi.fn());
 const clearChatContextSelectionsMock = vi.hoisted(() => vi.fn());
+const restoreChatContextSelectionsMock = vi.hoisted(() => vi.fn());
 const createTaskMock = vi.hoisted(() => vi.fn());
 const runTaskMock = vi.hoisted(() => vi.fn());
 const toggleTaskAgentPanelMock = vi.hoisted(() => vi.fn());
 const messageErrorMock = vi.hoisted(() => vi.fn());
+const messageSuccessMock = vi.hoisted(() => vi.fn());
 
 const chatState = vi.hoisted(() => ({
   inputMessage: 'hello',
@@ -32,10 +35,11 @@ const chatState = vi.hoisted(() => ({
 }));
 
 const fileState = vi.hoisted(() => ({
-  chatContextSelections: [] as any[],
+  chatContextSelectionsByContext: {} as Record<string, any[]>,
   chatUploadFileList: [],
   clearChatContextSelections: clearChatContextSelectionsMock,
   clearChatUploadFileList: clearChatUploadFileListMock,
+  restoreChatContextSelections: restoreChatContextSelectionsMock,
 }));
 
 const homeState = vi.hoisted(() => ({
@@ -89,12 +93,9 @@ const activeWorkspaceIdMock = vi.hoisted(() => ({
   value: null as string | null,
 }));
 
-vi.mock('react-i18next', () => ({
-  useTranslation: () => ({ t: (key: string) => key }),
-}));
-
-vi.mock('@lobehub/ui/base-ui', () => ({
-  toast: { error: messageErrorMock },
+vi.mock('@lobehub/ui', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  toast: { error: messageErrorMock, success: messageSuccessMock },
 }));
 
 vi.mock('@/hooks/usePermission', () => ({
@@ -155,7 +156,8 @@ vi.mock('@/store/file', () => {
 
   return {
     fileChatSelectors: {
-      chatContextSelections: (state: typeof fileState) => state.chatContextSelections,
+      chatContextSelections: (contextKey: string) => (state: typeof fileState) =>
+        state.chatContextSelectionsByContext[contextKey] ?? [],
       chatUploadFileList: (state: typeof fileState) => state.chatUploadFileList,
     },
     useFileStore,
@@ -180,15 +182,24 @@ describe('Home InputArea useSend', () => {
     sendMessageMock.mockReset();
     clearContentMock.mockReset();
     clearChatUploadFileListMock.mockReset();
+    clearChatUploadFileListMock.mockImplementation((submittedIds?: string[]) => {
+      fileState.chatUploadFileList = submittedIds
+        ? fileState.chatUploadFileList.filter(
+            (file: { id: string }) => !submittedIds.includes(file.id),
+          )
+        : [];
+    });
     clearChatContextSelectionsMock.mockReset();
+    restoreChatContextSelectionsMock.mockReset();
     createTaskMock.mockReset();
     runTaskMock.mockReset();
     toggleTaskAgentPanelMock.mockReset();
     messageErrorMock.mockReset();
+    messageSuccessMock.mockReset();
     homeDailyBriefState.advance.mockReset();
     homeDailyBriefState.currentPair = undefined;
     chatState.inputMessage = 'hello';
-    fileState.chatContextSelections = [];
+    fileState.chatContextSelectionsByContext = {};
     fileState.chatUploadFileList = [];
     homeState.inputActiveMode = null;
     homeState.ungroupedAgents = [];
@@ -198,7 +209,7 @@ describe('Home InputArea useSend', () => {
     activeWorkspaceIdMock.value = null;
   });
 
-  it('creates and starts a private workspace task with the selected Agent', async () => {
+  it('creates a private workspace task without starting it', async () => {
     activeWorkspaceIdMock.value = 'workspace-1';
     globalState.systemStatus.homeSelectedAgentId = 'agt_custom';
     homeState.ungroupedAgents = [{ id: 'agt_custom', type: 'agent' }];
@@ -207,7 +218,6 @@ describe('Home InputArea useSend', () => {
       assigneeAgentId: 'agt_custom',
       identifier: 'T-26',
     });
-    runTaskMock.mockResolvedValue({ topicId: 'tpc-26' });
     const { result } = renderHook(() => useSend('task'));
     const params: Parameters<SendButtonHandler>[0] = {
       clearContent: vi.fn(),
@@ -227,10 +237,26 @@ describe('Home InputArea useSend', () => {
       name: 'Prepare the weekly report',
       visibility: 'private',
     });
-    expect(runTaskMock).toHaveBeenCalledWith('T-26', undefined, { throwOnError: true });
+    // Task mode records the task; it must not launch a run, open the task
+    // panel, or navigate away from Home.
+    expect(runTaskMock).not.toHaveBeenCalled();
+    expect(toggleTaskAgentPanelMock).not.toHaveBeenCalled();
+    expect(routerMock.push).not.toHaveBeenCalled();
     expect(sendMessageMock).not.toHaveBeenCalled();
-    expect(toggleTaskAgentPanelMock).toHaveBeenCalledWith(true);
-    expect(routerMock.push).toHaveBeenCalledWith('/tasks?agentId=agt_custom&topicId=tpc-26');
+    expect(messageSuccessMock).toHaveBeenCalledWith(
+      expect.objectContaining({ title: 'dashboard.task.created' }),
+    );
+    // The toast is the only handle on the task once the composer is cleared, so
+    // its action must open that task rather than just dismiss the toast.
+    const [{ actions }] = messageSuccessMock.mock.calls.at(-1) as [
+      { actions: { label: string; onClick: () => void }[] },
+    ];
+    expect(actions).toHaveLength(1);
+    expect(actions[0].label).toBe('taskIntent.openCreated');
+    actions[0].onClick();
+    expect(routerMock.push).toHaveBeenCalledWith(
+      taskDetailPath('T-26', 'agt_custom', 'Prepare the weekly report'),
+    );
     expect(clearContentMock).toHaveBeenCalledTimes(1);
   });
 
@@ -256,9 +282,16 @@ describe('Home InputArea useSend', () => {
     expect(messageErrorMock).toHaveBeenCalledWith('dashboard.submitFailed');
   });
 
-  it('keeps the draft and stays on Home when task execution fails', async () => {
-    createTaskMock.mockResolvedValue({ assigneeAgentId: 'agt_inbox', identifier: 'T-27' });
-    runTaskMock.mockRejectedValue(new Error('run failed'));
+  it('keeps the draft and stays on Home when task creation throws', async () => {
+    fileState.chatUploadFileList = [
+      {
+        id: 'file-1',
+        file: new File(['report'], 'report.pdf'),
+        fileUrl: 'https://example.com/f/file-1',
+        status: 'success',
+      },
+    ] as any;
+    createTaskMock.mockRejectedValue(new Error('create failed'));
     const { result } = renderHook(() => useSend('task'));
     const params: Parameters<SendButtonHandler>[0] = {
       clearContent: vi.fn(),
@@ -271,16 +304,24 @@ describe('Home InputArea useSend', () => {
       await result.current.send(params);
     });
 
+    expect(runTaskMock).not.toHaveBeenCalled();
     expect(routerMock.push).not.toHaveBeenCalled();
     expect(clearContentMock).not.toHaveBeenCalled();
+    expect(clearChatUploadFileListMock).not.toHaveBeenCalled();
+    expect(messageSuccessMock).not.toHaveBeenCalled();
     expect(messageErrorMock).toHaveBeenCalledWith('dashboard.submitFailed');
   });
 
-  it('reuses the created task when retrying after its first run fails', async () => {
-    createTaskMock.mockResolvedValue({ assigneeAgentId: 'agt_inbox', identifier: 'T-28' });
-    runTaskMock
-      .mockRejectedValueOnce(new Error('run failed'))
-      .mockResolvedValueOnce({ topicId: 'tpc-28' });
+  it('persists uploaded attachments when creating a task', async () => {
+    fileState.chatUploadFileList = [
+      {
+        id: 'file-1',
+        file: new File(['report'], 'report.pdf', { type: 'application/pdf' }),
+        fileUrl: 'https://example.com/f/file-1',
+        status: 'success',
+      },
+    ] as any;
+    createTaskMock.mockResolvedValue({ identifier: 'T-27' });
     const { result } = renderHook(() => useSend('task'));
     const params: Parameters<SendButtonHandler>[0] = {
       clearContent: vi.fn(),
@@ -290,39 +331,80 @@ describe('Home InputArea useSend', () => {
     };
 
     await act(async () => {
-      await result.current.send(params);
       await result.current.send(params);
     });
 
     expect(createTaskMock).toHaveBeenCalledTimes(1);
-    expect(runTaskMock).toHaveBeenCalledTimes(2);
-    expect(runTaskMock).toHaveBeenNthCalledWith(2, 'T-28', undefined, { throwOnError: true });
-    expect(toggleTaskAgentPanelMock).toHaveBeenCalledWith(true);
-    expect(routerMock.push).toHaveBeenCalledWith('/tasks?agentId=agt_inbox&topicId=tpc-28');
+    const created = createTaskMock.mock.calls[0][0];
+    expect(created.editorData.root.children).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          children: [
+            expect.objectContaining({
+              type: 'file',
+              fileUrl: 'https://example.com/f/file-1',
+              name: 'report.pdf',
+              status: 'uploaded',
+            }),
+          ],
+        }),
+      ]),
+    );
+    expect(clearChatUploadFileListMock).toHaveBeenCalledTimes(1);
+    expect(messageErrorMock).not.toHaveBeenCalled();
   });
 
-  it('does not discard attachments that Task mode cannot persist', async () => {
-    fileState.chatUploadFileList = [{ id: 'file-1' }] as any;
+  it('preserves uploads added while task creation is pending', async () => {
+    const submittedFile = {
+      id: 'submitted',
+      file: new File(['first'], 'first.txt'),
+      fileUrl: 'https://example.com/first',
+      status: 'success',
+    };
+    const newFile = {
+      id: 'new-upload',
+      file: new File(['second'], 'second.txt'),
+      status: 'uploading',
+    };
+    fileState.chatUploadFileList = [submittedFile] as any;
+    let completeCreation!: (value: { identifier: string }) => void;
+    createTaskMock.mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          completeCreation = resolve;
+        }),
+    );
     const { result } = renderHook(() => useSend('task'));
     const params: Parameters<SendButtonHandler>[0] = {
       clearContent: vi.fn(),
       editor: {} as Parameters<SendButtonHandler>[0]['editor'],
-      getEditorData: () => ({ type: 'doc' }),
-      getMarkdownContent: () => 'Prepare the weekly report',
+      getEditorData: () => undefined,
+      getMarkdownContent: () => 'First task',
     };
-
-    await act(async () => {
-      await result.current.send(params);
+    let submission!: Promise<void>;
+    act(() => {
+      submission = Promise.resolve(result.current.send(params));
     });
-
-    expect(createTaskMock).not.toHaveBeenCalled();
-    expect(clearChatUploadFileListMock).not.toHaveBeenCalled();
-    expect(messageErrorMock).toHaveBeenCalledWith('dashboard.task.unsupportedContext');
+    fileState.chatUploadFileList = [submittedFile, newFile] as any;
+    await act(async () => {
+      completeCreation({ identifier: 'T-28' });
+      await submission;
+    });
+    expect(fileState.chatUploadFileList).toEqual([newFile]);
+    expect(JSON.stringify(createTaskMock.mock.calls[0][0].editorData)).not.toContain('second.txt');
   });
 
-  it('explains why an attachment-only Task submission cannot proceed', async () => {
+  it('creates a task from an attachment-only submission', async () => {
     chatState.inputMessage = '';
-    fileState.chatUploadFileList = [{ id: 'file-1' }] as any;
+    fileState.chatUploadFileList = [
+      {
+        id: 'file-1',
+        file: new File(['report'], 'report.pdf', { type: 'application/pdf' }),
+        fileUrl: 'https://example.com/f/file-1',
+        status: 'success',
+      },
+    ] as any;
+    createTaskMock.mockResolvedValue({ identifier: 'T-27' });
     const { result } = renderHook(() => useSend('task'));
     const params: Parameters<SendButtonHandler>[0] = {
       clearContent: vi.fn(),
@@ -335,10 +417,48 @@ describe('Home InputArea useSend', () => {
       await result.current.send(params);
     });
 
-    expect(createTaskMock).not.toHaveBeenCalled();
-    expect(clearChatUploadFileListMock).not.toHaveBeenCalled();
-    expect(messageErrorMock).toHaveBeenCalledWith('dashboard.task.unsupportedContext');
+    expect(createTaskMock).toHaveBeenCalledTimes(1);
+    const created = createTaskMock.mock.calls[0][0];
+    expect(created.instruction).toBe('report.pdf');
+    expect(created.name).toBe('report.pdf');
+    expect(created.editorData.root.children).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          children: [
+            expect.objectContaining({
+              type: 'file',
+              fileUrl: 'https://example.com/f/file-1',
+              name: 'report.pdf',
+              status: 'uploaded',
+            }),
+          ],
+        }),
+      ]),
+    );
+    expect(clearChatUploadFileListMock).toHaveBeenCalledTimes(1);
+    expect(messageErrorMock).not.toHaveBeenCalled();
   });
+
+  it.each(['pending', 'uploading', 'error'])(
+    'retains the attachment draft when upload is %s',
+    async (status) => {
+      fileState.chatUploadFileList = [
+        { id: 'file-1', file: new File(['report'], 'report.pdf'), status },
+      ] as any;
+      const { result } = renderHook(() => useSend('task'));
+      await act(async () => {
+        await result.current.send({
+          clearContent: vi.fn(),
+          editor: {} as Parameters<SendButtonHandler>[0]['editor'],
+          getMarkdownContent: () => 'Report',
+        });
+      });
+      expect(createTaskMock).not.toHaveBeenCalled();
+      expect(clearContentMock).not.toHaveBeenCalled();
+      expect(clearChatUploadFileListMock).not.toHaveBeenCalled();
+      expect(messageErrorMock).toHaveBeenCalledWith('dashboard.task.attachmentsNotReady');
+    },
+  );
 
   it('routes cold homepage sends to the created topic instead of relying on ChatHydration timing', async () => {
     const { result } = renderHook(() => useSend());
@@ -363,6 +483,9 @@ describe('Home InputArea useSend', () => {
     expect(routerMock.push).toHaveBeenCalledWith('/agent/agt_inbox');
 
     const sentPayload = sendMessageMock.mock.calls[0][0];
+
+    sentPayload.onPreflightFailure();
+    expect(restoreChatContextSelectionsMock).toHaveBeenCalledWith('home:chat:agt_inbox', []);
 
     await act(async () => {
       await sentPayload.onTopicCreated('tpc_created');
@@ -451,18 +574,20 @@ describe('Home InputArea useSend', () => {
   it('passes context selections through starter agent mode sends', async () => {
     homeState.inputActiveMode = 'agent';
     activeWorkspaceSlugMock.value = 'team';
-    fileState.chatContextSelections = [
-      {
-        content: 'const selected = true;',
-        filePath: 'src/example.ts',
-        id: 'code-selection',
-        lineRange: { endLine: 12, startLine: 10 },
-        preview: 'src/example.ts:10-12',
-        source: 'code',
-        title: 'src/example.ts:10-12',
-        workingDirectory: '/repo',
-      },
-    ];
+    fileState.chatContextSelectionsByContext = {
+      'home:chat:agt_inbox': [
+        {
+          content: 'const selected = true;',
+          filePath: 'src/example.ts',
+          id: 'code-selection',
+          lineRange: { endLine: 12, startLine: 10 },
+          preview: 'src/example.ts:10-12',
+          source: 'code',
+          title: 'src/example.ts:10-12',
+          workingDirectory: '/repo',
+        },
+      ],
+    };
 
     const { result } = renderHook(() => useSend());
     const params: Parameters<SendButtonHandler>[0] = {
@@ -490,6 +615,6 @@ describe('Home InputArea useSend', () => {
         workspaceSlug: 'team',
       }),
     );
-    expect(clearChatContextSelectionsMock).toHaveBeenCalledTimes(1);
+    expect(clearChatContextSelectionsMock).toHaveBeenCalledWith('home:chat:agt_inbox');
   });
 });

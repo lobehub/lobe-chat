@@ -1,9 +1,8 @@
 import { TITLE_BAR_HEIGHT } from '@lobechat/desktop-bridge';
-import { Flexbox } from '@lobehub/ui';
-import { Divider } from 'antd';
-import { createStaticStyles, cx } from 'antd-style';
+import { Divider, Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
 
+import { useDeferredMount } from '@/hooks/useDeferredMount';
 import { electronStylish } from '@/styles/electron';
 import { getPlatform } from '@/utils/platform';
 
@@ -18,22 +17,9 @@ import WinControl from './WinControl';
 
 const platform = getPlatform();
 
-// A translucent tint rather than a solid color: the desktop body is deliberately
-// semi-transparent for vibrancy, and an opaque titlebar would kill it. The tint only
-// needs to push the bar a step away from the opaque content card so the attached
-// active tab reads as part of the card.
-const styles = createStaticStyles(({ css }) => ({
-  bar: css`
-    background-color: rgb(0 0 0 / 4%);
-
-    html[data-theme='dark'] & {
-      background-color: rgb(0 0 0 / 20%);
-    }
-  `,
-}));
-
 const TitleBar = memo(() => {
   useWatchThemeUpdate();
+  const tabBarMounted = useDeferredMount();
 
   const { padding, showCustomWinControl } = getTitleBarLayoutConfig(platform);
 
@@ -41,14 +27,14 @@ const TitleBar = memo(() => {
     <Flexbox
       horizontal
       align={'center'}
-      className={cx(electronStylish.draggable, styles.bar)}
+      className={electronStylish.draggable}
       height={TITLE_BAR_HEIGHT}
       justify={'space-between'}
       style={{ minHeight: TITLE_BAR_HEIGHT, padding }}
       width={'100%'}
     >
       <NavigationBar />
-      <TabBar />
+      {tabBarMounted && <TabBar />}
 
       <Flexbox horizontal align={'center'} gap={4}>
         <Flexbox horizontal className={electronStylish.nodrag} gap={8}>
@@ -58,7 +44,7 @@ const TitleBar = memo(() => {
         </Flexbox>
         {showCustomWinControl && (
           <>
-            <Divider orientation={'vertical'} />
+            <Divider orientation={'vertical'} style={{ marginInline: 8 }} />
             <WinControl />
           </>
         )}

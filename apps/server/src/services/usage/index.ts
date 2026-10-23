@@ -4,7 +4,9 @@ import { asc, desc, eq } from 'drizzle-orm';
 
 import { messages } from '@/database/schemas';
 import { type LobeChatDatabase } from '@/database/type';
+import { notCopiedTranscript } from '@/database/utils/copiedTranscript';
 import { genRangeWhere, genWhere } from '@/database/utils/genWhere';
+import { hasLiveParentTopic } from '@/database/utils/topicVisibility';
 import { buildWorkspaceWhere } from '@/database/utils/workspace';
 import { type MessageMetadata, type ModelUsage } from '@/types/message';
 import {
@@ -31,6 +33,19 @@ export class UsageRecordService {
     this.db = db;
   }
 
+  private messageScope = () =>
+    genWhere([
+      buildWorkspaceWhere(
+        { userId: this.userId, workspaceId: this.workspaceId },
+        {
+          isDeleted: messages.isDeleted,
+          userId: messages.userId,
+          workspaceId: messages.workspaceId,
+        },
+      ),
+      hasLiveParentTopic(messages.topicId),
+    ]);
+
   /**
    * @description Find usage records by date range.
    * @param agentId Optional agent id to attribute usage to a single agent.
@@ -55,11 +70,9 @@ export class UsageRecordService {
       .from(messages)
       .where(
         genWhere([
-          buildWorkspaceWhere(
-            { userId: this.userId, workspaceId: this.workspaceId },
-            { userId: messages.userId, workspaceId: messages.workspaceId },
-          ),
+          this.messageScope(),
           eq(messages.role, 'assistant'),
+          notCopiedTranscript(),
           agentId ? eq(messages.agentId, agentId) : undefined,
           genRangeWhere([startAt, endAt], messages.createdAt, (date) => date.toDate()),
         ]),
@@ -76,6 +89,7 @@ export class UsageRecordService {
       const totalOutputTokens = usage?.totalOutputTokens ?? metadata?.totalOutputTokens ?? 0;
       return {
         createdAt: spend.createdAt,
+        credits: usage?.credits ?? 0,
         id: spend.id,
         metadata: spend.metadata,
         model: spend.model,
@@ -236,11 +250,9 @@ export class UsageRecordService {
       .from(messages)
       .where(
         genWhere([
-          buildWorkspaceWhere(
-            { userId: this.userId, workspaceId: this.workspaceId },
-            { userId: messages.userId, workspaceId: messages.workspaceId },
-          ),
+          this.messageScope(),
           eq(messages.role, 'assistant'),
+          notCopiedTranscript(),
           eq(messages.agentId, agentId),
           genRangeWhere([startAt, endAt], messages.createdAt, (date) => date.toDate()),
         ]),

@@ -11,6 +11,15 @@ class AgentBotProviderService {
     return lambdaClient.agentBotProvider.getByAgentId.query({ agentId });
   };
 
+  /**
+   * Credentials in the clear, for writing an importable export file. Separate
+   * from `getByAgentId` on purpose: that one masks, and the export is the only
+   * place allowed to ask for the real values.
+   */
+  exportByAgentId = async (agentId: string) => {
+    return lambdaClient.agentBotProvider.exportByAgentId.query({ agentId });
+  };
+
   getRuntimeStatus = async (params: {
     applicationId: string;
     platform: string;
@@ -72,12 +81,32 @@ class AgentBotProviderService {
     return lambdaClient.agentBotProvider.lineFetchBotInfo.mutate({ channelAccessToken });
   };
 
+  feishuFetchOwnerId = async (params: {
+    appId: string;
+    appSecret: string;
+    platform: 'feishu' | 'lark';
+  }) => {
+    return lambdaClient.agentBotProvider.feishuFetchOwnerId.mutate(params);
+  };
+
   wechatGetQrCode = async () => {
     return lambdaClient.agentBotProvider.wechatGetQrCode.mutate();
   };
 
   wechatPollQrStatus = async (qrcode: string) => {
     return lambdaClient.agentBotProvider.wechatPollQrStatus.query({ qrcode });
+  };
+
+  feishuRegisterBegin = async (
+    params: Parameters<typeof lambdaClient.agentBotProvider.feishuRegisterBegin.mutate>[0],
+  ) => {
+    return lambdaClient.agentBotProvider.feishuRegisterBegin.mutate(params);
+  };
+
+  feishuRegisterPoll = async (
+    params: Parameters<typeof lambdaClient.agentBotProvider.feishuRegisterPoll.query>[0],
+  ) => {
+    return lambdaClient.agentBotProvider.feishuRegisterPoll.query(params);
   };
 }
 

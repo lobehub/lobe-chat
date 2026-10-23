@@ -1,8 +1,6 @@
 'use client';
 
-import { Flexbox, Icon, Markdown, Text } from '@lobehub/ui';
-import { Button } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { Button, createStaticStyles, cssVar, Flexbox, Icon, Markdown, Text } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { CircleAlert, CircleCheck, CircleSlash, SquareArrowOutUpRight } from 'lucide-react';
 import { memo } from 'react';
@@ -69,6 +67,13 @@ const TaskCallbackMessage = memo<TaskCallbackMessageProps>(({ id }) => {
   const reason = (callback.reason ?? 'done') as CallbackReason;
   const { color, i18nKey, icon } = reasonMeta[reason] ?? reasonMeta.done;
   const content = typeof item?.content === 'string' ? item.content : '';
+  const openTask = () => openTaskDetail(callback.identifier);
+
+  const viewTaskButton = (
+    <Button icon={SquareArrowOutUpRight} size={'small'} type={'text'} onClick={openTask}>
+      {t('taskCallback.viewTask')}
+    </Button>
+  );
 
   return (
     <Flexbox paddingBlock={8}>
@@ -79,14 +84,7 @@ const TaskCallbackMessage = memo<TaskCallbackMessageProps>(({ id }) => {
             <Text strong>{t(i18nKey)}</Text>
             <span className={styles.identifier}>{callback.identifier}</span>
           </Flexbox>
-          <Button
-            icon={SquareArrowOutUpRight}
-            size={'small'}
-            type={'text'}
-            onClick={() => openTaskDetail(callback.identifier)}
-          >
-            {t('taskCallback.viewTask')}
-          </Button>
+          {viewTaskButton}
         </Flexbox>
         {content ? <Markdown variant={'chat'}>{content}</Markdown> : null}
       </Flexbox>

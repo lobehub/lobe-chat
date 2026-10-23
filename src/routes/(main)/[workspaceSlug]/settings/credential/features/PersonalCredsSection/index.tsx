@@ -1,15 +1,13 @@
 'use client';
 
-import { Flexbox } from '@lobehub/ui';
-import { Empty } from 'antd';
-import { createStaticStyles } from 'antd-style';
+import { createStaticStyles, Empty, Flexbox } from '@lobehub/ui';
 import { type FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import AsyncBoundary from '@/components/AsyncBoundary';
 import ListSkeleton from '@/components/ListSkeleton';
+import CredItem from '@/features/Settings/creds/features/CredItem';
 import { lambdaQuery } from '@/libs/trpc/client';
-import CredItem from '@/routes/(main)/settings/creds/features/CredItem';
 
 import ShareToggle from './ShareToggle';
 

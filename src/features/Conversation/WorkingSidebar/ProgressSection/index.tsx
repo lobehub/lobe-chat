@@ -1,5 +1,4 @@
-import { Checkbox, Flexbox, Icon } from '@lobehub/ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import { Checkbox, createStaticStyles, cssVar, cx, Flexbox, Icon } from '@lobehub/ui';
 import { ChevronDown, ChevronUp, CircleArrowRight } from 'lucide-react';
 import { type KeyboardEvent, memo, useCallback, useId, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -44,8 +43,6 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     font-size: 10.5px;
     font-weight: 600;
     color: ${cssVar.colorTextSecondary};
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
   `,
   headerRow: css`
     cursor: pointer;
@@ -86,7 +83,11 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
       padding 0.2s ${cssVar.motionEaseInOut};
   `,
   listInner: css`
+    /* Blockify the inline-flex Base UI Checkbox labels — without this the todo
+       rows flow inline and wrap several per line. */
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
     min-height: 0;
   `,
   processingRow: css`
@@ -118,7 +119,7 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
   `,
 }));
 
-const ProgressSection = memo(() => {
+const ProgressSection = memo<{ className?: string }>(({ className }) => {
   const { t } = useTranslation('chat');
   const [expanded, setExpanded] = useState(true);
   const context = useAgentContext();
@@ -153,7 +154,7 @@ const ProgressSection = memo(() => {
   const ringOffset = RING_CIRCUM * (1 - progress.completionPercent / 100);
 
   return (
-    <div data-testid="workspace-progress">
+    <div className={className} data-testid="workspace-progress">
       <Flexbox
         horizontal
         align="center"

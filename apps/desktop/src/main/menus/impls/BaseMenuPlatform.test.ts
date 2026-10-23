@@ -6,7 +6,11 @@ import type { App } from '@/core/App';
 import { BaseMenuPlatform } from './BaseMenuPlatform';
 
 // Create a concrete implementation for testing
-class TestMenuPlatform extends BaseMenuPlatform {}
+class TestMenuPlatform extends BaseMenuPlatform {
+  buildReloadItem(ignoreCache = false) {
+    return this.buildReloadMenuItem('Reload', ignoreCache);
+  }
+}
 class TestDevToolsMenuPlatform extends BaseMenuPlatform {
   buildDevToolsItem(label = 'Developer Tools', accelerator = 'F12') {
     return this.buildDevToolsMenuItem(label, accelerator);
@@ -40,6 +44,8 @@ const createBrowserWindow = ({
       isDevToolsFocused: vi.fn(() => isDevToolsFocused),
       isDevToolsOpened: vi.fn(() => isDevToolsOpened),
       openDevTools: vi.fn(),
+      reload: vi.fn(),
+      reloadIgnoringCache: vi.fn(),
       setDevToolsWebContents: vi.fn(),
     },
   }) as unknown as ElectronBrowserWindow;
@@ -50,6 +56,7 @@ const mockApp = {
     ns: vi.fn(),
   },
   browserManager: {
+    browsers: new Map(),
     getMainWindow: vi.fn(),
     showMainWindow: vi.fn(),
     retrieveByIdentifier: vi.fn(),
@@ -70,7 +77,11 @@ describe('BaseMenuPlatform', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(BrowserWindow).mockImplementation(() => createBrowserWindow({}));
+    // `BrowserWindow` is instantiated with `new` by the production code, so the
+    // implementation must be constructable (vitest 5 rejects arrow functions).
+    vi.mocked(BrowserWindow).mockImplementation(function () {
+      return createBrowserWindow({});
+    });
     vi.mocked(BrowserWindow.getAllWindows).mockReturnValue([]);
     vi.mocked(BrowserWindow.getFocusedWindow).mockReturnValue(null);
     menuPlatform = new TestMenuPlatform(mockApp);
@@ -91,6 +102,30 @@ describe('BaseMenuPlatform', () => {
     });
   });
 
+  describe('reload confirmation', () => {
+    it.each([false, true])(
+      'preserves the requested cache behavior (ignoreCache=%s)',
+      (ignoreCache) => {
+        const target = createBrowserWindow({});
+        const runWithUnloadConfirmation = vi.fn();
+        mockApp.browserManager.browsers.set('test', {
+          webContents: target.webContents,
+          runWithUnloadConfirmation,
+        } as any);
+        const item = menuPlatform.buildReloadItem(ignoreCache);
+        item.click?.(undefined as any, target, undefined as any);
+        expect(target.webContents.reload).not.toHaveBeenCalled();
+        expect(target.webContents.reloadIgnoringCache).not.toHaveBeenCalled();
+
+        const originalOperation = runWithUnloadConfirmation.mock.calls[0][0];
+        originalOperation();
+        expect(target.webContents.reload).toHaveBeenCalledTimes(ignoreCache ? 0 : 1);
+        expect(target.webContents.reloadIgnoringCache).toHaveBeenCalledTimes(ignoreCache ? 1 : 0);
+        mockApp.browserManager.browsers.clear();
+      },
+    );
+  });
+
   describe('buildDevToolsMenuItem', () => {
     let devToolsMenuPlatform: TestDevToolsMenuPlatform;
 
@@ -100,7 +135,9 @@ describe('BaseMenuPlatform', () => {
 
     it('should create a managed DevTools window when the target window has no DevTools open', () => {
       const devToolsWindow = createBrowserWindow({});
-      vi.mocked(BrowserWindow).mockImplementation(() => devToolsWindow);
+      vi.mocked(BrowserWindow).mockImplementation(function () {
+        return devToolsWindow;
+      });
       const targetWindow = createBrowserWindow({ isDevToolsOpened: false });
       const item = devToolsMenuPlatform.buildDevToolsItem();
 
@@ -163,7 +200,9 @@ describe('BaseMenuPlatform', () => {
     it('should replace default DevTools with a managed DevTools window', () => {
       vi.useFakeTimers();
       const devToolsWindow = createBrowserWindow({});
-      vi.mocked(BrowserWindow).mockImplementation(() => devToolsWindow);
+      vi.mocked(BrowserWindow).mockImplementation(function () {
+        return devToolsWindow;
+      });
       const targetWindow = createBrowserWindow({
         isDevToolsFocused: false,
         isDevToolsOpened: true,

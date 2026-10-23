@@ -1,22 +1,17 @@
-import { Accordion, Flexbox } from '@lobehub/ui';
-import React, { type Key, memo, useCallback, useMemo } from 'react';
+import { AccordionRoot, Flexbox } from '@lobehub/ui';
+import React, { memo, useCallback, useMemo } from 'react';
 
 import { useAgentStore } from '@/store/agent';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
-import TaskList from './Task';
 import Topic from './Topic';
 
 export enum ChatSidebarKey {
-  Tasks = 'tasks',
   Topic = 'topic',
 }
 
-// Topic expanded, Tasks collapsed — the resting state for an agent with no
-// saved preference (matches the prior `defaultExpandedKeys={[Topic]}`).
 const DEFAULT_EXPANDED: Record<string, boolean> = {
-  [ChatSidebarKey.Tasks]: false,
   [ChatSidebarKey.Topic]: true,
 };
 
@@ -33,12 +28,11 @@ const Body = memo(() => {
   }, [sections]);
 
   const handleExpandedChange = useCallback(
-    (keys: Key[]) => {
+    (keys: string[]) => {
       if (!agentId) return;
       updateSystemStatus({
         expandAgentSidebarSectionsByAgent: {
           [agentId]: {
-            [ChatSidebarKey.Tasks]: keys.includes(ChatSidebarKey.Tasks),
             [ChatSidebarKey.Topic]: keys.includes(ChatSidebarKey.Topic),
           },
         },
@@ -49,13 +43,17 @@ const Body = memo(() => {
 
   return (
     <Flexbox paddingInline={4}>
-      <Accordion expandedKeys={expandedKeys} gap={8} onExpandedChange={handleExpandedChange}>
-        <TaskList itemKey={ChatSidebarKey.Tasks} />
+      <AccordionRoot
+        indicatorPlacement="inline"
+        style={{ gap: 8 }}
+        value={expandedKeys}
+        onValueChange={(next) => handleExpandedChange(next as string[])}
+      >
         <Topic
           expanded={expandedKeys.includes(ChatSidebarKey.Topic)}
           itemKey={ChatSidebarKey.Topic}
         />
-      </Accordion>
+      </AccordionRoot>
     </Flexbox>
   );
 });

@@ -18,8 +18,17 @@ export const FeatureFlagsSchema = z.object({
   api_key_manage: FeatureFlagValue.optional(),
   edit_agent: FeatureFlagValue.optional(),
 
+  /**
+   * Rollout gate for publishing or re-enabling Agent Share. Array values are
+   * creator user IDs. Visiting, chatting on, and managing existing shares do
+   * not require this flag. Deployment support is independently enforced by
+   * `ENABLE_BUSINESS_FEATURES` (see `_helpers/agentShareFeatureGate.ts`).
+   */
+  agent_share: FeatureFlagValue.optional(),
+
   ai_image: FeatureFlagValue.optional(),
   speech_to_text: FeatureFlagValue.optional(),
+  voice_dictation: FeatureFlagValue.optional(),
   token_counter: FeatureFlagValue.optional(),
 
   welcome_suggest: FeatureFlagValue.optional(),
@@ -30,8 +39,43 @@ export const FeatureFlagsSchema = z.object({
 
   rag_eval: FeatureFlagValue.optional(),
 
+  /**
+   * Rollout gate for the multiplexed Agent Gateway socket (protocol v2: one
+   * `/v2/ws` connection per user instead of one per run). Array values are user
+   * ids, so the rollout can go allowlist → everyone without a deploy.
+   *
+   * Deployment support is independent and enforced separately: the client also
+   * requires `serverConfig.agentGatewayProtocol === 2`, because a gateway
+   * without `/v2/ws` cannot serve this no matter what the flag says.
+   */
+  agent_gateway_mux: FeatureFlagValue.optional(),
+
+  /**
+   * LobeHub Mobile rollout switch for the multiplexed gateway socket and
+   * protocol-v2 payloads. Independent from `agent_gateway_mux`: flipping one
+   * never changes the other client. Array values are user ids.
+   */
+  agent_gateway_mux_mobile: FeatureFlagValue.optional(),
+
+  /**
+   * Rollout gate for relaying LLM calls to the user's device: a model provider
+   * only that device can reach (a local Ollama / LM Studio, a private-network
+   * endpoint) runs one attempt at a time on the client that started the run,
+   * while the agent loop stays on the server. Off: such providers keep being
+   * dialed by the server. Array values are user ids.
+   */
+  agent_llm_relay: FeatureFlagValue.optional(),
+
+  /**
+   * Dashboards: monitoring widgets built by the `lobe-dashboard` agent tool,
+   * the home / project dashboard pages, the widget Portal and in-chat widget
+   * previews. Off: none of it is reachable and the tool is never offered;
+   * already-published widgets keep refreshing on their schedule. Array values
+   * are user ids.
+   */
+  dashboard: FeatureFlagValue.optional(),
+
   // internal flag
-  agent_self_iteration: FeatureFlagValue.optional(),
   agent_onboarding: FeatureFlagValue.optional(),
   dev_dock: FeatureFlagValue.optional(),
   dev_dock_workspaces: z.array(z.string()).optional(),
@@ -64,7 +108,8 @@ export const evaluateFeatureFlag = (
   if (typeof flagValue === 'boolean') return flagValue;
 
   if (Array.isArray(flagValue)) {
-    return userId ? flagValue.includes(userId) : false;
+    if (userId && flagValue.includes(userId)) return true;
+    return false;
   }
 };
 
@@ -77,6 +122,12 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
   api_key_manage: false,
   edit_agent: true,
 
+  // Cloud-only grayscale: off everywhere until an admin publishes a whitelist
+  // (array of user IDs) or flips it to true. Self-hosted deployments
+  // are additionally hard-blocked by ENABLE_BUSINESS_FEATURES on the server
+  // gate, so setting this env-side does not enable the feature there.
+  agent_share: false,
+
   ai_image: true,
 
   check_updates: true,
@@ -86,7 +137,17 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
   knowledge_base: true,
   rag_eval: false,
 
-  agent_self_iteration: isDev,
+  // Off until an admin publishes a user allowlist or flips it to true; the
+  // v1 socket stays the default everywhere until then.
+  agent_gateway_mux: false,
+  agent_gateway_mux_mobile: false,
+
+  // Off until the client executor ships everywhere; allowlist first.
+  agent_llm_relay: false,
+
+  // Off until an admin publishes a user allowlist or flips it to true.
+  dashboard: false,
+
   agent_onboarding: isDev,
   dev_dock: isDev,
   auth_captcha: true,
@@ -97,6 +158,7 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
 
   market: true,
   speech_to_text: true,
+  voice_dictation: false,
   changelog: true,
 
   // the flags below can only be used with commercial license
@@ -115,6 +177,12 @@ export const mapFeatureFlagsEnvToState = (
 ): IFeatureFlagsState => {
   return {
     isAgentEditable: evaluateFeatureFlag(config.edit_agent, userId),
+
+    enableAgentShare: evaluateFeatureFlag(config.agent_share, userId),
+    enableGatewayMux: evaluateFeatureFlag(config.agent_gateway_mux, userId),
+    enableGatewayMuxMobile: evaluateFeatureFlag(config.agent_gateway_mux_mobile, userId),
+    enableLlmRelay: evaluateFeatureFlag(config.agent_llm_relay, userId),
+    enableDashboard: evaluateFeatureFlag(config.dashboard, userId),
     showProvider: evaluateFeatureFlag(config.provider_settings, userId),
 
     showOpenAIApiKey: evaluateFeatureFlag(config.openai_api_key, userId),
@@ -130,7 +198,6 @@ export const mapFeatureFlagsEnvToState = (
 
     enableKnowledgeBase: evaluateFeatureFlag(config.knowledge_base, userId),
     enableRAGEval: evaluateFeatureFlag(config.rag_eval, userId),
-    enableAgentSelfIteration: evaluateFeatureFlag(config.agent_self_iteration, userId),
     enableAgentOnboarding: evaluateFeatureFlag(config.agent_onboarding, userId),
     enableDevDock: evaluateFeatureFlag(config.dev_dock, userId),
     enableAuthCaptcha: evaluateFeatureFlag(config.auth_captcha, userId),
@@ -142,6 +209,7 @@ export const mapFeatureFlagsEnvToState = (
 
     showMarket: evaluateFeatureFlag(config.market, userId),
     enableSTT: evaluateFeatureFlag(config.speech_to_text, userId),
+    enableVoiceDictation: evaluateFeatureFlag(config.voice_dictation, userId),
 
     hideGitHub: evaluateFeatureFlag(config.commercial_hide_github, userId),
     hideDocs: evaluateFeatureFlag(config.commercial_hide_docs, userId),

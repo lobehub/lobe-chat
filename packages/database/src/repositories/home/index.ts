@@ -1,25 +1,28 @@
 import {
   type SidebarAgentItem,
+  type SidebarAgentLabel,
   type SidebarAgentListResponse,
   type SidebarGroup,
 } from '@lobechat/types';
 import { cleanObject } from '@lobechat/utils';
-import { and, count, desc, eq, inArray, isNull, not, or, sql } from 'drizzle-orm';
+import { and, asc, count, desc, eq, inArray, isNull, not, or, sql } from 'drizzle-orm';
 
 import { ChatGroupModel } from '../../models/chatGroup';
 import {
+  agentLabelAssignments,
+  agentLabels,
   agents,
-  agentsToSessions,
   chatGroups,
   sessionGroups,
-  sessions,
   topics,
-  workspaceUserSettings,
 } from '../../schemas';
 import { type LobeChatDatabase } from '../../type';
 import { sanitizeBm25Query } from '../../utils/bm25';
 import { normalizeInboxAgentMeta } from '../../utils/inboxAgent';
+import { inJsonStringArray } from '../../utils/inJsonStringArray';
+import { notShareVisitorTopic } from '../../utils/shareVisitor';
 import { buildWorkspaceWhere } from '../../utils/workspace';
+import type { FtsSearchCandidateSource } from '../ftsSearch';
 
 // Mirrors the main chat sidebar's system-topic exclusions, plus the legacy
 // task_manager trigger. These topics are surfaced in their own product surfaces,
@@ -41,11 +44,18 @@ export class HomeRepository {
   private userId: string;
   private workspaceId?: string;
   private db: LobeChatDatabase;
+  private ftsSearchCandidateSource?: FtsSearchCandidateSource;
 
-  constructor(db: LobeChatDatabase, userId: string, workspaceId?: string) {
+  constructor(
+    db: LobeChatDatabase,
+    userId: string,
+    workspaceId?: string,
+    ftsSearchCandidateSource?: FtsSearchCandidateSource,
+  ) {
     this.userId = userId;
     this.workspaceId = workspaceId;
     this.db = db;
+    this.ftsSearchCandidateSource = ftsSearchCandidateSource;
   }
 
   private get scope() {
@@ -61,36 +71,41 @@ export class HomeRepository {
 
   /**
    * Get sidebar agent list with pinned, grouped, and ungrouped items
+   *
+   * @param includeLabels - whether the caller holds `agent_label:read`. The
+   *   router decides; defaulting to `true` keeps personal mode and every
+   *   existing caller unchanged, since that grant only exists in a workspace.
    */
-  async getSidebarAgentList(): Promise<SidebarAgentListResponse> {
-    // 1. Query all agents (non-virtual) with their session info (if exists).
+  async getSidebarAgentList(
+    includeLabels = true,
+    includeGroups = true,
+  ): Promise<SidebarAgentListResponse> {
+    // 1. Query all non-virtual agents.
     //    `visibility` is selected so we can later bucket public vs. the
     //    current user's private rows; the WHERE already hides other members'
     //    private rows via the workspace-aware predicate.
     const agentList = await this.db
       .select({
         agencyConfig: agents.agencyConfig,
-        agentSessionGroupId: agents.sessionGroupId,
+        sessionGroupId: agents.sessionGroupId,
         agentUserId: agents.userId,
         avatar: agents.avatar,
         backgroundColor: agents.backgroundColor,
         description: agents.description,
         id: agents.id,
+        name: agents.name,
+        model: agents.model,
         pinned: agents.pinned,
-        sessionGroupId: sessions.groupId,
-        sessionId: sessions.id,
-        sessionPinned: sessions.pinned,
         slug: agents.slug,
         title: agents.title,
         updatedAt: agents.updatedAt,
         visibility: agents.visibility,
       })
       .from(agents)
-      .leftJoin(agentsToSessions, eq(agents.id, agentsToSessions.agentId))
-      .leftJoin(sessions, eq(agentsToSessions.sessionId, sessions.id))
       .where(
         and(
           buildWorkspaceWhere(this.scope, {
+            isDeleted: agents.isDeleted,
             userId: agents.userId,
             workspaceId: agents.workspaceId,
             visibility: agents.visibility,
@@ -117,6 +132,7 @@ export class HomeRepository {
       .from(chatGroups)
       .where(
         buildWorkspaceWhere(this.scope, {
+          isDeleted: chatGroups.isDeleted,
           userId: chatGroups.userId,
           workspaceId: chatGroups.workspaceId,
           visibility: chatGroups.visibility,
@@ -133,36 +149,40 @@ export class HomeRepository {
     // loaded topics for.
     const { agentUnread, groupUnread } = await this.getUnreadCounts();
 
-    // 3. Query sessionGroups (user-defined folders). Folders are a per-member
-    // concern in workspace mode: only the caller's own folders render —
-    // another member's folder must never shape this caller's sidebar. Items
-    // whose groupId points at a folder invisible to the caller fall back to
-    // the ungrouped list in processAgentList.
-    const folderWhere = buildWorkspaceWhere(this.scope, {
-      userId: sessionGroups.userId,
-      workspaceId: sessionGroups.workspaceId,
-      visibility: sessionGroups.visibility,
-    });
-    const groupList = await this.db
-      .select({
-        id: sessionGroups.id,
-        name: sessionGroups.name,
-        sort: sessionGroups.sort,
-        userId: sessionGroups.userId,
-        visibility: sessionGroups.visibility,
-      })
-      .from(sessionGroups)
-      .where(
-        this.workspaceId ? and(folderWhere, eq(sessionGroups.userId, this.userId)) : folderWhere,
-      )
-      .orderBy(sessionGroups.sort);
+    // 2.3 Labels applied to agents — one scope-wide query, attached per item
+    // in processAgentList so the list can render tags / group by label.
+    //
+    // Skipped when the caller lacks the label read grant: the registry is
+    // gated on `agent_label:read`, and this payload carries the same label
+    // names and colors, so returning it anyway would just be a second way in.
+    const agentLabelsMap = includeLabels ? await this.getAgentLabelsMap() : new Map();
 
-    // 3.5 Per-member folder assignments + pins: workspace members organize
-    // shared items without touching the shared `agents.sessionGroupId` /
-    // `pinned` columns (one member's drag or pin must not reshape another
-    // member's sidebar). These entries are the sole source in workspace mode
-    // — see processAgentList for the no-fallback rule.
-    const { assignmentOverrides, pinnedOverrides } = await this.getSidebarPreferenceOverrides();
+    // 3. Query sessionGroups (user-defined folders). Folders are the shared
+    // skeleton of a workspace sidebar: every member sees the same public
+    // folders, in the same shared order. Private folders stay scoped to their
+    // creator through the standard visibility predicate. Items whose groupId
+    // points at a folder invisible to the caller fall back to the ungrouped
+    // list in processAgentList.
+    const groupList = !includeGroups
+      ? []
+      : await this.db
+          .select({
+            id: sessionGroups.id,
+            name: sessionGroups.name,
+            sort: sessionGroups.sort,
+            userId: sessionGroups.userId,
+            visibility: sessionGroups.visibility,
+          })
+          .from(sessionGroups)
+          .where(
+            buildWorkspaceWhere(this.scope, {
+              isDeleted: sessionGroups.isDeleted,
+              userId: sessionGroups.userId,
+              workspaceId: sessionGroups.workspaceId,
+              visibility: sessionGroups.visibility,
+            }),
+          )
+          .orderBy(sessionGroups.sort);
 
     // 4. Process and categorize
     return this.processAgentList(
@@ -172,9 +192,40 @@ export class HomeRepository {
       memberAvatarsMap,
       agentUnread,
       groupUnread,
-      assignmentOverrides,
-      pinnedOverrides,
+      agentLabelsMap,
     );
+  }
+
+  /**
+   * Labels applied to agents in the current scope, keyed by agent id. The
+   * junction rows carry the same workspace scoping as the label registry, so
+   * one predicate covers both personal and workspace mode.
+   */
+  private async getAgentLabelsMap(): Promise<Map<string, SidebarAgentLabel[]>> {
+    const rows = await this.db
+      .select({
+        agentId: agentLabelAssignments.agentId,
+        color: agentLabels.color,
+        id: agentLabels.id,
+        name: agentLabels.name,
+      })
+      .from(agentLabelAssignments)
+      .innerJoin(agentLabels, eq(agentLabelAssignments.labelId, agentLabels.id))
+      .where(
+        buildWorkspaceWhere(this.scope, {
+          userId: agentLabelAssignments.userId,
+          workspaceId: agentLabelAssignments.workspaceId,
+        }),
+      )
+      .orderBy(asc(agentLabels.name));
+
+    const map = new Map<string, SidebarAgentLabel[]>();
+    for (const { agentId, ...label } of rows) {
+      const existing = map.get(agentId) || [];
+      existing.push(label);
+      map.set(agentId, existing);
+    }
+    return map;
   }
 
   /**
@@ -198,6 +249,9 @@ export class HomeRepository {
         .where(
           and(
             buildWorkspaceWhere(this.scope, topics),
+            // Agent-share visitor topics keep the creator's userId — never bump
+            // the creator's own unread badge for a visitor's conversation.
+            notShareVisitorTopic(),
             isUnread,
             isMainSidebarTopic,
             sql`${topics.agentId} is not null`,
@@ -210,6 +264,7 @@ export class HomeRepository {
         .where(
           and(
             buildWorkspaceWhere(this.scope, topics),
+            notShareVisitorTopic(),
             isUnread,
             isMainSidebarTopic,
             sql`${topics.groupId} is not null`,
@@ -230,16 +285,15 @@ export class HomeRepository {
   private processAgentList(
     agentItems: Array<{
       agencyConfig: { heterogeneousProvider?: { type?: string } } | null;
-      agentSessionGroupId: string | null;
       agentUserId: string;
       avatar: string | null;
       backgroundColor: string | null;
       description: string | null;
       id: string;
+      name: string | null;
+      model: string | null;
       pinned: boolean | null;
       sessionGroupId: string | null;
-      sessionId: string | null;
-      sessionPinned: boolean | null;
       slug: string | null;
       title: string | null;
       updatedAt: Date;
@@ -267,23 +321,14 @@ export class HomeRepository {
     memberAvatarsMap: Map<string, Array<{ avatar: string; background?: string }>>,
     agentUnread: Map<string, number> = new Map(),
     groupUnread: Map<string, number> = new Map(),
-    assignmentOverrides: Record<string, string | null> = {},
-    pinnedOverrides: Record<string, boolean> = {},
+    agentLabelsMap: Map<string, SidebarAgentLabel[]> = new Map(),
   ): SidebarAgentListResponse {
-    // Sidebar organization (folder + pin) is FULLY per-member in workspace
-    // mode: only the caller's own workspace_user_settings entries apply — the
-    // shared `sessionGroupId` / `pinned` columns are ignored entirely (no
-    // fallback), so nothing another member did (or a transferred-in agent's
-    // personal-mode state) can shape this caller's sidebar. Personal mode
-    // keeps reading the shared columns — single-user data, nothing to leak.
-    const perMember = Boolean(this.workspaceId);
-    const effectiveGroupId = (itemId: string, sharedGroupId: string | null): string | null =>
-      perMember ? (assignmentOverrides[itemId] ?? null) : sharedGroupId;
-    const effectivePinned = (itemId: string, sharedPinned: boolean): boolean =>
-      perMember ? (pinnedOverrides[itemId] ?? false) : sharedPinned;
+    // Sidebar organization (folder membership + pin) is SHARED in workspace
+    // mode: it reads the same `sessionGroupId` / `pinned` columns as personal
+    // mode, so one member's grouping and pinning is what every member sees.
+    // The only per-member layer left is show/hide, applied client-side from
+    // `sidebarAgentVisibilityOverrides` / `sidebarHiddenGroupIds`.
     // Convert to unified format
-    // For pinned status: agents.pinned takes priority, fallback to sessions.pinned for backward compatibility
-    // For groupId: agents.sessionGroupId takes priority, fallback to sessions.groupId for backward compatibility
     type EnrichedItem = SidebarAgentItem & {
       groupId: string | null;
       isPrivate: boolean;
@@ -301,12 +346,14 @@ export class HomeRepository {
           avatar: meta.avatar,
           backgroundColor: a.backgroundColor,
           description: a.description,
-          groupId: effectiveGroupId(a.id, a.agentSessionGroupId ?? a.sessionGroupId),
+          groupId: a.sessionGroupId,
           heterogeneousType: a.agencyConfig?.heterogeneousProvider?.type ?? null,
           id: a.id,
           isPrivate: visibility === 'private',
-          pinned: effectivePinned(a.id, a.pinned ?? a.sessionPinned ?? false),
-          sessionId: a.sessionId,
+          labels: agentLabelsMap.get(a.id),
+          name: a.name,
+          model: a.model,
+          pinned: a.pinned ?? false,
           slug: a.slug,
           title: meta.title,
           type: 'agent' as const,
@@ -325,11 +372,10 @@ export class HomeRepository {
           backgroundColor: g.backgroundColor,
           description: g.description,
           groupAvatar: g.avatar,
-          groupId: effectiveGroupId(g.id, g.groupId),
+          groupId: g.groupId,
           id: g.id,
           isPrivate: visibility === 'private',
-          pinned: effectivePinned(g.id, g.pinned ?? false),
-          sessionId: null,
+          pinned: g.pinned ?? false,
           title: g.title,
           type: 'group' as const,
           unreadCount: groupUnread.get(g.id) ?? 0,
@@ -367,19 +413,23 @@ export class HomeRepository {
 
     for (const item of allItems) {
       const { groupId, isPrivate, ...sidebarItem } = item;
-      const cleanedItem = cleanObject(sidebarItem) as SidebarAgentItem;
+      const validGroupIds = isPrivate ? privateGroupIds : groupIds;
+      const categoryId = groupId && validGroupIds.has(groupId) ? groupId : null;
+      const cleanedItem = {
+        ...cleanObject(sidebarItem),
+        groupId: categoryId,
+      } as SidebarAgentItem;
 
       if (item.pinned) {
         (isPrivate ? privatePinned : pinned).push(cleanedItem);
         continue;
       }
 
-      const validGroupIds = isPrivate ? privateGroupIds : groupIds;
-      if (groupId && validGroupIds.has(groupId)) {
+      if (categoryId) {
         const bucket = isPrivate ? privateGroupedMap : groupedMap;
-        const existing = bucket.get(groupId) || [];
+        const existing = bucket.get(categoryId) || [];
         existing.push(cleanedItem);
-        bucket.set(groupId, existing);
+        bucket.set(categoryId, existing);
       } else if (isPrivate) {
         privateUngrouped.push(cleanedItem);
       } else {
@@ -409,31 +459,6 @@ export class HomeRepository {
   }
 
   /**
-   * Per-member sidebar state from workspace_user_settings. Folder assignment
-   * and pinning are fully per-member in workspace mode — these entries are
-   * the only source of truth; the shared `sessionGroupId` / `pinned` columns
-   * are ignored (no fallback), so no other member's action leaks into the
-   * caller's sidebar.
-   */
-  private async getSidebarPreferenceOverrides(): Promise<{
-    assignmentOverrides: Record<string, string | null>;
-    pinnedOverrides: Record<string, boolean>;
-  }> {
-    if (!this.workspaceId) return { assignmentOverrides: {}, pinnedOverrides: {} };
-
-    const settings = await this.db.query.workspaceUserSettings.findFirst({
-      where: and(
-        eq(workspaceUserSettings.workspaceId, this.workspaceId),
-        eq(workspaceUserSettings.userId, this.userId),
-      ),
-    });
-    return {
-      assignmentOverrides: settings?.preference?.sidebarGroupAssignments ?? {},
-      pinnedOverrides: settings?.preference?.sidebarPinnedOverrides ?? {},
-    };
-  }
-
-  /**
    * Search agents and chat groups by keyword
    * Searches in title and description fields
    */
@@ -441,10 +466,27 @@ export class HomeRepository {
     if (!keyword.trim()) return [];
 
     const bm25Query = sanitizeBm25Query(keyword);
+    const candidateResults = this.ftsSearchCandidateSource?.ftsSearchCandidateEnabled
+      ? await Promise.all([
+          this.ftsSearchCandidateSource.ftsSearchCandidates({
+            entity: 'agents',
+            filters: { excludeVirtual: true },
+            pagination: {},
+            query: { fields: ['title', 'description'], text: keyword },
+          }),
+          this.ftsSearchCandidateSource.ftsSearchCandidates({
+            entity: 'chatGroups',
+            filters: {},
+            pagination: {},
+            query: { fields: ['title', 'description'], text: keyword },
+          }),
+        ])
+      : undefined;
+    const agentCandidateIds = candidateResults?.[0].candidates.map(({ id }) => id);
+    const chatGroupCandidateIds = candidateResults?.[1].candidates.map(({ id }) => id);
 
     // Run agent and chat group searches in parallel
-    const [{ pinnedOverrides }, agentResults, chatGroupResults] = await Promise.all([
-      this.getSidebarPreferenceOverrides(),
+    const [agentResults, chatGroupResults] = await Promise.all([
       // 1. Search agents by title or description (BM25)
       this.db
         .select({
@@ -452,9 +494,8 @@ export class HomeRepository {
           backgroundColor: agents.backgroundColor,
           description: agents.description,
           id: agents.id,
+          name: agents.name,
           pinned: agents.pinned,
-          sessionId: sessions.id,
-          sessionPinned: sessions.pinned,
           slug: agents.slug,
           title: agents.title,
           updatedAt: agents.updatedAt,
@@ -462,13 +503,13 @@ export class HomeRepository {
           visibility: agents.visibility,
         })
         .from(agents)
-        .leftJoin(agentsToSessions, eq(agents.id, agentsToSessions.agentId))
-        .leftJoin(sessions, eq(agentsToSessions.sessionId, sessions.id))
         .where(
           and(
             buildWorkspaceWhere(this.scope, agents),
             not(eq(agents.virtual, true)),
-            sql`(${agents.title} @@@ ${bm25Query} OR ${agents.description} @@@ ${bm25Query})`,
+            agentCandidateIds
+              ? inJsonStringArray(agents.id, agentCandidateIds)
+              : sql`(${agents.title} @@@ ${bm25Query} OR ${agents.description} @@@ ${bm25Query})`,
           ),
         )
         .orderBy(desc(agents.updatedAt)),
@@ -489,7 +530,9 @@ export class HomeRepository {
         .where(
           and(
             buildWorkspaceWhere(this.scope, chatGroups),
-            sql`(${chatGroups.title} @@@ ${bm25Query} OR ${chatGroups.description} @@@ ${bm25Query})`,
+            chatGroupCandidateIds
+              ? inJsonStringArray(chatGroups.id, chatGroupCandidateIds)
+              : sql`(${chatGroups.title} @@@ ${bm25Query} OR ${chatGroups.description} @@@ ${bm25Query})`,
           ),
         )
         .orderBy(desc(chatGroups.updatedAt)),
@@ -514,10 +557,8 @@ export class HomeRepository {
           backgroundColor: a.backgroundColor,
           description: a.description,
           id: a.id,
-          pinned: this.workspaceId
-            ? (pinnedOverrides[a.id] ?? false)
-            : (a.pinned ?? a.sessionPinned ?? false),
-          sessionId: a.sessionId,
+          name: a.name,
+          pinned: a.pinned ?? false,
           title: meta.title,
           type: 'agent' as const,
           updatedAt: a.updatedAt,
@@ -533,7 +574,7 @@ export class HomeRepository {
           backgroundColor: g.backgroundColor,
           description: g.description,
           id: g.id,
-          pinned: this.workspaceId ? (pinnedOverrides[g.id] ?? false) : (g.pinned ?? false),
+          pinned: g.pinned ?? false,
           title: g.title,
           type: 'group' as const,
           updatedAt: g.updatedAt,

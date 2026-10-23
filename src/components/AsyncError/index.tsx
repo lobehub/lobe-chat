@@ -1,8 +1,6 @@
 'use client';
 
-import { Center, Flexbox, Icon, Text } from '@lobehub/ui';
-import { Button } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { Button, Center, createStaticStyles, cssVar, Flexbox, Icon, Text } from '@lobehub/ui';
 import { RotateCwIcon, TriangleAlertIcon } from 'lucide-react';
 import { memo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { normalizeAsyncError } from '@/libs/swr/normalizeError';
 
 /**
- * The error counterpart to the loading family (`NeuralNetworkLoading`,
+ * The error counterpart to the loading family (`Spin`,
  * `SkeletonLoading`, …). One reusable component, several `variant`s so different
  * surfaces express failure differently without each re-implementing the
  * icon + reason + retry plumbing. Pick the variant by where the failure lives;
@@ -25,6 +23,12 @@ import { normalizeAsyncError } from '@/libs/swr/normalizeError';
 export type AsyncErrorVariant = 'page' | 'block' | 'inline' | 'metric';
 
 export interface AsyncErrorProps {
+  /**
+   * Custom action rendered in the retry button's slot — for terminal errors
+   * where retrying can never succeed but the user still needs a way out
+   * (e.g. a Back button on a 403).
+   */
+  action?: ReactNode;
   /** Override the auto-derived description (status-based copy otherwise). */
   description?: ReactNode;
   /** The thrown error; normalized for status-specific copy + retryable gating. */
@@ -66,7 +70,7 @@ const styles = createStaticStyles(({ css }) => ({
 }));
 
 const AsyncError = memo<AsyncErrorProps>(
-  ({ variant = 'block', error, onRetry, retrying = false, title, description }) => {
+  ({ variant = 'block', error, onRetry, retrying = false, title, description, action }) => {
     const { t } = useTranslation('error');
     const { status, retryable } = normalizeAsyncError(error);
 
@@ -144,17 +148,18 @@ const AsyncError = memo<AsyncErrorProps>(
             {reason}
           </Text>
         </Flexbox>
-        {showRetry && (
-          <Button
-            disabled={retrying}
-            icon={<Icon icon={RotateCwIcon} />}
-            loading={retrying}
-            size={'small'}
-            onClick={onRetry}
-          >
-            {t('error.retry')}
-          </Button>
-        )}
+        {action ??
+          (showRetry && (
+            <Button
+              disabled={retrying}
+              icon={<Icon icon={RotateCwIcon} />}
+              loading={retrying}
+              size={'small'}
+              onClick={onRetry}
+            >
+              {t('error.retry')}
+            </Button>
+          ))}
       </Center>
     );
   },

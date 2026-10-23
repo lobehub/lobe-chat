@@ -1,8 +1,7 @@
 'use client';
 
 import { type FlexboxProps } from '@lobehub/ui';
-import { ActionIcon, Flexbox } from '@lobehub/ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import { ActionIcon, createStaticStyles, cssVar, cx, Flexbox } from '@lobehub/ui';
 import { XIcon } from 'lucide-react';
 import { memo } from 'react';
 

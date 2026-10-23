@@ -1,10 +1,12 @@
+import type { MessengerOversizeImageStrategy } from '@lobechat/const';
+
 import type { MessengerPlatform } from '@/config/messenger';
 import type { SafeMessengerAccountLink } from '@/database/models/messengerAccountLink';
 import { MessengerAccountLinkModel } from '@/database/models/messengerAccountLink';
 import type { LobeChatDatabase } from '@/database/type';
-import type { WechatOutboundAttachment } from '@/server/services/bot/platforms/wechat/sendAttachments';
+import type { BotMessageAttachment } from '@/server/services/bot/platforms/types';
 import { getInstallationStore } from '@/server/services/messenger/installations';
-import { getMessengerRouter } from '@/server/services/messenger/MessengerRouter';
+import { sendOutboundDirectMessage } from '@/server/services/messenger/outbound';
 import {
   getWechatPushWindowStatus,
   sendProactiveWechatMessage,
@@ -35,6 +37,7 @@ export const MESSENGER_PUSH_PLATFORMS = [
   'slack',
   'discord',
   'wechat',
+  'linq',
 ] as const satisfies readonly MessengerPlatform[];
 
 export type MessengerPushPlatform = (typeof MESSENGER_PUSH_PLATFORMS)[number];
@@ -65,14 +68,16 @@ const resolveAccountLink = async (params: {
 };
 
 const sendAlwaysAvailableMessage = async (params: {
+  attachments?: BotMessageAttachment[];
   content?: string;
+  oversizeImageStrategy?: MessengerOversizeImageStrategy;
   platform: Exclude<MessengerPushPlatform, 'wechat'>;
   serverDB: LobeChatDatabase;
   tenantId?: string;
   userId: string;
 }): Promise<MessengerPushResult> => {
   const content = params.content?.trim();
-  if (!content) return { status: 'unavailable' };
+  if (!content && !params.attachments?.length) return { status: 'unavailable' };
 
   const link = await resolveAccountLink(params);
   if (!link) return { status: 'unlinked' };
@@ -85,9 +90,11 @@ const sendAlwaysAvailableMessage = async (params: {
   if (!credentials) return { status: 'unavailable' };
 
   try {
-    await getMessengerRouter().sendDirectMessage({
+    await sendOutboundDirectMessage({
+      attachments: params.attachments,
       content,
       credentials,
+      oversizeImageStrategy: params.oversizeImageStrategy,
       platformUserId: link.platformUserId,
     });
     return { status: 'sent' };
@@ -98,8 +105,13 @@ const sendAlwaysAvailableMessage = async (params: {
 };
 
 export const sendMessengerPush = async (params: {
-  attachments?: WechatOutboundAttachment[];
+  attachments?: BotMessageAttachment[];
   content?: string;
+  /**
+   * What to do with an image over the platform's image budget: recompress it
+   * (default) or send the original as a download link.
+   */
+  oversizeImageStrategy?: MessengerOversizeImageStrategy;
   platform: MessengerPushPlatform;
   serverDB: LobeChatDatabase;
   tenantId?: string;

@@ -53,7 +53,7 @@ export const BrowserManifest: BuiltinToolManifest = {
     },
     {
       description:
-        'Fill a text input, textarea, or contenteditable identified by a snapshot ref. Set submit=true to press Enter afterwards.',
+        'Fill a text input, textarea, or contenteditable identified by a snapshot ref, or choose an option of a native select (combobox) by its value or visible label. Set submit=true to press Enter afterwards.',
       name: BrowserApiName.fill,
       parameters: {
         properties: {
@@ -66,7 +66,7 @@ export const BrowserManifest: BuiltinToolManifest = {
             type: 'boolean',
           },
           text: {
-            description: 'Text to fill.',
+            description: 'Text to fill; for a select, the option value or visible label.',
             type: 'string',
           },
         },
@@ -108,7 +108,7 @@ export const BrowserManifest: BuiltinToolManifest = {
     },
     {
       description:
-        'Capture a screenshot of the current page for the USER to see in chat. You cannot see the image yourself — use snapshot/readPage for perception.',
+        'Capture a screenshot of the current page. The image is stored and returned to you as a file reference, and is also shown to the USER in chat. Use snapshot/readPage when you only need the page structure or text.',
       name: BrowserApiName.screenshot,
       parameters: {
         properties: {},
@@ -126,13 +126,15 @@ export const BrowserManifest: BuiltinToolManifest = {
     },
   ],
   // `client`: runs in the desktop renderer (local runtime). `server`: cloud
-  // agent runs proxy each call back to the bound device via deviceGateway.
+  // agent runs proxy each call back to the bound device via deviceGateway —
+  // the desktop app's panel, or a headless agent-browser under `lh connect`.
+  deviceClients: ['cli', 'desktop'],
   executors: ['client', 'server'],
   identifier: BrowserIdentifier,
   meta: {
     avatar: '🌐',
     description:
-      'Drive the in-app browser sidebar: navigate, inspect pages via accessibility snapshots, click, fill forms, and capture screenshots — visible to the user in real time.',
+      'Drive a browser on the device: navigate, inspect pages via accessibility snapshots, click, fill forms, and capture screenshots. In the desktop app it is the sidebar browser the user watches live; under the CLI it is a headless browser.',
     title: 'Browser',
   },
   systemRole: systemPrompt,

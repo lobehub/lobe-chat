@@ -1,5 +1,6 @@
 import { channelDocUrl } from '@lobechat/const';
 
+import { PLATFORM_UNSUPPORTED_MESSAGE_APIS } from '../messageCapabilities';
 import type { PlatformDefinition } from '../types';
 import { WechatClientFactory } from './client';
 import { schema } from './schema';
@@ -12,7 +13,13 @@ export const wechat: PlatformDefinition = {
   documentation: {
     setupGuideUrl: channelDocUrl('wechat'),
   },
+  // The QR handshake writes botId / userId / botToken together, and with no
+  // credentials in `schema` there is no `type: 'password'` marking to separate
+  // them. Name the two identifiers so the connected-account panel keeps showing
+  // them; the token stays masked.
+  publicCredentialKeys: ['botId', 'userId'],
   schema,
   supportsMessageEdit: false,
+  unsupportedMessageApis: PLATFORM_UNSUPPORTED_MESSAGE_APIS.wechat,
   clientFactory: new WechatClientFactory(),
 };

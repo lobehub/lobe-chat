@@ -2,15 +2,8 @@
 
 import type { RouteObject } from 'react-router';
 
-import {
-  acceptanceRouteMeta,
-  verifyReportsRouteMeta,
-  verifyRouteMeta,
-} from '@/features/Verify/routeMeta';
-import { sharePageRouteMeta } from '@/routes/share/page/[id]/routeMeta';
-import { shareTopicRouteMeta } from '@/routes/share/t/[id]/routeMeta';
-import { loadRouteWithBuiltinToolSurfaces } from '@/spa/initialize/toolSurfaces';
-import { dynamicElement, ErrorBoundary } from '@/utils/router';
+import { acceptanceRouteMeta } from '@/features/Acceptance/routeMeta';
+import { dynamicElement, dynamicLayout, ErrorBoundary } from '@/utils/router';
 
 import { createMainAreaRouteFactory, createSharedDesktopRoutes } from './desktopRouter.shared';
 
@@ -24,98 +17,65 @@ export const mainAreaMetaRoutes: RouteObject[] = [
   { children: createMainAreaChildren(), path: '/' },
 ];
 
+const acceptanceRoute = (path: string): RouteObject => ({
+  children: [
+    {
+      element: dynamicElement(
+        () => import('@/routes/(main)/acceptance/empty'),
+        'Desktop > Acceptance Empty',
+      ),
+      index: true,
+    },
+    {
+      element: dynamicElement(
+        () => import('@/routes/acceptance/[acceptanceId]'),
+        'Desktop > AcceptanceReport',
+      ),
+      handle: { meta: acceptanceRouteMeta },
+      path: ':acceptanceId',
+    },
+    {
+      element: dynamicElement(
+        () => import('@/routes/acceptance/[acceptanceId]'),
+        'Desktop > AcceptanceCheck',
+      ),
+      handle: { meta: acceptanceRouteMeta },
+      path: ':acceptanceId/check/:checkId',
+    },
+  ],
+  element: dynamicElement(() => import('@/routes/(main)/acceptance'), 'Desktop > Acceptance'),
+  errorElement: <ErrorBoundary />,
+  handle: { meta: acceptanceRouteMeta },
+  path,
+});
+
+// `/share/*` is served by the standalone Share app (apps/share), not this router.
 const webOnlyRoutes: RouteObject[] = [
-  // Share topic route (outside main layout)
-  {
-    children: [
-      {
-        element: dynamicElement(
-          () => loadRouteWithBuiltinToolSurfaces(() => import('@/routes/share/t/[id]')),
-          'Desktop > Share > Topic',
-        ),
-        handle: { meta: shareTopicRouteMeta },
-        path: ':id',
-      },
-    ],
-    element: dynamicElement(
-      () => import('@/routes/share/t/[id]/_layout'),
-      'Desktop > Share > Topic > Layout',
-    ),
-    path: '/share/t',
-  },
-
-  // Share page route (outside main layout)
-  {
-    children: [
-      {
-        element: dynamicElement(() => import('@/routes/share/page/[id]'), 'Desktop > Share > Page'),
-        handle: { meta: sharePageRouteMeta },
-        path: ':id',
-      },
-    ],
-    path: '/share/page',
-  },
-
   {
     element: dynamicElement(() => import('@/routes/verify-im'), 'Desktop > VerifyIm'),
     errorElement: <ErrorBoundary />,
     path: '/verify-im',
   },
 
-  // Verify report workspace — standalone master-detail (outside main layout)
+  // Acceptance renders outside the main layout, so it brings its own workspace
+  // context: `/acceptance` is personal, `/:workspaceSlug/acceptance` is scoped.
   {
     children: [
+      acceptanceRoute('/acceptance'),
       {
-        element: dynamicElement(
-          () => import('@/routes/(main)/verify/empty'),
-          'Desktop > Verify Empty',
+        children: [acceptanceRoute('acceptance')],
+        element: dynamicLayout(
+          () => import('@/routes/(main)/[workspaceSlug]/_layout'),
+          'Desktop > Workspace > Acceptance Layout',
         ),
-        index: true,
-      },
-      {
-        element: dynamicElement(() => import('@/routes/verify/[runId]'), 'Desktop > VerifyReport'),
-        handle: { meta: verifyRouteMeta },
-        path: ':runId',
+        errorElement: <ErrorBoundary />,
+        path: ':workspaceSlug',
       },
     ],
-    element: dynamicElement(() => import('@/routes/(main)/verify'), 'Desktop > Verify'),
-    errorElement: <ErrorBoundary />,
-    handle: { meta: verifyReportsRouteMeta },
-    path: '/verify',
-  },
-
-  // Subject-level delivery acceptance — the verify workspace's twin: a
-  // master-detail with the acceptance list on the left.
-  {
-    children: [
-      {
-        element: dynamicElement(
-          () => import('@/routes/(main)/acceptance/empty'),
-          'Desktop > Acceptance Empty',
-        ),
-        index: true,
-      },
-      {
-        element: dynamicElement(
-          () => import('@/routes/acceptance/[acceptanceId]'),
-          'Desktop > AcceptanceReport',
-        ),
-        handle: { meta: acceptanceRouteMeta },
-        path: ':acceptanceId',
-      },
-      {
-        element: dynamicElement(
-          () => import('@/routes/acceptance/[acceptanceId]'),
-          'Desktop > AcceptanceCheck',
-        ),
-        handle: { meta: acceptanceRouteMeta },
-        path: ':acceptanceId/check/:checkId',
-      },
-    ],
-    element: dynamicElement(() => import('@/routes/(main)/acceptance'), 'Desktop > Acceptance'),
-    errorElement: <ErrorBoundary />,
-    handle: { meta: acceptanceRouteMeta },
-    path: '/acceptance',
+    element: dynamicLayout(
+      () => import('@/routes/(main)/acceptance/_layout'),
+      'Desktop > Acceptance Layout',
+    ),
   },
 ];
 

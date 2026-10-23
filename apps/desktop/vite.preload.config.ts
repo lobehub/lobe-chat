@@ -2,6 +2,7 @@ import path from 'node:path';
 
 import { defineConfig, type UserConfig } from 'vite';
 
+import { viteOsPlatformResolve } from '../../plugins/vite/osPlatformResolve';
 import {
   applyDesktopViteConfigExtension,
   loadDesktopEnv,
@@ -23,7 +24,11 @@ export default defineConfig(async (env) => {
       copyPublicDir: false,
       emptyOutDir: true,
       lib: {
-        entry: path.resolve(__dirname, 'src/preload/index.ts'),
+        entry: {
+          connectorOAuth: path.resolve(__dirname, 'src/preload/connectorOAuth.ts'),
+          index: path.resolve(__dirname, 'src/preload/index.ts'),
+        },
+        fileName: (_format, entryName) => `${entryName}.js`,
         formats: ['cjs'],
       },
       minify: !isDev,
@@ -32,6 +37,9 @@ export default defineConfig(async (env) => {
       reportCompressedSize: false,
       rolldownOptions: {
         external: nodeExternals,
+        output: {
+          dynamicImportInCjs: false,
+        },
       },
       sourcemap: isDev ? 'inline' : false,
       ssr: true,
@@ -39,9 +47,11 @@ export default defineConfig(async (env) => {
       target: MAIN_NODE_TARGET,
     },
     define: { ...processEnvDefine },
+    plugins: [viteOsPlatformResolve()],
     publicDir: false,
     resolve: {
       alias: mainProcessAlias,
+      dedupe: ['@sentry/electron'],
     },
     root: __dirname,
     ssr: {

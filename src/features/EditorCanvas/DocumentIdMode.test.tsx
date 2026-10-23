@@ -2,11 +2,14 @@
  * @vitest-environment happy-dom
  */
 import { act, render, screen, waitFor } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import AsyncError from '@/components/AsyncError';
+import { useDocumentStore } from '@/store/document';
 import { editorSelectors } from '@/store/document/slices/editor';
 
 import DocumentIdMode from './DocumentIdMode';
+import InternalEditor from './InternalEditor';
 
 const handleContentChangeStore = vi.fn();
 const performSave = vi.fn();
@@ -32,13 +35,8 @@ const mockDocumentStore = {
   useFetchDocument,
 };
 
-vi.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
-  }),
-}));
-
-vi.mock('zustand-utils', () => ({
+vi.mock('zustand-utils', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
   createStoreUpdater: () => () => undefined,
 }));
 
@@ -124,8 +122,90 @@ describe('DocumentIdMode', () => {
     render(<DocumentIdMode documentId="doc-1" editor={editor} onInit={onInit} />);
 
     await waitFor(() => {
-      expect(onEditorInit).toHaveBeenCalledWith(editor);
+      expect(onEditorInit).toHaveBeenCalledWith(editor, 'doc-1');
       expect(onInit).toHaveBeenCalledWith(editor);
+    });
+  });
+
+  describe('re-hydration on a new remote version', () => {
+    const savedBody = { root: { children: [], type: 'root' } };
+    const remoteBody = { root: { children: [{ type: 'heading' }], type: 'root' } };
+
+    const renderAtVersion = (editor: any, version: string) => {
+      useFetchDocument.mockReturnValue(
+        createFetchDocumentResult({ data: { updatedAt: new Date(version) } }),
+      );
+      // A fresh `style` re-renders the memoized component, as the store subscription does.
+      return <DocumentIdMode documentId="doc-1" editor={editor} style={{}} />;
+    };
+
+    afterEach(() => {
+      useFetchDocument.mockImplementation(() => createFetchDocumentResult());
+      vi.mocked(useDocumentStore.getState).mockReturnValue({ documents: {} } as any);
+    });
+
+    it('should not reset the editor when the new version is its own save', async () => {
+      const editor = {
+        getDocument: vi.fn(() => savedBody),
+        getLexicalEditor: vi.fn(() => ({})),
+      } as any;
+      vi.mocked(useDocumentStore.getState).mockReturnValue({
+        documents: { 'doc-1': { editorData: savedBody } },
+      } as any);
+
+      const { rerender } = render(renderAtVersion(editor, '2026-10-12T00:00:00Z'));
+      await waitFor(() => expect(onEditorInit).toHaveBeenCalledTimes(1));
+
+      // The autosave mirrors its row into the detail replica, bumping updatedAt.
+      rerender(renderAtVersion(editor, '2026-10-12T00:00:05Z'));
+      await act(async () => {});
+
+      expect(onEditorInit).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not hydrate again after the editor initialized through onInit', async () => {
+      // The editor is not ready on the first render, so InternalEditor's onInit does the
+      // first hydration and the mount effect bails out.
+      let lexicalReady = false;
+      const editor = {
+        getDocument: vi.fn(() => savedBody),
+        getLexicalEditor: vi.fn(() => (lexicalReady ? {} : undefined)),
+      } as any;
+      vi.mocked(useDocumentStore.getState).mockReturnValue({
+        documents: { 'doc-1': { editorData: savedBody } },
+      } as any);
+
+      const { rerender } = render(renderAtVersion(editor, '2026-10-12T00:00:00Z'));
+      expect(onEditorInit).not.toHaveBeenCalled();
+
+      lexicalReady = true;
+      act(() => {
+        vi.mocked(InternalEditor).mock.lastCall![0].onInit!(editor);
+      });
+      expect(onEditorInit).toHaveBeenCalledTimes(1);
+
+      // The autosave's version bump is the next render that re-reads isEditorInitialized.
+      rerender(renderAtVersion(editor, '2026-10-12T00:00:05Z'));
+      await act(async () => {});
+
+      expect(onEditorInit).toHaveBeenCalledTimes(1);
+    });
+
+    it('should re-hydrate when a remote body replaced the stored one', async () => {
+      const editor = {
+        getDocument: vi.fn(() => savedBody),
+        getLexicalEditor: vi.fn(() => ({})),
+      } as any;
+      vi.mocked(useDocumentStore.getState).mockReturnValue({
+        documents: { 'doc-1': { editorData: remoteBody } },
+      } as any);
+
+      const { rerender } = render(renderAtVersion(editor, '2026-10-12T00:00:00Z'));
+      await waitFor(() => expect(onEditorInit).toHaveBeenCalledTimes(1));
+
+      rerender(renderAtVersion(editor, '2026-10-12T00:00:05Z'));
+
+      await waitFor(() => expect(onEditorInit).toHaveBeenCalledTimes(2));
     });
   });
 
@@ -160,6 +240,27 @@ describe('DocumentIdMode', () => {
 
     expect(screen.getByTestId('async-error')).toBeInTheDocument();
     expect(screen.queryByTestId('internal-editor')).not.toBeInTheDocument();
+  });
+
+  it('should explain missing access instead of a load failure on FORBIDDEN', () => {
+    const editor = {
+      getLexicalEditor: vi.fn(() => ({})),
+    } as any;
+    useFetchDocument.mockReturnValueOnce({
+      ...createFetchDocumentResult(),
+      error: Object.assign(new Error('forbidden'), { data: { code: 'FORBIDDEN' } }),
+    });
+    vi.mocked(editorSelectors.isDocumentLoading).mockReturnValueOnce(() => true);
+
+    render(<DocumentIdMode documentId="doc-1" editor={editor} />);
+
+    expect(screen.queryByTestId('not-found')).not.toBeInTheDocument();
+    expect(vi.mocked(AsyncError).mock.lastCall?.[0]).toEqual(
+      expect.objectContaining({
+        description: 'pageEditor.noAccess.description',
+        title: 'pageEditor.noAccess.title',
+      }),
+    );
   });
 
   it('should render not found when the document fetch resolves to null', () => {

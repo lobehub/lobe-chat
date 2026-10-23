@@ -1,16 +1,16 @@
-import { Icon, type IconProps } from '@lobehub/ui';
-import { type ContextMenuItem, ContextMenuTrigger } from '@lobehub/ui/base-ui';
-import { createStaticStyles } from 'antd-style';
+import { type ContextMenuItem, ContextMenuTrigger, Icon, type IconProps } from '@lobehub/ui';
+import { createStaticStyles } from '@lobehub/ui';
 import { PinIcon, XIcon } from 'lucide-react';
 import { memo, type ReactNode } from 'react';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
   close: css`
+    pointer-events: none;
     cursor: pointer;
 
     position: absolute;
     inset-block-start: 50%;
-    inset-inline-end: 4px;
+    inset-inline-start: 7px;
     transform: translateY(-50%);
 
     display: grid;
@@ -49,9 +49,29 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
       background: ${cssVar.colorFillSecondary};
     }
 
+    /* the close button takes over the leading icon's slot instead of reserving
+       its own trailing space; while hidden it must not swallow taps on the icon */
     &:hover [data-tab-close],
-    &:focus-within [data-tab-close] {
+    & [data-tab-close]:focus-visible {
+      pointer-events: auto;
       opacity: 1;
+    }
+
+    /* keyboard focus on the select button keeps the icon, so the visible glyph
+       always matches the action Enter/Space would run */
+    &:hover [data-tab-icon],
+    &:has([data-tab-close]:focus-visible) [data-tab-icon] {
+      opacity: 0;
+    }
+
+    /* keyboard focus on the select button outranks hover */
+    &:has([data-tab-key]:focus-visible) [data-tab-icon] {
+      opacity: 1;
+    }
+
+    &:has([data-tab-key]:focus-visible) [data-tab-close] {
+      pointer-events: none;
+      opacity: 0;
     }
   `,
   containerActive: css`
@@ -69,6 +89,10 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     place-items: center;
 
     color: ${cssVar.colorTextSecondary};
+  `,
+  icon: css`
+    display: flex;
+    transition: opacity 0.15s;
   `,
   label: css`
     overflow: hidden;
@@ -101,7 +125,7 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
       color: ${cssVar.colorText};
     }
   `,
-  tabClosable: css`
+  tabPinned: css`
     padding-inline-end: 30px;
   `,
   trigger: css`
@@ -115,7 +139,6 @@ interface WorkspaceTabProps {
   active: boolean;
   closeLabel?: string;
   contextMenuItems?: ContextMenuItem[];
-  fixed?: boolean;
   icon: IconProps['icon'];
   iconNode?: ReactNode;
   label: ReactNode;
@@ -131,7 +154,6 @@ const WorkspaceTab = memo<WorkspaceTabProps>(
     active,
     closeLabel,
     contextMenuItems,
-    fixed,
     icon,
     iconNode,
     label,
@@ -148,21 +170,23 @@ const WorkspaceTab = memo<WorkspaceTabProps>(
       >
         <button
           aria-pressed={active}
-          className={`${styles.tab} ${!fixed && (onClose || pinned) ? styles.tabClosable : ''}`}
+          className={`${styles.tab} ${pinned ? styles.tabPinned : ''}`}
           data-tab-key={tabKey}
           type="button"
           onClick={onSelect}
         >
           <span className={styles.trigger}>
-            {iconNode ?? <Icon icon={icon} size={14} />}
+            <span className={styles.icon} data-tab-icon={onClose && !pinned ? '' : undefined}>
+              {iconNode ?? <Icon icon={icon} size={14} />}
+            </span>
             <span className={styles.label}>{label}</span>
           </span>
         </button>
-        {!fixed && pinned ? (
+        {pinned ? (
           <span aria-label={pinnedLabel} className={styles.pinned} role="img">
             <Icon icon={PinIcon} size={12} />
           </span>
-        ) : !fixed && onClose ? (
+        ) : onClose ? (
           <button
             data-tab-close
             aria-label={closeLabel}

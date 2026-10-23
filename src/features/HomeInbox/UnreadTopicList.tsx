@@ -1,21 +1,34 @@
 import { AGENT_CHAT_TOPIC_URL } from '@lobechat/const';
-import { type ConversationContext } from '@lobechat/types';
-import { Avatar, Flexbox, Icon, Markdown, stopPropagation, Text } from '@lobehub/ui';
-import { Button } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import type { ConversationContext } from '@lobechat/types';
+import { agentDisplayName } from '@lobechat/types';
+import {
+  Avatar,
+  Button,
+  createStaticStyles,
+  cssVar,
+  cx,
+  Flexbox,
+  Icon,
+  stopPropagation,
+  Text,
+} from '@lobehub/ui';
 import { ChevronDownIcon, ChevronRightIcon, MessageSquarePlus } from 'lucide-react';
 import { lazy, memo, Suspense, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import UnreadDot from '@/components/UnreadDot';
 import { useAgentDisplayMeta } from '@/features/AgentTasks/shared/useAgentDisplayMeta';
+import { useEntityMarkdown } from '@/features/EntityLink';
 import { homeType } from '@/features/Home/components/homeType';
 import Time from '@/features/Home/components/Time';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useChatStore } from '@/store/chat';
 
 import AuthorChip from './AuthorChip';
+import { sanitizeInboxPreview } from './sanitizeInboxPreview';
 import { type InboxTopic } from './useHomeInboxTopics';
+
+const MarkdownMessage = lazy(() => import('@/features/Conversation/Markdown'));
 
 const DOT_WIDTH = 14;
 const ROW_GAP = 8;
@@ -106,6 +119,8 @@ const UnreadTopicItem = memo<UnreadTopicItemProps>(
     const updateTopicStatus = useChatStore((s) => s.updateTopicStatus);
     const sendMessage = useChatStore((s) => s.sendMessage);
     const prefetchMessages = useChatStore((s) => s.prefetchMessages);
+    const markdownProps = useEntityMarkdown();
+    const assistantPreview = sanitizeInboxPreview(topic.lastAssistantMessage ?? '');
 
     const [expanded, setExpanded] = useState(false);
     const [read, setRead] = useState(false);
@@ -181,7 +196,7 @@ const UnreadTopicItem = memo<UnreadTopicItemProps>(
               shape={'circle'}
               size={AVATAR_SIZE}
               style={{ flex: 'none' }}
-              title={agent.title}
+              title={agentDisplayName(agent)}
             />
           )}
           <Text
@@ -202,10 +217,12 @@ const UnreadTopicItem = memo<UnreadTopicItemProps>(
 
         {expanded && (
           <Flexbox className={bare ? styles.bareBody : styles.body} gap={8}>
-            {topic.lastAssistantMessage && (
-              <Markdown style={{ overflow: 'unset' }} variant={'chat'}>
-                {topic.lastAssistantMessage}
-              </Markdown>
+            {assistantPreview && (
+              <Suspense fallback={null}>
+                <MarkdownMessage {...markdownProps} style={{ overflow: 'unset' }}>
+                  {assistantPreview}
+                </MarkdownMessage>
+              </Suspense>
             )}
 
             {replying ? (

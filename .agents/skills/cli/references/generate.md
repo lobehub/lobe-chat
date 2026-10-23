@@ -12,9 +12,10 @@ lh generate (alias: gen)
 ├── image <prompt>                         # Image generation
 ├── video <prompt>                         # Video generation
 ├── tts <text>                             # Text-to-speech
-├── asr <audioFile>                        # Audio-to-text (speech recognition)
+├── asr <audio-file>                       # Audio-to-text (speech recognition)
 ├── download <generationId> <asyncTaskId>  # Wait & download generation result
 ├── status <generationId> <asyncTaskId>    # Check async task status
+├── delete <generationId>                  # Delete a generation record
 └── list                                   # List generation topics
 ```
 
@@ -26,12 +27,16 @@ lh generate (alias: gen)
 
 ## `lh generate text <prompt>` / `lh gen text <prompt>`
 
-Generate text completion.
+Generate a complete text response. Incremental streaming is not supported; the agent
+gateway WebSocket handles agent operations, not this single-completion endpoint.
 
 **Source**: `apps/cli/src/commands/generate/text.ts`
 
 ```bash
-lh gen text "Explain quantum computing" [options]
+lh gen text <prompt> [-m <model>] [-p <provider>] [-s <prompt>] [--temperature <n>] [--max-tokens <n>] [--json] [--pipe]
+```
+
+```bash
 echo "context" | lh gen text "summarize" --pipe
 ```
 
@@ -42,7 +47,6 @@ echo "context" | lh gen text "summarize" --pipe
 | `-s, --system <prompt>`     | System prompt                      | -                    |
 | `--temperature <n>`         | Temperature (0-2)                  | -                    |
 | `--max-tokens <n>`          | Maximum output tokens              | -                    |
-| `--stream`                  | Enable streaming output            | `false`              |
 | `--json`                    | Output full JSON response          | `false`              |
 | `--pipe`                    | Read additional context from stdin | `false`              |
 
@@ -56,6 +60,36 @@ cat README.md | lh gen text "summarize this" --pipe
 
 ---
 
+## `lh generate json <prompt>` / `lh gen json <prompt>`
+
+Generate a JSON object with structured output.
+
+**Source**: `apps/cli/src/commands/generate/json.ts`
+
+```bash
+lh gen json <prompt> [-m <model>] [-p <provider>] [-s <prompt>] [--schema <json|path>] [--schema-name <name>] [--strict] [--pipe]
+```
+
+| Option                      | Description                                        | Default              |
+| --------------------------- | -------------------------------------------------- | -------------------- |
+| `-m, --model <model>`       | Model ID                                           | `openai/gpt-4o-mini` |
+| `-p, --provider <provider>` | Provider name                                      | -                    |
+| `-s, --system <prompt>`     | System prompt                                      | -                    |
+| `--schema <json\|path>`     | JSON Schema, inline or from a file (required)      | -                    |
+| `--schema-name <name>`      | Schema name sent to the model                      | `response`           |
+| `--strict`                  | Require the model to adhere strictly to the schema | `false`              |
+| `--pipe`                    | Read additional context from stdin                 | `false`              |
+
+The command calls the `aiChat.outputJSON` mutation rather than `/webapi/chat`, so the server owns
+provider-specific handling (`json_schema` support, the tool-calling fallback, Responses API routing), and
+prints the parsed object pretty-printed. It is a single request: `--stream`, `--temperature` and
+`--max-tokens` are not accepted options, and passing them fails as an unknown option. A reply the server
+cannot parse into the schema exits with code 1. The server keeps only `type`, `properties`, `required`,
+`additionalProperties` and `$defs`; schemas using other root keywords (`allOf`, `minProperties`, ...) are
+rejected up front.
+
+---
+
 ## `lh generate image <prompt>` / `lh gen image <prompt>`
 
 Generate images from text prompt. This is an async operation — the command submits the task and returns a generation ID + async task ID for tracking.
@@ -63,7 +97,10 @@ Generate images from text prompt. This is an async operation — the command sub
 **Source**: `apps/cli/src/commands/generate/image.ts`
 
 ```bash
-lh gen image "A sunset over mountains" [options]
+lh gen image <prompt> [-m <model>] [-p <provider>] [-n <n>] [--width <px>] [--height <px>] [--steps <n>] [--seed <n>] [--json]
+```
+
+```bash
 lh gen image "A cute cat" --model dall-e-3 --provider openai --json
 ```
 
@@ -111,18 +148,21 @@ Generate video from text prompt. This is an async operation.
 **Source**: `apps/cli/src/commands/generate/video.ts`
 
 ```bash
-lh gen video "A cat playing piano" -m < model > -p < provider > [options]
+lh gen video <prompt> -m <model> -p <provider> [--aspect-ratio <ratio>] [--duration <sec>] [--resolution <res>] [--seed <n>] [--image <url>] [--images <urls...>] [--end-image <url>] [--json]
 ```
 
-| Option                      | Description              | Required |
-| --------------------------- | ------------------------ | -------- |
-| `-m, --model <model>`       | Model ID                 | Yes      |
-| `-p, --provider <provider>` | Provider name            | Yes      |
-| `--aspect-ratio <ratio>`    | Aspect ratio (e.g. 16:9) | No       |
-| `--duration <sec>`          | Duration in seconds      | No       |
-| `--resolution <res>`        | Resolution (e.g. 720p)   | No       |
-| `--seed <n>`                | Random seed              | No       |
-| `--json`                    | Output raw JSON          | No       |
+| Option                      | Description                            | Required |
+| --------------------------- | -------------------------------------- | -------- |
+| `-m, --model <model>`       | Model ID                               | Yes      |
+| `-p, --provider <provider>` | Provider name                          | Yes      |
+| `--aspect-ratio <ratio>`    | Aspect ratio (e.g. 16:9)               | No       |
+| `--duration <sec>`          | Duration in seconds                    | No       |
+| `--resolution <res>`        | Resolution (e.g. 720p, 1080p)          | No       |
+| `--seed <n>`                | Random seed                            | No       |
+| `--image <url>`             | First-frame image URL (image-to-video) | No       |
+| `--images <urls...>`        | Multiple reference image URLs          | No       |
+| `--end-image <url>`         | Last-frame image URL                   | No       |
+| `--json`                    | Output raw JSON                        | No       |
 
 **Note**: Unlike image, video requires `-m` and `-p` (no defaults). Use `lh model list <provider> --type video` to find available video models.
 
@@ -162,20 +202,42 @@ Text-to-speech generation.
 **Source**: `apps/cli/src/commands/generate/tts.ts`
 
 ```bash
-lh gen tts "Hello, world!" [options]
+lh gen tts <text> [-o <file>] [--voice <voice>] [--speed <n>] [-m <model>] [-p <provider>]
 ```
+
+| Option                      | Description                              | Default      |
+| --------------------------- | ---------------------------------------- | ------------ |
+| `-o, --output <file>`       | Output audio file path                   | `output.mp3` |
+| `--voice <voice>`           | Voice name                               | `alloy`      |
+| `--speed <n>`               | Speed multiplier (0.25-4.0)              | `1`          |
+| `-m, --model <model>`       | Model ID (`provider/model` supported)    | `tts-1`      |
+| `-p, --provider <provider>` | Provider (derived from model if omitted) | `openai`     |
+
+Uses the selected provider's saved configuration through ModelRuntime, with the same
+authenticated tRPC client as `lh gen asr`.
 
 ---
 
-## `lh generate asr <audioFile>` / `lh gen asr <audioFile>`
+## `lh generate asr <audio-file>` / `lh gen asr <audio-file>`
 
-Audio-to-text transcription (Automatic Speech Recognition).
+Audio-to-text transcription (Automatic Speech Recognition). Accepts a local path or a URL.
 
 **Source**: `apps/cli/src/commands/generate/asr.ts`
 
 ```bash
-lh gen asr recording.wav [options]
+lh gen asr <audio-file> [--model <model>] [--provider <provider>] [--language <lang>] [--json]
 ```
+
+```bash
+lh gen asr recording.wav
+```
+
+| Option                  | Description                 | Default     |
+| ----------------------- | --------------------------- | ----------- |
+| `--model <model>`       | STT model                   | `whisper-1` |
+| `--provider <provider>` | AI provider                 | `openai`    |
+| `--language <lang>`     | Language code (e.g. en, zh) | -           |
+| `--json`                | Output raw JSON             | -           |
 
 ---
 
@@ -189,7 +251,10 @@ Wait for an async generation task to complete and download the result file.
 > Do **not** pass the generation ID (`gen_xxx`) here — that will cause a server error.
 
 ```bash
-lh gen download <generationId> <asyncTaskId> [-o output.png]
+lh gen download <generationId> <asyncTaskId> [-o <path>] [--interval <sec>] [--timeout <sec>]
+```
+
+```bash
 lh gen download gen_xxx 7ad0eb13-xxxx-xxxx-xxxx-xxxxxxxxxxxx -o ~/Desktop/result.mp4 --timeout 600
 ```
 
@@ -218,6 +283,9 @@ Check the status of an async generation task.
 
 ```bash
 lh gen status <generationId> <asyncTaskId> [--json]
+```
+
+```bash
 lh gen status gen_xxx 7ad0eb13-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 

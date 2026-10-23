@@ -1,5 +1,7 @@
 import { TaskApiName, TaskIdentifier } from '@lobechat/builtin-tool-task';
 import type {
+  ListedWorkType,
+  RegisterCanvasWorkParams,
   RegisterDocumentWorkParams,
   RegisterSkillToolResultWorkParams,
   RegisterTaskWorkParams,
@@ -7,15 +9,16 @@ import type {
   WorkListItem,
   WorkSkillProvider,
   WorkSummaryItem,
-  WorkType,
   WorkVersionEventItem,
   WorkVersionEventMap,
   WorkVersionItem,
+  WorkVisibility,
 } from '@lobechat/types';
 
 import { mutate } from '@/libs/swr';
-import { isMessageListKey, matchDomain, workKeys } from '@/libs/swr/keys';
+import { matchDomain, workKeys } from '@/libs/swr/keys';
 import { lambdaClient } from '@/libs/trpc/client';
+import { revalidateConversationMessages } from '@/services/message/replica';
 
 /** One cursor page of the workspace-wide Work list (resource page 产物 gallery). */
 export interface WorkSummaryPage {
@@ -71,8 +74,10 @@ class WorkService {
   listByWorkspace = async (params: {
     cursor?: string | null;
     limit?: number;
+    originAgentId?: string | null;
     provider?: WorkSkillProvider;
-    type?: WorkType | null;
+    type?: ListedWorkType | null;
+    visibility?: WorkVisibility;
   }): Promise<WorkSummaryPage> =>
     lambdaClient.work.listByWorkspace.query({ ...params, includeFileWorks: true });
 
@@ -94,19 +99,38 @@ class WorkService {
   registerTask = async (params: RegisterTaskWorkParams): Promise<WorkItem | null> =>
     lambdaClient.work.registerTask.mutate(params);
 
+  registerCanvas = async (params: RegisterCanvasWorkParams): Promise<WorkItem> =>
+    lambdaClient.work.registerCanvas.mutate(params);
+
   registerDocument = async (params: RegisterDocumentWorkParams): Promise<WorkItem | null> =>
     lambdaClient.work.registerDocument.mutate(params);
 
   deleteTaskWork = async (params: { taskId: string }): Promise<void> =>
     lambdaClient.work.deleteTaskWork.mutate(params);
 
+  /** Remove one Work card by id (see `useRemoveWork`); server-side restricted to the caller's own rows. */
+  deleteWork = async (id: string): Promise<void> => lambdaClient.work.deleteWork.mutate({ id });
+
   handleSkillToolResult = async (
     params: RegisterSkillToolResultWorkParams,
   ): Promise<WorkItem | null> => lambdaClient.work.handleSkillToolResult.mutate(params);
 
   /**
+   * Report a finished desktop-LOCAL hetero run's tool messages for the
+   * server-side shell Work scan (gh CLI → github Work cards). Local runs have
+   * no `agent_operations` row, so the server's completion scan never fires for
+   * them — the executor calls this at clean completion instead.
+   */
+  registerShellWorksForRun = async (params: {
+    anchorMessageId: string;
+    messageIds: string[];
+    topicId: string;
+  }): Promise<{ failed: number; registered: number; rootOperationId: string | null }> =>
+    lambdaClient.work.registerShellWorksForRun.mutate(params);
+
+  /**
    * Invalidate everything a Work mutation can change for a conversation:
-   * - the topic's `message:list` entries, since Work summaries (in-message chips
+   * - the topic's transcript syncs, since Work summaries (in-message chips
    *   and the sidebar summary view) ride the message payload
    * - the sidebar history and expanded version views
    */
@@ -120,22 +144,42 @@ class WorkService {
 
   /**
    * Re-pull the message list for a topic so the Work summaries attached to its
-   * message payload become fresh. `mutate` only refetches mounted keys, so this
-   * is a no-op when the topic isn't the active conversation.
+   * message payload become fresh. Only mounted syncs refetch, so this is a
+   * no-op when the topic isn't the active conversation.
    */
   refreshConversationMessages = async (topicId: string) => {
-    await mutate((key) => isMessageListKey(key, (context) => context.topicId === topicId));
+    await revalidateConversationMessages((context) => context.topicId === topicId);
   };
 
   refreshAll = async () => {
+    await this.#collapseWorkspaceTails();
     await mutate(matchDomain('work:'));
+  };
+
+  /**
+   * Revalidate every mounted workspace Work list (the gallery filters and the
+   * project dashboards). Their replicas sync through `work:workspace` keys.
+   */
+  refreshWorkspaceLists = async () => {
+    await this.#collapseWorkspaceTails();
+    await mutate((key) => Array.isArray(key) && key[0] === workKeys.workspace.root);
+  };
+
+  /**
+   * The gallery replica only re-requests its head page, so loaded tail pages
+   * are dropped first rather than left stale. Imported on demand: the work
+   * store depends on this service.
+   */
+  #collapseWorkspaceTails = async () => {
+    const { workActions } = await import('@/store/work');
+    workActions.collapseWorkspaceWorksTails();
   };
 
   /**
    * Refresh only the sidebar's *lazy* Work caches for a conversation — the
    * history list ({@link workKeys.conversation}) and any expanded version
    * timelines ({@link workKeys.versions}). Deliberately narrower than
-   * {@link refreshAll}: it never touches the `message:list` payload (Work
+   * {@link refreshAll}: it never touches the message payload (Work
    * summaries ride the message list and are refreshed by the message fetch
    * itself) nor the cross-topic workspace gallery (`work:workspace`).
    *
@@ -159,11 +203,11 @@ class WorkService {
   /**
    * Broad invalidation for Work mutations without a single-topic scope (e.g.
    * task deletion, which can orphan Works across topics into a "task deleted"
-   * state). Refreshes every mounted `message:list` — since Work summaries ride
+   * state). Refreshes every mounted transcript sync — since Work summaries ride
    * the message payload — plus the whole work domain for the sidebar caches.
    */
   refreshAllConversations = async () => {
-    await Promise.all([mutate((key) => isMessageListKey(key)), this.refreshAll()]);
+    await Promise.all([revalidateConversationMessages(), this.refreshAll()]);
   };
 
   refreshVersions = async (workId?: string | null) => {

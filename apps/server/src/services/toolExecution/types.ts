@@ -1,10 +1,14 @@
 import { type LobeToolManifest } from '@lobechat/context-engine';
 import { type LobeChatDatabase } from '@lobechat/database';
 import {
+  type AgentShareVisitorContext,
   type ChatToolPayload,
   type ClientSecretPayload,
+  type DeviceUnavailableErrorData,
   type ExecSubAgentParams,
+  type ExecutionPlan,
   type StepActivatedSkill,
+  type StepContextTodoItem,
   type WorkRegistrationIntent,
 } from '@lobechat/types';
 
@@ -24,6 +28,11 @@ export interface ServerSubAgentRunParams {
   description: string;
   /** Detailed instruction/prompt for the sub-agent run. */
   instruction: string;
+  /**
+   * Continue this earlier `callSubAgent` sub-agent (its isolation thread id)
+   * instead of starting a new one. Only set by `callSubAgent`.
+   */
+  subAgentId?: string;
   /** Optional per-run timeout in milliseconds. */
   timeout?: number;
 }
@@ -102,6 +111,14 @@ export interface ServerAgentMemberRunParams {
 
 export interface ServerAgentMemberRunResult {
   /**
+   * Per-member start failure reasons, parallel to the members that failed to
+   * fork. Surfaced to the supervisor's tool result so a speak/broadcast/
+   * delegate/executeAgentTask dispatch failure is diagnosable (e.g. "The model
+   * provider returned an empty completion.") instead of an opaque "failed to
+   * start" — mirrors `ServerSubAgentRunResult.error` (issue #16257).
+   */
+  errors?: string[];
+  /**
    * Whether at least one member op was forked. `false` means every member
    * failed to start — no completion bridge will fire, so the caller must
    * surface an inline tool error instead of parking the parent.
@@ -155,6 +172,26 @@ export interface ToolExecutionContext {
    */
   agentMember?: ServerAgentMemberRunner;
   /**
+   * Shared-agent visitor marker, forwarded from
+   * `RuntimeExecutorContext.agentShareVisitor` (see
+   * `modules/AgentRuntime/context.ts`). Present ONLY for a share-visitor run.
+   * `BuiltinToolsExecutor.execute` re-checks every builtin dispatch against
+   * `isShareBlockedBuiltinDispatch` with these permissions — the unbypassable
+   * counterpart of the assembly-time tool-set trim, which only shapes what the
+   * model is OFFERED, not what the executor will run. That gate is strictly
+   * wider than a plain data-tool check: master default-deny allowlist, the
+   * owner's `toolGrants` picker, and humanIntervention policy, and it
+   * internally delegates to `isShareBlockedDataToolCall` for the per-API
+   * data-tool rules.
+   *
+   * Tool runtimes that trigger their own billed work (e.g. image generation)
+   * project it with `toAgentShareVisitorIds` into a `spendOrigin` payload so
+   * the resulting spend log is attributed to the shared agent, exactly like the
+   * LLM path. Only those ids may be projected; never forward this object as a
+   * whole, since its permission fields have no place in billing metadata.
+   */
+  agentShareVisitor?: AgentShareVisitorContext;
+  /**
    * Visibility of the agent executing this tool call. Resolved once per tool
    * call in the runtime executor. Tool runtimes that persist agent side-effects
    * (documents, tasks, etc.) forward this so private-agent output inherits
@@ -174,8 +211,17 @@ export interface ToolExecutionContext {
   /** Originating request IP propagated through the operation metadata. */
   clientIp?: string;
   /**
+   * Todo items as of this tool call, reconstructed from the operation's message
+   * history by the runtime executors — the tool-execution counterpart of what
+   * `serverCallLlmContextBuilder` feeds the prompt. The lobe-agent runtime needs
+   * it because its own store (the topic's plan document) only exists after
+   * `createPlan`, so an agent that only ever calls `createTodos` would otherwise
+   * read back an empty list on every subsequent call.
+   */
+  currentTodos?: StepContextTodoItem[];
+  /**
    * Whether the run's execution plan is device-capable (`device` or
-   * `device-unrouted`) — derived from `state.metadata.executionPlan` by the
+   * `device-unrouted`) — derived from `state.plan.execution` by the
    * runtime executors. Device-only skills gate listing/activation/loading on
    * this consistently, so a `device-unrouted` run can activate them before the
    * model routes a device; actual command execution stays gated at the device
@@ -192,17 +238,50 @@ export interface ToolExecutionContext {
    */
   editingAgentId?: string;
   /**
+   * When scope is 'group_agent_builder', the ID of the group being edited. Kept
+   * separate from `groupId` so the builder's own conversation is not treated as
+   * a group chat turn; only GroupAgentBuilder tool methods read this.
+   */
+  editingGroupId?: string;
+  /**
+   * Tool ids offered to the model in this run (operation tool set plus step activations). Lets a
+   * runtime name a follow-up tool in its result only when the model can actually call it.
+   */
+  enabledToolIds?: string[];
+  /**
    * Legacy agent invocation callback forwarded from RuntimeExecutorContext.
    * Kept for tool runtimes that still dispatch through exec_sub_agent style
    * flows; `lobe-agent.callSubAgent` uses the per-call `subAgent` runner below.
    */
   execSubAgent?: (params: ExecSubAgentParams) => Promise<unknown>;
+  /**
+   * The run's resolved execution plan. Lets a runtime explain a gate the plan
+   * imposes (e.g. a device-locked run has no device picker) instead of the
+   * gated tool just looking missing.
+   */
+  executionPlan?: ExecutionPlan;
   /** Per-call execution timeout resolved by the agent runtime. */
   executionTimeoutMs?: number;
   /** Current group ID for group chat context */
   groupId?: string | null;
   /** Whether this tool call is executing inside an isolated sub-agent run. */
   isSubAgent?: boolean;
+  /**
+   * The run resolved to a local device AND the owner asked for the device
+   * sandbox (`agencyConfig.localSandbox`). The Local System device-proxy passes
+   * it to `runCommand` so the desktop confines the spawned command.
+   *
+   * Resolved once against the run's effective execution target — never
+   * re-derived downstream from the raw flag, which says nothing about where the
+   * run actually landed.
+   */
+  localSandbox?: boolean;
+  /**
+   * The sandboxed run may reach the package-registry allowlist
+   * (`agencyConfig.localSandboxNetwork`). Meaningless without
+   * {@link localSandbox}.
+   */
+  localSandboxNetwork?: boolean;
   /**
    * Optional server-owned embedding runtime for memory search.
    *
@@ -225,6 +304,8 @@ export interface ToolExecutionContext {
   onWorkRegistration?: (intent: WorkRegistrationIntent) => void;
   /** Agent runtime operation ID for structured tool outcome identity. */
   operationId?: string;
+  /** Project the run belongs to; scopes project knowledge and created tasks. */
+  projectId?: string;
   /**
    * Filesystem skills (name + absolute SKILL.md path) discovered on the
    * execution device. Used by the Skills runtime to load them on demand via the
@@ -278,7 +359,7 @@ export interface ToolExecutionContext {
    * Workspace ID that scopes ownership for any model/service the runtime
    * instantiates. When unset the runtime falls back to personal mode
    * (`workspace_id IS NULL`). Threaded from the chat/task router through
-   * `state.metadata.workspaceId` so tool side-effects (createBrief, pinTask,
+   * `state.origin.workspaceId` so tool side-effects (createBrief, pinTask,
    * etc.) land in the same workspace the request originated from.
    */
   workspaceId?: string;
@@ -293,6 +374,8 @@ export interface ToolExecutionResult {
    */
   deferred?: boolean;
   error?: any;
+  /** Structured unavailable-device context preserved through the runtime error envelope. */
+  errorData?: DeviceUnavailableErrorData;
   state?: Record<string, any>;
   success: boolean;
   /**
@@ -308,6 +391,13 @@ export interface ToolExecutionResult {
 }
 
 export interface ToolExecutionResultResponse extends ToolExecutionResult {
+  /**
+   * Wall time the tool took on the DEVICE, by the device's own clock, when the
+   * call was dispatched to one. Paired with the server-observed
+   * `executionTime`, the difference is pure dispatch overhead — the number that
+   * decides whether moving the agent loop onto the device is worth it.
+   */
+  deviceExecutionTime?: number;
   executionTime: number;
 }
 

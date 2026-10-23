@@ -1,3 +1,5 @@
+import type { VerifyCheckDefinition } from './acceptanceFlow';
+import type { GoalReleaseGateDossier } from './goalRollout';
 /**
  * Verify (delivery checker) domain types — the shared vocabulary, frozen-item
  * shape, Toulmin narrative, and rubric run-policy config. Kept here (not in the
@@ -49,7 +51,7 @@ export type VerifyUserDecision = 'accepted' | 'rejected' | 'overridden';
  * is not coupled to task-only workflows: a future run can accept a topic,
  * document, artifact, release, etc. without another schema reshape.
  */
-export type AcceptanceSubjectType = 'task' | 'topic' | 'document';
+export type AcceptanceSubjectType = 'task' | 'topic' | 'document' | 'standalone' | 'goal_gate';
 
 /**
  * Business-level acceptance state. Check-level and run-level verdicts stay in the
@@ -90,9 +92,9 @@ export interface AcceptanceVisualRender {
 }
 
 /**
- * Acceptance policy/config snapshot. The source may be a task's `config.verify`,
- * a topic-level override, or a document acceptance rule, so it lives with the
- * generic aggregate rather than only in task types.
+ * Acceptance policy/config snapshot. This is the authoritative policy for the
+ * subject's verification lifecycle; legacy task `config.verify` values are
+ * migrated here on first read.
  */
 /**
  * One user-authored acceptance criterion in a subject's standing checklist
@@ -157,11 +159,38 @@ export interface AcceptanceGroupFeedback {
 /** One group-scoped feedback entry as stored on a round's decision detail. */
 export type VerifyRunGroupFeedbackEntry = Omit<AcceptanceGroupFeedback, 'roundIndex'>;
 
+/** A presentation group of stable acceptance-union check IDs, independent of execution flows. */
+export interface AcceptanceCheckGroup {
+  checkItemIds: string[];
+  title: string;
+}
+
 /** Generic acceptance extension bag for cross-subject state we have not modeled yet. */
 export interface AcceptanceMetadata {
   [key: string]: unknown;
+  /** Current checklist organization; frozen plans, results and reviews keep their original IDs. */
+  checkGrouping?: { groups: AcceptanceCheckGroup[]; version: number };
+  /**
+   * Pull requests linked by hand (`lh acceptance link-pr`, or ingest finding
+   * one). Display-only claims: nothing is verified against the provider, so
+   * they never drive merge → accepted. That stays with provider-verified
+   * `scm_change_requests` rows, which take precedence when both name a PR.
+   */
+  pullRequests?: AcceptancePullRequestLink[];
   /** User-set display-title override for the acceptance (sidebar rename). */
   title?: string;
+}
+
+/** A hand-linked pull request on an acceptance. */
+export interface AcceptancePullRequestLink {
+  /** When it was linked (ISO 8601). */
+  linkedAt: string;
+  number: number;
+  provider: 'github';
+  /** `owner/name` as pasted; compare case-insensitively. */
+  repoFullName: string;
+  title?: string;
+  url: string;
 }
 
 /**
@@ -173,15 +202,127 @@ export interface AcceptanceMetadata {
 export type AcceptanceCheckReviewAction = 'accept' | 'ignore' | 'reject';
 
 /**
+ * Why a reviewer rejected a check — see `@lobechat/const/verify` for the reason
+ * this exists at all (one button, three unrelated jobs).
+ *
+ * - unmet:       the delivery does not satisfy THIS check
+ * - new-idea:    the check passes, but the reviewer wants something different
+ * - no-evidence: the evidence does not show enough to judge the check at all
+ */
+export type AcceptanceRejectIntent = 'unmet' | 'new-idea' | 'no-evidence';
+
+/** What an automated reviewer proposes for a check — never `ignore`, which is a
+ *  statement about the reviewer's priorities rather than about the delivery.
+ *  `unjudgeable` means no capture could settle the criterion from the reviewer's
+ *  side; see `reviewPredictionActions` in `@lobechat/const/verify`. */
+export type ReviewPredictionAction = 'accept' | 'reject' | 'unjudgeable';
+
+/**
+ * How a review attempt ended — see `@lobechat/const/verify` for why this is
+ * separate from the verdict. `skipped` / `errored` carry no `action`.
+ */
+export type ReviewPredictionStatus = 'judged' | 'skipped' | 'errored';
+
+/**
+ * The reviewer's verdict on a model proposal. `misidentified` is separate from
+ * `not-an-issue` on purpose: it carries the OPPOSITE signal on the judgement
+ * (there really is a problem) while still marking the grounding wrong.
+ */
+export type ReviewAdjudication = 'confirmed' | 'not-an-issue' | 'misidentified';
+
+/** How closely a submitted reject matched the proposal it started from. */
+export type ReviewProposalEdit = 'verbatim' | 'comment-edited' | 'region-moved' | 'rewritten';
+
+/**
+ * One automated reviewer's opinion on one check result. Never written to
+ * `verify_check_results.user_decision` — the human decision stays the single
+ * ground truth, and this rides alongside it so the two can be compared per
+ * model version.
+ */
+export interface ReviewPrediction {
+  /** The verdict — absent unless `status` is `judged`. */
+  action?: ReviewPredictionAction | null;
+  /** Regions the model circled, same shape the human's annotations use. */
+  annotations?: AcceptanceReviewAnnotation[];
+  /** The one-line justification shown to the reviewer. */
+  comment?: string;
+  /** Model self-reported 0–1. Treat as unranked until calibrated per model. */
+  confidence?: number;
+  createdAt: string;
+  id: string;
+  /** Pins the opinion to what produced it, e.g. `gemini-3.6-flash`. */
+  model: string;
+  provider: string;
+  /** Full reasoning, kept for training; not surfaced in the collapsed card. */
+  rationale?: string;
+  status: ReviewPredictionStatus;
+}
+
+/**
+ * The reviewer's response to a proposal, recorded on the check's decision
+ * detail. Kept next to the decision rather than on the prediction row so it
+ * survives the prediction being regenerated for a newer model version.
+ */
+export interface ReviewProposalOutcome {
+  adjudication: ReviewAdjudication;
+  /** How much the reviewer changed the proposal before submitting it. */
+  edit?: ReviewProposalEdit;
+  /** The proposal being judged (`verify_review_predictions.id`). */
+  predictionId: string;
+  respondedAt: string;
+}
+
+/**
+ * Where on a video evidence an annotation sits, in seconds from the start.
+ * `start` alone pins one frame; `start` + `end` marks a span.
+ */
+export interface AcceptanceReviewAnnotationTime {
+  end?: number;
+  start: number;
+}
+
+/**
  * A user-drawn region on one evidence image, in coordinates normalized to the
- * image box (0–1) so the overlay renders at any display size.
+ * image box (0–1) so the overlay renders at any display size. On video evidence
+ * the region is drawn on the frame at `time.start`; a note that marks a moment
+ * or a span without circling an area carries the whole frame
+ * (`FULL_FRAME_RECT` in `@lobechat/const/verify`).
  */
 export interface AcceptanceReviewAnnotation {
   /** The note attached to this region. */
   comment?: string;
+  /**
+   * The agent chapter this note disputes, quoted so the objection still reads
+   * correctly after the evidence is re-uploaded.
+   */
+  disputes?: Pick<VerifyEvidenceChapter, 'kind' | 'note' | 't'>;
   /** The evidence row (`verify_evidence.id`) the region was drawn on. */
   evidenceId: string;
   rect: { height: number; width: number; x: number; y: number };
+  /** Video evidence only: the frame or span the note is about. */
+  time?: AcceptanceReviewAnnotationTime;
+}
+
+/**
+ * How an agent marker on a video reads (runtime set: `verifyEvidenceChapterKinds`).
+ *
+ * - `step`: an action the agent performed, logged while driving the recording.
+ * - `check`: something the agent verified on this frame — a claim for the reviewer
+ *   to audit, never a pass.
+ * - `flag`: an anomaly the agent noticed and judged harmless, disclosed so the
+ *   reviewer can disagree.
+ */
+export type VerifyEvidenceChapterKind = 'check' | 'flag' | 'step';
+
+/** An agent-authored marker on a video evidence (`verify_evidence.metadata.chapters`). */
+export interface VerifyEvidenceChapter {
+  kind: VerifyEvidenceChapterKind;
+  /** Short name shown on the timeline; required for `step`. */
+  label?: string;
+  /** What the agent claims or noticed; required for `check` and `flag`. */
+  note?: string;
+  /** Seconds from the start of the video. */
+  t: number;
 }
 
 /**
@@ -203,6 +344,19 @@ export interface VerifyCheckDecisionDetail {
   /** Uploaded/pasted screenshots backing the reject (FKs to files). */
   fileIds?: string[];
   /**
+   * Set when this decision started from a model proposal. Absent means the
+   * reviewer judged cold — either they were in the blind control slice, or no
+   * proposal existed yet. That distinction is what keeps miss rate measurable.
+   */
+  proposal?: ReviewProposalOutcome;
+  /**
+   * Which of the three jobs this reject is doing. Absent on rows written before
+   * the intent split, which is why every reader must treat "no intent" as
+   * "unknown" rather than defaulting it to `unmet` — backfilling a guess here
+   * would manufacture exactly the label noise the split exists to remove.
+   */
+  rejectIntent?: AcceptanceRejectIntent;
+  /**
    * The acceptance round that was CURRENT when the decision was made. A
    * carried-forward check's result row belongs to an older round, so the
    * result's own round cannot arbitrate staleness — a reject stands until a
@@ -223,6 +377,7 @@ export interface VerifyCheckDecisionDetail {
 export type VerifyRunStatus =
   | 'unverified'
   | 'planned'
+  | 'collecting_evidence'
   | 'verifying'
   | 'passed'
   | 'failed'
@@ -262,12 +417,17 @@ export type VerifyRunScenario = 'coding' | 'writing' | 'research' | 'generic';
  */
 export type VerifySurface = 'web' | 'desktop' | 'cli' | 'mobile' | 'bot';
 
-/** The medium of a captured evidence artifact. */
+/**
+ * The medium of a captured evidence artifact. `audio` covers a delivered or
+ * captured sound (TTS output, a recorded voice reply, an alert tone) — it plays
+ * inline on the acceptance page instead of publishing as an unplayable blob.
+ */
 export type VerifyEvidenceType =
-  'screenshot' | 'gif' | 'video' | 'text' | 'markdown' | 'dom_snapshot' | 'transcript';
+  'screenshot' | 'gif' | 'video' | 'audio' | 'text' | 'markdown' | 'dom_snapshot' | 'transcript';
 
 /** Who / what captured an evidence artifact (provenance). */
-export type VerifyEvidenceCapturedBy = 'agent-browser' | 'cdp' | 'cli' | 'program' | 'llm_judge';
+export type VerifyEvidenceCapturedBy =
+  'agent' | 'agent-browser' | 'cdp' | 'cli' | 'program' | 'llm_judge';
 
 /**
  * Provenance of a user's acceptance decision on a verify round
@@ -276,6 +436,19 @@ export type VerifyEvidenceCapturedBy = 'agent-browser' | 'cdp' | 'cli' | 'progra
  * `verify_runs.user_decision` verb stays the queryable field.
  */
 export interface VerifyRunDecisionDetail {
+  /**
+   * The provider change request whose merge made this decision, when
+   * `source` is `scm_merge`. Lets the board and the verifier-training
+   * pipeline tell a human verdict apart from a merge-driven one.
+   */
+  changeRequest?: {
+    /** Provider user id of whoever merged; resolves through the SCM identities. */
+    mergedByExternalId?: string;
+    number: number;
+    provider: string;
+    repoFullName: string;
+    url: string;
+  };
   /** Free-form reason, e.g. the reject note that seeds the next repair round. */
   comment?: string;
   /** When the decision was made (ISO 8601). */
@@ -292,6 +465,12 @@ export interface VerifyRunDecisionDetail {
    * staleness falls out of the round chain.
    */
   groupFeedback?: VerifyRunGroupFeedbackEntry[];
+  /**
+   * What made the decision. Absent means a human clicked accept / reject;
+   * `scm_merge` means the linked pull request was merged, which LobeHub
+   * treats as the strongest possible acceptance signal.
+   */
+  source?: 'scm_merge';
 }
 
 /**
@@ -326,7 +505,7 @@ export interface VerifyCodingScope {
   branch?: string;
   /** Git commit (short sha) of the code under test. */
   commit?: string;
-  /** Entry point / command exercised, e.g. "lh verify ingest-report". */
+  /** Entry point / command exercised, e.g. "lh acceptance run ingest". */
   entry?: string;
   /** Associated pull request, when the verification run has one. */
   pullRequest?: VerifyCodingPullRequest;
@@ -419,6 +598,8 @@ export interface VerifyInteractionCostOperators {
 export interface VerifyInteractionCostPhase {
   actionCount?: number;
   activeSeconds?: number;
+  /** Wall-clock the agent actually spent here — not the user-equivalent price. */
+  actualAgentSeconds?: number;
   checkItemId?: string;
   id: string;
   label?: string;
@@ -464,6 +645,18 @@ export interface VerifyRubricConfig {
  */
 export interface VerifyRunMetadata {
   [key: string]: unknown;
+  /** Autonomous Goal review, kept separate from human decisions and verifier verdicts. */
+  goalReview?: {
+    feedback: string;
+    predictionIds: string[];
+    /**
+     * `unjudgeable` is separate from `rejected` on purpose: it means the review
+     * could not decide from evidence, not that the delivery fell short. Folding
+     * it into `rejected` both sent the builder off to fix nothing and made the
+     * two indistinguishable in the agreement statistics.
+     */
+    status: 'passed' | 'rejected' | 'errored' | 'unjudgeable';
+  };
   interactionCost?: VerifyInteractionCost;
   /**
    * Per-run override for the repair-round cap, taking precedence over the
@@ -484,6 +677,15 @@ export interface VerifyRunMetadata {
    * run that *authored* the report — and is many-to-one.
    */
   origin?: VerifyRunOrigin;
+  previewUrl?: string;
+  /** A Goal decision gate's frozen dossier: what the owner decides a batch release on. */
+  releaseGate?: GoalReleaseGateDossier;
+  /**
+   * The round this one replays (`flow plan --from-run`). A replay is pinned to
+   * the source round's frozen definition, so it never follows later graph edits
+   * and never absorbs another flow, even while it holds no results yet.
+   */
+  replayOfRunId?: string;
 }
 
 export type VerifyVisualizationValue = boolean | null | number | string;
@@ -597,6 +799,25 @@ export interface VerifyCheckResultMetadata {
 }
 
 /**
+ * How one round's checks came out, counted — what a surface shows as
+ * "3 passed · 1 undecided" without reading the checks themselves.
+ *
+ * Deliberately the same three-way split the acceptance's criteria list uses
+ * (`CriterionOutcomeState`): a check with no verdict falls back to its status,
+ * and everything else is undecided. Two surfaces reading the same round must
+ * not be able to disagree about it.
+ */
+export interface VerifyCheckTally {
+  /** Judged failed — a failed verdict, or a failed status where no verdict landed. */
+  failed: number;
+  /** Judged passed — a passed verdict, or a passed status where no verdict landed. */
+  passed: number;
+  total: number;
+  /** Planned but never judged: neither passed nor failed. */
+  unjudged: number;
+}
+
+/**
  * Immutable snapshot of one check item, frozen into `agent_operations.verify_plan`
  * when the plan is confirmed. The resolved content (title / verifierConfig) is
  * copied in — not just a criterion FK — so editing the source criterion / rubric
@@ -610,6 +831,7 @@ export interface VerifyCheckItem {
    * checks without one fall back to surface grouping.
    */
   category?: string;
+  definition?: VerifyCheckDefinition;
   /** One-sentence summary of what this check verifies. */
   description?: string;
   /** The document holding the detailed judging instruction / rule body, if any. */
@@ -622,8 +844,14 @@ export interface VerifyCheckItem {
   onFail: VerifyOnFailStrategy;
   /** Whether failing this item blocks delivery (snapshot may override the source default). */
   required: boolean;
+  resourceSnapshot?: {
+    documentContent?: string;
+    fixtures: { fixtureId: string; content?: string; fileHash?: string; url?: string }[];
+  };
   /** Provenance: the criterion this item was instantiated from, or null when agent-generated. */
   sourceCriterionId?: string | null;
+  /** Immutable reusable flow definition instantiated for this verification round. */
+  sourceFlowNode?: { flowId: string; nodeId: string; incomingEdgeId?: string };
   /** Provenance: the rubric (group) this item came in through, or null. */
   sourceRubricId?: string | null;
   /**
@@ -689,7 +917,7 @@ export interface ToulminVerdict {
 /**
  * Declares that a criterion is evidence-driven: it cannot pass on the
  * deliverable text alone — the run must capture and upload an artifact of each
- * listed `type` (via `lh verify upload-evidence`). Stored under the plan item's
+ * listed `type` (via `lh acceptance run result submit`). Stored under the plan item's
  * `verifierConfig.requiredEvidence`, so adding it needs no schema change. The
  * structural gate marks a required item `uncertain` when any listed type is
  * missing, independent of the LLM judge.
@@ -710,10 +938,8 @@ export interface RequiredEvidenceSpec {
  * provenance only — no verdict logic. Verifying an evidence is itself a new
  * check (related through `verify_check_results`), so this table stays flat.
  *
- * The payload lives in exactly one of two places: `content` for small inline
- * text (dom snapshot / console log / transcript), or `fileId` for a stored
- * artifact (screenshot / gif / video, or large text). The `files` table already
- * owns mime / size / hash / url, so none of that metadata is duplicated here.
+ * The payload lives in exactly one of three places: `content` for small inline
+ * text, `documentId` for a LobeHub document, or `fileId` for a stored artifact.
  */
 export interface VerifyEvidence {
   capturedAt?: Date | null;
@@ -726,6 +952,8 @@ export interface VerifyEvidence {
   createdAt: Date;
   /** Human-readable caption, e.g. "首页首屏完整渲染". */
   description?: string | null;
+  /** LobeHub document evidence — FK to `documents`. */
+  documentId?: string | null;
   /** Stored artifact — FK to `files`, which owns mime / size / hash / url. */
   fileId?: string | null;
   id: string;

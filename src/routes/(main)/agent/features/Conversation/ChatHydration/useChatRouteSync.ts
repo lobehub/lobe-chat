@@ -12,7 +12,12 @@ const getSearchSuffix = (searchParams: URLSearchParams) => {
   return search ? `?${search}` : '';
 };
 
-export const useChatRouteSync = () => {
+interface ChatRouteSyncOptions {
+  getConversationPath?: (agentId: string) => string;
+  getTopicPath?: (agentId: string, topicId: string) => string;
+}
+
+export const useChatRouteSync = (options: ChatRouteSyncOptions = {}) => {
   const location = useLocation();
   const navigate = useWorkspaceAwareNavigate();
   const params = useParams<{ aid?: string; topicId?: string }>();
@@ -47,8 +52,9 @@ export const useChatRouteSync = () => {
       (state) => state.activeTopicId,
       (state) => {
         const { aid, topicId } = paramsRef.current;
+        const routeAgentId = aid || useChatStore.getState().activeAgentId;
 
-        if (!aid || state === topicId) return;
+        if (!routeAgentId || state === topicId) return;
 
         if (state === undefined && topicId) {
           useChatStore.setState(
@@ -62,7 +68,9 @@ export const useChatRouteSync = () => {
         const nextSearchParams = new URLSearchParams(searchParamsRef.current);
         nextSearchParams.delete('topic');
 
-        const nextPath = state ? AGENT_CHAT_TOPIC_URL(aid, state) : AGENT_CHAT_URL(aid);
+        const nextPath = state
+          ? options.getTopicPath?.(routeAgentId, state) || AGENT_CHAT_TOPIC_URL(routeAgentId, state)
+          : options.getConversationPath?.(routeAgentId) || AGENT_CHAT_URL(routeAgentId);
         const nextUrl = `${nextPath}${getSearchSuffix(nextSearchParams)}${locationRef.current.hash}`;
         const currentUrl = `${locationRef.current.pathname}${locationRef.current.search}${locationRef.current.hash}`;
 
@@ -72,6 +80,9 @@ export const useChatRouteSync = () => {
     const unsubscribeThread = useChatStore.subscribe(
       (state) => state.activeThreadId,
       (state) => {
+        // A topic switch clears null to undefined. Avoid a redundant query update
+        // against the old pathname, which would undo navigation to the edited topic.
+        if ((state || null) === searchParamsRef.current.get('thread')) return;
         setThread(state || null);
       },
     );
@@ -80,5 +91,5 @@ export const useChatRouteSync = () => {
       unsubscribeTopic();
       unsubscribeThread();
     };
-  }, [navigate, setThread]);
+  }, [navigate, options.getConversationPath, options.getTopicPath, setThread]);
 };

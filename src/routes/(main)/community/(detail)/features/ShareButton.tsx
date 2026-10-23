@@ -1,8 +1,11 @@
 import {
   ActionIcon,
   Avatar,
+  Button,
   Center,
   CopyButton,
+  createStaticStyles,
+  cssVar,
   Flexbox,
   Icon,
   Input,
@@ -10,8 +13,6 @@ import {
   Tag,
   Text,
 } from '@lobehub/ui';
-import { Button } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
 import { startCase } from 'es-toolkit/compat';
 import { LinkIcon, Share2Icon } from 'lucide-react';
 import { type ComponentProps, type ReactNode } from 'react';
@@ -145,7 +146,7 @@ const ShareButton = memo<ShareButtonProps>(({ meta, ...rest }) => {
       </Center>
     );
   } else {
-    content = <Skeleton active paragraph={{ rows: 4 }} title={false} />;
+    content = <Skeleton.Text rows={4} />;
   }
 
   return (

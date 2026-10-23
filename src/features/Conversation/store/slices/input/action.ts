@@ -1,4 +1,4 @@
-import { toast } from '@lobehub/ui/base-ui';
+import { toast } from '@lobehub/ui';
 import { t } from 'i18next';
 import { type StateCreator } from 'zustand';
 
@@ -26,6 +26,11 @@ export interface InputAction {
    * normal send — there is no message row to recover the text from afterwards.
    */
   commitScheduledSend: (message: string, files?: { id: string }[]) => Promise<boolean>;
+
+  /**
+   * Fill the composer with editable text and move focus to the editor.
+   */
+  fillInputMessage: (message: string) => void;
 
   /**
    * Report the floating overlay height (TodoProgress + QueueTray) so the
@@ -102,6 +107,16 @@ export const inputSlice: StateCreator<State & InputAction, [], [], InputAction> 
     );
 
     return true;
+  },
+
+  fillInputMessage: (message) => {
+    const { editor } = get();
+
+    set({ inputMessage: '' });
+    editor?.setDocument('text', '');
+    set({ inputMessage: message });
+    editor?.setDocument('text', message);
+    editor?.focus();
   },
 
   setChatInputOverlayHeight: (height) => {

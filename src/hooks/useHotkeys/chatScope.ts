@@ -1,3 +1,4 @@
+import { isDesktop } from '@lobechat/const';
 import { HotkeyEnum, HotkeyScopeEnum } from '@lobechat/const/hotkeys';
 import { useEffect } from 'react';
 import { useHotkeysContext } from 'react-hotkeys-hook';
@@ -6,6 +7,7 @@ import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useActionSWR } from '@/libs/swr';
 import { topicActionKeys } from '@/libs/swr/keys';
 import { useChatStore } from '@/store/chat';
+import { useGlobalStore } from '@/store/global';
 
 import { useHotkeyById } from './useHotkeyById';
 
@@ -18,6 +20,20 @@ export const useSaveTopicHotkey = () => {
 export const useOpenChatSettingsHotkey = () => {
   const openChatSettings = useOpenChatSettings();
   return useHotkeyById(HotkeyEnum.OpenChatSettings, openChatSettings);
+};
+
+/**
+ * `enabled` defaults to the desktop gate, where a local shell always exists.
+ * The web build passes its own condition — there the panel can only open once a
+ * device is connected, so the binding must stay off until one is.
+ */
+export const useToggleTerminalPanelHotkey = (enabled: boolean = isDesktop) => {
+  const toggleTerminalPanel = useGlobalStore((s) => s.toggleTerminalPanel);
+
+  return useHotkeyById(HotkeyEnum.ToggleTerminalPanel, () => toggleTerminalPanel(), {
+    enableOnContentEditable: true,
+    enabled,
+  });
 };
 
 // Note: useRegenerateMessageHotkey has been moved to ConversationStore

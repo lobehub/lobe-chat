@@ -1,8 +1,8 @@
 'use client';
 
-import { ConfigProvider, ThemeProvider } from '@lobehub/ui';
+import { ConfigProvider, ThemeScope } from '@lobehub/ui';
 import * as m from 'motion/react-m';
-import { type ComponentType, type ReactElement } from 'react';
+import { type ComponentType, type ReactElement, type ReactNode } from 'react';
 import { lazy, memo, Suspense } from 'react';
 import type { RouteObject } from 'react-router';
 import { Navigate, Outlet, useRouteError } from 'react-router';
@@ -39,6 +39,7 @@ function resolveLazyModule<P>(module: { default: ComponentType<P> } | ComponentT
 }
 
 interface DynamicRouteOptions {
+  fallback?: ReactNode;
   preloadId?: string;
 }
 
@@ -108,7 +109,7 @@ export function dynamicElement<P = NonNullable<unknown>>(
 
   // @ts-ignore
   return (
-    <Suspense fallback={<Loading debugId={debugId || 'dynamicElement'} />}>
+    <Suspense fallback={options?.fallback ?? <Loading debugId={debugId || 'dynamicElement'} />}>
       {/* @ts-ignore */}
       <Component {...({} as P)} />
     </Suspense>
@@ -129,7 +130,7 @@ export function dynamicLayout<P = NonNullable<unknown>>(
 
   // @ts-ignore
   return (
-    <Suspense fallback={<Loading debugId={debugId || 'dynamicLayout'} />}>
+    <Suspense fallback={options?.fallback ?? <Loading debugId={debugId || 'dynamicLayout'} />}>
       {/* @ts-ignore */}
       <Component {...({} as P)} />
     </Suspense>
@@ -147,20 +148,15 @@ export const ErrorBoundary = ({ resetPath }: ErrorBoundaryProps) => {
   const appearance = isDark ? 'dark' : 'light';
 
   if (typeof window !== 'undefined' && isChunkLoadError(error)) {
-    notifyChunkError();
+    notifyChunkError(error);
   }
 
   return (
-    <ThemeProvider
-      appearance={appearance}
-      defaultAppearance={appearance}
-      defaultThemeMode={appearance}
-      theme={{ cssVar: { key: 'lobe-vars' } }}
-    >
-      <ConfigProvider motion={m}>
+    <ConfigProvider motion={m}>
+      <ThemeScope appearance={appearance}>
         <ErrorCapture error={error} resetPath={resetPath} />
-      </ConfigProvider>
-    </ThemeProvider>
+      </ThemeScope>
+    </ConfigProvider>
   );
 };
 

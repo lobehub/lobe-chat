@@ -1,3 +1,4 @@
+import { HETERO_CONTINUE_PROMPT } from '@lobechat/const';
 import { act } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -22,7 +23,7 @@ vi.mock(
 // private local override runs in-process even if the shared workspace row points
 // at the gateway.
 const mockSelectRuntimeType = vi.fn((ctx: any) =>
-  ctx?.executionTarget === 'local' && !ctx?.isWorkspaceAgent ? 'hetero' : 'gateway',
+  ctx?.executionTarget === 'local' && !ctx?.workspaceScoped ? 'hetero' : 'gateway',
 );
 vi.mock('@/store/chat/slices/agentRun/actions/dispatch/agentDispatcher', () => ({
   selectRuntimeType: (ctx: any) => mockSelectRuntimeType(ctx),
@@ -33,9 +34,16 @@ let mockAgentVisibility: 'private' | 'public' = 'public';
 let mockIsWorkspaceAgent = false;
 let mockSharedExecutionTarget: 'device' | 'local' = 'local';
 let mockWorkspaceOverride: { boundDeviceId: string; executionTarget: 'local' } | undefined;
-vi.mock('@/store/chat/slices/agentRun/actions/transports/hetero/heteroResume', () => ({
-  resolveHeteroResume: () => ({ cwdChanged: false, resumeSessionId: mockResumeSessionId }),
-}));
+let mockTopic:
+  | { id: string; metadata?: { heteroSessionId?: string }; model?: string; provider?: string }
+  | undefined;
+vi.mock(
+  '@/store/chat/slices/agentRun/actions/transports/hetero/heteroResume',
+  async (importOriginal) => ({
+    ...(await importOriginal<object>()),
+    resolveHeteroResume: () => ({ cwdChanged: false, resumeSessionId: mockResumeSessionId }),
+  }),
+);
 
 vi.mock('@/store/chat/utils/activeTopicDocumentContext', () => ({
   mergeAgentRuntimeInitialContexts: () => undefined,
@@ -46,6 +54,7 @@ vi.mock('@/store/chat/slices/operation/selectors', () => ({
   operationSelectors: {
     getOperationById: () => () => undefined,
     isMessageProcessing: () => () => false,
+    isMessageRegenerating: () => () => false,
   },
 }));
 
@@ -87,7 +96,14 @@ vi.mock('@/store/agent/selectors', () => ({
 }));
 
 vi.mock('@/store/chat/selectors', () => ({
-  topicSelectors: { getTopicById: () => () => undefined },
+  operationSelectors: { isAgentRuntimeRunningByContext: () => () => false },
+  topicSelectors: {
+    getTopicById: () => () => mockTopic,
+    getTopicHeteroPinById: () => () =>
+      mockTopic?.model ? { model: mockTopic.model, provider: mockTopic.provider || '' } : undefined,
+    getTopicModelById: () => () =>
+      mockTopic?.model ? { model: mockTopic.model, provider: mockTopic.provider || '' } : undefined,
+  },
 }));
 
 vi.mock('@/store/electron', () => ({
@@ -102,16 +118,13 @@ vi.mock('@/store/user', () => ({
   }),
 }));
 
-vi.mock('@/components/AntdStaticMethods', () => ({
-  message: { info: vi.fn() },
-}));
-
 const mockChatDeleteMessage = vi.fn(async () => {});
 const mockExecuteGatewayAgent = vi.fn(async () => {});
 const noop = vi.fn();
 vi.mock('@/store/chat', () => ({
   useChatStore: {
     getState: vi.fn(() => ({
+      dbMessagesMap: {},
       operations: {},
       operationsByMessage: {},
 
@@ -120,7 +133,6 @@ vi.mock('@/store/chat', () => ({
       deleteMessage: (...args: any[]) => mockChatDeleteMessage(...(args as [])),
       executeGatewayAgent: (...args: any[]) => mockExecuteGatewayAgent(...(args as [])),
       failOperation: noop,
-      internal_updateTopicLoading: noop,
       isGatewayModeEnabled: () => false,
       refreshMessages: vi.fn(async () => {}),
       startOperation: vi.fn(() => ({ operationId: 'op-id' })),
@@ -141,7 +153,8 @@ const USER_MESSAGE = { content: 'clean up worktrees', id: 'user-1', role: 'user'
  * and immediately died on the usage limit. `step-1` is also the group id.
  */
 const buildGroupStore = (children: any[], dbMessages?: any[]) => {
-  const store = createStore({ context: CONTEXT });
+  // A static transcript: the chat store is mocked, so rows are held locally.
+  const store = createStore({ context: CONTEXT, messages: [] });
   act(() => {
     store.setState({
       dbMessages: dbMessages ?? [
@@ -167,6 +180,7 @@ describe('continueHeteroAfterError', () => {
     mockResumeSessionId = 'sess-1';
     mockIsWorkspaceAgent = false;
     mockSharedExecutionTarget = 'local';
+    mockTopic = undefined;
     mockWorkspaceOverride = undefined;
   });
 
@@ -196,6 +210,23 @@ describe('continueHeteroAfterError', () => {
     });
     expect(executorParams().message).toContain('Continue the task from where it stopped');
     expect(executorParams().message).not.toBe(USER_MESSAGE.content);
+  });
+
+  it('continues with the topic-pinned heterogeneous model', async () => {
+    mockTopic = { id: 'topic-1', model: 'opus', provider: 'claude-code' };
+    const store = buildGroupStore([
+      { content: 'looking', id: 'step-1', tools: [{ id: 'call-1' }] },
+      { content: '', error: HETERO_RATE_LIMIT, id: 'step-2', tools: [{ id: 'call-2' }] },
+    ]);
+
+    await act(async () => {
+      await store.getState().continueHeteroAfterError('step-1');
+    });
+
+    expect(executorParams().heterogeneousProvider).toMatchObject({
+      model: 'opus',
+      type: 'claude-code',
+    });
   });
 
   it('drops an error-only tail step and chains the continuation onto its parent', async () => {
@@ -269,7 +300,8 @@ describe('continueHeteroAfterError', () => {
       expect.objectContaining({
         boundDeviceId: 'personal-device',
         executionTarget: 'local',
-        isWorkspaceAgent: false,
+        isWorkspaceAgent: true,
+        workspaceScoped: false,
       }),
     );
     expect(mockUpdateMessage).not.toHaveBeenCalled();
@@ -280,9 +312,56 @@ describe('continueHeteroAfterError', () => {
     expect(executorParams().workingDirectory).toBe('/Users/me/project');
   });
 
-  it('falls back through the gateway for a workspace shared-local target without an override', async () => {
+  // A device-bound Claude Code run (desktop `local` synced to a bound device, or
+  // web) routes through the gateway. Retrying its rate-limit card used to delete
+  // the whole group and regenerate from the user prompt, wiping every step.
+  it('resumes a gateway-dispatched run in place instead of replacing the turn', async () => {
+    mockSharedExecutionTarget = 'device';
+    mockTopic = { id: 'topic-1', metadata: { heteroSessionId: 'sess-remote' } };
+    const store = buildGroupStore([
+      { content: 'looking', id: 'step-1', tools: [{ id: 'call-1' }] },
+      { content: '', error: HETERO_RATE_LIMIT, id: 'step-2' },
+    ]);
+
+    await act(async () => {
+      await store.getState().continueHeteroAfterError('step-1');
+    });
+
+    expect(mockChatDeleteMessage).not.toHaveBeenCalled();
+    expect(mockRemoveMessages).toHaveBeenCalledWith(['step-2'], CONTEXT);
+    expect(mockExecuteHeterogeneousAgent).not.toHaveBeenCalled();
+    expect(mockExecuteGatewayAgent).toHaveBeenCalledTimes(1);
+    expect(mockExecuteGatewayAgent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: HETERO_CONTINUE_PROMPT,
+        parentMessageId: 'step-1',
+        parentOperationId: 'op-id',
+      }),
+    );
+  });
+
+  it('falls back to a whole-turn regenerate for a gateway run with no CLI session', async () => {
+    mockSharedExecutionTarget = 'device';
+    mockTopic = { id: 'topic-1' };
+    const store = buildGroupStore([
+      { content: 'looking', id: 'step-1', tools: [{ id: 'call-1' }] },
+      { content: '', error: HETERO_RATE_LIMIT, id: 'step-2' },
+    ]);
+
+    await act(async () => {
+      await store.getState().continueHeteroAfterError('step-1');
+    });
+
+    expect(mockChatDeleteMessage).toHaveBeenCalledWith('step-1', { operationId: 'op-id' });
+    expect(mockExecuteGatewayAgent).toHaveBeenCalledWith(
+      expect.objectContaining({ message: USER_MESSAGE.content }),
+    );
+  });
+
+  it('resumes through the gateway for a workspace shared-local target without an override', async () => {
     mockIsWorkspaceAgent = true;
     mockSharedExecutionTarget = 'local';
+    mockTopic = { id: 'topic-1', metadata: { heteroSessionId: 'sess-remote' } };
     const store = buildGroupStore([
       { content: 'looking', id: 'step-1', tools: [{ id: 'call-1' }] },
       { content: '', error: HETERO_RATE_LIMIT, id: 'step-2' },
@@ -297,15 +376,19 @@ describe('continueHeteroAfterError', () => {
         boundDeviceId: 'workspace-device',
         executionTarget: 'local',
         isWorkspaceAgent: true,
+        workspaceScoped: true,
       }),
     );
     expect(mockExecuteGatewayAgent).toHaveBeenCalledWith(
-      expect.objectContaining({ message: USER_MESSAGE.content }),
+      expect.objectContaining({ message: HETERO_CONTINUE_PROMPT, parentMessageId: 'step-1' }),
     );
     expect(mockExecuteHeterogeneousAgent).not.toHaveBeenCalled();
   });
 
-  it('ignores a retained member device override while the Workspace Agent is private', async () => {
+  // The owner's own `local` pick lives in the per-user override even on a
+  // private Workspace Agent (the shared row must never reference a personal
+  // device — the server rejects it), so it must keep applying here.
+  it("applies the owner's own local override while the Workspace Agent is private", async () => {
     mockAgentVisibility = 'private';
     mockIsWorkspaceAgent = true;
     mockSharedExecutionTarget = 'device';
@@ -324,9 +407,10 @@ describe('continueHeteroAfterError', () => {
 
     expect(mockSelectRuntimeType).toHaveBeenCalledWith(
       expect.objectContaining({
-        boundDeviceId: 'workspace-device',
-        executionTarget: 'device',
-        isWorkspaceAgent: false,
+        boundDeviceId: 'personal-device',
+        executionTarget: 'local',
+        isWorkspaceAgent: true,
+        workspaceScoped: false,
       }),
     );
   });

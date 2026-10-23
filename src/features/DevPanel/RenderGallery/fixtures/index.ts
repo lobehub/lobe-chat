@@ -8,13 +8,16 @@ import type { ToolRenderFixture } from '../lifecycleMode';
 import { buildSchemaSample, humanize, single, type ToolsetFixtureModule } from './_helpers';
 import claudeCode from './claude-code';
 import codex from './codex';
+import devin from './devin';
 import github from './github';
+import kimiCode from './kimi-code';
 import linear from './linear';
 import lobeActivator from './lobe-activator';
 import lobeAgent from './lobe-agent';
 import lobeAgentBuilder from './lobe-agent-builder';
 import lobeAgentDocuments from './lobe-agent-documents';
 import lobeAgentManagement from './lobe-agent-management';
+import lobeBrowser from './lobe-browser';
 import lobeCloudSandbox from './lobe-cloud-sandbox';
 import lobeGroupAgentBuilder from './lobe-group-agent-builder';
 import lobeGroupManagement from './lobe-group-management';
@@ -25,10 +28,12 @@ import lobeNotebook from './lobe-notebook';
 import lobePageAgent from './lobe-page-agent';
 import lobeSkillStore from './lobe-skill-store';
 import lobeSkills from './lobe-skills';
+import lobeTask from './lobe-task';
 import lobeUserInteraction from './lobe-user-interaction';
 import lobeUserMemory from './lobe-user-memory';
 import lobeWebBrowsing from './lobe-web-browsing';
 import lobeWebOnboarding from './lobe-web-onboarding';
+import { lobeAuv } from './lobeAuv';
 
 export type { ToolRenderFixture, ToolRenderFixtureVariant } from '../lifecycleMode';
 
@@ -81,13 +86,17 @@ export const DEVTOOLS_GROUP_DETAIL = {
 const toolsetModules: ToolsetFixtureModule[] = [
   claudeCode,
   codex,
+  devin,
   github,
+  kimiCode,
   linear,
   lobeActivator,
   lobeAgent,
   lobeAgentBuilder,
   lobeAgentDocuments,
   lobeAgentManagement,
+  lobeAuv,
+  lobeBrowser,
   lobeCloudSandbox,
   lobeGroupAgentBuilder,
   lobeGroupManagement,
@@ -98,6 +107,7 @@ const toolsetModules: ToolsetFixtureModule[] = [
   lobePageAgent,
   lobeSkillStore,
   lobeSkills,
+  lobeTask,
   lobeUserInteraction,
   lobeUserMemory,
   lobeWebBrowsing,

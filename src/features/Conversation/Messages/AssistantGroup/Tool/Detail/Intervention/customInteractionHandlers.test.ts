@@ -1,3 +1,4 @@
+import { CredsApiName, CredsIdentifier } from '@lobechat/builtin-tool-creds';
 import { LobeAgentApiName, LobeAgentIdentifier } from '@lobechat/builtin-tool-lobe-agent';
 import {
   UserInteractionApiName,
@@ -12,8 +13,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { installMarketplaceAgents } from '@/services/installMarketplaceAgents';
 
 import {
+  isApprovalBackedInteraction,
+  isCustomInteractionIdentifier,
   prepareCustomInteractionSubmit,
   recordCustomInteractionResolution,
+  toApprovalDecision,
 } from './customInteractionHandlers';
 
 vi.mock('@/services/installMarketplaceAgents', () => ({
@@ -90,15 +94,26 @@ describe('customInteractionHandlers', () => {
     const payload = {
       'How broad should this pass be?': 'Focused',
       'Which surfaces?': ['Chat', 'Settings'],
+      '__supplement__': 'Keep the existing behavior.',
     };
 
     const result = await prepareCustomInteractionSubmit(identifier, payload, { apiName });
 
     expect(result).toEqual({
-      options: { pluginState: { askUserAnswers: payload } },
+      // createUserMessage must stay false: the completed tool card already
+      // renders the answers, so a synthetic user message would duplicate them
+      // in the client runtime.
+      options: { createUserMessage: false, pluginState: { askUserAnswers: payload } },
       payload,
     });
   });
+
+  it.each(['devin', 'droid', 'qoder'])(
+    'routes %s tools through the heterogeneous custom flow',
+    (type) => {
+      expect(isCustomInteractionIdentifier(type, 'askUserQuestion')).toBe(true);
+    },
+  );
 
   it('persists skipped marketplace picks from the original tool arguments', async () => {
     await recordCustomInteractionResolution(
@@ -128,6 +143,38 @@ describe('customInteractionHandlers', () => {
         },
         lastActiveAt: '2026-04-29T10:00:00.000Z',
       },
+    });
+  });
+
+  describe('approval-backed forms (lobe-creds requestCredsInput)', () => {
+    it('renders as a custom form', () => {
+      expect(isApprovalBackedInteraction(CredsIdentifier, CredsApiName.requestCredsInput)).toBe(
+        true,
+      );
+      expect(isCustomInteractionIdentifier(CredsIdentifier, CredsApiName.requestCredsInput)).toBe(
+        true,
+      );
+      expect(isApprovalBackedInteraction(CredsIdentifier, CredsApiName.injectCredsToSandbox)).toBe(
+        false,
+      );
+    });
+
+    it('turns submit into a plain approval that drops the payload', () => {
+      const decision = toApprovalDecision({
+        payload: { OPENAI_API_KEY: 'sk-test-secret-value' },
+        type: 'submit',
+      });
+
+      expect(decision).toEqual({ type: 'approve' });
+      expect(JSON.stringify(decision)).not.toContain('sk-test-secret-value');
+    });
+
+    it('turns skip and cancel into reject-and-continue', () => {
+      expect(toApprovalDecision({ reason: 'not now', type: 'skip' })).toEqual({
+        reason: 'not now',
+        type: 'reject',
+      });
+      expect(toApprovalDecision({ type: 'cancel' })).toEqual({ reason: undefined, type: 'reject' });
     });
   });
 });

@@ -1,7 +1,6 @@
 import type { IAsyncTaskError } from '@lobechat/types';
-import { Flexbox, stopPropagation } from '@lobehub/ui';
-import { Button } from '@lobehub/ui/base-ui';
-import type { ItemType } from 'antd/es/menu/interface';
+import type { ItemType } from '@lobehub/ui';
+import { Button, Flexbox, stopPropagation } from '@lobehub/ui';
 import { isNull } from 'es-toolkit/compat';
 import { FileBoxIcon } from 'lucide-react';
 import { useMemo } from 'react';
@@ -100,17 +99,15 @@ const FileListItemActions = ({
       {!isFolder &&
         !isPage &&
         (isCreatingFileParseTask || isNull(chunkingStatus) || !chunkingStatus ? (
-          canEditResources && (
+          // Unsupported file types simply hide the entry instead of surfacing a
+          // permanently disabled button.
+          canEditResources &&
+          isSupportedForChunking && (
             <div
               className={isCreatingFileParseTask ? undefined : styles.hover}
-              title={t(
-                isSupportedForChunking
-                  ? 'FileManager.actions.chunkingTooltip'
-                  : 'FileManager.actions.chunkingUnsupported',
-              )}
+              title={t('FileManager.actions.chunkingTooltip')}
             >
               <Button
-                disabled={!isSupportedForChunking}
                 icon={FileBoxIcon}
                 loading={isCreatingFileParseTask}
                 size={'small'}

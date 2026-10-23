@@ -1,4 +1,4 @@
-import { mkdir, realpath, stat, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, realpath, stat, writeFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import path from 'node:path';
 
@@ -39,6 +39,8 @@ export const isValidClaudeSessionId = (sessionId: string): boolean =>
  * Returns `null` for a session id that could not be a real CC session.
  */
 export const resolveClaudeCodeTranscriptPath = async (params: {
+  /** Claude profile root selected through CLAUDE_CONFIG_DIR. */
+  configDir?: string;
   cwd: string;
   home?: string;
   sessionId: string;
@@ -53,7 +55,11 @@ export const resolveClaudeCodeTranscriptPath = async (params: {
   } catch {
     // cwd may not exist yet — fall back to the literal path, same as the CLI
   }
-  const projectDir = path.join(home, '.claude', 'projects', encodeClaudeProjectDir(realCwd));
+  const projectDir = path.join(
+    params.configDir ?? path.join(home, '.claude'),
+    'projects',
+    encodeClaudeProjectDir(realCwd),
+  );
   const filePath = path.join(projectDir, `${sessionId}.jsonl`);
 
   // Belt-and-braces: the regex already forbids separators, but assert the
@@ -70,6 +76,41 @@ const fileExists = async (p: string): Promise<boolean> => {
   } catch {
     return false;
   }
+};
+
+/**
+ * Locate the transcript `--resume` will actually load, which is not always the
+ * one {@link resolveClaudeCodeTranscriptPath} points at: CC keeps appending to
+ * the file under the cwd the session was CREATED in, and resumes it by id from
+ * any cwd. A topic that moves into a worktree therefore resumes a transcript
+ * stored under another directory's project folder.
+ *
+ * Session ids are UUIDs, so the first `<id>.jsonl` under any project folder is
+ * that session. Returns the cwd-derived path when none exists (so a caller can
+ * create it there), and `null` for a session id that could not be real.
+ */
+export const findClaudeCodeTranscriptPath = async (params: {
+  configDir?: string;
+  cwd: string;
+  home?: string;
+  sessionId: string;
+}): Promise<string | null> => {
+  const filePath = await resolveClaudeCodeTranscriptPath(params);
+  if (!filePath || (await fileExists(filePath))) return filePath;
+
+  const projectsDir = path.dirname(path.dirname(filePath));
+  let projectDirs: string[];
+  try {
+    projectDirs = await readdir(projectsDir);
+  } catch {
+    return filePath;
+  }
+  for (const projectDir of projectDirs) {
+    const candidate = path.join(projectsDir, projectDir, path.basename(filePath));
+    if (await fileExists(candidate)) return candidate;
+  }
+
+  return filePath;
 };
 
 export type EnsureResumeTranscriptReason =
@@ -96,6 +137,7 @@ export interface EnsureResumeTranscriptResult {
  * filesystem path.
  */
 export const ensureClaudeCodeResumeTranscript = async (params: {
+  configDir?: string;
   cwd: string;
   home?: string;
   messages: HeteroSessionImportMessage[];
@@ -103,7 +145,12 @@ export const ensureClaudeCodeResumeTranscript = async (params: {
   transcriptOptions?: Partial<Omit<BuildClaudeCodeTranscriptOptions, 'cwd' | 'sessionId'>>;
 }): Promise<EnsureResumeTranscriptResult> => {
   const { cwd, messages, sessionId } = params;
-  const filePath = await resolveClaudeCodeTranscriptPath({ cwd, home: params.home, sessionId });
+  const filePath = await findClaudeCodeTranscriptPath({
+    configDir: params.configDir,
+    cwd,
+    home: params.home,
+    sessionId,
+  });
   if (!filePath) return { path: null, reason: 'invalid-session-id', written: false };
 
   if (await fileExists(filePath)) return { path: filePath, reason: 'exists', written: false };

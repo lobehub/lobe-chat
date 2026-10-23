@@ -1,4 +1,9 @@
-import { type FilesTabs, type FileUploader, type SortType } from '@/types/files';
+import {
+  type FilesTabs,
+  type FileUploader,
+  type ResourceSourceFilter,
+  type SortType,
+} from '@/types/files';
 
 /**
  * Unified resource item that represents both files and documents
@@ -21,6 +26,7 @@ export interface ResourceItem {
 
   // Document-specific (optional)
   content?: string | null;
+  contentPreview?: string | null;
   // Timestamps
   createdAt: Date;
 
@@ -35,6 +41,8 @@ export interface ResourceItem {
   // Identity
   id: string;
   knowledgeBaseId?: string;
+  /** Knowledge bases the row is filed into; the drive tags rows with them. */
+  knowledgeBaseIds?: string[];
   // Metadata
   metadata?: Record<string, any>;
   // Real ID or temp-resource-{timestamp}-{random}
@@ -68,6 +76,9 @@ export interface ResourceItem {
  */
 export interface ResourceQueryParams {
   category?: FilesTabs;
+  /** Drive listing: uploaded files and the folders that hold them, no pages. */
+  filesOnly?: boolean;
+  includeContentPreview?: boolean;
   libraryId?: string;
   limit?: number;
   offset?: number;
@@ -76,6 +87,11 @@ export interface ResourceQueryParams {
   showFilesInKnowledgeBase?: boolean;
   sorter?: 'name' | 'createdAt' | 'size';
   sortType?: SortType;
+  /**
+   * Origin narrowing driven by the explorer's source filter chips
+   * (all / AI-generated / uploaded / acceptance evidence).
+   */
+  sourceFilter?: ResourceSourceFilter;
   /**
    * Workspace-mode visibility narrowing driven by the Sidebar mode toggle.
    * `'private'` shows the caller's own private rows; `'public'` shows
