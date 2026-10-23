@@ -90,15 +90,15 @@ describe('useTopicFilterDropdownMenu group modes', () => {
   });
 
   /** @example The project sidebar offers by agent and by device, and drops by project because it is already one project. */
-  it('offers by agent and by device but not by project inside a project-scoped list', () => {
+  it('offers by agent first, then by device but not by project inside a project-scoped list', () => {
     scopeMock.scope = { projectId: 'prj-1' };
 
     const { result } = renderHook(() => useTopicFilterDropdownMenu());
 
     expect(organizeLabels(result.current())).toEqual([
+      'filter.groupMode.byAgent',
       'filter.groupMode.byStatus',
       'filter.groupMode.byTime',
-      'filter.groupMode.byAgent',
       'filter.groupMode.byDevice',
       'filter.groupMode.flat',
     ]);
