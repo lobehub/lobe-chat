@@ -19,7 +19,6 @@ import {
   varchar,
 } from 'drizzle-orm/pg-core';
 
-import { idGenerator } from '../utils/idGenerator';
 import { createdAt, timestamptz, updatedAt } from './_helpers';
 import { agentOperations } from './agentOperations';
 import { channelMembers, channels } from './channel';
@@ -37,15 +36,12 @@ import { topics } from './topic';
 export const channelJobs = pgTable(
   'channel_jobs',
   {
-    id: text('id')
-      .primaryKey()
-      .$defaultFn(() => idGenerator('channelJobs'))
-      .notNull(),
+    id: uuid('id').defaultRandom().primaryKey().notNull(),
     channelId: text('channel_id')
       .references(() => channels.id, { onDelete: 'cascade' })
       .notNull(),
     memberId: uuid('member_id').notNull(),
-    messageId: text('message_id').notNull(),
+    messageId: uuid('message_id').notNull(),
     threadId: text('thread_id'),
     /** Member who triggered the request; its user is the execution identity. */
     requesterMemberId: uuid('requester_member_id').notNull(),
@@ -71,7 +67,7 @@ export const channelJobs = pgTable(
       .references((): AnyPgColumn => agentOperations.id, { onDelete: 'set null' }),
     /** Where the run's input ends, frozen at claim; later messages belong to the next job. */
     manifest: jsonb('manifest').$type<ChannelInputManifest>(),
-    /** Member config frozen at claim time. */
+    /** Effective Agent settings and Channel environment frozen at claim time. */
     executionConfig: jsonb('execution_config').$type<ChannelExecutionConfig>(),
     /** Device of a device-hosted run; with `workingDirectory` it forms the directory lock. */
     deviceId: varchar('device_id', { length: 64 }),
@@ -98,7 +94,7 @@ export const channelJobs = pgTable(
     draft: text('draft'),
     /** A revoked job never publishes. Set by stops, failures and isolation. */
     publicationRevoked: boolean('publication_revoked').notNull().default(false),
-    publishedMessageId: text('published_message_id'),
+    publishedMessageId: uuid('published_message_id'),
 
     createdAt: createdAt(),
     updatedAt: updatedAt(),

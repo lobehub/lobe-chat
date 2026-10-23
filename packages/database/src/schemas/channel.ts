@@ -165,10 +165,7 @@ export const channelMembers = pgTable(
 export const channelMemberGrants = pgTable(
   'channel_member_grants',
   {
-    id: text('id')
-      .primaryKey()
-      .$defaultFn(() => idGenerator('channelMemberGrants'))
-      .notNull(),
+    id: uuid('id').defaultRandom().primaryKey().notNull(),
     channelId: text('channel_id')
       .references(() => channels.id, { onDelete: 'cascade' })
       .notNull(),

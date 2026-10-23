@@ -1211,7 +1211,7 @@ table channel_audit {
 }
 
 table channel_member_grants {
-  id text [pk, not null]
+  id uuid [pk, not null, default: `gen_random_uuid()`]
   channel_id text [not null]
   member_id uuid [not null]
   device_owner_id text [not null]
@@ -1287,10 +1287,10 @@ table channels {
 }
 
 table channel_jobs {
-  id text [pk, not null]
+  id uuid [pk, not null, default: `gen_random_uuid()`]
   channel_id text [not null]
   member_id uuid [not null]
-  message_id text [not null]
+  message_id uuid [not null]
   thread_id text
   requester_member_id uuid [not null]
   delivery_key text [not null, default: 'initial']
@@ -1311,7 +1311,7 @@ table channel_jobs {
   isolated_at "timestamp with time zone"
   draft text
   publication_revoked boolean [not null, default: false]
-  published_message_id text
+  published_message_id uuid
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
 
@@ -1334,7 +1334,7 @@ table channel_jobs {
 
 table channel_message_files {
   id uuid [pk, not null, default: `gen_random_uuid()`]
-  message_id text [not null]
+  message_id uuid [not null]
   file_id text [not null]
   sort_order integer [not null]
 
@@ -1345,7 +1345,7 @@ table channel_message_files {
 }
 
 table channel_messages {
-  id text [pk, not null]
+  id uuid [pk, not null, default: `gen_random_uuid()`]
   channel_id text [not null]
   thread_id text
   sequence integer [not null]
@@ -1353,7 +1353,7 @@ table channel_messages {
   author_member_id uuid [not null]
   mentions jsonb [not null, default: `[]`]
   request_key text [not null]
-  reply_to_id text
+  reply_to_id uuid
   routing_status text [not null]
   routing_source text
   routing_reason text
@@ -1376,7 +1376,7 @@ table channel_messages {
 table channel_threads {
   id text [pk, not null]
   channel_id text [not null]
-  root_message_id text [not null]
+  root_message_id uuid [not null]
   root_sequence integer [not null]
   follower_member_ids jsonb [not null, default: `[]`]
   created_at "timestamp with time zone" [not null, default: `now()`]

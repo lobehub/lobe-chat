@@ -26,9 +26,6 @@ describe('idGenerator', () => {
     expect(userId).toMatch(/^user_[\dA-Za-z]{12}$/);
 
     expect(idGenerator('channels')).toMatch(/^chn_[\dA-Za-z]{12}$/);
-    expect(idGenerator('channelJobs')).toMatch(/^chj_[\dA-Za-z]{12}$/);
-    expect(idGenerator('channelMessages')).toMatch(/^chm_[\dA-Za-z]{12}$/);
-    expect(idGenerator('channelMemberGrants')).toMatch(/^chg_[\dA-Za-z]{12}$/);
     expect(idGenerator('channelThreads')).toMatch(/^cht_[\dA-Za-z]{12}$/);
   });
 

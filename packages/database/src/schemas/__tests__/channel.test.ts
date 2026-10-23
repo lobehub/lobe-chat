@@ -133,6 +133,15 @@ afterEach(async () => {
 });
 
 describe('channel schema', () => {
+  it('generates UUIDs for internal messages and jobs', async () => {
+    const fixture = await createChannel();
+    const [job] = await createClaimedJob(fixture, 1);
+    expect(job.id).toMatch(/^[\da-f]{8}-[\da-f]{4}-4[\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}$/i);
+    expect(job.messageId).toMatch(
+      /^[\da-f]{8}-[\da-f]{4}-4[\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}$/i,
+    );
+  });
+
   describe('members', () => {
     it('enforces Agent references and preserves authored history after Agent deletion', async () => {
       const { agent, channel, owner } = await createChannel();
@@ -371,6 +380,9 @@ describe('channel schema', () => {
       };
 
       const [created] = await serverDB.insert(channelMemberGrants).values(grant).returning();
+      expect(created.id).toMatch(
+        /^[\da-f]{8}-[\da-f]{4}-4[\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}$/i,
+      );
       expect(created.status).toBe('pending');
       await expect(serverDB.insert(channelMemberGrants).values(grant)).rejects.toThrow();
       await expect(

@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS "channel_audit" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "channel_member_grants" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"channel_id" text NOT NULL,
 	"member_id" uuid NOT NULL,
 	"device_owner_id" text NOT NULL,
@@ -65,10 +65,10 @@ CREATE TABLE IF NOT EXISTS "channels" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "channel_jobs" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"channel_id" text NOT NULL,
 	"member_id" uuid NOT NULL,
-	"message_id" text NOT NULL,
+	"message_id" uuid NOT NULL,
 	"thread_id" text,
 	"requester_member_id" uuid NOT NULL,
 	"delivery_key" text DEFAULT 'initial' NOT NULL,
@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS "channel_jobs" (
 	"isolated_at" timestamp with time zone,
 	"draft" text,
 	"publication_revoked" boolean DEFAULT false NOT NULL,
-	"published_message_id" text,
+	"published_message_id" uuid,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "channel_jobs_operation_id_unique" UNIQUE("operation_id"),
@@ -98,14 +98,14 @@ CREATE TABLE IF NOT EXISTS "channel_jobs" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "channel_message_files" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"message_id" text NOT NULL,
+	"message_id" uuid NOT NULL,
 	"file_id" text NOT NULL,
 	"sort_order" integer NOT NULL,
 	CONSTRAINT "channel_message_files_message_file_unique" UNIQUE("message_id","file_id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "channel_messages" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"channel_id" text NOT NULL,
 	"thread_id" text,
 	"sequence" integer NOT NULL,
@@ -113,7 +113,7 @@ CREATE TABLE IF NOT EXISTS "channel_messages" (
 	"author_member_id" uuid NOT NULL,
 	"mentions" jsonb DEFAULT '[]'::jsonb NOT NULL,
 	"request_key" text NOT NULL,
-	"reply_to_id" text,
+	"reply_to_id" uuid,
 	"routing_status" text NOT NULL,
 	"routing_source" text,
 	"routing_reason" text,
@@ -126,7 +126,7 @@ CREATE TABLE IF NOT EXISTS "channel_messages" (
 CREATE TABLE IF NOT EXISTS "channel_threads" (
 	"id" text PRIMARY KEY NOT NULL,
 	"channel_id" text NOT NULL,
-	"root_message_id" text NOT NULL,
+	"root_message_id" uuid NOT NULL,
 	"root_sequence" integer NOT NULL,
 	"follower_member_ids" jsonb DEFAULT '[]'::jsonb NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,

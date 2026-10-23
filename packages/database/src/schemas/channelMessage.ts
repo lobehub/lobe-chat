@@ -28,7 +28,7 @@ export const channelThreads = pgTable(
     channelId: text('channel_id')
       .references(() => channels.id, { onDelete: 'cascade' })
       .notNull(),
-    rootMessageId: text('root_message_id').notNull(),
+    rootMessageId: uuid('root_message_id').notNull(),
     rootSequence: integer('root_sequence').notNull(),
     /** Member ids (people and Agents) following this Thread. */
     followerMemberIds: jsonb('follower_member_ids').$type<string[]>().notNull().default([]),
@@ -50,10 +50,7 @@ export const channelThreads = pgTable(
 export const channelMessages = pgTable(
   'channel_messages',
   {
-    id: text('id')
-      .primaryKey()
-      .$defaultFn(() => idGenerator('channelMessages'))
-      .notNull(),
+    id: uuid('id').defaultRandom().primaryKey().notNull(),
     channelId: text('channel_id')
       .references(() => channels.id, { onDelete: 'cascade' })
       .notNull(),
@@ -65,7 +62,7 @@ export const channelMessages = pgTable(
     mentions: jsonb('mentions').$type<string[]>().notNull().default([]),
     /** Client retry key for a human message; run identity for a published reply. */
     requestKey: text('request_key').notNull(),
-    replyToId: text('reply_to_id'),
+    replyToId: uuid('reply_to_id'),
 
     routingStatus: text('routing_status').$type<ChannelMessageRoutingStatus>().notNull(),
     /** Where the recipients came from. NULL until routing settles, and on replies. */
@@ -117,7 +114,7 @@ export const channelMessageFiles = pgTable(
   'channel_message_files',
   {
     id: uuid('id').defaultRandom().primaryKey().notNull(),
-    messageId: text('message_id')
+    messageId: uuid('message_id')
       .references(() => channelMessages.id, { onDelete: 'cascade' })
       .notNull(),
     fileId: text('file_id')

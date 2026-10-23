@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "b96ceba7-7595-4130-8be7-07bcd3b4b0fc",
+  "id": "d5ec5e41-9fcb-4b39-86c2-feacc49dd051",
   "policies": {},
   "prevId": "441054df-5d72-4ff2-b7fc-742c8cfb5db5",
   "roles": {},
@@ -10308,9 +10308,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "channel_id": {
           "name": "channel_id",
@@ -10880,9 +10881,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "channel_id": {
           "name": "channel_id",
@@ -10898,7 +10900,7 @@
         },
         "message_id": {
           "name": "message_id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -11028,7 +11030,7 @@
         },
         "published_message_id": {
           "name": "published_message_id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
@@ -11327,7 +11329,7 @@
         },
         "message_id": {
           "name": "message_id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -11399,9 +11401,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "channel_id": {
           "name": "channel_id",
@@ -11448,7 +11451,7 @@
         },
         "reply_to_id": {
           "name": "reply_to_id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
@@ -11672,7 +11675,7 @@
         },
         "root_message_id": {
           "name": "root_message_id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },

@@ -21,8 +21,8 @@ There is no `channel_id` on ordinary messages, topics or operations, no public C
 no separate Channel session/run/runtime-message store. `trigger='channel'` records the origin of
 an ordinary conversation/execution. The job points to it from the source side.
 
-Public history belongs to the Channel and survives deletion of an author or Agent. Member IDs
-are UUIDs. Agent members reference `agents.id`; deletion clears that reference and blocks new
+Public history belongs to the Channel and survives deletion of an author or Agent. Member, grant, message and job IDs
+are database-generated UUIDs; message references use UUID columns as well. Agent members reference `agents.id`; deletion clears that reference and blocks new
 claims, retaining authored history. Optional `channels.project_id` is cleared on project deletion.
 Project association does not grant Channel access. Personal channels are removed with their owner;
 workspace channels retain their public history if the creator leaves or deletes their account.
