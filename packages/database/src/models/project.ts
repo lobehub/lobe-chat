@@ -369,12 +369,80 @@ export class ProjectModel {
       .from(projects)
       .leftJoin(agents, eq(agents.id, projects.coordinatorAgentId))
       .where(and(this.readable(), statusWhere))
+      // Recently updated first for every caller; the sidebar applies the manual
+      // `sort_order` itself, so the order stays a sidebar view, not the API default.
       .orderBy(desc(projects.updatedAt))
       .limit(limit)
       .offset(offset);
     // Coordinators are virtual agents the client agent list never loads, so the
     // list carries their display meta for the owner column.
     return rows.map(({ coordinatorAgent, project }) => ({ ...project, coordinatorAgent }));
+  }
+
+  /**
+   * Move one project in the scope's shared manual order, placing it directly
+   * before or after `anchorId` (both must be visible to the caller).
+   *
+   * The order spans every project in the scope — including other members'
+   * private ones the caller cannot see — so the move is applied to that full
+   * list and every row is renumbered. Positions never collide across members,
+   * no caller needs to send the whole list, and a per-scope lock makes sure
+   * concurrent moves in one scope apply one after another. `updated_at` is left alone:
+   * moving a project is not an edit, and the "recently updated" order must not
+   * jump.
+   */
+  async move(id: string, anchor: { afterId: string } | { beforeId: string }) {
+    const anchorId = 'beforeId' in anchor ? anchor.beforeId : anchor.afterId;
+    if (anchorId === id) return;
+
+    await this.db.transaction(async (tx) => {
+      // Serialize moves per scope before reading the order. Locking the rows in
+      // the ordered read itself is not enough: under READ COMMITTED a waiting
+      // transaction would return the order it sorted before the wait.
+      await tx.execute(
+        sql`SELECT pg_advisory_xact_lock(hashtext(${`project-order:${this.workspaceId ?? `user:${this.userId}`}`}))`,
+      );
+
+      const visible = await tx
+        .select({ id: projects.id })
+        .from(projects)
+        .where(and(inArray(projects.id, [id, anchorId]), this.manageable()));
+      if (visible.length !== 2) throw new Error('Project not found');
+
+      const scope = buildWorkspaceWhere(
+        { userId: this.userId, workspaceId: this.workspaceId },
+        {
+          isDeleted: projects.isDeleted,
+          userId: projects.userId,
+          workspaceId: projects.workspaceId,
+        },
+      );
+      const rows = await tx
+        .select({ id: projects.id })
+        .from(projects)
+        .where(scope)
+        .orderBy(sql`${projects.sortOrder} ASC NULLS FIRST`, desc(projects.updatedAt));
+
+      // Either project may have been deleted since the check above.
+      const ids = rows.map((row) => row.id);
+      if (!ids.includes(id) || !ids.includes(anchorId)) throw new Error('Project not found');
+
+      const order = ids.filter((rowId) => rowId !== id);
+      const anchorIndex = order.indexOf(anchorId);
+      order.splice('beforeId' in anchor ? anchorIndex : anchorIndex + 1, 0, id);
+
+      const position = sql.join(
+        order.map((rowId, index) => sql`WHEN ${rowId} THEN ${index}`),
+        sql` `,
+      );
+      await tx
+        .update(projects)
+        .set({
+          sortOrder: sql`(CASE ${projects.id} ${position} END)::integer`,
+          updatedAt: sql`${projects.updatedAt}`,
+        })
+        .where(and(inArray(projects.id, order), scope));
+    });
   }
 
   async update(id: string, input: UpdateProjectInput) {
