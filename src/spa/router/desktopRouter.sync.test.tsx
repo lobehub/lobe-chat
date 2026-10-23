@@ -82,6 +82,7 @@ async function readRouterSources() {
       'projectWorkspaceRoutes.tsx',
       'taskWorkspaceRoutes.tsx',
       'workspaceSettingsRoutes.tsx',
+      'resourceRoutes.tsx',
     ].map((filename) => readFile(path.join(process.cwd(), 'src/spa/router', filename), 'utf8')),
   );
 }
@@ -516,9 +517,11 @@ describe('desktop router shared definition', () => {
       ['/apps', AppsSkeleton],
       ['/memory', MemorySkeleton],
       ['/resource', ResourceHomeSkeleton],
-      ['/resource/files', ResourceCategorySkeleton],
-      ['/resource/images', ResourceCategorySkeleton],
+      ['/resource/drive', ResourceCategorySkeleton],
+      ['/resource/drive/files', ResourceCategorySkeleton],
+      ['/resource/drive/images', ResourceCategorySkeleton],
       ['/resource/works', ResourceCategorySkeleton],
+      ['/resource/library', ResourceCategorySkeleton],
     ] as const) {
       const matches = matchRoutes(getRoutes(pathname), pathname);
       expect(
@@ -571,13 +574,13 @@ describe('desktop router shared definition', () => {
   ])(
     '%s paints the resource skeleton on its first render, without a chunk wait',
     (_, getRoutes) => {
-      const matches = matchRoutes(getRoutes('/resource/files'), '/resource/files');
+      const matches = matchRoutes(getRoutes('/resource/drive/files'), '/resource/drive/files');
       const Skeleton = resolveRouteSkeleton(
         matches?.map(({ route }) => ({ handle: route.handle })) ?? [],
       );
 
       const html = renderToString(
-        <MemoryRouter initialEntries={['/resource/files']}>
+        <MemoryRouter initialEntries={['/resource/drive/files']}>
           {Skeleton && <Skeleton />}
         </MemoryRouter>,
       );
@@ -733,9 +736,10 @@ describe('desktop router shared definition', () => {
   });
 
   it('keeps business resource and task routes in the shared definition', async () => {
-    const [sharedSource] = await readRouterSources();
+    const [sharedSource, , , , , , resourceSource] = await readRouterSources();
 
-    expect(sharedSource).toContain('...BusinessResourceRoutes');
+    expect(sharedSource).toContain('resourceRoute,');
+    expect(resourceSource).toContain('...BusinessResourceRoutes');
     expect(sharedSource).toContain("import('@/routes/(main)/(task-workspace)/_layout')");
     expect(sharedSource).toContain("import('@/routes/(main)/agent/task/[taskId]')");
     expect(sharedSource).not.toContain("import('@/routes/(main)/task-workspace/_layout')");

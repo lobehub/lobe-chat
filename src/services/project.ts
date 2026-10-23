@@ -51,6 +51,9 @@ class ProjectService {
 
   delete = async (id: string) => lambdaClient.project.delete.mutate({ id });
 
+  move = async (id: string, anchor: { afterId: string } | { beforeId: string }) =>
+    lambdaClient.project.move.mutate({ id, ...anchor });
+
   create = async (
     params: {
       avatar?: string;
@@ -74,6 +77,9 @@ class ProjectService {
 
   removeKnowledgeBase = async (id: string, knowledgeBaseId: string) =>
     lambdaClient.project.removeKnowledgeBase.mutate({ id, knowledgeBaseId });
+
+  replaceCoordinator = async (id: string, agentId: string) =>
+    lambdaClient.project.replaceCoordinator.mutate({ agentId, id });
 
   reopen = async (id: string) => lambdaClient.project.reopen.mutate({ id });
 

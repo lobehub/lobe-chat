@@ -53,6 +53,96 @@ describe('ProjectModel', () => {
     await serverDB.delete(users);
   });
 
+  describe('move', () => {
+    // The manual order as the sidebar reads it: sort_order, unplaced first, newest first.
+    const ids = async (m: ProjectModel) =>
+      (await m.list())
+        .toSorted(
+          (a, b) =>
+            (a.sortOrder ?? -1) - (b.sortOrder ?? -1) ||
+            b.updatedAt.getTime() - a.updatedAt.getTime(),
+        )
+        .map((p) => p.name);
+
+    it('leaves the list API in recently-updated order', async () => {
+      const a = await createProject(model, { name: 'A' });
+      const b = await createProject(model, { name: 'B' });
+      await model.move(a.id, { beforeId: b.id });
+
+      expect((await model.list()).map((p) => p.name)).toEqual(['B', 'A']);
+    });
+
+    it('places a project before or after another and keeps the order', async () => {
+      const a = await createProject(model, { name: 'A' });
+      const b = await createProject(model, { name: 'B' });
+      const c = await createProject(model, { name: 'C' });
+      expect(await ids(model)).toEqual(['C', 'B', 'A']);
+
+      await model.move(a.id, { beforeId: c.id });
+      expect(await ids(model)).toEqual(['A', 'C', 'B']);
+
+      await model.move(a.id, { afterId: b.id });
+      expect(await ids(model)).toEqual(['C', 'B', 'A']);
+      expect((await model.findById(c.id))?.sortOrder).toBe(0);
+    });
+
+    it('lists projects never placed above placed ones', async () => {
+      const a = await createProject(model, { name: 'A' });
+      const b = await createProject(model, { name: 'B' });
+      await model.move(a.id, { beforeId: b.id });
+      await createProject(model, { name: 'New' });
+
+      expect(await ids(model)).toEqual(['New', 'A', 'B']);
+    });
+
+    it('keeps updatedAt so the recently-updated order does not move', async () => {
+      const a = await createProject(model, { name: 'A' });
+      const b = await createProject(model, { name: 'B' });
+      const before = await model.findByIds([a.id, b.id]);
+
+      await model.move(a.id, { beforeId: b.id });
+
+      for (const row of await model.findByIds([a.id, b.id])) {
+        const original = before.find((p) => p.id === row.id)!;
+        expect(row.updatedAt.getTime()).toBe(original.updatedAt.getTime());
+      }
+    });
+
+    it('rejects projects outside the caller scope', async () => {
+      const mine = await createProject(model, { name: 'Mine' });
+      const theirs = await createProject(otherModel, { name: 'Theirs' });
+
+      await expect(model.move(theirs.id, { beforeId: mine.id })).rejects.toThrow(
+        'Project not found',
+      );
+      expect((await otherModel.findById(theirs.id))?.sortOrder).toBeNull();
+    });
+
+    it("keeps each member's private projects in place when another member moves", async () => {
+      await serverDB.insert(workspaces).values({
+        id: 'project-order-workspace',
+        name: 'Project Order Workspace',
+        primaryOwnerId: userId,
+        slug: 'project-order-workspace',
+      });
+      const alice = new ProjectModel(serverDB, userId, 'project-order-workspace');
+      const bob = new ProjectModel(serverDB, otherUserId, 'project-order-workspace');
+      const publicA = await createProject(alice, { name: 'PublicA' });
+      const publicB = await createProject(alice, { name: 'PublicB' });
+      const privateA = await createProject(alice, { name: 'PrivateA', visibility: 'private' });
+      const privateB = await createProject(bob, { name: 'PrivateB', visibility: 'private' });
+
+      await alice.move(privateA.id, { beforeId: publicA.id });
+      await alice.move(publicB.id, { afterId: publicA.id });
+      expect(await ids(alice)).toEqual(['PrivateA', 'PublicA', 'PublicB']);
+
+      await bob.move(privateB.id, { afterId: publicB.id });
+
+      expect(await ids(alice)).toEqual(['PrivateA', 'PublicA', 'PublicB']);
+      expect(await ids(bob)).toEqual(['PublicA', 'PublicB', 'PrivateB']);
+    });
+  });
+
   it('lets several projects share one main agent', async () => {
     const shared = await new AgentModel(serverDB, userId).create({ title: 'Planner' });
     const first = await createProject(model, { name: 'First' });
@@ -112,6 +202,34 @@ describe('ProjectModel', () => {
       expect.objectContaining({ coordinatorAgentId: inbox?.id, id: project.id }),
     ]);
     expect(await model.delete(project.id)).toEqual(expect.objectContaining({ id: project.id }));
+  });
+
+  it('tells whether replacing a main agent retires it', async () => {
+    const project = await createProject(model, { name: 'Disposition' });
+    const inbox = (await new AgentModel(serverDB, userId).getBuiltinAgent(INBOX_SESSION_ID))!;
+    const user = await new AgentModel(serverDB, userId).create({ title: 'Planner' });
+
+    // The project's own lead is ignored only when asked about handing it over.
+    expect(
+      await model.isDedicatedCoordinator(project.coordinatorAgentId, {
+        exceptProjectId: project.id,
+      }),
+    ).toBe(true);
+    expect(await model.isDedicatedCoordinator(project.coordinatorAgentId)).toBe(false);
+    // A member of another project is still in use there.
+    const other = await createProject(model, { name: 'Borrower' });
+    await model.addAgent(other.id, { agentId: project.coordinatorAgentId });
+    expect(
+      await model.isDedicatedCoordinator(project.coordinatorAgentId, {
+        exceptProjectId: project.id,
+      }),
+    ).toBe(false);
+    expect(await model.isDedicatedCoordinator(inbox.id, { exceptProjectId: project.id })).toBe(
+      false,
+    );
+    expect(await model.isDedicatedCoordinator(user.id, { exceptProjectId: project.id })).toBe(
+      false,
+    );
   });
 
   it('creates, lists, updates, and deletes a project in the owner scope', async () => {

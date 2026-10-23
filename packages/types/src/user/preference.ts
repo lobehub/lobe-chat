@@ -140,6 +140,11 @@ export interface LobeUser {
 
 export const UserGuideSchema = z.object({
   /**
+   * Pages and Resources were merged into Docs; set once the notice is acknowledged
+   */
+  docsMerged: z.boolean().optional(),
+
+  /**
    * Move the settings button to the avatar dropdown
    */
   moveSettingsToAvatar: z.boolean().optional(),

@@ -1,4 +1,10 @@
-import { createReplicaSlice, linkReplicaEntity, recordLens, singleEntity } from '@/libs/replica';
+import {
+  arrayEntity,
+  createReplicaSlice,
+  linkReplicaEntity,
+  recordLens,
+  singleEntity,
+} from '@/libs/replica';
 import { getCacheScope } from '@/libs/swr/useCacheScope';
 import { documentService } from '@/services/document';
 import { useGlobalStore } from '@/store/global';
@@ -13,6 +19,8 @@ import {
   pageDetailResource,
   pageListResource,
   type PageListValue,
+  pageSectionResource,
+  type PageSectionScope,
 } from './projection';
 
 const DEFAULT_PAGE_SIZE = 20;
@@ -27,6 +35,7 @@ export class PagePrivateAction {
   readonly detail;
   readonly entity;
   readonly list;
+  readonly section;
 
   constructor(set: Setter, get: () => PageState) {
     this.#get = get;
@@ -55,7 +64,16 @@ export class PagePrivateAction {
       stateKey: 'pageDetailReplica',
       view: recordLens<PageState, LobeDocument>('pageDetailMap'),
     });
-    this.entity = linkReplicaEntity<LobeDocument>([this.list, this.detail]);
+    this.section = createReplicaSlice(pageSectionResource, {
+      actionPrefix: 'pageSection',
+      entity: arrayEntity<LobeDocument>((doc) => doc.id),
+      get,
+      set,
+      stateKey: 'pageSectionReplica',
+      view: recordLens<PageState, LobeDocument[]>('pageSectionMap'),
+    });
+    // A rename or delete in the editor reaches the sidebar sections' rows too.
+    this.entity = linkReplicaEntity<LobeDocument>([this.list, this.detail, this.section]);
   }
 
   insertListRow = (doc: LobeDocument): void => {
@@ -86,7 +104,13 @@ export class PagePrivateAction {
     );
   };
 
-  revalidateList = (): Promise<unknown> => this.list.revalidate(PAGE_LIST_KEY);
+  revalidateList = (): Promise<unknown> =>
+    Promise.all([
+      this.list.revalidate(PAGE_LIST_KEY),
+      ...(['mine', 'shared'] satisfies PageSectionScope[]).map((scope) =>
+        this.section.revalidate(scope),
+      ),
+    ]);
 
   preHydrateList = (): Promise<boolean> => {
     const scope = getCacheScope();
