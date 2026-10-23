@@ -7,6 +7,8 @@ const path = require('node:path');
 const { spawn } = require('node:child_process');
 const { setTimeout: delay } = require('node:timers/promises');
 
+const CLEANUP_TIMEOUT_MS = 150_000;
+
 const TERMINAL_STATUSES = new Set([
   'done',
   'error',
@@ -205,8 +207,20 @@ class AgentRunner {
 
   requestSignal(code) {
     if (this.signalCode || this.cleaningUp) return;
+    this.startCleanupBudget();
     this.signalCode = code;
     this.resolveSignal(code);
+  }
+
+  startCleanupBudget() {
+    if (this.cleanupDeadline) return;
+    this.cleanupDeadline = Date.now() + CLEANUP_TIMEOUT_MS;
+    // Include any in-flight startup response in the same budget as cleanup.
+    this.cleanupTimer = setTimeout(() => {
+      this.cleanupFailure = true;
+      this.log('Runner cleanup deadline exceeded', true);
+      this.activeChild?.kill('SIGKILL');
+    }, CLEANUP_TIMEOUT_MS);
   }
 
   installSignalHandlers() {
@@ -230,7 +244,11 @@ class AgentRunner {
   }
 
   async wait(ms) {
-    if (this.cleaningUp) return delay(ms);
+    if (this.cleaningUp) {
+      const remaining = this.cleanupDeadline - Date.now();
+      if (remaining <= 0) throw new RunnerError('Runner cleanup deadline exceeded');
+      return delay(Math.min(ms, remaining));
+    }
     let timer;
     try {
       await Promise.race([
@@ -247,14 +265,21 @@ class AgentRunner {
     this.checkSignal();
   }
 
-  exec(command, args) {
+  exec(command, args, timeoutMs = 30_000) {
     return new Promise((resolve, reject) => {
+      const remaining = this.cleanupDeadline ? this.cleanupDeadline - Date.now() : Infinity;
+      if (remaining <= 0) {
+        reject(new RunnerError('Runner cleanup deadline exceeded'));
+        return;
+      }
+      const timeout = Math.min(timeoutMs || Infinity, remaining);
       const child = spawn(command, args, {
         env: process.env,
         killSignal: 'SIGKILL',
         stdio: ['ignore', 'pipe', 'pipe'],
-        timeout: 30_000,
+        timeout: Number.isFinite(timeout) ? timeout : 0,
       });
+      this.activeChild = child;
       let stdout = '';
       let stderr = '';
       child.stdout.setEncoding('utf8');
@@ -266,17 +291,19 @@ class AgentRunner {
         stderr += chunk;
       });
       child.once('error', (error) => {
+        this.activeChild = undefined;
         reject(error);
       });
       child.once('close', (code, signal) => {
+        this.activeChild = undefined;
         resolve({ code: code ?? 1, signal, stdout, stderr });
       });
     });
   }
 
-  async runCli(args) {
+  async runCli(args, timeoutMs) {
     this.checkSignal();
-    const result = await this.exec(this.options.cli, args);
+    const result = await this.exec(this.options.cli, args, timeoutMs);
     if (result.code !== 0) {
       throw new RunnerError(
         `CLI failed (${result.code}): ${result.stderr.trim() || result.stdout.trim() || args.join(' ')}`,
@@ -291,35 +318,41 @@ class AgentRunner {
 
   async startRun() {
     if (this.options.runMode === 'agent') {
-      return this.runCli([
-        'agent',
-        'run',
-        '--agent-id',
-        this.options.agentId,
-        '--prompt',
-        this.options.prompt,
-        '--device',
-        'local',
-        '--detach',
-        '--json',
-      ]);
+      return this.runCli(
+        [
+          'agent',
+          'run',
+          '--agent-id',
+          this.options.agentId,
+          '--prompt',
+          this.options.prompt,
+          '--device',
+          'local',
+          '--detach',
+          '--json',
+        ],
+        0,
+      );
     }
 
-    const task = await this.runCli([
-      'task',
-      'create',
-      '--instruction',
-      this.options.prompt,
-      '--agent',
-      this.options.agentId,
-      '--json',
-    ]);
+    const task = await this.runCli(
+      [
+        'task',
+        'create',
+        '--instruction',
+        this.options.prompt,
+        '--agent',
+        this.options.agentId,
+        '--json',
+      ],
+      0,
+    );
     if (typeof task?.id !== 'string') throw new RunnerError('lh task create returned no task ID');
     this.taskId = task.id;
     fs.mkdirSync(path.dirname(this.taskUsageLog), { recursive: true });
     fs.closeSync(fs.openSync(this.taskUsageLog, 'a'));
     this.log(`Task: ${task.identifier || task.id}`);
-    return this.runCli(['task', 'run', task.id, '--device', 'local', '--json']);
+    return this.runCli(['task', 'run', task.id, '--device', 'local', '--json'], 0);
   }
 
   async resolveAgentId() {
@@ -404,10 +437,12 @@ class AgentRunner {
         await this.wait(this.options.pollMs);
       }
     } finally {
+      this.startCleanupBudget();
       this.cleaningUp = true;
       try {
         await this.cleanup();
       } finally {
+        clearTimeout(this.cleanupTimer);
         await fs.promises.rm(this.pidPath, { force: true });
         this.removeSignalHandlers();
       }
@@ -418,7 +453,7 @@ class AgentRunner {
     const pid = readJson(this.pidPath)?.pid;
     if (!pid) return;
     process.kill(pid, 'SIGTERM');
-    const deadline = Date.now() + 170_000;
+    const deadline = Date.now() + CLEANUP_TIMEOUT_MS + 20_000;
     while (fs.existsSync(this.pidPath)) {
       if (Date.now() >= deadline) throw new RunnerError('Timed out waiting for runner cleanup');
       await delay(200);
@@ -537,10 +572,10 @@ class AgentRunner {
   }
 
   async cleanup() {
-    await this.captureSnapshot();
     if (this.operationId && !this.operationTerminal && !this.interruptAttempted) {
       await this.interruptAndWait();
     }
+    await this.captureSnapshot();
 
     if (this.topicId) {
       try {
