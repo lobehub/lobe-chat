@@ -34,11 +34,22 @@ const decodeBase64 = (value: string) => Uint8Array.from(atob(value), (char) => c
 export const isCanvasFileRefWrite = (write: CanvasFileWrite): write is CanvasFileRefWrite =>
   typeof write.fileRef === 'string' && write.fileRef.length > 0;
 
+// Tool-calling models can omit a required field. Read it defensively so the change set reports
+// the missing field by name instead of crashing inside normalizeCanvasPath on `undefined`.
+const readPath = (value: unknown): string | undefined => {
+  const path = (value as { path?: unknown } | null | undefined)?.path;
+  return typeof path === 'string' && path.length > 0 ? path : undefined;
+};
+
 export const collectCanvasFileRefs = (changes: CanvasChangeSet): CanvasFileRefWrite[] =>
-  (changes.writes ?? []).filter(isCanvasFileRefWrite).map((write) => ({
-    fileRef: write.fileRef,
-    path: normalizeCanvasPath(write.path) ?? write.path,
-  }));
+  (changes.writes ?? [])
+    .filter(isCanvasFileRefWrite)
+    .flatMap((write) => {
+      // A fileRef write with no usable path is refused by applyCanvasChanges; skipping it here
+      // keeps this pre-resolution pass from crashing on the missing path first.
+      const path = readPath(write);
+      return path ? [{ fileRef: write.fileRef, path: normalizeCanvasPath(path) ?? path }] : [];
+    });
 
 const countOccurrences = (text: string, search: string) => {
   let count = 0;
@@ -46,13 +57,6 @@ const countOccurrences = (text: string, search: string) => {
     count += 1;
   }
   return count;
-};
-
-// Tool-calling models can omit a required field. Read it defensively so the change set reports
-// the missing field by name instead of crashing inside normalizeCanvasPath on `undefined`.
-const readPath = (value: unknown): string | undefined => {
-  const path = (value as { path?: unknown } | null | undefined)?.path;
-  return typeof path === 'string' && path.length > 0 ? path : undefined;
 };
 
 export const applyCanvasChanges = (

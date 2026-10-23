@@ -127,6 +127,18 @@ describe('applyCanvasChanges', () => {
       ok: false,
     });
   });
+
+  it('names the missing path for a fileRef write before the fileRef is resolved', () => {
+    // Regression (codex review on #21529): collectCanvasFileRefs runs before applyCanvasChanges,
+    // so the missing path must be refused here too instead of crashing in the pre-resolution pass.
+    expect(
+      applyCanvasChanges(new Map(), { writes: [{ fileRef: 'msg_abc.image_1' } as any] }),
+    ).toEqual({
+      error:
+        'writes[0] is missing "path": every write must name the file it targets, e.g. "index.html".',
+      ok: false,
+    });
+  });
 });
 
 describe('collectCanvasFileRefs', () => {
@@ -148,5 +160,11 @@ describe('collectCanvasFileRefs', () => {
         ],
       }),
     ).toEqual([{ fileRef: 'msg_abc.image_1', path: 'img/photo.jpg' }]);
+  });
+
+  it('skips a fileRef write without a path instead of crashing', () => {
+    expect(
+      collectCanvasFileRefs({ writes: [{ fileRef: 'msg_abc.image_1' } as any] }),
+    ).toEqual([]);
   });
 });
