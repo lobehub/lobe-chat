@@ -67,6 +67,7 @@ components:
             - mail
             - wallet
             - service
+            - phone
           type: string
         metadata:
           additionalProperties: true
