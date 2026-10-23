@@ -77,6 +77,15 @@ class RowMouseSensor extends MouseSensor {
   ];
 }
 
+// Enter / Space on the focused ⋯ button must open its menu, not start a keyboard drag.
+class RowKeyboardSensor extends KeyboardSensor {
+  static activators = KeyboardSensor.activators.map((activator) => ({
+    ...activator,
+    handler: (...args: Parameters<typeof activator.handler>) =>
+      !startsOnRowAction(args[0].nativeEvent) && activator.handler(...args),
+  }));
+}
+
 class RowTouchSensor extends TouchSensor {
   static activators = [
     {
@@ -129,7 +138,7 @@ const SortableProjectList = memo<{ projects: ProjectListItem[] }>(({ projects })
     useSensor(RowMouseSensor, { activationConstraint: { distance: 5 } }),
     // A press-and-hold picks a row up on touch, so a vertical swipe still scrolls the sidebar.
     useSensor(RowTouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+    useSensor(RowKeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
 
   if (sortBy !== 'manual' || !canManage)

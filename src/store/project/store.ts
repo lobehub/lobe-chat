@@ -122,6 +122,7 @@ export const useProjectStore = createWithEqualityFn<ProjectStore>()(
     const refreshList = () => list.revalidate(PROJECT_LIST_KEY);
     let moveQueue: Promise<unknown> = Promise.resolve();
     let moveGeneration = 0;
+    let reconciling: Promise<unknown> | undefined;
 
     // A project page is keyed by its route param, so one project can sit under
     // both its id and its slug.
@@ -180,6 +181,11 @@ export const useProjectStore = createWithEqualityFn<ProjectStore>()(
         await refreshList();
       },
       moveProject: (id, ids) => {
+        // After a failed move the visible order is stale until the refetch
+        // lands; a drop made in that window would be computed against it, so
+        // ignore it — the list snaps back to the server order.
+        if (reconciling) return reconciling.then(() => undefined);
+
         const index = ids.indexOf(id);
         const anchor =
           index < ids.length - 1 ? { beforeId: ids[index + 1] } : { afterId: ids[index - 1] };
@@ -190,18 +196,22 @@ export const useProjectStore = createWithEqualityFn<ProjectStore>()(
 
         // Moves are computed against the order the user sees, which assumes
         // every earlier move landed. Once one fails, the queued ones are stale:
-        // drop them and let the refetch show the real order.
+        // drop them, and hold the queue until the refetch shows the real order.
         const generation = moveGeneration;
         const write = moveQueue.then(() =>
           generation === moveGeneration ? projectService.move(id, anchor) : undefined,
         );
         moveQueue = write.catch(() => {
           moveGeneration += 1;
+          reconciling ??= refreshList().finally(() => {
+            reconciling = undefined;
+          });
+          return reconciling;
         });
         return write.then(
           () => undefined,
           async (error) => {
-            await refreshList();
+            await moveQueue;
             throw error;
           },
         );

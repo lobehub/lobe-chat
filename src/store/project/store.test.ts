@@ -223,6 +223,28 @@ describe('project store replicas', () => {
       expect(projectService.move).toHaveBeenCalledTimes(1);
       await waitFor(() => expect(names()).toEqual(['a', 'b', 'c']));
     });
+
+    it('ignores a drop made while a failed move is being reconciled', async () => {
+      await loadList('a', 'b', 'c');
+      vi.mocked(projectService.move).mockRejectedValueOnce(new Error('boom'));
+      const refetch = deferred();
+      const { moveProject } = useProjectStore.getState();
+
+      const failed = moveProject('c', ['c', 'a', 'b']);
+      vi.mocked(projectService.listAll).mockReturnValue(refetch.promise as any);
+      await vi.waitFor(() => expect(projectService.listAll).toHaveBeenCalledTimes(2));
+
+      // The list still shows the failed optimistic order while the refetch is in flight.
+      const late = moveProject('c', ['a', 'b', 'c']);
+      expect(names()).toEqual(['c', 'a', 'b']);
+
+      refetch.resolve(ok(['a', 'b', 'c'].map((id) => project(id))));
+      await expect(failed).rejects.toThrow('boom');
+      await late;
+
+      expect(projectService.move).toHaveBeenCalledTimes(1);
+      await waitFor(() => expect(names()).toEqual(['a', 'b', 'c']));
+    });
   });
 
   describe('mutations', () => {
