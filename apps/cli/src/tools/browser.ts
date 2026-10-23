@@ -44,16 +44,37 @@ const isolationArgs = (configPath: string) => [
   IDLE_TIMEOUT,
 ];
 
-const spawnAgentBrowser = (binaryPath: string, args: string[], timeoutMs: number) =>
-  spawn(binaryPath, args, {
+/** cmd.exe expands or splits on these even inside double quotes. */
+const CMD_UNSAFE = /["%!^\r\n]/;
+
+/**
+ * argv for a `.cmd` shim, which Windows only starts through cmd.exe. With
+ * `shell: true` Node joins argv into one command line, so every element is
+ * double-quoted (the temp `--config` path can contain spaces) and one that
+ * cmd.exe would still interpret is refused rather than escaped. Only the
+ * sanitized session name and our own temp paths reach argv; page text and
+ * other model input travel over stdin.
+ */
+export const toCmdShellArgv = (binaryPath: string, args: string[]) => {
+  const quoted = [binaryPath, ...args].map((arg) => {
+    if (CMD_UNSAFE.test(arg)) throw new Error(`Unsafe argument for agent-browser: ${arg}`);
+    return `"${arg}"`;
+  });
+  return { args: quoted.slice(1), command: quoted[0] };
+};
+
+const spawnAgentBrowser = (binaryPath: string, args: string[], timeoutMs: number) => {
+  const viaShell = process.platform === 'win32' && /\.(?:cmd|bat)$/i.test(binaryPath);
+  const argv = viaShell ? toCmdShellArgv(binaryPath, args) : { args, command: binaryPath };
+  return spawn(argv.command, argv.args, {
     cwd: os.tmpdir(),
     env: isolatedEnv(),
-    // `.cmd` shims on Windows only start through a shell; argv stays fixed.
-    shell: process.platform === 'win32' && binaryPath.endsWith('.cmd'),
+    shell: viaShell,
     stdio: ['pipe', 'pipe', 'pipe'],
     timeout: timeoutMs,
     windowsHide: true,
   });
+};
 
 const isExecutableFile = async (filePath: string) => {
   const stats = await stat(filePath).catch(() => undefined);
@@ -65,7 +86,8 @@ const isExecutableFile = async (filePath: string) => {
 };
 
 const findOnPath = async (name: string): Promise<string | undefined> => {
-  const exts = process.platform === 'win32' ? ['.cmd', '.exe', ''] : [''];
+  // A real `.exe` needs no shell; the npm `.cmd` shim is the fallback.
+  const exts = process.platform === 'win32' ? ['.exe', '.cmd', ''] : [''];
   for (const dir of (process.env.PATH ?? '').split(path.delimiter)) {
     if (!dir) continue;
     for (const ext of exts) {
@@ -189,5 +211,5 @@ export const closeBrowserSessions = async (device: BrowserDevice | undefined) =>
     child.on('error', () => resolve());
     child.on('close', () => resolve());
     child.stdin.end();
-  });
+  }).catch(() => {});
 };
