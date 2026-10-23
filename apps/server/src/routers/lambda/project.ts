@@ -7,7 +7,8 @@ import {
   type WorkspaceRole,
   wsCompatProcedure,
 } from '@/business/server/trpc-middlewares/workspaceAuth';
-import { ProjectModel } from '@/database/models/project';
+import { ProjectModel, type ProjectModelOptions } from '@/database/models/project';
+import { ProjectCoordinatorRepository } from '@/database/repositories/projectCoordinator';
 import type { LobeChatDatabase } from '@/database/type';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
@@ -26,12 +27,20 @@ const isWorkspaceViewer = (ctx: { workspaceId?: string | null; workspaceRole?: W
 
 const projectProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
+  const workspaceId = ctx.workspaceId ?? undefined;
+  const options: ProjectModelOptions = {
+    canManageAllMembers: isWorkspaceAdmin(ctx),
+    readOnly: isWorkspaceViewer(ctx),
+  };
   return opts.next({
     ctx: {
-      projectModel: new ProjectModel(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined, {
-        canManageAllMembers: isWorkspaceAdmin(ctx),
-        readOnly: isWorkspaceViewer(ctx),
-      }),
+      projectCoordinatorRepo: new ProjectCoordinatorRepository(
+        ctx.serverDB,
+        ctx.userId,
+        workspaceId,
+        options,
+      ),
+      projectModel: new ProjectModel(ctx.serverDB, ctx.userId, workspaceId, options),
     },
   });
 });
@@ -322,7 +331,9 @@ export const projectRouter = router({
         return {
           data: await withMainAgent(
             ctx.projectModel,
-            requireResult(await ctx.projectModel.replaceCoordinator(input.id, input.agentId)),
+            requireResult(
+              await ctx.projectCoordinatorRepo.replaceCoordinator(input.id, input.agentId),
+            ),
           ),
           message: 'Project main agent replaced',
           success: true,
