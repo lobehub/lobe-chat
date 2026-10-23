@@ -1,6 +1,6 @@
 import type { ShareVisibility } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
-import { and, asc, eq, sql } from 'drizzle-orm';
+import { and, asc, eq, isNull, sql } from 'drizzle-orm';
 
 import { agents, chatGroups, chatGroupsAgents, topics, topicShares } from '../schemas';
 import type { LobeChatDatabase } from '../type';
@@ -50,7 +50,7 @@ export class TopicShareModel {
       ),
     });
 
-    if (!topic) {
+    if (!topic?.userId) {
       throw new Error('Topic not found or not owned by user');
     }
 
@@ -150,7 +150,14 @@ export class TopicShareModel {
       // to carry the recycle-bin gate itself: a trashed topic keeps its
       // `topic_shares` row and its messages until purge, and without this an
       // anonymous visitor could keep reading a deleted conversation.
-      .innerJoin(topics, and(eq(topicShares.topicId, topics.id), notTrashed(topics.isDeleted)))
+      .innerJoin(
+        topics,
+        and(
+          eq(topicShares.topicId, topics.id),
+          isNull(topics.channelId),
+          notTrashed(topics.isDeleted),
+        ),
+      )
       .leftJoin(agents, eq(topics.agentId, agents.id))
       .leftJoin(chatGroups, eq(topics.groupId, chatGroups.id))
       .where(eq(topicShares.id, shareId))

@@ -5,15 +5,18 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
 import {
+  agentOperations,
   channelJobs,
   channelMemberGrants,
   channelMembers,
-  channelMessageFiles,
   channelMessages,
   channelRuns,
   channels,
   channelSessions,
   files,
+  messages,
+  messagesFiles,
+  topics,
   users,
   workspaces,
 } from '..';
@@ -58,12 +61,16 @@ const revisionOf = async (channelId: string) => {
 };
 
 const createMessage = async (channelId: string, authorMemberId: string, sequence: number) => {
+  const [canonical] = await serverDB
+    .insert(messages)
+    .values({ channelId, content: `message ${sequence}`, role: 'user', userId: null })
+    .returning();
   const [message] = await serverDB
     .insert(channelMessages)
     .values({
       authorMemberId,
       channelId,
-      content: `message ${sequence}`,
+      id: canonical.id,
       requestKey: `request-${sequence}`,
       routingStatus: 'directed',
       sequence,
@@ -106,13 +113,23 @@ const createRun = async (
     .returning();
   const [session] = await serverDB
     .insert(channelSessions)
-    .values({ channelId: channel.id, memberId: agent.id, scope: `main-${sequence}` })
+    .values({
+      channelId: channel.id,
+      memberId: agent.id,
+      principalUserId: ownerId,
+      scope: `main-${sequence}`,
+    })
     .returning();
 
+  const [operation] = await serverDB
+    .insert(agentOperations)
+    .values({ id: `op_${session.id}`, channelId: channel.id, userId: ownerId, status: 'idle' })
+    .returning();
   return serverDB
     .insert(channelRuns)
     .values({
       channelId: channel.id,
+      operationId: operation.id,
       jobId: job.id,
       manifest: manifest(owner.id, agent.id),
       memberId: agent.id,
@@ -136,6 +153,27 @@ afterEach(async () => {
 });
 
 describe('channel schema', () => {
+  it('rejects ownerless ordinary rows and permits channel-owned rows', async () => {
+    const { channel } = await createChannel();
+    await expect(serverDB.insert(topics).values({ userId: null })).rejects.toThrow();
+    await expect(
+      serverDB.insert(messages).values({ role: 'user', userId: null }),
+    ).rejects.toThrow();
+    await expect(
+      serverDB
+        .insert(topics)
+        .values({ channelId: channel.id, mode: 'channel', trigger: 'channel', userId: null }),
+    ).resolves.toBeDefined();
+    await expect(
+      serverDB
+        .insert(topics)
+        .values({ channelId: channel.id, mode: 'channel', trigger: 'channel', userId: null }),
+    ).rejects.toThrow();
+    await expect(
+      serverDB.insert(messages).values({ channelId: channel.id, role: 'user', userId: null }),
+    ).resolves.toBeDefined();
+  });
+
   describe('members', () => {
     it('keeps people and Agents in one member table with their own fields', async () => {
       const { agent, owner } = await createChannel();
@@ -211,29 +249,27 @@ describe('channel schema', () => {
       await expect(createMessage(first.channel.id, second.owner.id, 2)).rejects.toThrow();
     });
 
-    it('keeps attachments inside their channel and drops them with the file', async () => {
+    it('keeps canonical attachments unique and drops them with the file', async () => {
       const first = await createChannel('First');
-      const second = await createChannel('Second');
       const message = await createMessage(first.channel.id, first.owner.id, 1);
       const [file] = await serverDB
         .insert(files)
         .values({ fileType: 'text/plain', name: 'a.txt', size: 1, url: 'a.txt', userId: ownerId })
         .returning();
-      const attach = (channelId: string) =>
+      const attach = () =>
         serverDB
-          .insert(channelMessageFiles)
-          .values({ channelId, fileId: file.id, messageId: message.id, sortOrder: 0 });
+          .insert(messagesFiles)
+          .values({ fileId: file.id, messageId: message.id, sortOrder: 0, userId: null });
 
-      await expect(attach(second.channel.id)).rejects.toThrow();
-      await attach(first.channel.id);
-      await expect(attach(first.channel.id)).rejects.toThrow();
+      await attach();
+      await expect(attach()).rejects.toThrow();
 
       await serverDB.delete(files).where(eq(files.id, file.id));
 
       const remaining = await serverDB
         .select()
-        .from(channelMessageFiles)
-        .where(eq(channelMessageFiles.messageId, message.id));
+        .from(messagesFiles)
+        .where(eq(messagesFiles.messageId, message.id));
       expect(remaining).toHaveLength(0);
       const [kept] = await serverDB
         .select()

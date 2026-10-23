@@ -3,7 +3,7 @@ import { asc, eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../../core/getTestDB';
-import { channelMessageFiles, files } from '../../../schemas';
+import { files, messagesFiles } from '../../../schemas';
 import type { LobeChatDatabase } from '../../../type';
 import { ChannelExecutionModel } from '..';
 import { createChannelFixture, jobsOf, lease } from './testUtils';
@@ -32,10 +32,10 @@ const createFile = async (name: string) => {
 
 const attachmentsOf = async (messageId: string) => {
   const rows = await db
-    .select({ fileId: channelMessageFiles.fileId })
-    .from(channelMessageFiles)
-    .where(eq(channelMessageFiles.messageId, messageId))
-    .orderBy(asc(channelMessageFiles.sortOrder));
+    .select({ fileId: messagesFiles.fileId })
+    .from(messagesFiles)
+    .where(eq(messagesFiles.messageId, messageId))
+    .orderBy(asc(messagesFiles.sortOrder));
   return rows.map((row) => row.fileId);
 };
 

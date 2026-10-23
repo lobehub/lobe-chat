@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { type LobeChatDatabase } from '@lobechat/database';
-import { agentOperations, topics } from '@lobechat/database/schemas';
+import { agentOperations, channels, topics } from '@lobechat/database/schemas';
 import { getTestDB } from '@lobechat/database/test-utils';
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -85,6 +85,7 @@ describe('aiAgentRouter operation read guard', () => {
 
   afterEach(async () => {
     await serverDB.delete(agentOperations).where(eq(agentOperations.id, operationId));
+    await serverDB.delete(channels).where(eq(channels.creatorId, ownerId));
     await cleanupTestUser(serverDB, visitorId);
     await cleanupTestUser(serverDB, ownerId);
     vi.clearAllMocks();
@@ -131,6 +132,33 @@ describe('aiAgentRouter operation read guard', () => {
 
       expect(mockGetOperationStatus).not.toHaveBeenCalled();
       expect(mockGetPendingInterventions).not.toHaveBeenCalled();
+    });
+
+    it('hides Channel execution from ordinary status, intervention and journal reads', async () => {
+      const [channel] = await serverDB
+        .insert(channels)
+        .values({ creatorId: ownerId, title: 'Channel' })
+        .returning();
+      await serverDB
+        .update(agentOperations)
+        .set({ channelId: channel.id })
+        .where(eq(agentOperations.id, operationId));
+      mockRuntimeMetadata.mockResolvedValue({ userId: ownerId });
+
+      for (const userId of [ownerId, visitorId]) {
+        await expect(callerFor(userId).getOperationStatus({ operationId })).rejects.toMatchObject({
+          code: 'NOT_FOUND',
+        });
+        await expect(
+          callerFor(userId).getPendingInterventions({ operationId }),
+        ).rejects.toMatchObject({ code: 'NOT_FOUND' });
+        await expect(
+          callerFor(userId).getOperationStreamHistory({ operationId }),
+        ).rejects.toMatchObject({ code: 'NOT_FOUND' });
+      }
+      expect(mockGetOperationStatus).not.toHaveBeenCalled();
+      expect(mockGetPendingInterventions).not.toHaveBeenCalled();
+      expect(mockHistoryPage).not.toHaveBeenCalled();
     });
 
     it('rejects an unknown operation id without touching the runtime', async () => {

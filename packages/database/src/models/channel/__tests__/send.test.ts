@@ -4,7 +4,7 @@ import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../../core/getTestDB';
-import { channels, channelThreads } from '../../../schemas';
+import { channels, channelThreads, messages, topics } from '../../../schemas';
 import type { LobeChatDatabase } from '../../../type';
 import { createChannelFixture, jobsOf } from './testUtils';
 
@@ -20,6 +20,29 @@ const revisionOf = async (channelId: string) => {
 };
 
 describe('ChannelModel.send', () => {
+  it('stores public content once in canonical messages under a channel-owned topic', async () => {
+    const { asMember, channel } = await fixture.createTeamChannel();
+    const input = { content: 'Canonical', requestKey: 'canonical', routing: 'fallback' as const };
+    const first = await asMember.send(channel.id, input);
+    expect(await asMember.send(channel.id, input)).toEqual(first);
+    const rows = await db.select().from(messages).where(eq(messages.id, first.id));
+    expect(rows).toEqual([
+      expect.objectContaining({
+        channelId: channel.id,
+        content: input.content,
+        userId: null,
+        threadId: null,
+      }),
+    ]);
+    const [topic] = await db.select().from(topics).where(eq(topics.id, rows[0].topicId!));
+    expect(topic).toMatchObject({
+      channelId: channel.id,
+      mode: 'channel',
+      trigger: 'channel',
+      userId: null,
+    });
+  });
+
   it('queues a job per mentioned Agent, on behalf of the sender', async () => {
     const { asMember, channel, member } = await fixture.createTeamChannel();
     const coder = await fixture.addAgent(channel.id, 'Coder');

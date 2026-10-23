@@ -4,10 +4,12 @@ import type {
   AgentOperationStatus,
   VerifyCheckItem,
 } from '@lobechat/types';
+import type { AnyPgColumn } from 'drizzle-orm/pg-core';
 import { boolean, index, integer, jsonb, pgTable, text } from 'drizzle-orm/pg-core';
 
 import { amountNumeric, timestamps, timestamptz } from './_helpers';
 import { agents } from './agent';
+import { channels } from './channel';
 import { chatGroups } from './chatGroup';
 import { tasks } from './task';
 import { threads, topics } from './topic';
@@ -49,6 +51,9 @@ export const agentOperations = pgTable(
      * Preserved across user deletion — operations are valuable historical/audit data,
      * so this column is intentionally not a foreign key.
      */
+    channelId: text('channel_id').references((): AnyPgColumn => channels.id, {
+      onDelete: 'cascade',
+    }),
     userId: text('user_id').notNull(),
     workspaceId: text('workspace_id').references(() => workspaces.id, { onDelete: 'cascade' }),
 
@@ -136,6 +141,7 @@ export const agentOperations = pgTable(
     ...timestamps,
   },
   (t) => [
+    index('agent_operations_channel_id_idx').on(t.channelId),
     index('agent_operations_user_id_idx').on(t.userId),
     index('agent_operations_workspace_id_idx').on(t.workspaceId),
     index('agent_operations_agent_id_idx').on(t.agentId),

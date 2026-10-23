@@ -109,7 +109,7 @@ export const findOwnersByIds = async (
   if (ids.length === 0) return [];
 
   return ctx.db
-    .select({ id: topics.id, userId: topics.userId })
+    .select({ id: topics.id, userId: sql<string>`${topics.userId}` })
     .from(topics)
     .where(and(inArray(topics.id, ids), ctx.ownership()));
 };

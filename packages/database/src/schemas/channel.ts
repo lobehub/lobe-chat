@@ -15,10 +15,9 @@ import type {
   ChannelRunActivity,
   ChannelRunStatus,
   ChannelVisibility,
-  UIChatMessage,
 } from '@lobechat/types';
 import { sql } from 'drizzle-orm';
-import type { PgTableExtraConfigValue } from 'drizzle-orm/pg-core';
+import type { AnyPgColumn, PgTableExtraConfigValue } from 'drizzle-orm/pg-core';
 import {
   boolean,
   check,
@@ -36,7 +35,9 @@ import {
 
 import { idGenerator } from '../utils/idGenerator';
 import { createdAt, timestamptz, updatedAt } from './_helpers';
-import { files } from './file';
+import { agentOperations } from './agentOperations';
+import { messages } from './message';
+import { topics } from './topic';
 import { users } from './user';
 import { workspaces } from './workspace';
 
@@ -174,13 +175,13 @@ export const channelThreads = pgTable(
   ],
 );
 
-/** Public messages. Immutable once written: there is no edit. */
+/** Routing and sequencing extension of canonical public messages. Content lives in messages. */
 export const channelMessages = pgTable(
   'channel_messages',
   {
     id: text('id')
       .primaryKey()
-      .$defaultFn(() => idGenerator('channelMessages'))
+      .references((): AnyPgColumn => messages.id, { onDelete: 'cascade' })
       .notNull(),
     channelId: text('channel_id')
       .references(() => channels.id, { onDelete: 'cascade' })
@@ -188,7 +189,6 @@ export const channelMessages = pgTable(
     threadId: text('thread_id'),
     sequence: integer('sequence').notNull(),
     authorMemberId: text('author_member_id').notNull(),
-    content: text('content').notNull(),
     /** Mentioned member ids. Mentioned Agents run; mentioned people are only notified. */
     mentions: jsonb('mentions').$type<string[]>().notNull().default([]),
     /** Client retry key for a human message; run identity for a published reply. */
@@ -232,35 +232,6 @@ export const channelMessages = pgTable(
       columns: [t.channelId, t.authorMemberId],
       foreignColumns: [channelMembers.channelId, channelMembers.id],
       name: 'channel_messages_author_fk',
-    }),
-  ],
-);
-
-/**
- * Files attached to a public message, in attachment order. A join table rather than a list
- * on the message, so file cleanup (`FileModel.deleteUnreferenced`) sees the reference through
- * the foreign key, as it does for `messages_files`. Deleting the file removes the attachment.
- */
-export const channelMessageFiles = pgTable(
-  'channel_message_files',
-  {
-    id: uuid('id').defaultRandom().primaryKey().notNull(),
-    channelId: text('channel_id')
-      .references(() => channels.id, { onDelete: 'cascade' })
-      .notNull(),
-    messageId: text('message_id').notNull(),
-    fileId: text('file_id')
-      .references(() => files.id, { onDelete: 'cascade' })
-      .notNull(),
-    sortOrder: integer('sort_order').notNull(),
-  },
-  (t) => [
-    uniqueIndex('channel_message_files_message_file_unique').on(t.messageId, t.fileId),
-    index('channel_message_files_file_id_idx').on(t.fileId),
-    foreignKey({
-      columns: [t.channelId, t.messageId],
-      foreignColumns: [channelMessages.channelId, channelMessages.id],
-      name: 'channel_message_files_message_fk',
     }),
   ],
 );
@@ -330,12 +301,14 @@ export const channelSessions = pgTable(
       .references(() => channels.id, { onDelete: 'cascade' })
       .notNull(),
     memberId: text('member_id').notNull(),
-    /** `main` or a Thread id; no runtime topic identity. */
+    /** `main` or a channel Thread id; archived mappings keep their original topic. */
     scope: text('scope').notNull(),
     /** Incremented whenever the session is rotated, e.g. after an environment switch. */
     generation: integer('generation').notNull().default(1),
-    /** Runtime-side session id used to resume (CLI session or native transcript key). */
-    nativeSessionId: text('native_session_id'),
+    topicId: text('topic_id').references((): AnyPgColumn => topics.id, { onDelete: 'set null' }),
+    /** Immutable execution principal; preserved when its account is deleted. */
+    principalUserId: text('principal_user_id').notNull(),
+    environmentRevision: integer('environment_revision').notNull().default(0),
     /**
      * Every visible message of this branch at or below this sequence has been accepted by the
      * runtime, so incremental input starts after it. Exact without an exception list: a run's
@@ -371,6 +344,10 @@ export const channelRuns = pgTable(
     channelId: text('channel_id')
       .references(() => channels.id, { onDelete: 'cascade' })
       .notNull(),
+    operationId: text('operation_id')
+      .notNull()
+      .unique()
+      .references((): AnyPgColumn => agentOperations.id, { onDelete: 'cascade' }),
     jobId: text('job_id').notNull(),
     memberId: text('member_id').notNull(),
     /** Copied from the job: the member whose user this run executes as. */
@@ -379,6 +356,7 @@ export const channelRuns = pgTable(
       .references(() => channelSessions.id)
       .notNull(),
 
+    /** Coordination state; operation execution outcome is stored in agent_operations. */
     status: text('status').$type<ChannelRunStatus>().notNull().default('starting'),
     activity: text('activity').$type<ChannelRunActivity>(),
     /** Publication authority; bumped when a draft must be republished under new authority. */
@@ -468,40 +446,6 @@ export const channelRuns = pgTable(
   ],
 );
 
-/** Native members' private transcripts. Never shown to anyone, never in `messages`. */
-export const channelRuntimeMessages = pgTable(
-  'channel_runtime_messages',
-  {
-    /** Assigned by the agent runtime; transcript entries reference each other by it. */
-    id: text('id').primaryKey().notNull(),
-    sessionId: text('session_id')
-      .references(() => channelSessions.id, { onDelete: 'cascade' })
-      .notNull(),
-    runId: text('run_id')
-      .references(() => channelRuns.id, { onDelete: 'cascade' })
-      .notNull(),
-    stableKey: text('stable_key').notNull(),
-    data: jsonb('data').$type<UIChatMessage>().notNull(),
-    createdAt: createdAt(),
-  },
-  (t) => [uniqueIndex('channel_runtime_messages_session_key_unique').on(t.sessionId, t.stableKey)],
-);
-
-/** Latest agent-runtime checkpoint of a native session. */
-export const channelRuntimeStates = pgTable('channel_runtime_states', {
-  sessionId: text('session_id')
-    .primaryKey()
-    .references(() => channelSessions.id, { onDelete: 'cascade' })
-    .notNull(),
-  runId: text('run_id')
-    .references(() => channelRuns.id, { onDelete: 'cascade' })
-    .notNull(),
-  /** Serialized `AgentState` from `@lobechat/agent-runtime`, which this package cannot import. */
-  state: jsonb('state').$type<Record<string, unknown>>().notNull(),
-  createdAt: createdAt(),
-  updatedAt: updatedAt(),
-});
-
 /**
  * Approval to run an Agent member on someone's personal device (or a private shared one).
  * Binds to one (member, device, directory, environment revision); a switch needs a new grant.
@@ -579,8 +523,8 @@ export type NewChannel = typeof channels.$inferInsert;
 export type ChannelMemberItem = typeof channelMembers.$inferSelect;
 export type NewChannelMember = typeof channelMembers.$inferInsert;
 export type ChannelThreadItem = typeof channelThreads.$inferSelect;
-export type ChannelMessageItem = typeof channelMessages.$inferSelect;
-export type NewChannelMessage = typeof channelMessages.$inferInsert;
+export type ChannelMessageItem = typeof channelMessages.$inferSelect & { content: string };
+export type NewChannelMessage = typeof channelMessages.$inferInsert & { content: string };
 export type ChannelJobItem = typeof channelJobs.$inferSelect;
 export type ChannelSessionItem = typeof channelSessions.$inferSelect;
 export type ChannelRunItem = typeof channelRuns.$inferSelect;

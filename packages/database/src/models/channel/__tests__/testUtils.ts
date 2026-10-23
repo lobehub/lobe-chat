@@ -5,6 +5,7 @@ import {
   channelJobs,
   channelMembers,
   channelRuns,
+  channels,
   devices,
   users,
   workspaces,
@@ -62,6 +63,8 @@ export const createChannelFixture = (db: LobeChatDatabase, prefix: string) => {
   };
 
   const cleanup = async () => {
+    // Raw user deletion preserves Channel history; remove fixture-owned personal Channels too.
+    await db.delete(channels).where(inArray(channels.creatorId, userIds));
     await db.delete(workspaces).where(eq(workspaces.id, workspaceId));
     await db.delete(users).where(inArray(users.id, userIds));
   };

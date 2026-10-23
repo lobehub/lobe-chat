@@ -3,19 +3,9 @@ import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
-import {
-  channelMembers,
-  channelMessageFiles,
-  channelMessages,
-  channels,
-  files,
-  messages,
-  messagesFiles,
-  sessions,
-  topics,
-  users,
-} from '../../schemas';
+import { channels, files, messages, messagesFiles, sessions, topics, users } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
+import { ChannelModel } from '../channel';
 import { FileModel } from '../file';
 
 const serverDB: LobeChatDatabase = await getTestDB();
@@ -28,6 +18,7 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
+  await serverDB.delete(channels).where(eq(channels.creatorId, userId));
   await serverDB.delete(users).where(eq(users.id, userId));
 });
 
@@ -43,42 +34,24 @@ const createFile = async (name: string) => {
 
 /** Attaches the file to a message in the user's personal channel. */
 const attachInChannel = async (fileId: string) => {
-  const [channel] = await serverDB
-    .insert(channels)
-    .values({ creatorId: userId, title: 'Channel' })
-    .returning();
-  const [owner] = await serverDB
-    .insert(channelMembers)
-    .values({ actorType: 'user', channelId: channel.id, role: 'owner', userId })
-    .returning();
-  const [message] = await serverDB
-    .insert(channelMessages)
-    .values({
-      authorMemberId: owner.id,
-      channelId: channel.id,
-      content: 'See attached',
-      requestKey: 'req-1',
-      routingStatus: 'skipped',
-      sequence: 1,
-    })
-    .returning();
-  await serverDB
-    .insert(channelMessageFiles)
-    .values({ channelId: channel.id, fileId, messageId: message.id, sortOrder: 0 });
+  const model = new ChannelModel(serverDB, userId);
+  const { channel } = await model.create({ title: 'Channel' });
+  await model.send(channel.id, {
+    content: 'See attached',
+    fileIds: [fileId],
+    requestKey: 'req-1',
+    routing: 'fallback',
+  });
 };
 
 describe('FileModel channel message references', () => {
   it('deleteUnreferenced keeps a file attached to a channel message', async () => {
-    // ROOT CAUSE:
-    // Cleanup checked chat messages, sessions and content tables but not channel messages, so a
-    // file only a channel message referenced was treated as unreferenced and deleted.
+    // Channel attachments have no user owner; canonical joins must still protect the file.
     const id = await createFile('channel.txt');
     await attachInChannel(id);
 
     await expect(fileModel.deleteUnreferenced(id)).resolves.toBeUndefined();
-    await expect(
-      serverDB.query.files.findFirst({ where: eq(files.id, id) }),
-    ).resolves.toBeDefined();
+    await expect(serverDB.select().from(files).where(eq(files.id, id))).resolves.toHaveLength(1);
   });
 
   it('findDeletableFilesByTopicId keeps a topic file that a channel message also uses', async () => {
@@ -105,5 +78,8 @@ describe('FileModel channel message references', () => {
     await expect(fileModel.findDeletableFilesByTopicId('file-channel-refs-topic')).resolves.toEqual(
       [onlyInTopic],
     );
+    await serverDB.delete(topics).where(eq(topics.id, 'file-channel-refs-topic'));
+    await fileModel.deleteUnreferenced(alsoInChannel);
+    expect(await serverDB.select().from(files).where(eq(files.id, alsoInChannel))).toHaveLength(1);
   });
 });

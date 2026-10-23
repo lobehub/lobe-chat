@@ -1,6 +1,16 @@
 import type { ChannelInputManifest } from '@lobechat/types';
 import { CHANNEL_DELETED_USER_NAME } from '@lobechat/types';
-import { and, asc, eq, gt, isNull, lte, or } from 'drizzle-orm';
+import {
+  and,
+  asc,
+  eq,
+  getTableColumns,
+  gt,
+  isNull,
+  lte,
+  or,
+  sql as canonicalSql,
+} from 'drizzle-orm';
 
 import type {
   ChannelJobItem,
@@ -8,8 +18,10 @@ import type {
   ChannelMessageItem,
   ChannelSessionItem,
   ChannelThreadItem,
+  TopicItem,
 } from '../../schemas';
 import { channelMembers, channelMessages, users } from '../../schemas';
+import { messages } from '../../schemas/message';
 import type { Transaction } from '../../type';
 import { fileIdsByMessage } from './attachments';
 
@@ -58,10 +70,14 @@ export const buildManifest = async (
     request: ChannelMessageItem;
     session: ChannelSessionItem;
     thread: ChannelThreadItem | null;
+    topic: TopicItem;
   },
 ): Promise<ChannelInputManifest> => {
   const { job, member, request, session, thread } = params;
-  const incremental = Boolean(session.nativeSessionId);
+  const incremental =
+    member.config?.runtime === 'native'
+      ? session.acceptedSequence > 0
+      : Boolean(params.topic.metadata?.heteroSessionId);
   const cutoffSequence = request.sequence;
 
   const branch = thread
@@ -71,8 +87,12 @@ export const buildManifest = async (
       )
     : isNull(channelMessages.threadId);
   const visible = await tx
-    .select()
+    .select({
+      ...getTableColumns(channelMessages),
+      content: canonicalSql<string>`coalesce(${messages.content}, '')`,
+    })
     .from(channelMessages)
+    .innerJoin(messages, eq(messages.id, channelMessages.id))
     .where(
       and(
         eq(channelMessages.channelId, job.channelId),

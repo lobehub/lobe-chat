@@ -14,6 +14,7 @@ import type { TopicKeywordScope } from './types';
  * per model instance; the operation modules receive it as their first argument.
  */
 export interface TopicModelContext {
+  channelId?: string;
   db: LobeChatDatabase;
   ftsSearchCandidateSource?: FtsSearchCandidateSource;
   genId: () => string;
@@ -42,6 +43,7 @@ export interface TopicModelContext {
 }
 
 export const createTopicModelContext = ({
+  channelId,
   db,
   ftsSearchCandidateSource,
   includeShareVisitor,
@@ -49,9 +51,10 @@ export const createTopicModelContext = ({
   workspaceId,
 }: Pick<
   TopicModelContext,
-  'db' | 'ftsSearchCandidateSource' | 'includeShareVisitor' | 'userId' | 'workspaceId'
+  'channelId' | 'db' | 'ftsSearchCandidateSource' | 'includeShareVisitor' | 'userId' | 'workspaceId'
 >): TopicModelContext => {
   const ctx: TopicModelContext = {
+    channelId,
     db,
     ftsSearchCandidateSource,
     includeShareVisitor,
@@ -65,7 +68,10 @@ export const createTopicModelContext = ({
      * ({@link queryBySender} / {@link countBySender} / {@link countShareVisitors}).
      */
     workspaceScope: () =>
-      buildWorkspaceWhere({ userId: ctx.userId, workspaceId: ctx.workspaceId }, topics),
+      buildWorkspaceWhere(
+        { channelId: ctx.channelId, userId: ctx.userId, workspaceId: ctx.workspaceId },
+        topics,
+      ),
 
     /**
      * {@link workspaceScope} without the recycle-bin filter, still excluding
@@ -74,7 +80,12 @@ export const createTopicModelContext = ({
     trashScope: () =>
       and(
         buildWorkspaceWhere(
-          { includeTrashed: true, userId: ctx.userId, workspaceId: ctx.workspaceId },
+          {
+            channelId: ctx.channelId,
+            includeTrashed: true,
+            userId: ctx.userId,
+            workspaceId: ctx.workspaceId,
+          },
           topics,
         ),
         ctx.notShareVisitor(),
@@ -98,7 +109,10 @@ export const createTopicModelContext = ({
     mine: () => and(ctx.workspaceScope(), eq(topics.userId, ctx.userId)),
 
     messageOwnership: () =>
-      buildWorkspaceWhere({ userId: ctx.userId, workspaceId: ctx.workspaceId }, messages),
+      buildWorkspaceWhere(
+        { channelId: ctx.channelId, userId: ctx.userId, workspaceId: ctx.workspaceId },
+        messages,
+      ),
 
     /**
      * The default visitor exclusion applied by {@link ownership}: `topics.senderId IS NULL`,

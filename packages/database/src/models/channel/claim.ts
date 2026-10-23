@@ -1,5 +1,14 @@
 import type { ChannelJobBlockCode } from '@lobechat/types';
-import { and, asc, eq, isNotNull, isNull, or } from 'drizzle-orm';
+import {
+  and,
+  asc,
+  eq,
+  getTableColumns,
+  isNotNull,
+  isNull,
+  or,
+  sql as canonicalSql,
+} from 'drizzle-orm';
 
 import type {
   ChannelItem,
@@ -7,8 +16,11 @@ import type {
   ChannelMemberItem,
   ChannelRunItem,
   ChannelSessionItem,
+  TopicItem,
 } from '../../schemas';
 import {
+  agentOperations,
+  agents,
   channelJobs,
   channelMemberGrants,
   channelMembers,
@@ -16,11 +28,15 @@ import {
   channelRuns,
   channelSessions,
   devices,
+  topics,
 } from '../../schemas';
+import { messages } from '../../schemas/message';
 import type { Transaction } from '../../type';
+import { createNanoId } from '../../utils/idGenerator';
 import { findThread } from './delivery';
 import { buildManifest } from './manifest';
 import { audit } from './transaction';
+import { rotateSession } from './writer';
 
 export interface ChannelClaimOptions {
   /** Environment revision the device acknowledged; a claim for any other revision waits. */
@@ -35,6 +51,7 @@ export interface ChannelClaim {
   member: ChannelMemberItem;
   run: ChannelRunItem;
   session: ChannelSessionItem;
+  topic: TopicItem;
 }
 
 const DIRECTORY_LOCK = 'channel_runs_active_directory_unique';
@@ -222,8 +239,12 @@ export const claimJob = async (
   if (busy) return null;
 
   const [request] = await tx
-    .select()
+    .select({
+      ...getTableColumns(channelMessages),
+      content: canonicalSql<string>`coalesce(${messages.content}, '')`,
+    })
     .from(channelMessages)
+    .innerJoin(messages, eq(messages.id, channelMessages.id))
     .where(eq(channelMessages.id, job.messageId));
   // Queued before an environment switch: never run an old instruction in the new directory.
   if (request.sequence <= member.environmentCutoff) {
@@ -232,7 +253,7 @@ export const claimJob = async (
   }
   // The requester is the execution identity; without them there is nobody to run as.
   const [requester] = await tx
-    .select({ id: channelMembers.id })
+    .select({ id: channelMembers.id, userId: channelMembers.userId })
     .from(channelMembers)
     .where(
       and(
@@ -242,7 +263,7 @@ export const claimJob = async (
         isNotNull(channelMembers.userId),
       ),
     );
-  if (!requester) {
+  if (!requester?.userId) {
     await cancel(tx, job, 'requester_unavailable');
     return null;
   }
@@ -255,24 +276,104 @@ export const claimJob = async (
 
   const thread = await findThread(tx, channel.id, job.threadId);
   const scope = job.threadId ?? 'main';
-  const [session] = await tx
-    .insert(channelSessions)
-    .values({ channelId: channel.id, memberId: member.id, scope })
-    .onConflictDoUpdate({
-      set: { scope },
-      target: [channelSessions.memberId, channelSessions.scope],
-    })
-    .returning();
-  const manifest = await buildManifest(tx, { job, member, request, session, thread });
+  let [session] = await tx
+    .select()
+    .from(channelSessions)
+    .where(and(eq(channelSessions.memberId, member.id), eq(channelSessions.scope, scope)));
+  let topic = session?.topicId
+    ? (await tx.select().from(topics).where(eq(topics.id, session.topicId)))[0]
+    : undefined;
+  const hasPreviousRun =
+    session && !topic
+      ? (
+          await tx
+            .select({ id: channelRuns.id })
+            .from(channelRuns)
+            .where(eq(channelRuns.sessionId, session.id))
+            .limit(1)
+        )[0]
+      : undefined;
+  if (
+    session &&
+    (session.principalUserId !== requester.userId ||
+      session.environmentRevision !== member.environmentRevision ||
+      hasPreviousRun)
+  ) {
+    await rotateSession(tx, session, {
+      principalUserId: requester.userId,
+      environmentRevision: member.environmentRevision,
+    });
+    [session] = await tx
+      .select()
+      .from(channelSessions)
+      .where(and(eq(channelSessions.memberId, member.id), eq(channelSessions.scope, scope)));
+    topic = undefined;
+  }
+  if (!topic) {
+    [topic] = await tx
+      .insert(topics)
+      .values({
+        channelId: channel.id,
+        userId: requester.userId,
+        workspaceId: channel.workspaceId,
+        mode: 'channel_runtime',
+        trigger: 'channel',
+        agentId: null,
+      })
+      .returning();
+    if (session) {
+      [session] = await tx
+        .update(channelSessions)
+        .set({ topicId: topic.id })
+        .where(eq(channelSessions.id, session.id))
+        .returning();
+    } else {
+      [session] = await tx
+        .insert(channelSessions)
+        .values({
+          channelId: channel.id,
+          memberId: member.id,
+          scope,
+          principalUserId: requester.userId,
+          environmentRevision: member.environmentRevision,
+          topicId: topic.id,
+        })
+        .returning();
+    }
+  }
+  const contextTopic = topic;
+  const manifest = await buildManifest(tx, { job, member, request, session, thread, topic });
 
   const now = new Date();
   let run: ChannelRunItem;
   try {
     // A savepoint, so losing the directory race to another channel keeps this transaction.
     run = await tx.transaction(async (savepoint) => {
+      const configuredAgent = member.config?.agentId
+        ? (
+            await savepoint
+              .select({ id: agents.id })
+              .from(agents)
+              .where(eq(agents.id, member.config.agentId))
+          )[0]
+        : undefined;
+      const operationId = `op_${createNanoId(16)()}`;
+      await savepoint.insert(agentOperations).values({
+        id: operationId,
+        userId: requester.userId!,
+        channelId: channel.id,
+        workspaceId: channel.workspaceId,
+        topicId: contextTopic.id,
+        agentId: configuredAgent?.id,
+        trigger: 'channel',
+        status: 'idle',
+        model: member.config!.model,
+        provider: member.config!.provider,
+      });
       const [inserted] = await savepoint
         .insert(channelRuns)
         .values({
+          operationId,
           channelId: channel.id,
           deviceId: member.config!.deviceId,
           environmentRevision: member.environmentRevision,
@@ -308,5 +409,5 @@ export const claimJob = async (
     source: manifest.source,
   });
 
-  return { member, run, session };
+  return { member, run, session, topic };
 };

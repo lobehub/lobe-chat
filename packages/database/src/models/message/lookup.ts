@@ -29,7 +29,10 @@ export class MessageLookupQueries extends MessageScope {
     const thread = await this.db.query.threads.findFirst({
       where: and(
         eq(threads.id, threadId),
-        buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, threads),
+        buildWorkspaceWhere(
+          { channelId: this.channelId, userId: this.userId, workspaceId: this.workspaceId },
+          threads,
+        ),
       ),
     });
 
@@ -134,7 +137,10 @@ export class MessageLookupQueries extends MessageScope {
             .where(
               and(
                 eq(topics.id, topicId),
-                buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, topics),
+                buildWorkspaceWhere(
+                  { channelId: this.channelId, userId: this.userId, workspaceId: this.workspaceId },
+                  topics,
+                ),
               ),
             ),
         ),
@@ -187,7 +193,10 @@ export class MessageLookupQueries extends MessageScope {
             .where(
               and(
                 eq(topics.id, topicId),
-                buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, topics),
+                buildWorkspaceWhere(
+                  { channelId: this.channelId, userId: this.userId, workspaceId: this.workspaceId },
+                  topics,
+                ),
               ),
             ),
         ),

@@ -733,6 +733,7 @@ table agent_mails {
 
 table agent_operations {
   id text [pk, not null]
+  channel_id text
   user_id text [not null]
   workspace_id text
   agent_id text
@@ -778,6 +779,7 @@ table agent_operations {
   updated_at "timestamp with time zone" [not null, default: `now()`]
 
   indexes {
+    channel_id [name: 'agent_operations_channel_id_idx']
     user_id [name: 'agent_operations_user_id_idx']
     workspace_id [name: 'agent_operations_workspace_id_idx']
     agent_id [name: 'agent_operations_agent_id_idx']
@@ -1285,27 +1287,12 @@ table channel_members {
   }
 }
 
-table channel_message_files {
-  id uuid [pk, not null, default: `gen_random_uuid()`]
-  channel_id text [not null]
-  message_id text [not null]
-  file_id text [not null]
-  sort_order integer [not null]
-
-  indexes {
-    (message_id, file_id) [name: 'channel_message_files_message_file_unique', unique]
-    file_id [name: 'channel_message_files_file_id_idx']
-    
-  }
-}
-
 table channel_messages {
   id text [pk, not null]
   channel_id text [not null]
   thread_id text
   sequence integer [not null]
   author_member_id text [not null]
-  content text [not null]
   mentions jsonb [not null, default: `[]`]
   request_key text [not null]
   reply_to_id text
@@ -1331,6 +1318,7 @@ table channel_messages {
 table channel_runs {
   id text [pk, not null]
   channel_id text [not null]
+  operation_id text [not null, unique]
   job_id text [not null]
   member_id text [not null]
   requester_member_id text [not null]
@@ -1376,34 +1364,15 @@ table channel_runs {
   }
 }
 
-table channel_runtime_messages {
-  id text [pk, not null]
-  session_id text [not null]
-  run_id text [not null]
-  stable_key text [not null]
-  data jsonb [not null]
-  created_at "timestamp with time zone" [not null, default: `now()`]
-
-  indexes {
-    (session_id, stable_key) [name: 'channel_runtime_messages_session_key_unique', unique]
-  }
-}
-
-table channel_runtime_states {
-  session_id text [pk, not null]
-  run_id text [not null]
-  state jsonb [not null]
-  created_at "timestamp with time zone" [not null, default: `now()`]
-  updated_at "timestamp with time zone" [not null, default: `now()`]
-}
-
 table channel_sessions {
   id text [pk, not null]
   channel_id text [not null]
   member_id text [not null]
   scope text [not null]
   generation integer [not null, default: 1]
-  native_session_id text
+  topic_id text
+  principal_user_id text [not null]
+  environment_revision integer [not null, default: 0]
   accepted_sequence integer [not null, default: 0]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
@@ -2740,7 +2709,8 @@ table messages {
   trace_id text
   observation_id text
   client_id text
-  user_id text [not null]
+  channel_id text
+  user_id text
   session_id text
   topic_id text
   thread_id text
@@ -2758,6 +2728,8 @@ table messages {
   updated_at "timestamp with time zone" [not null, default: `now()`]
 
   indexes {
+    channel_id [name: 'messages_channel_id_idx']
+
     created_at [name: 'messages_created_at_idx']
     (client_id, user_id) [name: 'message_client_id_user_unique', unique]
     topic_id [name: 'messages_topic_id_idx']
@@ -2779,7 +2751,8 @@ table messages {
 table messages_files {
   file_id text [not null]
   message_id text [not null]
-  user_id text [not null]
+  user_id text
+  sort_order integer [not null, default: 0]
   workspace_id text
 
   indexes {
@@ -4206,7 +4179,8 @@ table topics {
   group_id text
   project_id text
   project_working_directory_id uuid
-  user_id text [not null]
+  channel_id text
+  user_id text
   client_id text
   description text
   history_summary text
@@ -4232,6 +4206,9 @@ table topics {
   updated_at "timestamp with time zone" [not null, default: `now()`]
 
   indexes {
+    channel_id [name: 'topics_channel_id_idx']
+
+    channel_id [name: 'topics_public_channel_unique', unique]
     (client_id, user_id) [name: 'topics_client_id_user_id_unique', unique]
     created_at [name: 'topics_created_at_idx']
     user_id [name: 'topics_user_id_idx']

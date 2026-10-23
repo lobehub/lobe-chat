@@ -861,7 +861,7 @@ export class ProjectModel {
         favorite: topics.favorite,
         metadata: topics.metadata,
         trigger: topics.trigger,
-        userId: topics.userId,
+        userId: sql<string>`${topics.userId}`,
         title: topics.title,
         status: topics.status,
         agentId: topics.agentId,

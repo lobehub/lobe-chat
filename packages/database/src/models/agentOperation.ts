@@ -136,14 +136,22 @@ export class AgentOperationModel {
   private readonly userId: string;
   private readonly workspaceId?: string;
 
-  constructor(db: LobeChatDatabase, userId: string, workspaceId?: string) {
+  constructor(
+    db: LobeChatDatabase,
+    userId: string,
+    workspaceId?: string,
+    private readonly options: { channelId?: string } = {},
+  ) {
     this.db = db;
     this.userId = userId;
     this.workspaceId = workspaceId;
   }
 
   private ownership = () =>
-    buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, agentOperations);
+    buildWorkspaceWhere(
+      { channelId: this.options.channelId, userId: this.userId, workspaceId: this.workspaceId },
+      agentOperations,
+    );
 
   /**
    * Insert the initial row when an operation is created. Idempotent via
@@ -152,6 +160,7 @@ export class AgentOperationModel {
    */
   async recordStart(params: RecordOperationStartParams): Promise<void> {
     const values: NewAgentOperation = {
+      channelId: this.options.channelId,
       agentId: params.agentId ?? null,
       appContext: params.appContext,
       chatGroupId: params.chatGroupId ?? null,
@@ -172,7 +181,25 @@ export class AgentOperationModel {
       workspaceId: this.workspaceId ?? null,
     };
 
-    await this.db.insert(agentOperations).values(values).onConflictDoNothing();
+    // Channel claims reserve an idle operation before dispatch so retries share one identity.
+    // The actual runtime initializes that reservation, but cannot replace another principal's
+    // operation, reparent it, or resurrect a settled execution.
+    if (this.options.channelId && params.topicId) {
+      await this.db
+        .insert(agentOperations)
+        .values(values)
+        .onConflictDoUpdate({
+          target: agentOperations.id,
+          set: values,
+          setWhere: and(
+            this.ownership(),
+            eq(agentOperations.topicId, params.topicId),
+            eq(agentOperations.status, 'idle'),
+          ),
+        });
+    } else {
+      await this.db.insert(agentOperations).values(values).onConflictDoNothing();
+    }
   }
 
   /**

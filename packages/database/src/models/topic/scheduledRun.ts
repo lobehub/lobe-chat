@@ -4,7 +4,7 @@ import {
   parseTopicScheduledRun,
   type TopicScheduledRun,
 } from '@lobechat/types';
-import { and, eq, or, sql } from 'drizzle-orm';
+import { and, eq, isNull, or, sql } from 'drizzle-orm';
 
 import { type TopicItem, topics } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
@@ -105,6 +105,7 @@ export async function getDueScheduledTopics(
     .where(
       and(
         eq(topics.status, 'scheduled'),
+        isNull(topics.channelId),
         notTrashed(topics.isDeleted),
         or(
           // `''` is the absent-runAt sentinel, and it never satisfies this pair —

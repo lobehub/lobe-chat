@@ -31,6 +31,7 @@ export const create = async (
     { userId: ctx.userId, workspaceId: ctx.workspaceId },
     {
       ...params,
+      channelId: ctx.channelId ?? null,
       agentId: params.agentId || null,
       groupId: params.groupId || null,
       id,
@@ -71,6 +72,7 @@ export const batchInsert = async (
           { userId: ctx.userId, workspaceId: ctx.workspaceId },
           {
             agentId: params.agentId || null,
+            channelId: ctx.channelId ?? null,
             favorite: params.favorite,
             groupId: params.sessionId ? null : params.groupId,
             id: params.id || ctx.genId(),

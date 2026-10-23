@@ -1,8 +1,15 @@
 import type { ChannelRunStatus } from '@lobechat/types';
-import { and, eq, gt, inArray } from 'drizzle-orm';
+import { and, eq, gt, inArray, sql } from 'drizzle-orm';
 
 import type { ChannelRunItem } from '../../schemas';
-import { channelJobs, channelMembers, channelRuns, channelSessions } from '../../schemas';
+import {
+  agentOperations,
+  channelJobs,
+  channelMembers,
+  channelRuns,
+  channelSessions,
+  topics,
+} from '../../schemas';
 import type { LobeChatDatabase, Transaction } from '../../type';
 import type { ChannelClaim, ChannelClaimOptions } from './claim';
 import { claimJob } from './claim';
@@ -13,7 +20,7 @@ import { resolveRouting } from './routing';
 import type { ChannelStopScope } from './stop';
 import { stopScope } from './stop';
 import { audit, withChannelLock } from './transaction';
-import { isolateWriter, OPEN_JOB_STATUSES } from './writer';
+import { advanceOperation, isolateWriter, OPEN_JOB_STATUSES } from './writer';
 
 /** Final statuses a released writer settles into; see {@link releaseOutcome}. */
 const SETTLED_RUN_STATUSES: ChannelRunStatus[] = [
@@ -112,11 +119,16 @@ export class ChannelExecutionModel {
     channelId: string,
     runId: string,
     fence: number,
-    receipt: { nativeSessionId: string; nativeTurnId?: string },
+    receipt: { nativeSessionId?: string; nativeTurnId?: string },
   ) =>
     withChannelLock(this.db, channelId, async (tx) => {
       const run = await fenced(tx, channelId, runId, fence);
-      if (run.acceptance === 'accepted') return;
+      if (
+        run.acceptance === 'accepted' ||
+        run.writerReleased ||
+        SETTLED_RUN_STATUSES.includes(run.status)
+      )
+        return;
 
       await tx
         .update(channelRuns)
@@ -135,9 +147,17 @@ export class ChannelExecutionModel {
         .update(channelSessions)
         .set({
           acceptedSequence: Math.max(session.acceptedSequence, run.manifest.cutoffSequence),
-          nativeSessionId: receipt.nativeSessionId,
         })
         .where(eq(channelSessions.id, session.id));
+      if (receipt.nativeSessionId && run.executionConfig?.runtime !== 'native' && session.topicId) {
+        await tx
+          .update(topics)
+          .set({
+            metadata: sql`coalesce(${topics.metadata}, '{}'::jsonb) || ${JSON.stringify({ heteroSessionId: receipt.nativeSessionId })}::jsonb`,
+          })
+          .where(eq(topics.id, session.topicId));
+      }
+      await advanceOperation(tx, run, 'running');
       await audit(tx, channelId, 'input_accepted', run.id, {
         cutoff: run.manifest.cutoffSequence,
       });
@@ -233,6 +253,16 @@ export class ChannelExecutionModel {
           .where(
             and(eq(channelJobs.id, run.jobId), inArray(channelJobs.status, OPEN_JOB_STATUSES)),
           );
+      await advanceOperation(
+        tx,
+        run,
+        outcome.status === 'failed' || outcome.status === 'execution_unknown'
+          ? 'error'
+          : outcome.status === 'stopped'
+            ? 'interrupted'
+            : 'done',
+        outcome.error ?? undefined,
+      );
       await audit(tx, channelId, 'writer_released', run.id, { status: outcome.status });
     });
 
@@ -255,6 +285,12 @@ export class ChannelExecutionModel {
         (run.writerReleased && SETTLED_RUN_STATUSES.includes(run.status))
       )
         return;
+
+      const [operation] = await tx
+        .select({ status: agentOperations.status })
+        .from(agentOperations)
+        .where(eq(agentOperations.id, run.operationId));
+      if (operation?.status === 'done') return;
 
       const [job] = await tx
         .select({ status: channelJobs.status })
@@ -286,6 +322,12 @@ export class ChannelExecutionModel {
           .where(
             and(eq(channelJobs.id, run.jobId), inArray(channelJobs.status, OPEN_JOB_STATUSES)),
           );
+      await advanceOperation(
+        tx,
+        run,
+        stopping ? 'interrupted' : 'error',
+        stopping ? undefined : failure.message,
+      );
       await audit(tx, channelId, 'execution_failed', run.id, {
         message: failure.message,
         notSubmitted: Boolean(failure.notSubmitted),
@@ -299,12 +341,13 @@ export class ChannelExecutionModel {
   executionUnknown = async (channelId: string, runId: string, fence: number, message: string) =>
     withChannelLock(this.db, channelId, async (tx) => {
       const run = await fenced(tx, channelId, runId, fence, true);
-      if (run.writerReleased || run.status === 'execution_unknown') return;
+      if (run.writerReleased || SETTLED_RUN_STATUSES.includes(run.status)) return;
 
       await tx
         .update(channelRuns)
         .set({ error: message, status: 'execution_unknown' })
         .where(eq(channelRuns.id, run.id));
+      await advanceOperation(tx, run, 'abandoned', message);
       await audit(tx, channelId, 'execution_unknown', run.id, { message });
     });
 

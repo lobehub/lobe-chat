@@ -1,20 +1,55 @@
-import { eq } from 'drizzle-orm';
+import type { AgentOperationStatus } from '@lobechat/types';
+import { and, eq, inArray } from 'drizzle-orm';
 
 import type { ChannelRunItem, ChannelSessionItem } from '../../schemas';
-import { channelJobs, channelRuns, channelSessions } from '../../schemas';
+import { agentOperations, channelJobs, channelRuns, channelSessions } from '../../schemas';
 import type { Transaction } from '../../type';
 import { audit } from './transaction';
+
+/** Only in-flight operations can advance; runtime-owned metrics and trace remain untouched. */
+export const advanceOperation = async (
+  tx: Transaction,
+  run: ChannelRunItem,
+  status: AgentOperationStatus,
+  error?: string,
+) => {
+  await tx
+    .update(agentOperations)
+    .set({
+      status,
+      ...(status === 'running' ? { startedAt: new Date() } : { completedAt: new Date() }),
+      ...(error && { error: { message: error } }),
+    })
+    .where(
+      and(
+        eq(agentOperations.id, run.operationId),
+        inArray(agentOperations.status, [
+          'idle',
+          'running',
+          'waiting_for_async_tool',
+          'waiting_for_client',
+          'waiting_for_human',
+        ]),
+      ),
+    );
+};
 
 /** Job statuses a stop, failure or isolation still settles. */
 export const OPEN_JOB_STATUSES = ['queued', 'running'] as const;
 
 /** Retires a session; the next delivery in its scope starts a new one from a full snapshot. */
-export const rotateSession = async (tx: Transaction, session: ChannelSessionItem) => {
+export const rotateSession = async (
+  tx: Transaction,
+  session: ChannelSessionItem,
+  nextIdentity: Pick<ChannelSessionItem, 'principalUserId' | 'environmentRevision'> = session,
+) => {
   await tx
     .update(channelSessions)
     .set({ scope: `archived:${session.id}` })
     .where(eq(channelSessions.id, session.id));
   await tx.insert(channelSessions).values({
+    principalUserId: nextIdentity.principalUserId,
+    environmentRevision: nextIdentity.environmentRevision,
     channelId: session.channelId,
     generation: session.generation + 1,
     memberId: session.memberId,
@@ -46,6 +81,7 @@ export const isolateWriter = async (tx: Transaction, run: ChannelRunItem, reason
     .where(eq(channelSessions.id, run.sessionId));
   if (session && !session.scope.startsWith('archived:')) await rotateSession(tx, session);
 
+  await advanceOperation(tx, run, 'abandoned', reason);
   await audit(tx, run.channelId, 'execution_isolated', run.id, {
     physicalStopped: run.physicalStopped,
     reason,

@@ -25,6 +25,8 @@ export type MessageScopeArgs = ConstructorParameters<typeof MessageScope>;
  * that each query and mutation module builds on.
  */
 export class MessageScope {
+  protected channelId?: string;
+
   protected userId: string;
 
   protected db: LobeChatDatabase;
@@ -50,6 +52,7 @@ export class MessageScope {
     ftsSearchCandidateSource?: FtsSearchCandidateSource,
     options: MessageModelOptions = {},
   ) {
+    this.channelId = options.channelId;
     this.userId = userId;
     this.db = db;
     this.workspaceId = workspaceId;
@@ -66,7 +69,10 @@ export class MessageScope {
    */
   protected workspaceScope = () =>
     and(
-      buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, messages),
+      buildWorkspaceWhere(
+        { channelId: this.channelId, userId: this.userId, workspaceId: this.workspaceId },
+        messages,
+      ),
       or(
         isNull(messages.topicId),
         inArray(
@@ -75,7 +81,10 @@ export class MessageScope {
             .select({ id: topics.id })
             .from(topics)
             .where(
-              buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, topics),
+              buildWorkspaceWhere(
+                { channelId: this.channelId, userId: this.userId, workspaceId: this.workspaceId },
+                topics,
+              ),
             ),
         ),
       ),
@@ -111,7 +120,10 @@ export class MessageScope {
       .from(topics)
       .where(
         and(
-          buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, topics),
+          buildWorkspaceWhere(
+            { channelId: this.channelId, userId: this.userId, workspaceId: this.workspaceId },
+            topics,
+          ),
           eq(topics.id, topicId),
         ),
       )
@@ -128,23 +140,40 @@ export class MessageScope {
   protected trashScope = () =>
     and(
       buildWorkspaceWhere(
-        { includeTrashed: true, userId: this.userId, workspaceId: this.workspaceId },
+        {
+          channelId: this.channelId,
+          includeTrashed: true,
+          userId: this.userId,
+          workspaceId: this.workspaceId,
+        },
         messages,
       ),
       this.notShareVisitor(),
     );
 
   protected pluginsOwnership = () =>
-    buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, messagePlugins);
+    buildWorkspaceWhere(
+      { channelId: this.channelId, userId: this.userId, workspaceId: this.workspaceId },
+      messagePlugins,
+    );
 
   protected translatesOwnership = () =>
-    buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, messageTranslates);
+    buildWorkspaceWhere(
+      { channelId: this.channelId, userId: this.userId, workspaceId: this.workspaceId },
+      messageTranslates,
+    );
 
   protected ttsOwnership = () =>
-    buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, messageTTS);
+    buildWorkspaceWhere(
+      { channelId: this.channelId, userId: this.userId, workspaceId: this.workspaceId },
+      messageTTS,
+    );
 
   protected agentsToSessionsOwnership = () =>
-    buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, agentsToSessions);
+    buildWorkspaceWhere(
+      { channelId: this.channelId, userId: this.userId, workspaceId: this.workspaceId },
+      agentsToSessions,
+    );
 
   // 18-char hash (was 14): widen the message id space — the coordinator-driven
   // hetero subagent flow allocates many ids per run, and a few extra chars keep
@@ -160,7 +189,10 @@ export class MessageScope {
         and(
           eq(agents.id, agentId),
           eq(agents.slug, INBOX_SESSION_ID),
-          buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, agents),
+          buildWorkspaceWhere(
+            { channelId: this.channelId, userId: this.userId, workspaceId: this.workspaceId },
+            agents,
+          ),
         ),
       );
     return and(

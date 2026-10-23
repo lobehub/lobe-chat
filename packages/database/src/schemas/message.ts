@@ -5,9 +5,12 @@ import type {
   ToolIntervention,
 } from '@lobechat/types';
 import { sql } from 'drizzle-orm';
+import type { AnyPgColumn } from 'drizzle-orm/pg-core';
 import {
   boolean,
+  check,
   index,
+  integer,
   jsonb,
   numeric,
   pgTable,
@@ -21,6 +24,7 @@ import { createInsertSchema } from 'drizzle-zod';
 import { idGenerator } from '../utils/idGenerator';
 import { softDeleteColumns, timestamps, varchar255 } from './_helpers';
 import { agents } from './agent';
+import { channels } from './channel';
 import { chatGroups } from './chatGroup';
 import { files } from './file';
 import { chunks, embeddings } from './rag';
@@ -127,9 +131,10 @@ export const messages = pgTable(
     clientId: text('client_id'),
 
     // foreign keys
-    userId: text('user_id')
-      .references(() => users.id, { onDelete: 'cascade' })
-      .notNull(),
+    channelId: text('channel_id').references((): AnyPgColumn => channels.id, {
+      onDelete: 'cascade',
+    }),
+    userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
     /**
      * we might deprecate sessionId in the future
      */
@@ -155,6 +160,11 @@ export const messages = pgTable(
     ...timestamps,
   },
   (table) => [
+    index('messages_channel_id_idx').on(table.channelId),
+    check(
+      'messages_owner_check',
+      sql`${table.userId} IS NOT NULL OR ${table.channelId} IS NOT NULL`,
+    ),
     index('messages_created_at_idx').on(table.createdAt),
     uniqueIndex('message_client_id_user_unique').on(table.clientId, table.userId),
     index('messages_topic_id_idx').on(table.topicId),
@@ -268,9 +278,8 @@ export const messagesFiles = pgTable(
     messageId: text('message_id')
       .notNull()
       .references(() => messages.id, { onDelete: 'cascade' }),
-    userId: text('user_id')
-      .references(() => users.id, { onDelete: 'cascade' })
-      .notNull(),
+    userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
+    sortOrder: integer('sort_order').notNull().default(0),
     workspaceId: text('workspace_id').references(() => workspaces.id, { onDelete: 'cascade' }),
   },
   (t) => ({

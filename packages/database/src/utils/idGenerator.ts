@@ -17,7 +17,6 @@ const prefixes = {
   channelJobs: 'chn_job',
   channelMemberGrants: 'chn_grant',
   channelMembers: 'chn_member',
-  channelMessages: 'chn_msg',
   channelRuns: 'chn_run',
   channelSessions: 'chn_session',
   channelThreads: 'chn_thread',

@@ -1,9 +1,8 @@
 /**
  * Channel: a shared conversation where people and Agents talk together (LOBE-15104).
  *
- * Channel identities never alias Agent Group, Topic, Task or Operation identities. Public
- * messages live in `channel_messages`; each Agent's private transcript lives in
- * `channel_runtime_messages` and is never shown to anyone.
+ * Public content lives in canonical messages, with channel_messages routing extensions.
+ * Each execution context has a private canonical topic, distinct from the public timeline.
  */
 
 export const CHANNEL_RUNTIMES = [

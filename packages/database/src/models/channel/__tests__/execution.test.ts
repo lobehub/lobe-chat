@@ -3,7 +3,15 @@ import { eq, sql } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../../core/getTestDB';
-import { channelJobs, channelMessages, channels, channelSessions } from '../../../schemas';
+import {
+  agentOperations,
+  channelJobs,
+  channelMessages,
+  channels,
+  channelSessions,
+  messages,
+  topics,
+} from '../../../schemas';
 import type { LobeChatDatabase } from '../../../type';
 import { ChannelExecutionModel } from '..';
 import { claimJob } from '../claim';
@@ -81,7 +89,9 @@ describe('ChannelExecutionModel', () => {
       .select()
       .from(channelSessions)
       .where(eq(channelSessions.id, run.sessionId));
-    expect(session).toMatchObject({ acceptedSequence: 1, nativeSessionId: 'session-1' });
+    expect(session).toMatchObject({ acceptedSequence: 1 });
+    const [topic] = await db.select().from(topics).where(eq(topics.id, session.topicId!));
+    expect(topic.metadata?.heteroSessionId).toBe('session-1');
 
     await execution.saveDraft(channel.id, run.id, run.fence, 'Fixed');
     await expect(
@@ -93,11 +103,17 @@ describe('ChannelExecutionModel', () => {
     const [reply] = await db.select().from(channelMessages).where(eq(channelMessages.id, replyId));
     expect(reply).toMatchObject({
       authorMemberId: agent.id,
-      content: 'Fixed',
       replyToId: message.id,
       routingStatus: 'reply',
       sequence: 2,
     });
+    const [canonicalReply] = await db.select().from(messages).where(eq(messages.id, replyId));
+    expect(canonicalReply.content).toBe('Fixed');
+    const [operation] = await db
+      .select()
+      .from(agentOperations)
+      .where(eq(agentOperations.id, run.operationId));
+    expect(operation.status).toBe('running');
     expect((await jobById(job.id)).status).toBe('completed');
 
     await execution.releaseWriter(channel.id, run.id, run.fence);
@@ -207,6 +223,12 @@ describe('ChannelExecutionModel', () => {
       await winner;
 
       expect(await loser).toBeNull();
+      expect(
+        await db
+          .select()
+          .from(agentOperations)
+          .where(eq(agentOperations.channelId, other.channel.id)),
+      ).toHaveLength(0);
       expect(await jobById(job.id)).toMatchObject({
         blockedCode: 'directory_locked',
         status: 'queued',

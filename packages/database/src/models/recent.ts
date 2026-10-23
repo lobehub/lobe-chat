@@ -133,7 +133,7 @@ export class RecentModel {
         title: sql<string>`COALESCE(${topics.title}, 'Untitled Topic')`.as('title'),
         type: sql<RecentDbItem['type']>`'topic'`.as('type'),
         updatedAt: topics.updatedAt,
-        userId: topics.userId,
+        userId: sql<string>`${topics.userId}`,
       })
       .from(topics)
       .leftJoin(agents, eq(topics.agentId, agents.id))

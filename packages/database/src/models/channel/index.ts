@@ -2,7 +2,7 @@ import type { ChannelMemberRole, ChannelVisibility } from '@lobechat/types';
 import { and, desc, eq, isNull } from 'drizzle-orm';
 
 import type { ChannelItem, ChannelMessageItem, ChannelRunItem } from '../../schemas';
-import { channelMembers, channelMessages, channelRuns, channels } from '../../schemas';
+import { channelMembers, channelMessages, channelRuns, channels, topics } from '../../schemas';
 import type { LobeChatDatabase, Transaction } from '../../type';
 import { normalizeWorkspaceId } from '../../utils/workspace';
 import { ChannelError } from './error';
@@ -59,6 +59,13 @@ export class ChannelModel {
           workspaceId: this.workspaceId,
         })
         .returning();
+      await tx.insert(topics).values({
+        channelId: channel.id,
+        mode: 'channel',
+        trigger: 'channel',
+        userId: null,
+        workspaceId: channel.workspaceId,
+      });
       const [member] = await tx
         .insert(channelMembers)
         .values({

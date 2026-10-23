@@ -1,8 +1,9 @@
 import type { ChannelMessageRoutingStatus } from '@lobechat/types';
-import { and, eq, sql } from 'drizzle-orm';
+import { and, eq, getTableColumns, sql as canonicalSql, sql } from 'drizzle-orm';
 
 import type { ChannelMessageItem } from '../../schemas';
 import { channelMessages } from '../../schemas';
+import { messages } from '../../schemas/message';
 import type { Transaction } from '../../type';
 import { candidateAgents, deliver, findThread } from './delivery';
 import { ChannelError } from './error';
@@ -14,8 +15,12 @@ export type ChannelRoutingDecision =
 
 const findMessage = async (tx: Transaction, channelId: string, messageId: string) => {
   const [message] = await tx
-    .select()
+    .select({
+      ...getTableColumns(channelMessages),
+      content: canonicalSql<string>`coalesce(${messages.content}, '')`,
+    })
     .from(channelMessages)
+    .innerJoin(messages, eq(messages.id, channelMessages.id))
     .where(and(eq(channelMessages.channelId, channelId), eq(channelMessages.id, messageId)));
   if (!message) throw new ChannelError('NOT_FOUND', 'Message not found');
 
@@ -92,5 +97,5 @@ export const retryRouting = async (
     .returning();
   await audit(tx, channelId, 'routing_retried', messageId, { attempt: retried.routingAttempt });
 
-  return retried;
+  return { ...retried, content: message.content };
 };
