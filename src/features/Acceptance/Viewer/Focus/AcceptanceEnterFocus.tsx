@@ -3,7 +3,9 @@
 import { Button, createStaticStyles, Icon } from '@lobehub/ui';
 import { ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useSearchParams } from 'react-router';
+import { useSearchParams } from 'react-router';
+
+import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 
 import { useAcceptanceScope } from '../AcceptanceScope';
 import { acceptanceCheckPath, useAcceptanceRouteBase } from '../routes';
@@ -21,7 +23,7 @@ const styles = createStaticStyles(({ css }) => ({
 
 const AcceptanceEnterFocus = () => {
   const { t } = useTranslation('verify');
-  const navigate = useNavigate();
+  const navigate = useWorkspaceAwareNavigate();
   const [params] = useSearchParams();
   const { acceptanceId, embedded } = useAcceptanceScope();
   const routeBase = useAcceptanceRouteBase();

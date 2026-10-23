@@ -14,8 +14,9 @@ import { ChevronsDownUp, ChevronsUpDown } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useSearchParams } from 'react-router';
+import { useSearchParams } from 'react-router';
 
+import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useSingleton } from '@/hooks/useSingleton';
 import { mutate as globalMutate } from '@/libs/swr';
 import { isAcceptanceListKey } from '@/libs/swr/keys';
@@ -80,7 +81,7 @@ const AcceptanceCheckInventory = ({
   const { acceptanceId, embedded } = useAcceptanceScope();
   const routeBase = useAcceptanceRouteBase();
   const { data, mutate } = useAcceptanceBundle(acceptanceId);
-  const navigate = useNavigate();
+  const navigate = useWorkspaceAwareNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [localFilter, setLocalFilter] = useState<CheckFilter>('all');
   const urlFilterRaw = searchParams.get('filter');

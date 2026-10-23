@@ -157,9 +157,26 @@ export interface OperationMetadata {
    */
   heteroAutoRetryAvailable?: boolean;
 
+  /**
+   * External heterogeneous producer (e.g. `claude-code`) the server dispatched
+   * this Gateway run to. `null` denotes the native AgentRuntime; `undefined`
+   * means an older server or topic marker did not report it, so it may still
+   * be an external producer.
+   * @default undefined
+   */
+  heteroType?: string | null;
+
   // UI state (for sendMessage operation)
   inputEditorTempState?: any | null; // Editor state snapshot for cancel restoration
   inputSendErrorMsg?: string; // Error message to display in UI
+  /**
+   * User-facing LLM-call total for the running operation.
+   *
+   * Counts only actual model invocations — tool-only runtime iterations do not
+   * increment it. `stepCount` in operation metadata remains the internal
+   * scheduling/execution index.
+   */
+  llmCalls?: number;
   // Progress information
   progress?: {
     current: number;

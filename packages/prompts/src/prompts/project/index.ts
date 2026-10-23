@@ -34,7 +34,8 @@ export interface ProjectContextPromptInput {
   project: {
     coordinatorAgentId: string;
     description?: string | null;
-    identifier: string;
+    /** Absent for a project that numbers its tasks with the scope's default prefix. */
+    identifier?: string | null;
     name: string;
     status: string;
   };
@@ -74,7 +75,7 @@ export const buildProjectContextPrompt = (input: ProjectContextPromptInput): str
   const membersById = new Map(members.map((member) => [member.agentId, member]));
 
   const lines: string[] = [
-    `<project identifier="${project.identifier}" status="${project.status}">${project.name}</project>`,
+    `<project${project.identifier ? ` identifier="${project.identifier}"` : ''} status="${project.status}">${project.name}</project>`,
   ];
   if (project.description?.trim()) {
     lines.push(`<description>${project.description.trim()}</description>`);

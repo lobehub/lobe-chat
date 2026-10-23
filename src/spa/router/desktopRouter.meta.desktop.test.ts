@@ -27,7 +27,7 @@ describe('mainAreaMetaRoutes (Electron adapter)', () => {
   });
 
   it('uses the active resource category for the tab title and icon', () => {
-    const { static: staticMeta } = matchRouteMeta(mainAreaMetaRoutes, '/resource/images');
+    const { static: staticMeta } = matchRouteMeta(mainAreaMetaRoutes, '/resource/drive/images');
 
     expect(staticMeta.titleKey).toBe('navigation.resourceImages');
     expect(staticMeta.icon).toBe(ImageIcon);

@@ -84,12 +84,13 @@ const fetchExplorerSearchPage = async (
 
   const response = await resourceService.queryResources({
     category: params.category,
+    filesOnly: !params.libraryId,
     includeContentPreview: params.includeContentPreview,
     libraryId: params.libraryId,
     limit: pageSize,
     offset: (cursor ?? 0) * pageSize,
     q: params.q,
-    showFilesInKnowledgeBase: false,
+    showFilesInKnowledgeBase: !params.libraryId,
     sourceFilter: params.sourceFilter,
     visibility: params.visibility,
   });

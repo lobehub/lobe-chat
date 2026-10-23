@@ -499,10 +499,12 @@ export const documentRouter = router({
     .input(
       z
         .object({
+          creator: z.enum(['others', 'self']).optional(),
           current: z.number().optional(),
           fileTypes: z.array(z.string()).optional(),
           pageSize: z.number().max(100).optional(),
           sourceTypes: z.array(z.string()).optional(),
+          standaloneOnly: z.boolean().optional(),
         })
         .optional(),
     )

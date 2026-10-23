@@ -42,6 +42,7 @@ import { chatConfigByIdSelectors } from '@/store/agent/selectors';
 import {
   consumePendingSandboxSelection,
   getPendingSandboxSelection,
+  toSandboxTopicMetadata,
 } from '@/store/chat/pendingSandboxSelection';
 import { consumePendingTopicRepos, getPendingTopicRepos } from '@/store/chat/pendingTopicRepos';
 import { topicSelectors } from '@/store/chat/selectors';
@@ -82,6 +83,7 @@ import {
   markGatewayMuxUnavailable,
 } from './muxRegistry';
 import { flagQueuedMessagesOnRunStart, syncQueuedMessagesFlag } from './queuedMessagesFlag';
+import { gatewayRunOperationMetadata } from './runOperationMetadata';
 import { isCompletedRuntimeEnd } from './runtimeEndReason';
 import * as serverSteerQueue from './serverSteerQueue';
 
@@ -1027,12 +1029,7 @@ export class GatewayActionImpl {
       isCreateNewTopic && executionContext.agentId
         ? getPendingSandboxSelection(executionContext.agentId)
         : undefined;
-    const sandboxTopicMetadata = pendingSandboxSelection
-      ? {
-          sandboxInstanceId: pendingSandboxSelection.instanceId,
-          sandboxMode: pendingSandboxSelection.mode,
-        }
-      : undefined;
+    const sandboxTopicMetadata = toSandboxTopicMetadata(pendingSandboxSelection);
     const cwdTopicMetadata =
       pendingRepos.length > 0
         ? {
@@ -1392,13 +1389,11 @@ export class GatewayActionImpl {
       });
     }
 
-    // Create a dedicated operation for gateway execution with correct context.
-    // Stash the server operation id in metadata so human-intervention flows
-    // (approve/reject/reject_continue) can look it up and call the server
-    // without needing an out-of-band lookup.
+    // Create a dedicated operation for gateway execution with correct context,
+    // carrying the server run's identity (see gatewayRunOperationMetadata).
     const { operationId: gatewayOpId } = this.#get().startOperation({
       context: resolvedMessageContext,
-      metadata: { heteroAutoRetryAvailable: true, serverOperationId: result.operationId },
+      metadata: { heteroAutoRetryAvailable: true, ...gatewayRunOperationMetadata(result) },
       parentOperationId,
       type: 'execServerAgentRuntime',
     });
@@ -1796,7 +1791,7 @@ export class GatewayActionImpl {
     const { operationId: gatewayOpId } = this.#get().startOperation({
       context,
       metadata: {
-        serverOperationId: operationId,
+        ...gatewayRunOperationMetadata({ heteroType, operationId }),
         ...(startTime !== undefined ? { startTime } : {}),
       },
       type: 'execServerAgentRuntime',

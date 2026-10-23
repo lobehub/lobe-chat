@@ -26,7 +26,16 @@ import {
   useProjectStore,
 } from './store';
 
-const mocks = vi.hoisted(() => ({ activeWorkspaceId: null as string | null }));
+const mocks = vi.hoisted(() => ({
+  activeWorkspaceId: null as string | null,
+  refreshProjectTopics: vi.fn(),
+}));
+
+vi.mock('@/store/projectWorkingDirectory', () => ({
+  useProjectDirectoryStore: {
+    getState: () => ({ refreshProjectTopics: mocks.refreshProjectTopics }),
+  },
+}));
 
 vi.mock('@/business/client/hooks/useActiveWorkspaceId', () => ({
   getActiveWorkspaceId: () => mocks.activeWorkspaceId,
@@ -40,7 +49,9 @@ vi.mock('@/services/project', () => ({
     delete: vi.fn(),
     detail: vi.fn(),
     listAll: vi.fn(),
+    move: vi.fn(),
     removeAgent: vi.fn(),
+    replaceCoordinator: vi.fn(),
     update: vi.fn(),
     updateKnowledgeBase: vi.fn(),
   },
@@ -158,6 +169,122 @@ describe('project store replicas', () => {
     await waitFor(() => expect(useProjectStore.getState().projectListMap.all).toBeUndefined());
   });
 
+  describe('moveProject', () => {
+    const deferred = () => {
+      let resolve!: (value: unknown) => void;
+      let reject!: (error: unknown) => void;
+      const promise = new Promise((res, rej) => {
+        resolve = res;
+        reject = rej;
+      });
+      return { promise, reject, resolve };
+    };
+
+    const loadList = async (...ids: string[]) => {
+      vi.mocked(projectService.listAll).mockResolvedValue(ok(ids.map((id) => project(id))) as any);
+      renderHook(() => useProjectStore((s) => s.useFetchProjectList)(true), { wrapper });
+      await waitFor(() =>
+        expect(useProjectStore.getState().projectListMap[PROJECT_LIST_KEY]).toHaveLength(
+          ids.length,
+        ),
+      );
+    };
+    // Positions, not array order: the shared list keeps its own order.
+    const names = () =>
+      useProjectStore
+        .getState()
+        .projectListMap[PROJECT_LIST_KEY]?.toSorted(
+          (a, b) => (a.sortOrder ?? -1) - (b.sortOrder ?? -1),
+        )
+        .map((p) => p.id);
+
+    it('moves the row at once and sends queued moves only after the earlier one lands', async () => {
+      await loadList('a', 'b', 'c');
+      const first = deferred();
+      vi.mocked(projectService.move)
+        .mockReturnValueOnce(first.promise as any)
+        .mockResolvedValueOnce(ok(undefined) as any);
+      const { moveProject } = useProjectStore.getState();
+
+      const one = moveProject('c', ['c', 'a', 'b']);
+      const two = moveProject('b', ['b', 'c', 'a']);
+
+      expect(names()).toEqual(['b', 'c', 'a']);
+      await Promise.resolve();
+      expect(projectService.move).toHaveBeenCalledTimes(1);
+      expect(projectService.move).toHaveBeenLastCalledWith('c', { beforeId: 'a' });
+
+      first.resolve(ok(undefined));
+      await Promise.all([one, two]);
+      expect(projectService.move).toHaveBeenCalledTimes(2);
+      expect(projectService.move).toHaveBeenLastCalledWith('b', { beforeId: 'c' });
+    });
+
+    it('keeps the shared list order and reads back the server once the queue is idle', async () => {
+      await loadList('a', 'b', 'c');
+      vi.mocked(projectService.move).mockResolvedValue(ok(undefined) as any);
+      const fetchesBefore = vi.mocked(projectService.listAll).mock.calls.length;
+      const serverOrder = [
+        { ...project('a'), sortOrder: 1 },
+        { ...project('b'), sortOrder: 2 },
+        { ...project('c'), sortOrder: 0 },
+      ];
+      vi.mocked(projectService.listAll).mockResolvedValue(ok(serverOrder) as any);
+
+      await useProjectStore.getState().moveProject('c', ['c', 'a', 'b']);
+
+      const raw = () =>
+        useProjectStore.getState().projectListMap[PROJECT_LIST_KEY]?.map((p) => p.id);
+      expect(raw()).toEqual(['a', 'b', 'c']);
+      expect(names()).toEqual(['c', 'a', 'b']);
+      await waitFor(() =>
+        expect(vi.mocked(projectService.listAll).mock.calls.length).toBe(fetchesBefore + 1),
+      );
+    });
+
+    it('drops moves queued behind a failed one and refetches the server order', async () => {
+      await loadList('a', 'b', 'c');
+      const first = deferred();
+      vi.mocked(projectService.move).mockReturnValueOnce(first.promise as any);
+      const { moveProject } = useProjectStore.getState();
+
+      const one = moveProject('c', ['c', 'a', 'b']);
+      const two = moveProject('b', ['b', 'c', 'a']);
+      vi.mocked(projectService.listAll).mockResolvedValue(
+        ok(['a', 'b', 'c'].map((id) => project(id))) as any,
+      );
+
+      first.reject(new Error('boom'));
+      await expect(one).rejects.toThrow('boom');
+      await two;
+
+      expect(projectService.move).toHaveBeenCalledTimes(1);
+      await waitFor(() => expect(names()).toEqual(['a', 'b', 'c']));
+    });
+
+    it('ignores a drop made while a failed move is being reconciled', async () => {
+      await loadList('a', 'b', 'c');
+      vi.mocked(projectService.move).mockRejectedValueOnce(new Error('boom'));
+      const refetch = deferred();
+      const { moveProject } = useProjectStore.getState();
+
+      const failed = moveProject('c', ['c', 'a', 'b']);
+      vi.mocked(projectService.listAll).mockReturnValue(refetch.promise as any);
+      await vi.waitFor(() => expect(projectService.listAll).toHaveBeenCalledTimes(2));
+
+      // The list still shows the failed optimistic order while the refetch is in flight.
+      const late = moveProject('c', ['a', 'b', 'c']);
+      expect(names()).toEqual(['c', 'a', 'b']);
+
+      refetch.resolve(ok(['a', 'b', 'c'].map((id) => project(id))));
+      await expect(failed).rejects.toThrow('boom');
+      await late;
+
+      expect(projectService.move).toHaveBeenCalledTimes(1);
+      await waitFor(() => expect(names()).toEqual(['a', 'b', 'c']));
+    });
+  });
+
   describe('mutations', () => {
     const seed = () => {
       const original = project('p1', 'Original');
@@ -263,6 +390,25 @@ describe('project store replicas', () => {
       });
       expect(projectService.removeAgent).toHaveBeenCalledWith('p1', 'agent-1');
       expect(projectService.detail).toHaveBeenLastCalledWith('launch');
+    });
+
+    it('reloads the page, the list and the conversations once the main agent is replaced', async () => {
+      const original = seed();
+      await waitSeeded();
+      vi.mocked(projectService.replaceCoordinator).mockResolvedValue(ok(original) as any);
+      vi.mocked(projectService.detail).mockResolvedValue(
+        ok({ ...detailOf(original), project: { ...original, coordinatorAgentId: 'lead' } }) as any,
+      );
+      vi.mocked(projectService.listAll).mockClear();
+
+      await act(() => useProjectStore.getState().replaceProjectCoordinator('p1', 'lead'));
+
+      expect(projectService.replaceCoordinator).toHaveBeenCalledWith('p1', 'lead');
+      expect(useProjectStore.getState().projectDetailMap.launch.project.coordinatorAgentId).toBe(
+        'lead',
+      );
+      await waitFor(() => expect(projectService.listAll).toHaveBeenCalled());
+      expect(mocks.refreshProjectTopics).toHaveBeenCalledWith('p1');
     });
 
     it('restores a knowledge toggle from the server when the update fails', async () => {

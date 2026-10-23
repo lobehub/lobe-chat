@@ -572,8 +572,11 @@ export default {
   'plans.plan.free.title': 'Free',
   'plans.plan.hobby.desc': 'For users with their own API who pay as they go',
   'plans.plan.hobby.title': 'Hobby',
+  'plans.plan.max.title': 'Max',
+  'plans.plan.plus.title': 'Plus',
   'plans.plan.premium.desc': 'For professional users who frequently use AI',
   'plans.plan.premium.title': 'Premium',
+  'plans.plan.pro.title': 'Pro',
   'plans.plan.starter.desc': 'For occasional AI users',
   'plans.plan.starter.title': 'Starter',
   'plans.plan.ultimate.desc': 'For heavy users who need complex AI conversations',
@@ -808,5 +811,6 @@ export default {
   'usage.storage.embeddings.used': 'Vector Storage',
   'usage.storage.file.used': 'File Usage',
   'usage.storage.sandboxStorage.used': 'Sandbox Storage',
+  'usage.storage.sandboxStorage.pool': 'Sandbox drives (workspace pool)',
   'usage.remaining': 'Remaining',
 };

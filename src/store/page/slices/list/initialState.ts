@@ -19,6 +19,10 @@ export interface PageListSliceState {
   pageListMap: Record<string, PageListValue>;
   /** Local-first bookkeeping for `pageListMap`. */
   pageListReplica: ReplicaState<PageListValue>;
+  /** The Docs sidebar's page sections (`pageSectionMap[mine|shared]`). */
+  pageSectionMap: Record<string, LobeDocument[]>;
+  /** Local-first bookkeeping for `pageSectionMap`. */
+  pageSectionReplica: ReplicaState<LobeDocument[]>;
 }
 
 export const initialPageListState: PageListSliceState = {
@@ -26,4 +30,6 @@ export const initialPageListState: PageListSliceState = {
   pageDetailReplica: createReplicaState(),
   pageListMap: {},
   pageListReplica: createReplicaState(),
+  pageSectionMap: {},
+  pageSectionReplica: createReplicaState(),
 };

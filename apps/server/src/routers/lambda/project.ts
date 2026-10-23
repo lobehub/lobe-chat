@@ -7,7 +7,8 @@ import {
   type WorkspaceRole,
   wsCompatProcedure,
 } from '@/business/server/trpc-middlewares/workspaceAuth';
-import { ProjectModel } from '@/database/models/project';
+import { ProjectModel, type ProjectModelOptions } from '@/database/models/project';
+import { ProjectCoordinatorRepository } from '@/database/repositories/projectCoordinator';
 import type { LobeChatDatabase } from '@/database/type';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
@@ -26,12 +27,20 @@ const isWorkspaceViewer = (ctx: { workspaceId?: string | null; workspaceRole?: W
 
 const projectProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
+  const workspaceId = ctx.workspaceId ?? undefined;
+  const options: ProjectModelOptions = {
+    canManageAllMembers: isWorkspaceAdmin(ctx),
+    readOnly: isWorkspaceViewer(ctx),
+  };
   return opts.next({
     ctx: {
-      projectModel: new ProjectModel(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined, {
-        canManageAllMembers: isWorkspaceAdmin(ctx),
-        readOnly: isWorkspaceViewer(ctx),
-      }),
+      projectCoordinatorRepo: new ProjectCoordinatorRepository(
+        ctx.serverDB,
+        ctx.userId,
+        workspaceId,
+        options,
+      ),
+      projectModel: new ProjectModel(ctx.serverDB, ctx.userId, workspaceId, options),
     },
   });
 });
@@ -202,17 +211,25 @@ export const projectRouter = router({
         ctx.projectModel,
         requireResult(await ctx.projectModel.findByReference(input.id)),
       );
-      const [agents, completionReviews, knowledgeBases, tasks, works] = await Promise.all([
-        ctx.projectModel.listAgents(project.id),
-        ctx.projectModel.listCompletionReviews(project.id),
-        ctx.projectModel.listKnowledgeBases(project.id),
-        ctx.projectModel.listTasks(project.id),
-        ctx.projectModel.listWorks(project.id),
-      ]);
+      // TODO(2026-12-31): remove with `ProjectModel.joinTopicAgents`.
+      await ctx.projectModel.joinTopicAgents(project.id);
+      const [agents, completionReviews, knowledgeBases, tasks, works, coordinatorRetires] =
+        await Promise.all([
+          ctx.projectModel.listAgents(project.id),
+          ctx.projectModel.listCompletionReviews(project.id),
+          ctx.projectModel.listKnowledgeBases(project.id),
+          ctx.projectModel.listTasks(project.id),
+          ctx.projectModel.listWorks(project.id),
+          ctx.projectModel.isDedicatedCoordinator(project.coordinatorAgentId, {
+            exceptProjectId: project.id,
+          }),
+        ]);
       return {
         data: {
           agents,
           completionReviews,
+          /** Replacing the main agent hands its history over and deletes it. */
+          coordinatorRetiresOnReplace: coordinatorRetires,
           knowledgeBases,
           permissions: ctx.projectModel.getPermissions(project),
           project,
@@ -312,6 +329,26 @@ export const projectRouter = router({
       }
     }),
 
+  replaceCoordinator: projectWriteProcedure
+    .input(idInput.extend({ agentId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await assertResourceUsable(ctx, 'agent', input.agentId);
+        return {
+          data: await withMainAgent(
+            ctx.projectModel,
+            requireResult(
+              await ctx.projectCoordinatorRepo.replaceCoordinator(input.id, input.agentId),
+            ),
+          ),
+          message: 'Project main agent replaced',
+          success: true,
+        };
+      } catch (error) {
+        mapProjectError(error, 'replaceCoordinator');
+      }
+    }),
+
   removeKnowledgeBase: projectWriteProcedure
     .input(idInput.extend({ knowledgeBaseId: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -347,6 +384,20 @@ export const projectRouter = router({
       mapProjectError(error, 'reopen');
     }
   }),
+
+  /** Move one project in the scope's shared manual order, next to another project. */
+  move: projectWriteProcedure
+    .input(
+      idInput.and(z.union([z.object({ beforeId: z.string() }), z.object({ afterId: z.string() })])),
+    )
+    .mutation(async ({ ctx, input: { id, ...anchor } }) => {
+      try {
+        await ctx.projectModel.move(id, anchor);
+        return { message: 'Project moved', success: true };
+      } catch (error) {
+        mapProjectError(error, 'move');
+      }
+    }),
 
   requestCompletion: projectWriteProcedure.input(idInput).mutation(async ({ ctx, input }) => {
     try {

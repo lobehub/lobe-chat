@@ -360,11 +360,13 @@ export class DocumentService {
    * Query documents with pagination
    */
   async queryDocuments(params?: {
+    creator?: 'others' | 'self';
     current?: number;
     excludeKnowledgeBaseIds?: string[];
     fileTypes?: string[];
     pageSize?: number;
     sourceTypes?: string[];
+    standaloneOnly?: boolean;
   }) {
     return this.documentModel.query(params);
   }
