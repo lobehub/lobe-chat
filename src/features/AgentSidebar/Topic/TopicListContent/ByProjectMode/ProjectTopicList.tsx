@@ -48,6 +48,13 @@ const STATUS_ICON: Record<string, ExecutionStatusVisual> = {
   ...TOPIC_GROUP_VISUALS,
 };
 
+/**
+ * A device section only offers a start where the run can actually begin: the
+ * server refuses a directory without an environment, or a read-only one.
+ */
+const isStartableDirectory = (directory: ProjectDirectory) =>
+  !!directory.instanceId && !!directory.environmentId && directory.permission === 'readWrite';
+
 const renderTopic = (topic: ChatTopic, suppressAgentAvatar?: boolean) => (
   <TopicItem
     fav={topic.favorite}
@@ -161,7 +168,7 @@ interface ProjectTopicListProps {
  * or status (picked from the group's "more" menu).
  */
 const ProjectTopicList = memo<ProjectTopicListProps>((props) => {
-  const { mode, onStartInDirectory, startDirectories, suppressAgentAvatar, topics } = props;
+  const { mode, onStartInDirectory, suppressAgentAvatar, topics } = props;
   const { t } = useTranslation('topic');
   const topicSortBy = useUserStore(preferenceSelectors.topicSortBy);
   const field = topicSortBy === 'createdAt' ? 'createdAt' : 'updatedAt';
@@ -169,6 +176,10 @@ const ProjectTopicList = memo<ProjectTopicListProps>((props) => {
   useDeviceStore((s) => s.useFetchDevices)(mode === 'byDevice');
   const devices = useDeviceStore(deviceSelectors.deviceList);
   const directories = useProjectDirectories();
+  const startDirectories = useMemo(
+    () => props.startDirectories?.filter(isStartableDirectory),
+    [props.startDirectories],
+  );
 
   // A joined id string, not the Set itself: the selector must return something
   // comparable or every operation write would re-render the list.

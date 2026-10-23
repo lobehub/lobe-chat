@@ -406,8 +406,11 @@ describe('Project topic group item', () => {
       {
         deviceId: 'device-1',
         deviceName: 'MacBook',
+        environmentId: 'env-1',
         id: 'binding-mac',
+        instanceId: 'ins-mac',
         path: '/Users/me/project',
+        permission: 'readWrite',
         projectAvatar: '',
         projectId: 'prj-1',
         projectName: 'LobeHub',
@@ -415,8 +418,25 @@ describe('Project topic group item', () => {
       },
       {
         deviceId: 'device-2',
+        environmentId: 'env-1',
         id: 'binding-linux',
+        instanceId: 'ins-linux',
         path: '/home/me/project',
+        permission: 'readWrite',
+        projectAvatar: '',
+        projectId: 'prj-1',
+        projectName: 'LobeHub',
+        projectSlug: 'lobehub',
+      },
+      // A read-only directory on a third device cannot start a run, so it must
+      // not seed an empty device section with a "+".
+      {
+        deviceId: 'device-3',
+        environmentId: 'env-1',
+        id: 'binding-readonly',
+        instanceId: 'ins-readonly',
+        path: '/srv/project',
+        permission: 'readOnly',
         projectAvatar: '',
         projectId: 'prj-1',
         projectName: 'LobeHub',
@@ -440,10 +460,11 @@ describe('Project topic group item', () => {
       </AccordionRoot>,
     );
 
-    // Both device sections get a "+" — the MacBook one is listed empty so a
-    // topic can start there — while the unknown section has no directory to
-    // start in (and the group header has no path, so it renders none). The
-    // Linux section comes first because it has the newest topic.
+    // Both runnable device sections get a "+" — the MacBook one is listed
+    // empty so a topic can start there — while the read-only device gets no
+    // section and the unknown section has no directory to start in (and the
+    // group header has no path, so it renders none). The Linux section comes
+    // first because it has the newest topic.
     const starts = screen.getAllByRole('button', { name: 'directories.start' });
     expect(starts).toHaveLength(2);
     fireEvent.click(starts[0]);
