@@ -44,9 +44,13 @@ const styles = createStaticStyles(({ css }) => ({
     overflow: auto;
     width: 100%;
   `,
+  heading: css`
+    text-align: center;
+  `,
   intro: css`
     width: 100%;
     max-width: 760px;
+    margin-inline: auto;
   `,
   page: css`
     box-sizing: border-box;
@@ -151,7 +155,7 @@ const ProjectWorkspace = memo(() => {
       <div className={styles.content}>
         <Flexbox className={styles.page} gap={0}>
           <Flexbox className={styles.intro} gap={18}>
-            <Flexbox gap={5}>
+            <Flexbox align={'center'} className={styles.heading} gap={5}>
               <Text fontSize={26} weight={650}>
                 {t('overview.title')}
               </Text>
