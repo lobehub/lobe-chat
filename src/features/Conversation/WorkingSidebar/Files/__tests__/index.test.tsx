@@ -89,6 +89,32 @@ describe('Files — reveal request integration', () => {
     ]);
   });
 
+  it('exposes the selected file filter to assistive technology and resets it with the workspace', () => {
+    const { rerender } = render(<Files workingDirectory="/repo" />);
+    const project = () =>
+      screen.getByRole('button', { name: 'workingPanel.files.views.project', pressed: true });
+    const changes = () =>
+      screen.getByRole('button', { name: 'workingPanel.files.views.changes', pressed: false });
+
+    expect(project()).toBeInTheDocument();
+    fireEvent.click(changes());
+    expect(
+      screen.getByRole('button', { name: 'workingPanel.files.views.changes', pressed: true }),
+    ).toBeInTheDocument();
+    fireEvent.click(
+      screen.getByRole('button', { name: 'workingPanel.files.views.project', pressed: false }),
+    );
+    expect(project()).toBeInTheDocument();
+    fireEvent.click(changes());
+
+    rerender(<Files workingDirectory="/another-repo" />);
+    expect(project()).toBeInTheDocument();
+    fireEvent.click(changes());
+    rerender(<Files workingDirectory="/non-git" />);
+    expect(project()).toBeInTheDocument();
+    expect(changes()).toBeDisabled();
+  });
+
   it('sends active Git and ignore filters to the file host before search truncation', async () => {
     render(<Files workingDirectory="/repo" />);
 

@@ -509,6 +509,7 @@ const Files = memo<FilesProps>(
             <>
               <ActionIcon
                 active={viewMode === 'project'}
+                aria-pressed={viewMode === 'project'}
                 icon={FolderTreeIcon}
                 size={'small'}
                 title={t('workingPanel.files.views.project')}
@@ -516,6 +517,7 @@ const Files = memo<FilesProps>(
               />
               <ActionIcon
                 active={viewMode === 'changes'}
+                aria-pressed={viewMode === 'changes'}
                 disabled={data?.source !== 'git'}
                 icon={GitCompareArrowsIcon}
                 size={'small'}
