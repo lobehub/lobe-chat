@@ -1,10 +1,11 @@
-import { ActionIcon, DropdownMenu } from '@lobehub/ui';
+import { ActionIcon, DropdownMenu, Flexbox } from '@lobehub/ui';
 import { MoreHorizontalIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { goalSelectors, useGoalStore } from '@/store/goal';
 
+import GoalShareAction from './Share/GoalShareAction';
 import { useGoalMenuItems } from './useGoalMenuItems';
 
 interface GoalDetailActionsProps {
@@ -21,9 +22,12 @@ const GoalDetailActions = memo<GoalDetailActionsProps>(({ agentId, goalId, proje
   const items = useGoalMenuItems({ agentId, creatorUserId, goalId, projectId, status });
 
   return (
-    <DropdownMenu items={items} placement={'bottomRight'}>
-      <ActionIcon icon={MoreHorizontalIcon} size={'small'} title={t('goalDetail.moreActions')} />
-    </DropdownMenu>
+    <Flexbox horizontal align={'center'} gap={4}>
+      <GoalShareAction goalId={goalId} />
+      <DropdownMenu items={items} placement={'bottomRight'}>
+        <ActionIcon icon={MoreHorizontalIcon} size={'small'} title={t('goalDetail.moreActions')} />
+      </DropdownMenu>
+    </Flexbox>
   );
 });
 

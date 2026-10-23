@@ -2,6 +2,7 @@ import type { GoalGraphSnapshot } from '@lobechat/types';
 
 import { createReplicaState, type ReplicaState } from '@/libs/replica';
 import type { GoalListItem } from '@/services/goal';
+import type { GoalShareInfo } from '@/services/goalShare';
 import type { MetricSeriesWithPoints } from '@/services/metric';
 
 import type { GoalListValue } from './projection';
@@ -49,6 +50,11 @@ export interface GoalState {
   goalMetricSeriesById: Record<string, MetricSeriesWithPoints[]>;
   /** Local-first bookkeeping for `goalMetricSeriesById`. */
   goalMetricSeriesReplica: ReplicaState<MetricSeriesWithPoints[]>;
+  /**
+   * The owner's share record per goal id: `null` is a settled "not shared",
+   * a missing key is "not read yet".
+   */
+  goalShareById: Record<string, GoalShareInfo | null>;
   goalViewMode: GoalViewMode;
   /**
    * Every agent's goals, for the home rail's cross-agent roll-up — keyed by
@@ -70,6 +76,7 @@ export const initialState: GoalState = {
   goalListVisibleLimit: 10,
   goalMetricSeriesById: {},
   goalMetricSeriesReplica: createReplicaState(),
+  goalShareById: {},
   goalViewMode: 'list',
   homeGoalsByScope: {},
   homeGoalsReplica: createReplicaState(),

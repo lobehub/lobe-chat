@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { mutate, useClientDataSWR } from '@/libs/swr';
 import { goalService } from '@/services/goal';
+import { goalShareService } from '@/services/goalShare';
 
 import { useGoalStore } from './index';
 import { initialState } from './initialState';
@@ -26,6 +27,15 @@ vi.mock('@/services/goal', () => ({
     getGraph: vi.fn(),
     list: vi.fn(),
     tick: vi.fn(),
+  },
+}));
+
+vi.mock('@/services/goalShare', () => ({
+  goalShareService: {
+    disable: vi.fn(),
+    enable: vi.fn(),
+    getInfo: vi.fn(),
+    setVisibility: vi.fn(),
   },
 }));
 
@@ -397,5 +407,56 @@ describe('GoalAction', () => {
 
     expect(goalService.advance).toHaveBeenCalledWith('goal-1', 'ollama');
     expect(goalService.tick).toHaveBeenCalledWith('goal-1', 'ollama');
+  });
+  describe('goal share', () => {
+    const record = (visibility: 'link' | 'private') => ({
+      goalId: 'goal-1',
+      id: 'share-1',
+      pageViewCount: 0,
+      userId: 'user-1',
+      visibility,
+    });
+
+    it('keeps the record the server created for a goal', async () => {
+      vi.mocked(goalShareService.enable).mockResolvedValue(record('link'));
+
+      await useGoalStore.getState().enableGoalShare('goal-1', 'link');
+
+      expect(goalShareService.enable).toHaveBeenCalledWith('goal-1', 'link');
+      expect(useGoalStore.getState().goalShareById['goal-1']).toEqual(record('link'));
+    });
+
+    it('swaps the record when the visibility changes', async () => {
+      useGoalStore.setState({ goalShareById: { 'goal-1': record('link') } });
+      vi.mocked(goalShareService.setVisibility).mockResolvedValue(record('private'));
+
+      await useGoalStore.getState().setGoalShareVisibility('goal-1', 'private');
+
+      expect(useGoalStore.getState().goalShareById['goal-1']?.visibility).toBe('private');
+    });
+
+    it('settles on "not shared" once sharing is stopped', async () => {
+      useGoalStore.setState({ goalShareById: { 'goal-1': record('link') } });
+      vi.mocked(goalShareService.disable).mockResolvedValue(undefined);
+
+      await useGoalStore.getState().disableGoalShare('goal-1');
+
+      expect(useGoalStore.getState().goalShareById['goal-1']).toBeNull();
+    });
+
+    it('leaves the record alone when the server refuses', async () => {
+      useGoalStore.setState({ goalShareById: { 'goal-1': record('link') } });
+      vi.mocked(goalShareService.disable).mockRejectedValue(new Error('forbidden'));
+
+      await expect(useGoalStore.getState().disableGoalShare('goal-1')).rejects.toThrow();
+
+      expect(useGoalStore.getState().goalShareById['goal-1']?.visibility).toBe('link');
+    });
+
+    it('does not read the share until it is enabled for the goal', () => {
+      renderHook(() => useGoalStore.getState().useFetchGoalShare('goal-1', false));
+
+      expect(vi.mocked(useClientDataSWR).mock.calls.at(-1)?.[0]).toBeNull();
+    });
   });
 });

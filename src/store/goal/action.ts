@@ -1,5 +1,10 @@
 import { GOAL_ACCEPTANCE_TASK_TITLE, type GoalStatus } from '@lobechat/const/goal';
-import type { GoalGraphSnapshot, GoalMetricCriterion, GoalTickResult } from '@lobechat/types';
+import type {
+  GoalGraphSnapshot,
+  GoalMetricCriterion,
+  GoalTickResult,
+  ShareVisibility,
+} from '@lobechat/types';
 
 import {
   createReplicaSlice,
@@ -10,6 +15,7 @@ import {
 import { mutate, useClientDataSWR } from '@/libs/swr';
 import { goalKeys } from '@/libs/swr/keys';
 import { type GoalListItem, goalService } from '@/services/goal';
+import { type GoalShareInfo, goalShareService } from '@/services/goalShare';
 import { type MetricSeriesWithPoints, metricService } from '@/services/metric';
 import type { StoreSetter } from '@/store/types';
 import { isTrpcErrorCode } from '@/utils/trpcError';
@@ -443,6 +449,50 @@ export class GoalActionImpl {
     });
     return { ...sync, isLoading: sync.isValidating, mutate: sync.revalidate };
   };
+
+  /** Make the goal reachable by link (or owner-only), then keep the record the popover reads. */
+  enableGoalShare = async (goalId: string, visibility: ShareVisibility): Promise<void> => {
+    await this.#setGoalShare(goalId, await goalShareService.enable(goalId, visibility));
+  };
+
+  setGoalShareVisibility = async (goalId: string, visibility: ShareVisibility): Promise<void> => {
+    await this.#setGoalShare(goalId, await goalShareService.setVisibility(goalId, visibility));
+  };
+
+  /** Stop sharing: the link stops resolving, and a later share starts a fresh one. */
+  disableGoalShare = async (goalId: string): Promise<void> => {
+    await goalShareService.disable(goalId);
+    await this.#setGoalShare(goalId, null);
+  };
+
+  #storeGoalShare = (goalId: string, share: GoalShareInfo | null): void => {
+    this.#set(
+      { goalShareById: { ...this.#get().goalShareById, [goalId]: share } },
+      false,
+      'setGoalShare',
+    );
+  };
+
+  /** Store the confirmed record, and the SWR entry with it so a reopened popover paints it. */
+  #setGoalShare = async (goalId: string, share: GoalShareInfo | null): Promise<void> => {
+    this.#storeGoalShare(goalId, share);
+    await mutate(goalKeys.share(goalId), share, { revalidate: false });
+  };
+
+  /**
+   * The owner's share record of a goal, read through `goalSelectors.goalShare`.
+   * `enabled` keeps the read off for a viewer who may not manage the share
+   * (the server answers 403) and for a goal that has nothing to share yet.
+   */
+  useFetchGoalShare = (goalId?: string | null, enabled = true) =>
+    useClientDataSWR(
+      enabled && goalId ? goalKeys.share(goalId) : null,
+      () => goalShareService.getInfo(goalId!),
+      {
+        onSuccess: (share) => this.#storeGoalShare(goalId!, share),
+        revalidateOnFocus: false,
+      },
+    );
 
   /**
    * Goals created from one conversation. A goal a CLI agent creates through
