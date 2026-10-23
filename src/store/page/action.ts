@@ -5,7 +5,6 @@ import { type ReplicaSyncResult } from '@/libs/replica';
 import { documentService } from '@/services/document';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
-import { useHomeStore } from '@/store/home';
 import type { StoreSetter } from '@/store/types';
 import { DocumentSourceType, type LobeDocument } from '@/types/document';
 import { standardizeIdentifier } from '@/utils/identifier';
@@ -32,7 +31,10 @@ const n = setNamespace('page');
  * refetch.
  */
 const syncDocsHome = (): void => {
-  void useHomeStore.getState().refreshDocsHome();
+  // Loaded on demand: the page store is on the first screen, and a static
+  // import would pull the home store — and through it the chat store and the
+  // whole model bank — into the entry chunk.
+  void import('@/store/home').then(({ useHomeStore }) => useHomeStore.getState().refreshDocsHome());
 };
 
 export interface PageUpdateParams {
