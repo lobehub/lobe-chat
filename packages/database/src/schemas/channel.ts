@@ -10,10 +10,6 @@ import type {
   ChannelMemberRole,
   ChannelMessageRoutingSource,
   ChannelMessageRoutingStatus,
-  ChannelPublicationStatus,
-  ChannelRunAcceptance,
-  ChannelRunActivity,
-  ChannelRunStatus,
   ChannelVisibility,
 } from '@lobechat/types';
 import { sql } from 'drizzle-orm';
@@ -39,7 +35,6 @@ import { agents } from './agent';
 import { agentOperations } from './agentOperations';
 import { messages } from './message';
 import { projects } from './project';
-import { topics } from './topic';
 import { users } from './user';
 import { workspaces } from './workspace';
 
@@ -238,7 +233,14 @@ export const channelMessages = pgTable(
   ],
 );
 
-/** One delivery of one message to one Agent member; each member drains its jobs FIFO. */
+/**
+ * One delivery of one message to one Agent member; each member drains its jobs FIFO.
+ *
+ * Claiming a job reserves one canonical `agent_operations` row whose `topicId` is a fresh
+ * private topic for that run; execution status, errors, usage and traces live on the
+ * operation. The job keeps only what the operation cannot: the frozen input, the execution
+ * lease, the writer lock and publication of the final reply.
+ */
 export const channelJobs = pgTable(
   'channel_jobs',
   {
@@ -256,10 +258,51 @@ export const channelJobs = pgTable(
     requesterMemberId: uuid('requester_member_id').notNull(),
     /** Separates redeliveries of the same message to the same member, e.g. after a retry. */
     deliveryKey: text('delivery_key').notNull().default('initial'),
+    /**
+     * Channel outcome of this delivery. It may settle while the writer is still held, e.g. a
+     * stop cancels the job before the process exits; the locks follow `writerHeld`.
+     */
     status: text('status').$type<ChannelJobStatus>().notNull().default('queued'),
     blockedReason: text('blocked_reason'),
     /** Machine-readable cause for `blockedReason`; clients must not parse the text. */
     blockedCode: text('blocked_code').$type<ChannelJobBlockCode>(),
+
+    // Execution, set when the job is claimed
+    /** Canonical execution reserved at claim time; NULL while the job waits. */
+    operationId: text('operation_id')
+      .unique()
+      .references((): AnyPgColumn => agentOperations.id, { onDelete: 'set null' }),
+    /** Input frozen at claim time; later public messages belong to the next job. */
+    manifest: jsonb('manifest').$type<ChannelInputManifest>(),
+    /** Member config frozen at claim time. */
+    executionConfig: jsonb('execution_config').$type<ChannelMemberConfig>(),
+    /** Device of a device-hosted run; with `workingDirectory` it forms the directory lock. */
+    deviceId: varchar('device_id', { length: 64 }),
+    /** Canonical working directory acknowledged by the device. */
+    workingDirectory: text('working_directory'),
+    /** When the runtime confirmed it took the input. An unknown delivery never gets one. */
+    acceptedAt: timestamptz('accepted_at'),
+    /** Process (or queue worker) currently driving the run. */
+    leaseOwner: text('lease_owner'),
+    leaseExpiresAt: timestamptz('lease_expires_at'),
+    /**
+     * Set when the job is claimed. Cleared only by physical stop confirmation (process tree
+     * ended, or the native operation finished) or a trusted failure before dispatch, when
+     * nothing ran. Leases, idleness, interrupts and operation completion do not clear it.
+     */
+    writerHeld: boolean('writer_held').notNull().default(false),
+    /**
+     * Set when termination could not be confirmed in time (INC-049). Publication is revoked so
+     * the member may run again, though not in the same device directory until the stop is
+     * confirmed: isolation frees the member lock but never `writerHeld`.
+     */
+    isolatedAt: timestamptz('isolated_at'),
+    /** Final answer saved by the run; immutable once set. */
+    draft: text('draft'),
+    /** A revoked job never publishes. Set by stops, failures and isolation. */
+    publicationRevoked: boolean('publication_revoked').notNull().default(false),
+    publishedMessageId: text('published_message_id'),
+
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
@@ -268,6 +311,23 @@ export const channelJobs = pgTable(
     uniqueIndex('channel_jobs_delivery_unique').on(t.messageId, t.memberId, t.deliveryKey),
     index('channel_jobs_channel_status_idx').on(t.channelId, t.status),
     index('channel_jobs_member_queue_idx').on(t.memberId, t.status, t.createdAt),
+    index('channel_jobs_lease_expires_idx')
+      .on(t.leaseExpiresAt)
+      .where(sql`${t.writerHeld} AND ${t.isolatedAt} IS NULL`),
+    /** At most one writer per member. */
+    uniqueIndex('channel_jobs_active_member_unique')
+      .on(t.memberId)
+      .where(sql`${t.writerHeld} AND ${t.isolatedAt} IS NULL`),
+    /**
+     * At most one writer per device directory, across all channels. Unlike the member lock,
+     * isolation does not release it: only physical stop confirmation proves the old process
+     * has left the directory.
+     */
+    uniqueIndex('channel_jobs_active_directory_unique')
+      .on(t.deviceId, t.workingDirectory)
+      .where(
+        sql`${t.deviceId} IS NOT NULL AND ${t.workingDirectory} IS NOT NULL AND ${t.writerHeld}`,
+      ),
     foreignKey({
       columns: [t.channelId, t.memberId],
       foreignColumns: [channelMembers.channelId, channelMembers.id],
@@ -287,163 +347,6 @@ export const channelJobs = pgTable(
       columns: [t.channelId, t.threadId],
       foreignColumns: [channelThreads.channelId, channelThreads.id],
       name: 'channel_jobs_thread_fk',
-    }),
-  ],
-);
-
-/** An Agent member's runtime session for one branch (main or a Thread). */
-export const channelSessions = pgTable(
-  'channel_sessions',
-  {
-    id: text('id')
-      .primaryKey()
-      .$defaultFn(() => idGenerator('channelSessions'))
-      .notNull(),
-    channelId: text('channel_id')
-      .references(() => channels.id, { onDelete: 'cascade' })
-      .notNull(),
-    memberId: uuid('member_id').notNull(),
-    /** `main` or a channel Thread id; archived mappings keep their original topic. */
-    scope: text('scope').notNull(),
-    /** Incremented whenever the session is rotated, e.g. after an environment switch. */
-    generation: integer('generation').notNull().default(1),
-    topicId: text('topic_id').references((): AnyPgColumn => topics.id, { onDelete: 'set null' }),
-    /** Immutable execution principal; preserved when its account is deleted. */
-    principalUserId: text('principal_user_id').notNull(),
-    environmentRevision: integer('environment_revision').notNull().default(0),
-    /**
-     * Every visible message of this branch at or below this sequence has been accepted by the
-     * runtime, so incremental input starts after it. Exact without an exception list: a run's
-     * manifest carries every unaccepted visible message up to its cutoff, and sequences only
-     * grow, so acceptance moves the cursor to that cutoff with no gaps behind it.
-     */
-    acceptedSequence: integer('accepted_sequence').notNull().default(0),
-    createdAt: createdAt(),
-    updatedAt: updatedAt(),
-  },
-  (t) => [
-    uniqueIndex('channel_sessions_member_scope_unique').on(t.memberId, t.scope),
-    foreignKey({
-      columns: [t.channelId, t.memberId],
-      foreignColumns: [channelMembers.channelId, channelMembers.id],
-      name: 'channel_sessions_member_fk',
-    }),
-  ],
-);
-
-/**
- * One execution of a job. Holds two separate fences: `fence` guards publication of the
- * draft, `executionFence` guards device receipts. A writer is released only by physical
- * stop confirmation; when that cannot be confirmed in time the run is isolated instead.
- */
-export const channelRuns = pgTable(
-  'channel_runs',
-  {
-    id: text('id')
-      .primaryKey()
-      .$defaultFn(() => idGenerator('channelRuns'))
-      .notNull(),
-    channelId: text('channel_id')
-      .references(() => channels.id, { onDelete: 'cascade' })
-      .notNull(),
-    operationId: text('operation_id')
-      .notNull()
-      .unique()
-      .references((): AnyPgColumn => agentOperations.id, { onDelete: 'cascade' }),
-    jobId: text('job_id').notNull(),
-    memberId: uuid('member_id').notNull(),
-    /** Copied from the job: the member whose user this run executes as. */
-    requesterMemberId: uuid('requester_member_id').notNull(),
-    sessionId: text('session_id')
-      .references(() => channelSessions.id)
-      .notNull(),
-
-    /** Coordination state; operation execution outcome is stored in agent_operations. */
-    status: text('status').$type<ChannelRunStatus>().notNull().default('starting'),
-    activity: text('activity').$type<ChannelRunActivity>(),
-    /** Publication authority; bumped when a draft must be republished under new authority. */
-    fence: integer('fence').notNull().default(1),
-    /** Device receipt authority; never changes when the draft gets a new publication fence. */
-    executionFence: integer('execution_fence').notNull().default(1),
-
-    /** Member config frozen at claim time. */
-    executionConfig: jsonb('execution_config').$type<ChannelMemberConfig>(),
-    environmentRevision: integer('environment_revision').notNull().default(0),
-    /** Device of a device-hosted run; with `workingDirectory` it forms the directory lock. */
-    deviceId: varchar('device_id', { length: 64 }),
-    /** Canonical working directory acknowledged by the device. */
-    workingDirectory: text('working_directory'),
-    environmentError: text('environment_error'),
-    manifest: jsonb('manifest').$type<ChannelInputManifest>().notNull(),
-    acceptance: text('acceptance').$type<ChannelRunAcceptance>().notNull().default('pending'),
-    nativeTurnId: text('native_turn_id'),
-
-    /** Process (or queue worker) currently driving the run; checked with the fences. */
-    leaseOwner: text('lease_owner'),
-    leaseExpiresAt: timestamptz('lease_expires_at'),
-    heartbeatAt: timestamptz('heartbeat_at'),
-
-    physicalStopped: boolean('physical_stopped').notNull().default(false),
-    cleanupRequested: boolean('cleanup_requested').notNull().default(false),
-    /** Only physical stop confirmation sets this; leases, idleness and interrupts do not. */
-    writerReleased: boolean('writer_released').notNull().default(false),
-    /**
-     * Set when termination could not be confirmed in time (INC-049). Publication is revoked
-     * and the session retired so the member may run again, though not in the same device
-     * directory until the stop is confirmed. `writerReleased` and `physicalStopped` still
-     * mean physical confirmation only.
-     */
-    isolatedAt: timestamptz('isolated_at'),
-
-    draft: text('draft'),
-    publicationStatus: text('publication_status')
-      .$type<ChannelPublicationStatus>()
-      .notNull()
-      .default('pending'),
-    publicationRevoked: boolean('publication_revoked').notNull().default(false),
-    publishedMessageId: text('published_message_id'),
-    error: text('error'),
-    createdAt: createdAt(),
-    updatedAt: updatedAt(),
-  },
-  (t) => [
-    unique('channel_runs_scope_unique').on(t.channelId, t.id),
-    uniqueIndex('channel_runs_job_unique').on(t.jobId),
-    index('channel_runs_channel_id_idx').on(t.channelId),
-    index('channel_runs_unsettled_idx')
-      .on(t.channelId, t.id)
-      .where(sql`${t.writerReleased} = false OR ${t.physicalStopped} = false`),
-    index('channel_runs_lease_expires_idx')
-      .on(t.leaseExpiresAt)
-      .where(sql`${t.writerReleased} = false AND ${t.isolatedAt} IS NULL`),
-    /** At most one writer per member. */
-    uniqueIndex('channel_runs_active_member_unique')
-      .on(t.memberId)
-      .where(sql`${t.writerReleased} = false AND ${t.isolatedAt} IS NULL`),
-    /**
-     * At most one writer per device directory, across all channels. Unlike the member lock,
-     * isolation does not release it: only physical stop confirmation proves the old process
-     * has left the directory.
-     */
-    uniqueIndex('channel_runs_active_directory_unique')
-      .on(t.deviceId, t.workingDirectory)
-      .where(
-        sql`${t.deviceId} IS NOT NULL AND ${t.workingDirectory} IS NOT NULL AND ${t.writerReleased} = false`,
-      ),
-    foreignKey({
-      columns: [t.channelId, t.jobId],
-      foreignColumns: [channelJobs.channelId, channelJobs.id],
-      name: 'channel_runs_job_fk',
-    }),
-    foreignKey({
-      columns: [t.channelId, t.memberId],
-      foreignColumns: [channelMembers.channelId, channelMembers.id],
-      name: 'channel_runs_member_fk',
-    }),
-    foreignKey({
-      columns: [t.channelId, t.requesterMemberId],
-      foreignColumns: [channelMembers.channelId, channelMembers.id],
-      name: 'channel_runs_requester_fk',
     }),
   ],
 );
@@ -528,6 +431,4 @@ export type ChannelThreadItem = typeof channelThreads.$inferSelect;
 export type ChannelMessageItem = typeof channelMessages.$inferSelect & { content: string };
 export type NewChannelMessage = typeof channelMessages.$inferInsert & { content: string };
 export type ChannelJobItem = typeof channelJobs.$inferSelect;
-export type ChannelSessionItem = typeof channelSessions.$inferSelect;
-export type ChannelRunItem = typeof channelRuns.$inferSelect;
 export type ChannelMemberGrantItem = typeof channelMemberGrants.$inferSelect;

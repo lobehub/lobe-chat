@@ -1,15 +1,8 @@
-import type { ChannelRunStatus } from '@lobechat/types';
-import { and, eq, gt, inArray, sql } from 'drizzle-orm';
+import type { AgentOperationStatus, ChannelJobStatus } from '@lobechat/types';
+import { and, eq, gt, isNotNull, sql } from 'drizzle-orm';
 
-import type { ChannelRunItem } from '../../schemas';
-import {
-  agentOperations,
-  channelJobs,
-  channelMembers,
-  channelRuns,
-  channelSessions,
-  topics,
-} from '../../schemas';
+import type { ChannelJobItem } from '../../schemas';
+import { agentOperations, channelJobs, channelMembers, topics } from '../../schemas';
 import type { LobeChatDatabase, Transaction } from '../../type';
 import type { ChannelClaim, ChannelClaimOptions } from './claim';
 import { claimJob } from './claim';
@@ -20,77 +13,74 @@ import { resolveRouting } from './routing';
 import type { ChannelStopScope } from './stop';
 import { stopScope } from './stop';
 import { audit, withChannelLock } from './transaction';
-import { advanceOperation, isolateWriter, OPEN_JOB_STATUSES } from './writer';
-
-/** Final statuses a released writer settles into; see {@link releaseOutcome}. */
-const SETTLED_RUN_STATUSES: ChannelRunStatus[] = [
-  'completed',
-  'execution_unknown',
-  'failed',
-  'stopped',
-];
+import { advanceOperation, isolateWriter, isOpenJob, operationStatus } from './writer';
 
 /**
- * Run fence check under the channel lock. `fence` is publication authority; a revoked run
- * may still record its termination (`allowRevoked`) but never publish.
+ * A claimed job under the channel lock. A revoked job may still record its termination
+ * (`allowRevoked`) but never accept input or publish.
+ *
+ * A claim is recognized by its frozen manifest, not its operation reference: that reference is
+ * cleared if the operation row is deleted, and the writer must stay releasable even then.
  */
-const fenced = async (
+const claimed = async (
   tx: Transaction,
   channelId: string,
-  runId: string,
-  fence: number,
+  jobId: string,
   allowRevoked = false,
-): Promise<ChannelRunItem> => {
-  const [run] = await tx
+): Promise<ChannelJobItem> => {
+  const [job] = await tx
     .select()
-    .from(channelRuns)
+    .from(channelJobs)
     .where(
       and(
-        eq(channelRuns.channelId, channelId),
-        eq(channelRuns.id, runId),
-        eq(channelRuns.fence, fence),
+        eq(channelJobs.channelId, channelId),
+        eq(channelJobs.id, jobId),
+        isNotNull(channelJobs.manifest),
       ),
     );
-  if (!run || (!allowRevoked && run.publicationRevoked))
+  if (!job) throw new ChannelError('NOT_FOUND', 'Claimed job not found');
+  if (!allowRevoked && job.publicationRevoked)
     throw new ChannelError('CONFLICT', 'Run authority was revoked');
 
-  return run;
+  return job;
 };
 
 /**
- * How a run ends once its writer is physically released.
+ * How a job ends once its writer is physically released.
  *
  * - Published: completed.
- * - Failed or execution unknown: keeps its status; the job fails and nothing publishes.
- *   An unknown execution is never redelivered.
- * - Revoked (stopped or isolated): stopped; an open job is cancelled.
- * - Accepted draft not yet published: unchanged, so a retried publish can still finish it.
- * - Anything else ended without a reply: failed, job failed.
+ * - Failed (including an unknown execution or isolation): stays failed; nothing publishes. An
+ *   unknown execution is never redelivered.
+ * - Revoked (stopped or isolated): an open job is cancelled.
+ * - Accepted draft not yet published: still running, so a retried publish can finish it.
+ * - Anything else ended without a reply: failed.
  */
 export const releaseOutcome = (
-  run: ChannelRunItem,
+  job: ChannelJobItem,
 ): {
-  error: string | null;
-  job?: 'cancelled' | 'failed';
+  error?: string;
+  job?: Extract<ChannelJobStatus, 'cancelled' | 'failed'>;
+  operation: AgentOperationStatus;
   revoke: boolean;
-  status: ChannelRunStatus;
 } => {
-  if (run.publishedMessageId) return { error: null, revoke: false, status: 'completed' };
-  if (run.status === 'failed' || run.status === 'execution_unknown')
-    return { error: run.error, job: 'failed', revoke: true, status: run.status };
-  if (run.publicationRevoked)
-    return { error: null, job: 'cancelled', revoke: true, status: 'stopped' };
-  if (run.acceptance === 'accepted' && run.draft !== null)
-    return { error: null, revoke: false, status: run.status };
+  if (job.publishedMessageId) return { operation: 'done', revoke: false };
+  if (job.status === 'failed') return { job: 'failed', operation: 'error', revoke: true };
+  if (job.publicationRevoked) return { job: 'cancelled', operation: 'interrupted', revoke: true };
+  if (job.acceptedAt && job.draft !== null) return { operation: 'done', revoke: false };
 
-  return { error: 'The run ended without a reply', job: 'failed', revoke: true, status: 'failed' };
+  return {
+    error: 'The run ended without a reply',
+    job: 'failed',
+    operation: 'error',
+    revoke: true,
+  };
 };
 
 /**
  * Channel writes made by the system rather than by a person: the dispatcher, native
  * completion callbacks, device receipts and reconcile. Mutations lock the channel row
  * within a transaction, except lease-only heartbeats. Callers must authenticate the source
- * (run-scoped token, service credentials) before calling.
+ * (job-scoped token, service credentials) before calling.
  */
 export class ChannelExecutionModel {
   constructor(private readonly db: LobeChatDatabase) {}
@@ -114,245 +104,192 @@ export class ChannelExecutionModel {
   ): Promise<ChannelClaim | null> =>
     withChannelLock(this.db, channelId, (tx, channel) => claimJob(tx, channel, jobId, options));
 
-  /** The runtime took the input: the session's cursor moves to the manifest cutoff. */
+  /** The runtime took the input; only now may the job publish. */
   accepted = async (
     channelId: string,
-    runId: string,
-    fence: number,
+    jobId: string,
     receipt: { nativeSessionId?: string; nativeTurnId?: string },
   ) =>
     withChannelLock(this.db, channelId, async (tx) => {
-      const run = await fenced(tx, channelId, runId, fence);
-      if (
-        run.acceptance === 'accepted' ||
-        run.writerReleased ||
-        SETTLED_RUN_STATUSES.includes(run.status)
-      )
-        return;
+      const job = await claimed(tx, channelId, jobId);
+      if (job.acceptedAt || !job.writerHeld || job.status !== 'running') return;
 
       await tx
-        .update(channelRuns)
-        .set({
-          acceptance: 'accepted',
-          activity: 'running',
-          nativeTurnId: receipt.nativeTurnId,
-          status: 'running',
-        })
-        .where(eq(channelRuns.id, run.id));
-      const [session] = await tx
-        .select()
-        .from(channelSessions)
-        .where(eq(channelSessions.id, run.sessionId));
-      await tx
-        .update(channelSessions)
-        .set({
-          acceptedSequence: Math.max(session.acceptedSequence, run.manifest.cutoffSequence),
-        })
-        .where(eq(channelSessions.id, session.id));
-      if (receipt.nativeSessionId && run.executionConfig?.runtime !== 'native' && session.topicId) {
-        await tx
-          .update(topics)
-          .set({
-            metadata: sql`coalesce(${topics.metadata}, '{}'::jsonb) || ${JSON.stringify({ heteroSessionId: receipt.nativeSessionId })}::jsonb`,
-          })
-          .where(eq(topics.id, session.topicId));
+        .update(channelJobs)
+        .set({ acceptedAt: new Date() })
+        .where(eq(channelJobs.id, job.id));
+
+      if (job.operationId) {
+        const [operation] = await tx
+          .select({ topicId: agentOperations.topicId })
+          .from(agentOperations)
+          .where(eq(agentOperations.id, job.operationId));
+        if (
+          receipt.nativeSessionId &&
+          job.executionConfig?.runtime !== 'native' &&
+          operation?.topicId
+        )
+          await tx
+            .update(topics)
+            .set({
+              metadata: sql`coalesce(${topics.metadata}, '{}'::jsonb) || ${JSON.stringify({ heteroSessionId: receipt.nativeSessionId })}::jsonb`,
+            })
+            .where(eq(topics.id, operation.topicId));
+        if (receipt.nativeTurnId)
+          await tx
+            .update(agentOperations)
+            .set({
+              metadata: sql`coalesce(${agentOperations.metadata}, '{}'::jsonb) || ${JSON.stringify({ nativeTurnId: receipt.nativeTurnId })}::jsonb`,
+            })
+            .where(eq(agentOperations.id, job.operationId));
       }
-      await advanceOperation(tx, run, 'running');
-      await audit(tx, channelId, 'input_accepted', run.id, {
-        cutoff: run.manifest.cutoffSequence,
+      await advanceOperation(tx, job, 'running');
+      await audit(tx, channelId, 'input_accepted', job.id, {
+        cutoff: job.manifest?.cutoffSequence ?? null,
       });
     });
 
   /** Stores the final answer. Immutable once saved, so a retry cannot change it. */
-  saveDraft = async (channelId: string, runId: string, fence: number, content: string) =>
+  saveDraft = async (channelId: string, jobId: string, content: string) =>
     withChannelLock(this.db, channelId, async (tx) => {
-      const run = await fenced(tx, channelId, runId, fence);
-      if (run.draft !== null) {
-        if (run.draft !== content)
+      const job = await claimed(tx, channelId, jobId);
+      if (job.draft !== null) {
+        if (job.draft !== content)
           throw new ChannelError('CONFLICT', 'The final draft is immutable');
         return;
       }
-      await tx.update(channelRuns).set({ draft: content }).where(eq(channelRuns.id, run.id));
+      await tx.update(channelJobs).set({ draft: content }).where(eq(channelJobs.id, job.id));
     });
 
   /**
    * Publishes the saved draft as the member's reply and completes the job. Idempotent: a
    * second call returns the same message id.
    */
-  publish = async (channelId: string, runId: string, fence: number): Promise<string> =>
+  publish = async (channelId: string, jobId: string): Promise<string> =>
     withChannelLock(this.db, channelId, async (tx) => {
-      const run = await fenced(tx, channelId, runId, fence);
-      if (run.publishedMessageId) return run.publishedMessageId;
-      if (run.draft === null || run.acceptance !== 'accepted')
+      const job = await claimed(tx, channelId, jobId);
+      if (job.publishedMessageId) return job.publishedMessageId;
+      if (job.draft === null || !job.acceptedAt)
         throw new ChannelError('CONFLICT', 'No accepted final draft');
 
       const [member] = await tx
         .select({ id: channelMembers.id })
         .from(channelMembers)
-        .where(and(eq(channelMembers.id, run.memberId), eq(channelMembers.active, true)));
+        .where(and(eq(channelMembers.id, job.memberId), eq(channelMembers.active, true)));
       if (!member) throw new ChannelError('CONFLICT', 'The member left the channel');
 
       const reply = await appendMessage(tx, {
-        authorMemberId: run.memberId,
+        authorMemberId: job.memberId,
         channelId,
-        content: run.draft,
-        replyToId: run.manifest.requestMessageId,
-        requestKey: `run:${run.id}`,
+        content: job.draft,
+        replyToId: job.messageId,
+        requestKey: `job:${job.id}`,
         routingStatus: 'reply',
-        threadId: run.manifest.threadId,
+        threadId: job.threadId,
       });
       await tx
-        .update(channelRuns)
-        .set({
-          publicationStatus: 'published',
-          publishedMessageId: reply.id,
-          // A writer released while its draft awaited publication finishes here.
-          ...(run.writerReleased && { status: 'completed' }),
-        })
-        .where(eq(channelRuns.id, run.id));
-      await tx
         .update(channelJobs)
-        .set({ status: 'completed' })
-        .where(eq(channelJobs.id, run.jobId));
-      await audit(tx, channelId, 'draft_published', run.id, { messageId: reply.id });
+        .set({ publishedMessageId: reply.id, status: 'completed' })
+        .where(eq(channelJobs.id, job.id));
+      await audit(tx, channelId, 'draft_published', job.id, { messageId: reply.id });
 
       return reply.id;
     });
 
   /**
    * Physical termination confirmed (process tree ended, or the native operation finished).
-   * The only way to release a writer, and with it the member and the device directory.
-   * Settles the run and its job by how the run ended; see {@link releaseOutcome}.
+   * Releases the writer, and with it the member and the device directory; the only other
+   * release is a trusted `notSubmitted` failure, where nothing ran.
+   * Settles the job and its operation by how the run ended; see {@link releaseOutcome}.
    */
-  releaseWriter = async (channelId: string, runId: string, fence: number) =>
+  releaseWriter = async (channelId: string, jobId: string) =>
     withChannelLock(this.db, channelId, async (tx) => {
-      const run = await fenced(tx, channelId, runId, fence, true);
-      if (run.writerReleased) return;
+      const job = await claimed(tx, channelId, jobId, true);
+      if (!job.writerHeld) return;
 
-      const outcome = releaseOutcome(run);
+      const outcome = releaseOutcome(job);
+      const status = outcome.job && isOpenJob(job) ? outcome.job : job.status;
       await tx
-        .update(channelRuns)
+        .update(channelJobs)
         .set({
-          activity: null,
-          cleanupRequested: false,
-          error: outcome.error,
           leaseExpiresAt: null,
           leaseOwner: null,
-          physicalStopped: true,
-          publicationRevoked: outcome.revoke || run.publicationRevoked,
-          status: outcome.status,
-          writerReleased: true,
+          publicationRevoked: outcome.revoke || job.publicationRevoked,
+          status,
+          writerHeld: false,
         })
-        .where(eq(channelRuns.id, run.id));
-      if (outcome.job)
-        await tx
-          .update(channelJobs)
-          .set({ status: outcome.job })
-          .where(
-            and(eq(channelJobs.id, run.jobId), inArray(channelJobs.status, OPEN_JOB_STATUSES)),
-          );
-      await advanceOperation(
-        tx,
-        run,
-        outcome.status === 'failed' || outcome.status === 'execution_unknown'
-          ? 'error'
-          : outcome.status === 'stopped'
-            ? 'interrupted'
-            : 'done',
-        outcome.error ?? undefined,
-      );
-      await audit(tx, channelId, 'writer_released', run.id, { status: outcome.status });
+        .where(eq(channelJobs.id, job.id));
+      await advanceOperation(tx, job, outcome.operation, outcome.error);
+      await audit(tx, channelId, 'writer_released', job.id, { status });
     });
 
   /**
    * The run failed. Revokes its publication and fails its job unless it was already being
    * stopped. `notSubmitted` marks a trusted pre-dispatch failure: nothing ran, so the writer
    * is released in the same transaction. A late failure after the reply was published or the
-   * release settled the run changes nothing.
+   * release settled the job changes nothing.
    */
   fail = async (
     channelId: string,
-    runId: string,
-    fence: number,
+    jobId: string,
     failure: { message: string; notSubmitted?: boolean },
   ) =>
     withChannelLock(this.db, channelId, async (tx) => {
-      const run = await fenced(tx, channelId, runId, fence, true);
-      if (
-        run.publishedMessageId ||
-        (run.writerReleased && SETTLED_RUN_STATUSES.includes(run.status))
-      )
-        return;
+      const job = await claimed(tx, channelId, jobId, true);
+      if (job.publishedMessageId || (!job.writerHeld && job.status !== 'running')) return;
+      if ((await operationStatus(tx, job)) === 'done') return;
 
-      const [operation] = await tx
-        .select({ status: agentOperations.status })
-        .from(agentOperations)
-        .where(eq(agentOperations.id, run.operationId));
-      if (operation?.status === 'done') return;
-
-      const [job] = await tx
-        .select({ status: channelJobs.status })
-        .from(channelJobs)
-        .where(eq(channelJobs.id, run.jobId));
-      const stopping =
-        job?.status === 'cancelled' || run.status === 'stop_requested' || run.status === 'stopped';
-      const released = run.writerReleased || Boolean(failure.notSubmitted);
-
+      const stopping = job.status === 'cancelled';
       await tx
-        .update(channelRuns)
+        .update(channelJobs)
         .set({
-          error: stopping ? null : failure.message,
           publicationRevoked: true,
-          status: stopping ? (released ? 'stopped' : 'stop_requested') : 'failed',
+          ...(!stopping && isOpenJob(job) && { status: 'failed' as const }),
           ...(failure.notSubmitted && {
-            cleanupRequested: false,
             leaseExpiresAt: null,
             leaseOwner: null,
-            physicalStopped: true,
-            writerReleased: true,
+            writerHeld: false,
           }),
         })
-        .where(eq(channelRuns.id, run.id));
-      if (!stopping)
-        await tx
-          .update(channelJobs)
-          .set({ status: 'failed' })
-          .where(
-            and(eq(channelJobs.id, run.jobId), inArray(channelJobs.status, OPEN_JOB_STATUSES)),
-          );
+        .where(eq(channelJobs.id, job.id));
       await advanceOperation(
         tx,
-        run,
+        job,
         stopping ? 'interrupted' : 'error',
         stopping ? undefined : failure.message,
       );
-      await audit(tx, channelId, 'execution_failed', run.id, {
+      await audit(tx, channelId, 'execution_failed', job.id, {
         message: failure.message,
         notSubmitted: Boolean(failure.notSubmitted),
       });
     });
 
   /**
-   * Lost the acknowledgement: the runtime may or may not have the input. Never redelivered
-   * automatically; the writer stays held until termination is confirmed or it is isolated.
+   * Lost the acknowledgement: the runtime may or may not have the input. The verdict is kept on
+   * the job, independent of whatever the runtime later records on the operation: publication
+   * is revoked and an open job fails, never redelivered. The writer stays held until
+   * termination is confirmed or it is isolated.
    */
-  executionUnknown = async (channelId: string, runId: string, fence: number, message: string) =>
+  executionUnknown = async (channelId: string, jobId: string, message: string) =>
     withChannelLock(this.db, channelId, async (tx) => {
-      const run = await fenced(tx, channelId, runId, fence, true);
-      if (run.writerReleased || SETTLED_RUN_STATUSES.includes(run.status)) return;
+      const job = await claimed(tx, channelId, jobId, true);
+      if (!job.writerHeld || job.publishedMessageId || job.status === 'failed') return;
 
       await tx
-        .update(channelRuns)
-        .set({ error: message, status: 'execution_unknown' })
-        .where(eq(channelRuns.id, run.id));
-      await advanceOperation(tx, run, 'abandoned', message);
-      await audit(tx, channelId, 'execution_unknown', run.id, { message });
+        .update(channelJobs)
+        .set({
+          publicationRevoked: true,
+          ...(isOpenJob(job) && { status: 'failed' as const }),
+        })
+        .where(eq(channelJobs.id, job.id));
+      await advanceOperation(tx, job, 'abandoned', message);
+      await audit(tx, channelId, 'execution_unknown', job.id, { message });
     });
 
   /** Isolates a writer whose termination stayed unconfirmed. See {@link isolateWriter}. */
-  isolate = async (channelId: string, runId: string, fence: number, reason: string) =>
+  isolate = async (channelId: string, jobId: string, reason: string) =>
     withChannelLock(this.db, channelId, async (tx) =>
-      isolateWriter(tx, await fenced(tx, channelId, runId, fence, true), reason),
+      isolateWriter(tx, await claimed(tx, channelId, jobId, true), reason),
     );
 
   /** System-initiated stop, e.g. a budget or reconcile decision. See {@link stopScope}. */
@@ -360,29 +297,27 @@ export class ChannelExecutionModel {
     withChannelLock(this.db, channelId, (tx) => stopScope(tx, channelId, scope));
 
   /**
-   * Extends the lease of a live run. Touches only the run row and takes no channel lock, so
-   * it cannot deadlock with channel writes. Returns false once the run lost its lease,
-   * fence or writer.
+   * Extends the lease of a live run. Touches only the job row and takes no channel lock, so
+   * it cannot deadlock with channel writes. Returns false once the run lost its lease or
+   * writer.
    */
   heartbeat = async (
-    runId: string,
-    fence: number,
+    jobId: string,
     lease: { leaseMs: number; leaseOwner: string },
   ): Promise<boolean> => {
     const now = new Date();
     const renewed = await this.db
-      .update(channelRuns)
-      .set({ heartbeatAt: now, leaseExpiresAt: new Date(now.getTime() + lease.leaseMs) })
+      .update(channelJobs)
+      .set({ leaseExpiresAt: new Date(now.getTime() + lease.leaseMs) })
       .where(
         and(
-          eq(channelRuns.id, runId),
-          eq(channelRuns.fence, fence),
-          eq(channelRuns.leaseOwner, lease.leaseOwner),
-          eq(channelRuns.writerReleased, false),
-          gt(channelRuns.leaseExpiresAt, now),
+          eq(channelJobs.id, jobId),
+          eq(channelJobs.leaseOwner, lease.leaseOwner),
+          eq(channelJobs.writerHeld, true),
+          gt(channelJobs.leaseExpiresAt, now),
         ),
       )
-      .returning({ id: channelRuns.id });
+      .returning({ id: channelJobs.id });
 
     return renewed.length > 0;
   };

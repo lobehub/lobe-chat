@@ -1,8 +1,8 @@
 import type { ChannelMemberRole, ChannelVisibility } from '@lobechat/types';
 import { and, desc, eq, isNull } from 'drizzle-orm';
 
-import type { ChannelItem, ChannelMessageItem, ChannelRunItem } from '../../schemas';
-import { channelMembers, channelMessages, channelRuns, channels, topics } from '../../schemas';
+import type { ChannelItem, ChannelJobItem, ChannelMessageItem } from '../../schemas';
+import { channelJobs, channelMembers, channelMessages, channels, topics } from '../../schemas';
 import type { LobeChatDatabase, Transaction } from '../../type';
 import { normalizeWorkspaceId } from '../../utils/workspace';
 import { ChannelError } from './error';
@@ -139,20 +139,20 @@ export class ChannelModel {
     this.write(channelId, (tx, access) => sendMessage(tx, access, input));
 
   /**
-   * Stops one run (its requester or an admin) or a whole branch (admins). Returns the runs
+   * Stops one job (its requester or an admin) or a whole branch (admins). Returns the jobs
    * whose writer is still held; the caller must stop them physically.
    */
-  stop = async (channelId: string, scope: ChannelStopScope): Promise<ChannelRunItem[]> =>
+  stop = async (channelId: string, scope: ChannelStopScope): Promise<ChannelJobItem[]> =>
     this.write(
       channelId,
       async (tx, { member }) => {
-        if ('runId' in scope && !hasRole(member.role, 'admin')) {
-          const [run] = await tx
-            .select({ requesterMemberId: channelRuns.requesterMemberId })
-            .from(channelRuns)
-            .where(and(eq(channelRuns.channelId, channelId), eq(channelRuns.id, scope.runId)));
-          if (run && run.requesterMemberId !== member.id)
-            throw new ChannelError('FORBIDDEN', 'Only the requester or an admin can stop this run');
+        if ('jobId' in scope && !hasRole(member.role, 'admin')) {
+          const [job] = await tx
+            .select({ requesterMemberId: channelJobs.requesterMemberId })
+            .from(channelJobs)
+            .where(and(eq(channelJobs.channelId, channelId), eq(channelJobs.id, scope.jobId)));
+          if (job && job.requesterMemberId !== member.id)
+            throw new ChannelError('FORBIDDEN', 'Only the requester or an admin can stop this job');
         }
         return stopScope(tx, channelId, scope);
       },

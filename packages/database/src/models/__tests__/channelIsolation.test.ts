@@ -82,7 +82,7 @@ describe('Channel compatibility with ordinary conversation APIs', () => {
         expect(await messageModel.query({ topicId: state.claim.topic.id })).toEqual([]);
         expect(
           await new AgentOperationModel(db, userId, workspaceId).findById(
-            state.claim.run.operationId,
+            state.claim.job.operationId!,
           ),
         ).toBeNull();
       }
@@ -124,23 +124,23 @@ describe('Channel compatibility with ordinary conversation APIs', () => {
     const operations = new AgentOperationModel(db, fixture.memberId, fixture.workspaceId, {
       channelId: state.channel.id,
     });
-    expect(await operations.findById(state.claim.run.operationId)).toMatchObject({
+    expect(await operations.findById(state.claim.job.operationId!)).toMatchObject({
       topicId: state.claim.topic.id,
     });
     await operations.recordStart({
-      operationId: state.claim.run.operationId,
+      operationId: state.claim.job.operationId!,
       topicId: state.claim.topic.id,
       maxSteps: 20,
       modelRuntimeConfig: { test: true },
       trigger: 'channel',
     });
-    await operations.recordCompletion(state.claim.run.operationId, {
+    await operations.recordCompletion(state.claim.job.operationId!, {
       status: 'done',
       totalTokens: 123,
     });
     // A delayed start cannot reset a completed canonical operation.
     await operations.recordStart({
-      operationId: state.claim.run.operationId,
+      operationId: state.claim.job.operationId!,
       topicId: state.claim.topic.id,
     });
     expect(
@@ -148,7 +148,7 @@ describe('Channel compatibility with ordinary conversation APIs', () => {
         await db
           .select()
           .from(agentOperations)
-          .where(eq(agentOperations.id, state.claim.run.operationId))
+          .where(eq(agentOperations.id, state.claim.job.operationId!))
       )[0],
     ).toMatchObject({
       maxSteps: 20,

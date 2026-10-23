@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { eq, sql } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../../core/getTestDB';
@@ -7,9 +7,7 @@ import {
   agentOperations,
   channelJobs,
   channelMessages,
-  channelRuns,
   channels,
-  channelSessions,
   messages,
   topics,
 } from '../../../schemas';
@@ -17,7 +15,7 @@ import type { LobeChatDatabase } from '../../../type';
 import { ChannelExecutionModel } from '..';
 import { claimJob } from '../claim';
 import { lockChannel } from '../transaction';
-import { createChannelFixture, deviceConfig, jobsOf, lease, runById } from './testUtils';
+import { createChannelFixture, deviceConfig, jobsOf, lease, operationById } from './testUtils';
 
 const db: LobeChatDatabase = await getTestDB();
 const fixture = createChannelFixture(db, 'channel-execution');
@@ -61,46 +59,51 @@ const jobById = async (jobId: string) => {
   return job;
 };
 
+const operationOf = async (jobId: string) => operationById(db, (await jobById(jobId)).operationId);
+
 describe('ChannelExecutionModel', () => {
-  it('claims, accepts, publishes and releases a run', async () => {
+  it('claims, accepts, publishes and releases a job', async () => {
     const { agent, channel, job, member, message } = await mentionAgent();
 
     const claim = await execution.claim(channel.id, job.id, lease);
-    expect(claim?.run).toMatchObject({
+    expect(claim?.job).toMatchObject({
       deviceId: 'device-1',
       leaseOwner: 'worker-1',
       requesterMemberId: member.id,
+      status: 'running',
       workingDirectory: '/repo',
+      writerHeld: true,
     });
-    expect(claim?.run.manifest).toMatchObject({
+    expect(claim?.job.manifest).toEqual({
       cutoffSequence: 1,
+      messages: [expect.objectContaining({ author: { id: member.id, name: 'mia', type: 'user' } })],
       requestMessageId: message.id,
       requesterMemberId: member.id,
       self: { memberId: agent.id, name: 'Coder' },
-      source: 'reconstructed',
+      threadId: null,
+      threadRootSequence: null,
     });
-    expect(claim?.run.manifest.messages).toEqual([
-      expect.objectContaining({ author: { id: member.id, name: 'mia', type: 'user' } }),
-    ]);
-    expect((await jobById(job.id)).status).toBe('running');
 
-    const { run } = claim!;
-    await execution.accepted(channel.id, run.id, run.fence, { nativeSessionId: 'session-1' });
-    const [session] = await db
-      .select()
-      .from(channelSessions)
-      .where(eq(channelSessions.id, run.sessionId));
-    expect(session).toMatchObject({ acceptedSequence: 1 });
-    const [topic] = await db.select().from(topics).where(eq(topics.id, session.topicId!));
+    await execution.accepted(channel.id, job.id, {
+      nativeSessionId: 'session-1',
+      nativeTurnId: 'turn-1',
+    });
+    expect((await jobById(job.id)).acceptedAt).toBeInstanceOf(Date);
+    const [topic] = await db.select().from(topics).where(eq(topics.id, claim!.topic.id));
     expect(topic.metadata?.heteroSessionId).toBe('session-1');
+    expect(await operationOf(job.id)).toMatchObject({
+      metadata: { nativeTurnId: 'turn-1' },
+      status: 'running',
+      topicId: claim!.topic.id,
+    });
 
-    await execution.saveDraft(channel.id, run.id, run.fence, 'Fixed');
-    await expect(
-      execution.saveDraft(channel.id, run.id, run.fence, 'Changed'),
-    ).rejects.toMatchObject({ code: 'CONFLICT' });
+    await execution.saveDraft(channel.id, job.id, 'Fixed');
+    await expect(execution.saveDraft(channel.id, job.id, 'Changed')).rejects.toMatchObject({
+      code: 'CONFLICT',
+    });
 
-    const replyId = await execution.publish(channel.id, run.id, run.fence);
-    expect(await execution.publish(channel.id, run.id, run.fence)).toBe(replyId);
+    const replyId = await execution.publish(channel.id, job.id);
+    expect(await execution.publish(channel.id, job.id)).toBe(replyId);
     const [reply] = await db.select().from(channelMessages).where(eq(channelMessages.id, replyId));
     expect(reply).toMatchObject({
       authorMemberId: agent.id,
@@ -110,35 +113,29 @@ describe('ChannelExecutionModel', () => {
     });
     const [canonicalReply] = await db.select().from(messages).where(eq(messages.id, replyId));
     expect(canonicalReply.content).toBe('Fixed');
-    const [operation] = await db
-      .select()
-      .from(agentOperations)
-      .where(eq(agentOperations.id, run.operationId));
-    expect(operation.status).toBe('running');
+    expect((await operationOf(job.id)).status).toBe('running');
     expect((await jobById(job.id)).status).toBe('completed');
 
-    await db.update(channelRuns).set({ cleanupRequested: true }).where(eq(channelRuns.id, run.id));
     const releasedState = {
-      cleanupRequested: false,
       leaseOwner: null,
-      physicalStopped: true,
+      publishedMessageId: replyId,
       status: 'completed',
-      writerReleased: true,
+      writerHeld: false,
     };
-
-    await execution.releaseWriter(channel.id, run.id, run.fence);
-    expect(await runById(db, run.id)).toMatchObject(releasedState);
-    await execution.releaseWriter(channel.id, run.id, run.fence);
-    expect(await runById(db, run.id)).toMatchObject(releasedState);
+    await execution.releaseWriter(channel.id, job.id);
+    expect(await jobById(job.id)).toMatchObject(releasedState);
+    expect((await operationOf(job.id)).status).toBe('done');
+    await execution.releaseWriter(channel.id, job.id);
+    expect(await jobById(job.id)).toMatchObject(releasedState);
   });
 
-  it('gives an existing session only the messages it has not accepted', async () => {
+  it('starts every run in a new private topic with the full branch snapshot', async () => {
     const { agent, asMember, channel, job } = await mentionAgent();
-    const first = (await execution.claim(channel.id, job.id, lease))!.run;
-    await execution.accepted(channel.id, first.id, first.fence, { nativeSessionId: 'session-1' });
-    await execution.saveDraft(channel.id, first.id, first.fence, 'Done');
-    await execution.publish(channel.id, first.id, first.fence);
-    await execution.releaseWriter(channel.id, first.id, first.fence);
+    const first = (await execution.claim(channel.id, job.id, lease))!;
+    await execution.accepted(channel.id, job.id, { nativeSessionId: 'session-1' });
+    await execution.saveDraft(channel.id, job.id, 'Done');
+    await execution.publish(channel.id, job.id);
+    await execution.releaseWriter(channel.id, job.id);
 
     const next = await asMember.send(channel.id, {
       content: 'Again',
@@ -147,10 +144,12 @@ describe('ChannelExecutionModel', () => {
       routing: 'jev',
     });
     const [nextJob] = await jobsOf(db, next.id);
-    const second = (await execution.claim(channel.id, nextJob.id, lease))!.run;
+    const second = (await execution.claim(channel.id, nextJob.id, lease))!;
 
-    expect(second.manifest.source).toBe('incremental');
-    expect(second.manifest.messages.map((m) => m.sequence)).toEqual([2, 3]);
+    expect(second.topic.id).not.toBe(first.topic.id);
+    expect(second.topic.metadata?.heteroSessionId).toBeUndefined();
+    expect(second.job.manifest!.messages.map((m) => m.sequence)).toEqual([1, 2, 3]);
+    expect((await operationById(db, second.job.operationId)).topicId).toBe(second.topic.id);
   });
 
   it('answers in message order and holds one writer per member', async () => {
@@ -164,17 +163,17 @@ describe('ChannelExecutionModel', () => {
     const [nextJob] = await jobsOf(db, next.id);
 
     expect(await execution.claim(channel.id, nextJob.id, lease)).toBeNull();
-    const run = (await execution.claim(channel.id, job.id, lease))!.run;
+    expect(await execution.claim(channel.id, job.id, lease)).not.toBeNull();
     expect(await execution.claim(channel.id, nextJob.id, lease)).toBeNull();
 
-    await execution.fail(channel.id, run.id, run.fence, { message: 'boom', notSubmitted: true });
-    expect((await jobById(job.id)).status).toBe('failed');
+    await execution.fail(channel.id, job.id, { message: 'boom', notSubmitted: true });
+    expect(await jobById(job.id)).toMatchObject({ status: 'failed', writerHeld: false });
     expect(await execution.claim(channel.id, nextJob.id, lease)).not.toBeNull();
   });
 
   it('blocks a job while another channel uses the same device directory', async () => {
     const first = await mentionAgent();
-    const run = (await execution.claim(first.channel.id, first.job.id, lease))!.run;
+    await execution.claim(first.channel.id, first.job.id, lease);
 
     const asOther = await fixture.createTeamChannel('Other');
     const otherAgent = await fixture.addAgent(asOther.channel.id, 'Coder', deviceConfig());
@@ -190,18 +189,16 @@ describe('ChannelExecutionModel', () => {
     expect(await jobById(job.id)).toMatchObject({ blockedCode: 'directory_locked' });
 
     // Isolation lets the member move on but does not free the directory.
-    await execution.isolate(first.channel.id, run.id, run.fence, 'termination unconfirmed');
-    expect(await runById(db, run.id)).toMatchObject({
-      physicalStopped: false,
-      writerReleased: false,
+    await execution.isolate(first.channel.id, first.job.id, 'termination unconfirmed');
+    expect(await jobById(first.job.id)).toMatchObject({
+      isolatedAt: expect.any(Date),
+      status: 'failed',
+      writerHeld: true,
     });
     expect(await execution.claim(asOther.channel.id, job.id, lease)).toBeNull();
 
-    await execution.releaseWriter(first.channel.id, run.id, run.fence);
-    expect(await runById(db, run.id)).toMatchObject({
-      physicalStopped: true,
-      writerReleased: true,
-    });
+    await execution.releaseWriter(first.channel.id, first.job.id);
+    expect(await jobById(first.job.id)).toMatchObject({ status: 'failed', writerHeld: false });
     expect(await execution.claim(asOther.channel.id, job.id, lease)).not.toBeNull();
     expect(await jobById(job.id)).toMatchObject({ blockedCode: null, status: 'running' });
   });
@@ -220,9 +217,9 @@ describe('ChannelExecutionModel', () => {
       });
       const [job] = await jobsOf(db, message.id);
 
-      // The first claim inserts its run but has not committed when the second one checks.
+      // The first claim takes the writer but has not committed when the second one checks.
       let inserted!: () => void;
-      const runInserted = new Promise<void>((resolve) => (inserted = resolve));
+      const writerTaken = new Promise<void>((resolve) => (inserted = resolve));
       let release!: () => void;
       const released = new Promise<void>((resolve) => (release = resolve));
       const winner = db.transaction(async (tx) => {
@@ -232,7 +229,7 @@ describe('ChannelExecutionModel', () => {
         await released;
       });
 
-      await runInserted;
+      await writerTaken;
       const loser = execution.claim(other.channel.id, job.id, lease);
       await waitForLockWaiter();
       release();
@@ -245,106 +242,198 @@ describe('ChannelExecutionModel', () => {
           .from(agentOperations)
           .where(eq(agentOperations.channelId, other.channel.id)),
       ).toHaveLength(0);
+      expect(
+        await db
+          .select()
+          .from(topics)
+          .where(and(eq(topics.channelId, other.channel.id), eq(topics.mode, 'channel_runtime'))),
+      ).toHaveLength(0);
       expect(await jobById(job.id)).toMatchObject({
         blockedCode: 'directory_locked',
+        operationId: null,
         status: 'queued',
+        writerHeld: false,
       });
     },
   );
 
   it('fails the job when the writer ends without a reply', async () => {
     const { channel, job } = await mentionAgent();
-    const run = (await execution.claim(channel.id, job.id, lease))!.run;
-    await execution.accepted(channel.id, run.id, run.fence, { nativeSessionId: 's' });
+    await execution.claim(channel.id, job.id, lease);
+    await execution.accepted(channel.id, job.id, { nativeSessionId: 's' });
 
-    await execution.releaseWriter(channel.id, run.id, run.fence);
+    await execution.releaseWriter(channel.id, job.id);
 
-    expect(await runById(db, run.id)).toMatchObject({
+    expect(await jobById(job.id)).toMatchObject({
       publicationRevoked: true,
       status: 'failed',
-      writerReleased: true,
+      writerHeld: false,
     });
-    expect((await jobById(job.id)).status).toBe('failed');
+    expect(await operationOf(job.id)).toMatchObject({
+      error: { message: 'The run ended without a reply' },
+      status: 'error',
+    });
   });
 
   it('settles the job of an unknown execution without redelivering it', async () => {
     const { channel, job } = await mentionAgent();
-    const run = (await execution.claim(channel.id, job.id, lease))!.run;
-    await execution.executionUnknown(channel.id, run.id, run.fence, 'receipt lost');
+    await execution.claim(channel.id, job.id, lease);
+    await execution.executionUnknown(channel.id, job.id, 'receipt lost');
+    expect((await operationOf(job.id)).status).toBe('abandoned');
 
-    await execution.releaseWriter(channel.id, run.id, run.fence);
-
-    expect(await runById(db, run.id)).toMatchObject({
-      status: 'execution_unknown',
-      writerReleased: true,
+    expect(await jobById(job.id)).toMatchObject({
+      publicationRevoked: true,
+      status: 'failed',
+      writerHeld: true,
     });
-    expect((await jobById(job.id)).status).toBe('failed');
+
+    // A late receipt cannot revive it.
+    await expect(
+      execution.accepted(channel.id, job.id, { nativeSessionId: 's' }),
+    ).rejects.toMatchObject({ code: 'CONFLICT' });
+    expect((await jobById(job.id)).acceptedAt).toBeNull();
+
+    await execution.releaseWriter(channel.id, job.id);
+
+    expect(await jobById(job.id)).toMatchObject({
+      publicationRevoked: true,
+      status: 'failed',
+      writerHeld: false,
+    });
   });
 
-  it('ignores a late failure once the run published or settled', async () => {
+  it('keeps an unknown execution unpublishable after the runtime settled its operation', async () => {
     const { channel, job } = await mentionAgent();
-    const run = (await execution.claim(channel.id, job.id, lease))!.run;
-    await execution.accepted(channel.id, run.id, run.fence, { nativeSessionId: 's' });
-    await execution.saveDraft(channel.id, run.id, run.fence, 'Done');
-    const replyId = await execution.publish(channel.id, run.id, run.fence);
+    await execution.claim(channel.id, job.id, lease);
+    const { operationId } = await jobById(job.id);
+    await db
+      .update(agentOperations)
+      .set({ status: 'error' })
+      .where(eq(agentOperations.id, operationId!));
 
-    await execution.fail(channel.id, run.id, run.fence, { message: 'late error' });
-    expect(await runById(db, run.id)).toMatchObject({
-      error: null,
+    await execution.executionUnknown(channel.id, job.id, 'receipt lost');
+
+    await expect(
+      execution.accepted(channel.id, job.id, { nativeSessionId: 's' }),
+    ).rejects.toMatchObject({ code: 'CONFLICT' });
+    await expect(execution.publish(channel.id, job.id)).rejects.toMatchObject({
+      code: 'CONFLICT',
+    });
+  });
+
+  it('fails an accepted draft whose execution became unknown', async () => {
+    const { channel, job } = await mentionAgent();
+    await execution.claim(channel.id, job.id, lease);
+    await execution.accepted(channel.id, job.id, { nativeSessionId: 's' });
+    await execution.saveDraft(channel.id, job.id, 'Done');
+    const { operationId } = await jobById(job.id);
+    await db
+      .update(agentOperations)
+      .set({ status: 'done' })
+      .where(eq(agentOperations.id, operationId!));
+
+    await execution.executionUnknown(channel.id, job.id, 'receipt lost');
+    await execution.releaseWriter(channel.id, job.id);
+
+    expect(await jobById(job.id)).toMatchObject({
+      publicationRevoked: true,
+      status: 'failed',
+      writerHeld: false,
+    });
+    await expect(execution.publish(channel.id, job.id)).rejects.toMatchObject({
+      code: 'CONFLICT',
+    });
+  });
+
+  it('still releases the writer after its operation row is gone', async () => {
+    const { agent, asMember, channel, job } = await mentionAgent();
+    await execution.claim(channel.id, job.id, lease);
+    const { operationId } = await jobById(job.id);
+    await db.delete(agentOperations).where(eq(agentOperations.id, operationId!));
+
+    await execution.releaseWriter(channel.id, job.id);
+
+    expect(await jobById(job.id)).toMatchObject({
+      operationId: null,
+      status: 'failed',
+      writerHeld: false,
+    });
+    const next = await asMember.send(channel.id, {
+      content: 'Next',
+      mentions: [agent.id],
+      requestKey: 'req-2',
+      routing: 'jev',
+    });
+    const [nextJob] = await jobsOf(db, next.id);
+    expect(await execution.claim(channel.id, nextJob.id, lease)).not.toBeNull();
+  });
+
+  it('ignores a late failure once the job published or settled', async () => {
+    const { channel, job } = await mentionAgent();
+    await execution.claim(channel.id, job.id, lease);
+    await execution.accepted(channel.id, job.id, { nativeSessionId: 's' });
+    await execution.saveDraft(channel.id, job.id, 'Done');
+    const replyId = await execution.publish(channel.id, job.id);
+
+    await execution.fail(channel.id, job.id, { message: 'late error' });
+    expect(await jobById(job.id)).toMatchObject({
       publicationRevoked: false,
       publishedMessageId: replyId,
-      status: 'running',
+      status: 'completed',
+      writerHeld: true,
     });
-    expect((await jobById(job.id)).status).toBe('completed');
+    expect(await operationOf(job.id)).toMatchObject({ error: null, status: 'running' });
 
-    await execution.releaseWriter(channel.id, run.id, run.fence);
-    await execution.fail(channel.id, run.id, run.fence, { message: 'later error' });
-    expect(await runById(db, run.id)).toMatchObject({ error: null, status: 'completed' });
+    await execution.releaseWriter(channel.id, job.id);
+    await execution.fail(channel.id, job.id, { message: 'later error' });
     expect((await jobById(job.id)).status).toBe('completed');
+    expect(await operationOf(job.id)).toMatchObject({ error: null, status: 'done' });
   });
 
-  it('keeps the first outcome of a released run', async () => {
+  it('keeps the first outcome of a released job', async () => {
     const { channel, job } = await mentionAgent();
-    const run = (await execution.claim(channel.id, job.id, lease))!.run;
-    await execution.executionUnknown(channel.id, run.id, run.fence, 'receipt lost');
-    await execution.releaseWriter(channel.id, run.id, run.fence);
+    await execution.claim(channel.id, job.id, lease);
+    await execution.executionUnknown(channel.id, job.id, 'receipt lost');
+    await execution.releaseWriter(channel.id, job.id);
 
-    await execution.fail(channel.id, run.id, run.fence, { message: 'late error' });
+    await execution.fail(channel.id, job.id, { message: 'late error' });
 
-    expect(await runById(db, run.id)).toMatchObject({
-      error: 'receipt lost',
-      status: 'execution_unknown',
+    expect(await operationOf(job.id)).toMatchObject({
+      error: { message: 'receipt lost' },
+      status: 'abandoned',
     });
     expect((await jobById(job.id)).status).toBe('failed');
   });
 
   it('keeps an accepted draft publishable after the writer is released', async () => {
     const { channel, job } = await mentionAgent();
-    const run = (await execution.claim(channel.id, job.id, lease))!.run;
-    await execution.accepted(channel.id, run.id, run.fence, { nativeSessionId: 's' });
-    await execution.saveDraft(channel.id, run.id, run.fence, 'Done');
+    await execution.claim(channel.id, job.id, lease);
+    await execution.accepted(channel.id, job.id, { nativeSessionId: 's' });
+    await execution.saveDraft(channel.id, job.id, 'Done');
 
-    await execution.releaseWriter(channel.id, run.id, run.fence);
-    expect(await runById(db, run.id)).toMatchObject({ status: 'running', writerReleased: true });
-    expect((await jobById(job.id)).status).toBe('running');
+    await execution.releaseWriter(channel.id, job.id);
+    expect(await jobById(job.id)).toMatchObject({ status: 'running', writerHeld: false });
 
-    await execution.publish(channel.id, run.id, run.fence);
-    expect((await runById(db, run.id)).status).toBe('completed');
+    await execution.publish(channel.id, job.id);
     expect((await jobById(job.id)).status).toBe('completed');
   });
 
-  it('refuses stale fences and archived channels', async () => {
+  it('refuses unclaimed or revoked jobs and archived channels', async () => {
     const { channel, job } = await mentionAgent();
-    const run = (await execution.claim(channel.id, job.id, lease))!.run;
-
     await expect(
-      execution.accepted(channel.id, run.id, run.fence + 1, { nativeSessionId: 's' }),
-    ).rejects.toMatchObject({ code: 'CONFLICT' });
-    await expect(execution.publish(channel.id, run.id, run.fence)).rejects.toMatchObject({
+      execution.accepted(channel.id, job.id, { nativeSessionId: 's' }),
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' });
+
+    await execution.claim(channel.id, job.id, lease);
+    await expect(execution.publish(channel.id, job.id)).rejects.toMatchObject({
       code: 'CONFLICT',
     });
 
-    await execution.fail(channel.id, run.id, run.fence, { message: 'boom', notSubmitted: true });
+    await execution.fail(channel.id, job.id, { message: 'boom', notSubmitted: true });
+    await expect(
+      execution.accepted(channel.id, job.id, { nativeSessionId: 's' }),
+    ).rejects.toMatchObject({ code: 'CONFLICT' });
+
     await db.update(channels).set({ archived: true }).where(eq(channels.id, channel.id));
     const [rerun] = await db
       .insert(channelJobs)
@@ -355,14 +444,12 @@ describe('ChannelExecutionModel', () => {
 
   it('renews the lease only for the live owner', async () => {
     const { channel, job } = await mentionAgent();
-    const run = (await execution.claim(channel.id, job.id, lease))!.run;
+    await execution.claim(channel.id, job.id, lease);
 
-    expect(await execution.heartbeat(run.id, run.fence, lease)).toBe(true);
-    expect(await execution.heartbeat(run.id, run.fence, { ...lease, leaseOwner: 'other' })).toBe(
-      false,
-    );
+    expect(await execution.heartbeat(job.id, lease)).toBe(true);
+    expect(await execution.heartbeat(job.id, { ...lease, leaseOwner: 'other' })).toBe(false);
 
-    await execution.fail(channel.id, run.id, run.fence, { message: 'boom', notSubmitted: true });
-    expect(await execution.heartbeat(run.id, run.fence, lease)).toBe(false);
+    await execution.fail(channel.id, job.id, { message: 'boom', notSubmitted: true });
+    expect(await execution.heartbeat(job.id, lease)).toBe(false);
   });
 });

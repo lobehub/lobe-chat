@@ -11,9 +11,7 @@ import {
   channelMemberGrants,
   channelMembers,
   channelMessages,
-  channelRuns,
   channels,
-  channelSessions,
   files,
   messages,
   messagesFiles,
@@ -79,14 +77,12 @@ const manifest = (requesterMemberId: string, memberId: string): ChannelInputMani
   requestMessageId: 'unused',
   requesterMemberId,
   self: { memberId, name: 'Codex' },
-  sessionGeneration: 1,
-  source: 'reconstructed',
   threadId: null,
   threadRootSequence: null,
 });
 
-/** Creates a job and a claimed run for `agent` on the given device directory. */
-const createRun = async (
+/** Creates a job claimed by `agent`, holding the writer on the given device directory. */
+const createClaimedJob = async (
   fixture: Awaited<ReturnType<typeof createChannel>>,
   sequence: number,
   directory: { deviceId: string; workingDirectory: string } | null = {
@@ -96,39 +92,28 @@ const createRun = async (
 ) => {
   const { agent, channel, owner } = fixture;
   const message = await createMessage(channel.id, owner.id, sequence);
-  const [job] = await serverDB
-    .insert(channelJobs)
+  const [operation] = await serverDB
+    .insert(agentOperations)
     .values({
+      id: `op_${channel.id}_${sequence}`,
       channelId: channel.id,
-      memberId: agent.id,
-      messageId: message.id,
-      requesterMemberId: owner.id,
-    })
-    .returning();
-  const [session] = await serverDB
-    .insert(channelSessions)
-    .values({
-      channelId: channel.id,
-      memberId: agent.id,
-      principalUserId: ownerId,
-      scope: `main-${sequence}`,
+      userId: ownerId,
+      status: 'idle',
+      workspaceId,
     })
     .returning();
 
-  const [operation] = await serverDB
-    .insert(agentOperations)
-    .values({ id: `op_${session.id}`, channelId: channel.id, userId: ownerId, status: 'idle' })
-    .returning();
   return serverDB
-    .insert(channelRuns)
+    .insert(channelJobs)
     .values({
       channelId: channel.id,
-      operationId: operation.id,
-      jobId: job.id,
       manifest: manifest(owner.id, agent.id),
       memberId: agent.id,
+      messageId: message.id,
+      operationId: operation.id,
       requesterMemberId: owner.id,
-      sessionId: session.id,
+      status: 'running',
+      writerHeld: true,
       ...directory,
     })
     .returning();
@@ -309,54 +294,54 @@ describe('channel schema', () => {
     });
   });
 
-  describe('runs', () => {
+  describe('writer locks', () => {
     it('allows one writer per member until it is released or isolated', async () => {
       const fixture = await createChannel();
-      const [run] = await createRun(fixture, 1, null);
+      const [job] = await createClaimedJob(fixture, 1, null);
 
-      await expect(createRun(fixture, 2, null)).rejects.toThrow();
+      await expect(createClaimedJob(fixture, 2, null)).rejects.toThrow();
 
       await serverDB
-        .update(channelRuns)
+        .update(channelJobs)
         .set({ isolatedAt: new Date() })
-        .where(eq(channelRuns.id, run.id));
-      await expect(createRun(fixture, 3, null)).resolves.toHaveLength(1);
+        .where(eq(channelJobs.id, job.id));
+      await expect(createClaimedJob(fixture, 3, null)).resolves.toHaveLength(1);
     });
 
-    it('serializes runs on one device directory across channels', async () => {
+    it('serializes writers on one device directory across channels', async () => {
       const first = await createChannel('First');
       const second = await createChannel('Second');
-      const [run] = await createRun(first, 1);
+      const [job] = await createClaimedJob(first, 1);
 
-      await expect(createRun(second, 1)).rejects.toThrow();
+      await expect(createClaimedJob(second, 1)).rejects.toThrow();
       await expect(
-        createRun(second, 2, { deviceId: 'device-1', workingDirectory: '/other' }),
+        createClaimedJob(second, 2, { deviceId: 'device-1', workingDirectory: '/other' }),
       ).resolves.toHaveLength(1);
 
       await serverDB
-        .update(channelRuns)
-        .set({ physicalStopped: true, writerReleased: true })
-        .where(eq(channelRuns.id, run.id));
+        .update(channelJobs)
+        .set({ writerHeld: false })
+        .where(eq(channelJobs.id, job.id));
       const third = await createChannel('Third');
-      await expect(createRun(third, 1)).resolves.toHaveLength(1);
+      await expect(createClaimedJob(third, 1)).resolves.toHaveLength(1);
     });
 
-    it('keeps the directory locked while an isolated run is still unconfirmed', async () => {
+    it('keeps the directory locked while an isolated writer is still unconfirmed', async () => {
       const first = await createChannel('First');
       const second = await createChannel('Second');
-      const [run] = await createRun(first, 1);
+      const [job] = await createClaimedJob(first, 1);
 
       await serverDB
-        .update(channelRuns)
+        .update(channelJobs)
         .set({ isolatedAt: new Date() })
-        .where(eq(channelRuns.id, run.id));
-      await expect(createRun(second, 1)).rejects.toThrow();
+        .where(eq(channelJobs.id, job.id));
+      await expect(createClaimedJob(second, 1)).rejects.toThrow();
 
       await serverDB
-        .update(channelRuns)
-        .set({ physicalStopped: true, writerReleased: true })
-        .where(eq(channelRuns.id, run.id));
-      await expect(createRun(second, 2)).resolves.toHaveLength(1);
+        .update(channelJobs)
+        .set({ writerHeld: false })
+        .where(eq(channelJobs.id, job.id));
+      await expect(createClaimedJob(second, 2)).resolves.toHaveLength(1);
     });
   });
 
@@ -414,9 +399,9 @@ describe('channel schema', () => {
       ).toHaveLength(1);
     });
 
-    it('deletes a channel with all of its rows', async () => {
+    it('deletes a channel with all of its rows but keeps its operations', async () => {
       const fixture = await createChannel();
-      await createRun(fixture, 1);
+      const [job] = await createClaimedJob(fixture, 1);
 
       await serverDB.delete(channels).where(eq(channels.id, fixture.channel.id));
 
@@ -424,12 +409,18 @@ describe('channel schema', () => {
         .select()
         .from(channelMembers)
         .where(eq(channelMembers.channelId, fixture.channel.id));
-      const runs = await serverDB
+      const jobs = await serverDB
         .select()
-        .from(channelRuns)
-        .where(eq(channelRuns.channelId, fixture.channel.id));
+        .from(channelJobs)
+        .where(eq(channelJobs.channelId, fixture.channel.id));
       expect(members).toHaveLength(0);
-      expect(runs).toHaveLength(0);
+      expect(jobs).toHaveLength(0);
+      // Usage history outlives the channel, and the stale id keeps it out of ordinary reads.
+      const [operation] = await serverDB
+        .select()
+        .from(agentOperations)
+        .where(eq(agentOperations.id, job.operationId!));
+      expect(operation).toMatchObject({ channelId: fixture.channel.id });
     });
   });
 });

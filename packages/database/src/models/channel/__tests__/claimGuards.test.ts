@@ -33,13 +33,13 @@ const request = async (model: ChannelModel, channelId: string, agentId: string, 
   return { job, message };
 };
 
-/** Claims and finishes a run with a published reply. */
+/** Claims and finishes a job with a published reply. */
 const answer = async (channelId: string, jobId: string) => {
-  const { run } = (await execution.claim(channelId, jobId, lease))!;
-  await execution.accepted(channelId, run.id, run.fence, { nativeSessionId: 's' });
-  await execution.saveDraft(channelId, run.id, run.fence, 'Answer');
-  await execution.publish(channelId, run.id, run.fence);
-  await execution.releaseWriter(channelId, run.id, run.fence);
+  await execution.claim(channelId, jobId, lease);
+  await execution.accepted(channelId, jobId, { nativeSessionId: 's' });
+  await execution.saveDraft(channelId, jobId, 'Answer');
+  await execution.publish(channelId, jobId);
+  await execution.releaseWriter(channelId, jobId);
 };
 
 describe('claim guards', () => {
@@ -138,7 +138,7 @@ describe('claim guards', () => {
     expect((await jobById(job.id)).status).toBe('cancelled');
   });
 
-  it('includes a late-routed request even behind the session cursor', async () => {
+  it('gives a late-routed request the history up to itself', async () => {
     const { asMember, channel } = await fixture.createTeamChannel();
     const agent = await fixture.addAgent(channel.id, 'Coder');
     const unmentioned = await asMember.send(channel.id, {
@@ -155,11 +155,13 @@ describe('claim guards', () => {
       status: 'assigned',
     });
     const [job] = await jobsOf(db, unmentioned.id);
-    const { run } = (await execution.claim(channel.id, job.id, lease))!;
+    const { job: claimed } = (await execution.claim(channel.id, job.id, lease))!;
 
-    expect(run.manifest.source).toBe('incremental');
-    expect(run.manifest.requestMessageId).toBe(unmentioned.id);
-    expect(run.manifest.messages).toEqual([
+    expect(claimed.manifest).toMatchObject({
+      cutoffSequence: unmentioned.sequence,
+      requestMessageId: unmentioned.id,
+    });
+    expect(claimed.manifest!.messages).toEqual([
       expect.objectContaining({ content: 'Who can help?', id: unmentioned.id }),
     ]);
   });

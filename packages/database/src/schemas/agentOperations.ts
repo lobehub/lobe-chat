@@ -4,12 +4,10 @@ import type {
   AgentOperationStatus,
   VerifyCheckItem,
 } from '@lobechat/types';
-import type { AnyPgColumn } from 'drizzle-orm/pg-core';
 import { boolean, index, integer, jsonb, pgTable, text } from 'drizzle-orm/pg-core';
 
 import { amountNumeric, timestamps, timestamptz } from './_helpers';
 import { agents } from './agent';
-import { channels } from './channel';
 import { chatGroups } from './chatGroup';
 import { tasks } from './task';
 import { threads, topics } from './topic';
@@ -51,10 +49,13 @@ export const agentOperations = pgTable(
      * Preserved across user deletion — operations are valuable historical/audit data,
      * so this column is intentionally not a foreign key.
      */
-    channelId: text('channel_id').references((): AnyPgColumn => channels.id, {
-      onDelete: 'cascade',
-    }),
     userId: text('user_id').notNull(),
+    /**
+     * Channel whose job reserved this operation. Not a foreign key for the same reason as
+     * `userId`: deleting the channel keeps its usage history, and the stale id keeps the row
+     * out of ordinary operation reads.
+     */
+    channelId: text('channel_id'),
     workspaceId: text('workspace_id').references(() => workspaces.id, { onDelete: 'cascade' }),
 
     agentId: text('agent_id').references(() => agents.id, { onDelete: 'set null' }),

@@ -7,8 +7,6 @@ import {
   agentOperations,
   agents,
   channelMembers,
-  channelRuns,
-  channelSessions,
   channelThreads,
   messages,
   topics,
@@ -16,7 +14,15 @@ import {
   workspaces,
 } from '../../../schemas';
 import { ChannelExecutionModel } from '..';
-import { createChannelFixture, deviceConfig, jobsOf, lease, nativeConfig } from './testUtils';
+import {
+  createChannelFixture,
+  deviceConfig,
+  jobById,
+  jobsOf,
+  lease,
+  nativeConfig,
+  operationById,
+} from './testUtils';
 
 const db = await getTestDB();
 const fixture = createChannelFixture(db, 'channel-canonical');
@@ -39,16 +45,15 @@ const setup = async (config = nativeConfig) => {
     const [job] = await jobsOf(db, message.id);
     return (await execution.claim(team.channel.id, job.id, lease))!;
   };
-  const finish = async (claimed: Awaited<ReturnType<typeof claim>>) => {
-    await execution.accepted(team.channel.id, claimed.run.id, claimed.run.fence, {});
-    await execution.saveDraft(team.channel.id, claimed.run.id, claimed.run.fence, 'Final answer');
-    await execution.releaseWriter(team.channel.id, claimed.run.id, claimed.run.fence);
+  const finish = async ({ job }: Awaited<ReturnType<typeof claim>>) => {
+    await execution.accepted(team.channel.id, job.id, {});
+    await execution.saveDraft(team.channel.id, job.id, 'Final answer');
+    await execution.releaseWriter(team.channel.id, job.id);
   };
   return { ...team, agent, claim, finish };
 };
 
-const operationOf = async (id: string) =>
-  (await db.select().from(agentOperations).where(eq(agentOperations.id, id)))[0];
+const operationOf = (id: string | null) => operationById(db, id);
 
 describe('canonical channel persistence', () => {
   it('attributes operations to the member Agent reference', async () => {
@@ -61,7 +66,7 @@ describe('canonical channel persistence', () => {
 
     const claim = await team.claim();
 
-    expect(await operationOf(claim.run.operationId)).toMatchObject({
+    expect(await operationOf(claim.job.operationId)).toMatchObject({
       agentId: source.id,
       userId: fixture.memberId,
     });
@@ -79,7 +84,7 @@ describe('canonical channel persistence', () => {
         mode: 'channel_runtime',
         trigger: 'channel',
       });
-      expect(await operationOf(claim.run.operationId)).toMatchObject({
+      expect(await operationOf(claim.job.operationId)).toMatchObject({
         userId: fixture.memberId,
         channelId: team.channel.id,
         workspaceId: fixture.workspaceId,
@@ -88,11 +93,11 @@ describe('canonical channel persistence', () => {
         provider: config.provider,
         trigger: 'channel',
       });
-      expect(claim.run.operationId).toMatch(/^op_/);
+      expect(claim.job.operationId).toMatch(/^op_/);
     },
   );
 
-  it('reuses native context without a CLI id and excludes private transcript from manifests', async () => {
+  it('gives each run its own topic and keeps private transcript out of manifests', async () => {
     const team = await setup();
     const first = await team.claim();
     await db.insert(messages).values({
@@ -103,37 +108,30 @@ describe('canonical channel persistence', () => {
       content: 'PRIVATE transcript',
     });
     await team.finish(first);
-    expect((await operationOf(first.run.operationId)).status).toBe('done');
+    expect((await operationOf(first.job.operationId)).status).toBe('done');
     // Physical release may precede publication, and only the saved final answer is published.
-    await execution.publish(team.channel.id, first.run.id, first.run.fence);
+    await execution.publish(team.channel.id, first.job.id);
+
     const second = await team.claim();
-    expect(second.topic.id).toBe(first.topic.id);
-    expect(second.session.id).toBe(first.session.id);
-    expect(second.run.manifest.source).toBe('incremental');
-    expect(second.run.manifest.messages.map((message) => message.content)).toEqual([
+    expect(second.topic.id).not.toBe(first.topic.id);
+    expect(second.job.manifest!.messages.map((message) => message.content)).toEqual([
+      'Request 1',
       'Final answer',
       'Request 2',
     ]);
-    await execution.accepted(team.channel.id, first.run.id, first.run.fence, {});
-    await execution.fail(team.channel.id, first.run.id, first.run.fence, {
-      message: 'Late failure',
-    });
-    expect((await operationOf(first.run.operationId)).status).toBe('done');
+
+    await execution.accepted(team.channel.id, first.job.id, {});
+    await execution.fail(team.channel.id, first.job.id, { message: 'Late failure' });
+    expect((await operationOf(first.job.operationId)).status).toBe('done');
+    expect((await jobById(db, first.job.id)).status).toBe('completed');
   });
 
-  it.each(['principal', 'environment', 'isolation', 'deleted topic', 'branch'])(
-    'rotates context for %s and preserves old run identity',
+  it.each(['same requester', 'other requester', 'deleted topic', 'branch'])(
+    'starts the next run (%s) in a new topic and preserves old run identity',
     async (reason) => {
       const team = await setup();
       const first = await team.claim();
-      if (reason === 'isolation')
-        await execution.isolate(team.channel.id, first.run.id, first.run.fence, 'lost worker');
-      else await team.finish(first);
-      if (reason === 'environment')
-        await db
-          .update(channelMembers)
-          .set({ environmentRevision: 1 })
-          .where(eq(channelMembers.id, team.agent.id));
+      await team.finish(first);
       if (reason === 'deleted topic') await db.delete(topics).where(eq(topics.id, first.topic.id));
       let threadId: string | undefined;
       if (reason === 'branch') {
@@ -141,49 +139,41 @@ describe('canonical channel persistence', () => {
           .insert(channelThreads)
           .values({
             channelId: team.channel.id,
-            rootMessageId: first.run.manifest.requestMessageId,
+            rootMessageId: first.job.messageId,
             rootSequence: 1,
             followerMemberIds: [team.agent.id],
           })
           .returning();
         threadId = thread.id;
       }
-      const second = await team.claim(reason === 'principal', threadId);
+
+      const second = await team.claim(reason === 'other requester', threadId);
+
       expect(second.topic.id).not.toBe(first.topic.id);
-      expect(second.session.acceptedSequence).toBe(0);
-      expect(second.run.manifest.source).toBe('reconstructed');
-      const [oldSession] = await db
-        .select()
-        .from(channelSessions)
-        .where(eq(channelSessions.id, first.session.id));
-      expect(oldSession.topicId).toBe(reason === 'deleted topic' ? null : first.topic.id);
-      expect((await operationOf(first.run.operationId)).topicId).toBe(
+      expect(second.topic.userId).toBe(
+        reason === 'other requester' ? fixture.ownerId : fixture.memberId,
+      );
+      expect((await operationOf(first.job.operationId)).topicId).toBe(
         reason === 'deleted topic' ? null : first.topic.id,
       );
     },
   );
 
-  it('merges hetero resume metadata and requires a resume id for incremental input', async () => {
+  it('merges the hetero resume id into the run topic metadata', async () => {
     const team = await setup(deviceConfig());
-    const first = await team.claim();
+    const claim = await team.claim();
     await db
       .update(topics)
       .set({ metadata: { model: 'preserved-model' } })
-      .where(eq(topics.id, first.topic.id));
-    await team.finish(first);
-    const second = await team.claim();
-    expect(second.topic.id).toBe(first.topic.id);
-    expect(second.run.manifest.source).toBe('reconstructed');
-    await execution.accepted(team.channel.id, second.run.id, second.run.fence, {
-      nativeSessionId: 'cli-resume',
-    });
-    await team.finish(second);
-    const third = await team.claim();
-    expect(third.topic.metadata).toMatchObject({
+      .where(eq(topics.id, claim.topic.id));
+
+    await execution.accepted(team.channel.id, claim.job.id, { nativeSessionId: 'cli-resume' });
+
+    const [topic] = await db.select().from(topics).where(eq(topics.id, claim.topic.id));
+    expect(topic.metadata).toMatchObject({
       model: 'preserved-model',
       heteroSessionId: 'cli-resume',
     });
-    expect(third.run.manifest.source).toBe('incremental');
   });
 
   it('does not create an operation for a blocked directory claim', async () => {
@@ -196,6 +186,12 @@ describe('canonical channel persistence', () => {
         .select()
         .from(agentOperations)
         .where(eq(agentOperations.channelId, second.channel.id)),
+    ).toHaveLength(0);
+    expect(
+      await db
+        .select()
+        .from(topics)
+        .where(and(eq(topics.channelId, second.channel.id), eq(topics.mode, 'channel_runtime'))),
     ).toHaveLength(0);
   });
 
@@ -213,7 +209,7 @@ describe('canonical channel persistence', () => {
       .where(and(eq(topics.channelId, team.channel.id), eq(topics.mode, 'channel')));
     expect(publicTopic.userId).toBeNull();
     expect(
-      await db.select().from(messages).where(eq(messages.id, claim.run.manifest.requestMessageId)),
+      await db.select().from(messages).where(eq(messages.id, claim.job.messageId)),
     ).toHaveLength(1);
   });
 
@@ -223,16 +219,15 @@ describe('canonical channel persistence', () => {
     await db
       .update(agentOperations)
       .set({ status: 'done', totalTokens: 42, traceS3Key: 'trace' })
-      .where(eq(agentOperations.id, claim.run.operationId));
-    await execution.accepted(team.channel.id, claim.run.id, claim.run.fence, {});
-    await execution.fail(team.channel.id, claim.run.id, claim.run.fence, { message: 'late' });
-    expect(
-      (await db.select().from(channelRuns).where(eq(channelRuns.id, claim.run.id)))[0],
-    ).toMatchObject({
+      .where(eq(agentOperations.id, claim.job.operationId!));
+    await execution.accepted(team.channel.id, claim.job.id, {});
+    await execution.fail(team.channel.id, claim.job.id, { message: 'late' });
+    expect(await jobById(db, claim.job.id)).toMatchObject({
+      acceptedAt: expect.any(Date),
       publicationRevoked: false,
       status: 'running',
     });
-    expect(await operationOf(claim.run.operationId)).toMatchObject({
+    expect(await operationOf(claim.job.operationId)).toMatchObject({
       status: 'done',
       totalTokens: 42,
       traceS3Key: 'trace',

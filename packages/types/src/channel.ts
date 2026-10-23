@@ -2,7 +2,7 @@
  * Channel: a shared conversation where people and Agents talk together (LOBE-15104).
  *
  * Public content lives in canonical messages, with channel_messages routing extensions.
- * Each execution context has a private canonical topic, distinct from the public timeline.
+ * Each run executes in its own private canonical topic, distinct from the public timeline.
  */
 
 export const CHANNEL_RUNTIMES = [
@@ -77,6 +77,13 @@ export type ChannelMessageRoutingSource = 'explicit' | 'fallback' | 'jev';
  */
 export type ChannelRoutingMode = 'fallback' | 'jev';
 
+/**
+ * - `queued`: waiting at the member's FIFO.
+ * - `running`: claimed; its operation carries the execution status.
+ * - `completed`: the final reply was published.
+ * - `failed`: ended without a publishable reply, or its execution failed or became unknown.
+ * - `cancelled`: stopped, or it can never run (requester left, environment switched).
+ */
 export type ChannelJobStatus = 'cancelled' | 'completed' | 'failed' | 'queued' | 'running';
 
 /** Why a queued job cannot start yet. Typed so clients never infer it from error text. */
@@ -86,22 +93,6 @@ export type ChannelJobBlockCode =
   | 'directory_locked'
   | 'unavailable'
   | 'workspace_changed';
-
-export type ChannelRunStatus =
-  | 'completed'
-  | 'execution_unknown'
-  | 'failed'
-  | 'running'
-  | 'starting'
-  | 'stop_requested'
-  | 'stopped';
-
-export type ChannelRunActivity = 'running' | 'typing';
-
-/** Whether the runtime confirmed it took the input; `unknown` runs are never redelivered. */
-export type ChannelRunAcceptance = 'accepted' | 'pending' | 'unknown';
-
-export type ChannelPublicationStatus = 'pending' | 'published';
 
 /** Approval of a member that executes on someone's personal device (or a private shared one). */
 export type ChannelMemberGrantStatus = 'approved' | 'pending' | 'rejected' | 'revoked';
@@ -122,20 +113,17 @@ export interface ChannelContextMessage {
 export interface ChannelInputManifest {
   /** Immutable at claim time; later public messages belong to the next run. */
   cutoffSequence: number;
-  /** Snapshot for a new session; otherwise only messages the session has not accepted yet. */
+  /** Every message visible to this branch up to the cutoff; each run starts a new private topic. */
   messages: ChannelContextMessage[];
   /** The member that triggered this run; its user is the execution identity. */
   requesterMemberId: string;
   requestMessageId: string;
   /** Fixed at claim time. */
   self: { memberId: string; name: string };
-  sessionGeneration: number;
-  /** Serialized to the CLI as contextMode: reconstructed -> snapshot, incremental -> delta. */
-  source: 'incremental' | 'reconstructed';
   threadId: string | null;
   /** Main-channel prefix visible to this branch; null for main. */
   threadRootSequence: number | null;
 }
 
-/** Flat audit payload: routing decisions, claims, fences, isolation reasons. */
+/** Flat audit payload: routing decisions, claims, stops, isolation reasons. */
 export type ChannelAuditDetails = Record<string, boolean | number | string | string[] | null>;

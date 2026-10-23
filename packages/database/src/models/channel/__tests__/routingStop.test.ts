@@ -6,7 +6,7 @@ import { getTestDB } from '../../../core/getTestDB';
 import { channelMessages, channelThreads } from '../../../schemas';
 import type { LobeChatDatabase } from '../../../type';
 import { ChannelExecutionModel } from '..';
-import { createChannelFixture, jobsOf, lease, runById } from './testUtils';
+import { createChannelFixture, jobById, jobsOf, lease, operationById } from './testUtils';
 
 const db: LobeChatDatabase = await getTestDB();
 const fixture = createChannelFixture(db, 'channel-routing-stop');
@@ -100,7 +100,7 @@ describe('routing write-back', () => {
 });
 
 describe('stop', () => {
-  it('revokes a run so it can never publish, and lets its requester stop it', async () => {
+  it('revokes a job so it can never publish, and lets its requester stop it', async () => {
     const { asMember, asOwner, channel } = await fixture.createTeamChannel();
     const coder = await fixture.addAgent(channel.id, 'Coder');
     const message = await asOwner.send(channel.id, {
@@ -110,26 +110,30 @@ describe('stop', () => {
       routing: 'jev',
     });
     const [job] = await jobsOf(db, message.id);
-    const run = (await execution.claim(channel.id, job.id, lease))!.run;
-    await execution.accepted(channel.id, run.id, run.fence, { nativeSessionId: 's' });
-    await execution.saveDraft(channel.id, run.id, run.fence, 'Draft');
+    await execution.claim(channel.id, job.id, lease);
+    await execution.accepted(channel.id, job.id, { nativeSessionId: 's' });
+    await execution.saveDraft(channel.id, job.id, 'Draft');
 
-    await expect(asMember.stop(channel.id, { runId: run.id })).rejects.toMatchObject({
+    await expect(asMember.stop(channel.id, { jobId: job.id })).rejects.toMatchObject({
       code: 'FORBIDDEN',
     });
-    const pending = await asOwner.stop(channel.id, { runId: run.id });
+    const pending = await asOwner.stop(channel.id, { jobId: job.id });
 
-    expect(pending.map((item) => item.id)).toEqual([run.id]);
-    expect(await runById(db, run.id)).toMatchObject({
+    expect(pending.map((item) => item.id)).toEqual([job.id]);
+    expect(await jobById(db, job.id)).toMatchObject({
       publicationRevoked: true,
-      status: 'stop_requested',
+      status: 'cancelled',
+      writerHeld: true,
     });
-    await expect(execution.publish(channel.id, run.id, run.fence)).rejects.toMatchObject({
+    await expect(execution.publish(channel.id, job.id)).rejects.toMatchObject({
       code: 'CONFLICT',
     });
 
-    await execution.releaseWriter(channel.id, run.id, run.fence);
-    expect(await runById(db, run.id)).toMatchObject({ status: 'stopped', writerReleased: true });
+    await execution.releaseWriter(channel.id, job.id);
+    expect(await jobById(db, job.id)).toMatchObject({ status: 'cancelled', writerHeld: false });
+    expect((await operationById(db, (await jobById(db, job.id)).operationId)).status).toBe(
+      'interrupted',
+    );
   });
 
   it('stops a branch: closes pending routing and cancels queued jobs there only', async () => {

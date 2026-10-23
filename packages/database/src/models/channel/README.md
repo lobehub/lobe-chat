@@ -5,22 +5,22 @@ This package provides the data contract only; it does not activate Channel route
 
 ## Canonical data
 
-| Responsibility                                                                  | Storage                                                                         |
-| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| Membership, roles, routing, branches, ordering                                  | Channel tables                                                                  |
-| Public branch timeline                                                          | `topics` (`mode=channel`, `channelId`, `userId=NULL`)                           |
-| Public body, files                                                              | `messages`, `messages_files`; `channel_messages.id` is the canonical message ID |
-| Private execution context                                                       | `topics` (`mode=channel_runtime`), ordinary messages/checkpoints                |
-| CLI resume handle                                                               | Private topic's `metadata.heteroSessionId`, never a database topic ID           |
-| Execution identity, outcome, usage, traces                                      | One `agent_operations` row per claimed run                                      |
-| Delivery receipt, cursor, publication fence, directory ownership, physical stop | Channel session/run extensions                                                  |
+| Responsibility                                                | Storage                                                                         |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| Membership, roles, routing, branches, ordering                | Channel tables                                                                  |
+| Public branch timeline                                        | `topics` (`mode=channel`, `channelId`, `userId=NULL`)                           |
+| Public body, files                                            | `messages`, `messages_files`; `channel_messages.id` is the canonical message ID |
+| Private execution context                                     | One new `topics` row per run (`mode=channel_runtime`), ordinary messages        |
+| CLI resume handle                                             | The run topic's `metadata.heteroSessionId`, never a database topic ID           |
+| Execution identity, status, errors, usage, traces             | One `agent_operations` row per claimed job; its `topicId` is the run topic      |
+| FIFO, frozen input, lease, writer/directory lock, publication | `channel_jobs` (the job is the run: at most one execution per delivery)         |
 
 Public history belongs to the Channel, not its creator. Author membership keeps attribution after
 an account is removed. Existing non-Channel topic/message rows still require a user owner. Private
-context belongs to the actual requesting user, not the Channel creator or agent owner. The session
-mapping binds agent member + branch + generation to a topic, principal and environment version.
-A principal/environment change, missing topic, or quarantine starts a fresh generation. Only an
-accepted input advances the cursor; rejected or unknown submissions never silently consume it.
+context belongs to the actual requesting user, not the Channel creator or agent owner. Every claim
+creates a fresh private topic and hands the runtime a full snapshot of the branch up to the
+request, so there is no session to resume across runs and no cursor to keep in sync. A retry is a
+new job (new `delivery_key`), never a second execution of the same job.
 
 Channels use `user_id` alongside `workspace_id`; authorization still uses membership.
 The optional `project_id` references `projects.id` and is cleared on project deletion,
@@ -35,8 +35,8 @@ Runtime/display configuration remains a snapshot; Agent access must be authorize
 - Channel transactions serialize writes with row locks, not a global revision counter.
   Realtime invalidation and missed-event recovery belong to the future subscription layer;
   canonical runtime updates and foreign-key cleanup do not all pass through Channel writes.
-  Message sequence, environment revisions, session generations and execution fences remain
-  independent correctness constraints, not versions of a whole-channel snapshot.
+  Message sequence and environment revisions remain independent correctness constraints, not
+  versions of a whole-channel snapshot.
 - `ChannelModel` checks Channel membership/role and workspace scope for public reads and writes.
   The eventual router must also authenticate active workspace membership.
 - Ordinary topic/message/operation constructors, search projection, sharing and memory extraction
@@ -45,14 +45,21 @@ Runtime/display configuration remains a snapshot; Agent access must be authorize
 - Trusted execution adapters use the topic/message/operation model's explicit `channelId` option
   **after authorization**. This is an internal scope selector, not a membership authorization API.
   It also binds runtime reads/writes to the requesting user; it cannot read the public timeline.
-- Pass the claim's `topic.id` and `run.operationId` into the existing runtime. Call `recordStart`
+- Pass the claim's `topic.id` and `job.operationId` into the existing runtime. Call `recordStart`
   on the reserved idle operation before acknowledging dispatch. A repeated start cannot reset a
   terminal operation. Native checkpoints and heterogeneous ingestion must use this same scope.
+- Execution status and errors are written only to the operation. The job's `status` is the
+  Channel outcome (queued, running, completed, failed, cancelled); release settles it from the
+  operation, e.g. an abandoned operation (unknown execution or isolation) fails the job.
 - Persist private transcript and usage through canonical models. Channel publication copies only
   the selected final reply and permitted attachments into the public timeline, never tool output
   or intermediate private history. File authorization must precede association with a message.
-- Operation completion is not physical process termination. Do not free a writer/directory lock
-  until stop/release is confirmed or explicitly quarantined. Never retry an unknown delivery.
+- Operation completion is not physical process termination. `writer_held` backs the per-member
+  and per-directory unique locks; only `releaseWriter` (physical stop confirmed) or a trusted
+  `notSubmitted` failure (nothing ran) clears it. Isolation frees the member but keeps the
+  directory locked until release. Never retry an unknown delivery.
+- Operations outlive their channel: `agent_operations.channel_id` is not a foreign key, so usage
+  history survives channel deletion and the stale id keeps it out of ordinary reads.
 - Generic operation status/stream/intervention endpoints intentionally reject Channel operations.
   A future Channel endpoint must independently authorize any public projection of execution state.
 

@@ -2,9 +2,9 @@ import type { ChannelMemberConfig, ChannelMemberRole } from '@lobechat/types';
 import { eq, inArray } from 'drizzle-orm';
 
 import {
+  agentOperations,
   channelJobs,
   channelMembers,
-  channelRuns,
   channels,
   devices,
   users,
@@ -65,6 +65,8 @@ export const createChannelFixture = (db: LobeChatDatabase, prefix: string) => {
   const cleanup = async () => {
     // Raw user deletion preserves Channel history; remove fixture-owned personal Channels too.
     await db.delete(channels).where(inArray(channels.userId, userIds));
+    // Operations outlive their channel by design; drop the ones this fixture ran.
+    await db.delete(agentOperations).where(inArray(agentOperations.userId, userIds));
     await db.delete(workspaces).where(eq(workspaces.id, workspaceId));
     await db.delete(users).where(inArray(users.id, userIds));
   };
@@ -106,7 +108,15 @@ export const createChannelFixture = (db: LobeChatDatabase, prefix: string) => {
 export const jobsOf = (db: LobeChatDatabase, messageId: string) =>
   db.select().from(channelJobs).where(eq(channelJobs.messageId, messageId));
 
-export const runById = async (db: LobeChatDatabase, runId: string) => {
-  const [run] = await db.select().from(channelRuns).where(eq(channelRuns.id, runId));
-  return run;
+export const jobById = async (db: LobeChatDatabase, jobId: string) => {
+  const [job] = await db.select().from(channelJobs).where(eq(channelJobs.id, jobId));
+  return job;
+};
+
+export const operationById = async (db: LobeChatDatabase, operationId: string | null) => {
+  const [operation] = await db
+    .select()
+    .from(agentOperations)
+    .where(eq(agentOperations.id, operationId!));
+  return operation;
 };

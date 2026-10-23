@@ -1,23 +1,7 @@
 import type { ChannelJobBlockCode } from '@lobechat/types';
-import {
-  and,
-  asc,
-  eq,
-  getTableColumns,
-  isNotNull,
-  isNull,
-  or,
-  sql as canonicalSql,
-} from 'drizzle-orm';
+import { and, asc, eq, getTableColumns, isNotNull, isNull, sql as canonicalSql } from 'drizzle-orm';
 
-import type {
-  ChannelItem,
-  ChannelJobItem,
-  ChannelMemberItem,
-  ChannelRunItem,
-  ChannelSessionItem,
-  TopicItem,
-} from '../../schemas';
+import type { ChannelItem, ChannelJobItem, ChannelMemberItem, TopicItem } from '../../schemas';
 import {
   agentOperations,
   agents,
@@ -25,8 +9,6 @@ import {
   channelMemberGrants,
   channelMembers,
   channelMessages,
-  channelRuns,
-  channelSessions,
   devices,
   topics,
 } from '../../schemas';
@@ -36,7 +18,6 @@ import { createNanoId } from '../../utils/idGenerator';
 import { findThread } from './delivery';
 import { buildManifest } from './manifest';
 import { audit } from './transaction';
-import { rotateSession } from './writer';
 
 export interface ChannelClaimOptions {
   /** Environment revision the device acknowledged; a claim for any other revision waits. */
@@ -48,13 +29,14 @@ export interface ChannelClaimOptions {
 }
 
 export interface ChannelClaim {
+  /** The claimed job, with its reserved `operationId` and frozen `manifest`. */
+  job: ChannelJobItem;
   member: ChannelMemberItem;
-  run: ChannelRunItem;
-  session: ChannelSessionItem;
+  /** Fresh private topic of this run; also the operation's `topicId`. */
   topic: TopicItem;
 }
 
-const DIRECTORY_LOCK = 'channel_runs_active_directory_unique';
+const DIRECTORY_LOCK = 'channel_jobs_active_directory_unique';
 
 const uniqueViolation = (error: unknown): string | undefined => {
   const pgError = error as {
@@ -163,13 +145,13 @@ const directoryBlock = async (
   if (!deviceId || !workingDirectory) return;
 
   const [busy] = await tx
-    .select({ id: channelRuns.id })
-    .from(channelRuns)
+    .select({ id: channelJobs.id })
+    .from(channelJobs)
     .where(
       and(
-        eq(channelRuns.deviceId, deviceId),
-        eq(channelRuns.workingDirectory, workingDirectory),
-        eq(channelRuns.writerReleased, false),
+        eq(channelJobs.deviceId, deviceId),
+        eq(channelJobs.workingDirectory, workingDirectory),
+        eq(channelJobs.writerHeld, true),
       ),
     )
     .limit(1);
@@ -224,15 +206,13 @@ export const claimJob = async (
     return null;
 
   const [busy] = await tx
-    .select({ id: channelRuns.id })
-    .from(channelRuns)
+    .select({ id: channelJobs.id })
+    .from(channelJobs)
     .where(
       and(
-        eq(channelRuns.memberId, member.id),
-        or(
-          and(eq(channelRuns.writerReleased, false), isNull(channelRuns.isolatedAt)),
-          and(eq(channelRuns.cleanupRequested, true), eq(channelRuns.physicalStopped, false)),
-        ),
+        eq(channelJobs.memberId, member.id),
+        eq(channelJobs.writerHeld, true),
+        isNull(channelJobs.isolatedAt),
       ),
     )
     .limit(1);
@@ -275,80 +255,25 @@ export const claimJob = async (
   }
 
   const thread = await findThread(tx, channel.id, job.threadId);
-  const scope = job.threadId ?? 'main';
-  let [session] = await tx
-    .select()
-    .from(channelSessions)
-    .where(and(eq(channelSessions.memberId, member.id), eq(channelSessions.scope, scope)));
-  let topic = session?.topicId
-    ? (await tx.select().from(topics).where(eq(topics.id, session.topicId)))[0]
-    : undefined;
-  const hasPreviousRun =
-    session && !topic
-      ? (
-          await tx
-            .select({ id: channelRuns.id })
-            .from(channelRuns)
-            .where(eq(channelRuns.sessionId, session.id))
-            .limit(1)
-        )[0]
-      : undefined;
-  if (
-    session &&
-    (session.principalUserId !== requester.userId ||
-      session.environmentRevision !== member.environmentRevision ||
-      hasPreviousRun)
-  ) {
-    await rotateSession(tx, session, {
-      principalUserId: requester.userId,
-      environmentRevision: member.environmentRevision,
-    });
-    [session] = await tx
-      .select()
-      .from(channelSessions)
-      .where(and(eq(channelSessions.memberId, member.id), eq(channelSessions.scope, scope)));
-    topic = undefined;
-  }
-  if (!topic) {
-    [topic] = await tx
-      .insert(topics)
-      .values({
-        channelId: channel.id,
-        userId: requester.userId,
-        workspaceId: channel.workspaceId,
-        mode: 'channel_runtime',
-        trigger: 'channel',
-        agentId: null,
-      })
-      .returning();
-    if (session) {
-      [session] = await tx
-        .update(channelSessions)
-        .set({ topicId: topic.id })
-        .where(eq(channelSessions.id, session.id))
-        .returning();
-    } else {
-      [session] = await tx
-        .insert(channelSessions)
-        .values({
-          channelId: channel.id,
-          memberId: member.id,
-          scope,
-          principalUserId: requester.userId,
-          environmentRevision: member.environmentRevision,
-          topicId: topic.id,
-        })
-        .returning();
-    }
-  }
-  const contextTopic = topic;
-  const manifest = await buildManifest(tx, { job, member, request, session, thread, topic });
+  const manifest = await buildManifest(tx, { job, member, request, thread });
 
   const now = new Date();
-  let run: ChannelRunItem;
+  let claimed: Omit<ChannelClaim, 'member'>;
   try {
-    // A savepoint, so losing the directory race to another channel keeps this transaction.
-    run = await tx.transaction(async (savepoint) => {
+    // A savepoint, so losing the directory race to another channel keeps this transaction
+    // and leaves no topic or operation behind.
+    claimed = await tx.transaction(async (savepoint) => {
+      const [topic] = await savepoint
+        .insert(topics)
+        .values({
+          channelId: channel.id,
+          userId: requester.userId,
+          workspaceId: channel.workspaceId,
+          mode: 'channel_runtime',
+          trigger: 'channel',
+          agentId: null,
+        })
+        .returning();
       const configuredAgent = member.agentId
         ? (
             await savepoint
@@ -363,33 +288,31 @@ export const claimJob = async (
         userId: requester.userId!,
         channelId: channel.id,
         workspaceId: channel.workspaceId,
-        topicId: contextTopic.id,
+        topicId: topic.id,
         agentId: configuredAgent?.id,
         trigger: 'channel',
         status: 'idle',
         model: member.config!.model,
         provider: member.config!.provider,
       });
-      const [inserted] = await savepoint
-        .insert(channelRuns)
-        .values({
-          operationId,
-          channelId: channel.id,
+      const [updated] = await savepoint
+        .update(channelJobs)
+        .set({
+          blockedCode: null,
+          blockedReason: null,
           deviceId: member.config!.deviceId,
-          environmentRevision: member.environmentRevision,
           executionConfig: member.config,
-          heartbeatAt: now,
-          jobId: job.id,
           leaseExpiresAt: new Date(now.getTime() + options.leaseMs),
           leaseOwner: options.leaseOwner,
           manifest,
-          memberId: member.id,
-          requesterMemberId: job.requesterMemberId,
-          sessionId: session.id,
+          operationId,
+          status: 'running',
           workingDirectory: member.config!.workingDirectory,
+          writerHeld: true,
         })
+        .where(eq(channelJobs.id, job.id))
         .returning();
-      return inserted;
+      return { job: updated, topic };
     });
   } catch (error) {
     const constraint = uniqueViolation(error);
@@ -399,15 +322,10 @@ export const claimJob = async (
     return null;
   }
 
-  await tx
-    .update(channelJobs)
-    .set({ blockedCode: null, blockedReason: null, status: 'running' })
-    .where(eq(channelJobs.id, job.id));
-  await audit(tx, channel.id, 'run_claimed', run.id, {
+  await audit(tx, channel.id, 'run_claimed', job.id, {
     cutoff: manifest.cutoffSequence,
-    jobId: job.id,
-    source: manifest.source,
+    operationId: claimed.job.operationId,
   });
 
-  return { member, run, session, topic };
+  return { ...claimed, member };
 };

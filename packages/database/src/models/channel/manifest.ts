@@ -1,24 +1,12 @@
 import type { ChannelInputManifest } from '@lobechat/types';
 import { CHANNEL_DELETED_USER_NAME } from '@lobechat/types';
-import {
-  and,
-  asc,
-  eq,
-  getTableColumns,
-  gt,
-  isNull,
-  lte,
-  or,
-  sql as canonicalSql,
-} from 'drizzle-orm';
+import { and, asc, eq, getTableColumns, isNull, lte, or, sql as canonicalSql } from 'drizzle-orm';
 
 import type {
   ChannelJobItem,
   ChannelMemberItem,
   ChannelMessageItem,
-  ChannelSessionItem,
   ChannelThreadItem,
-  TopicItem,
 } from '../../schemas';
 import { channelMembers, channelMessages, users } from '../../schemas';
 import { messages } from '../../schemas/message';
@@ -54,13 +42,9 @@ const rosterNames = async (tx: Transaction, channelId: string) => {
 };
 
 /**
- * Input for one run, frozen at claim time. A Thread sees its own messages plus the main
- * channel up to its root. An existing session receives only what it has not accepted; a new
- * one gets the full snapshot. Later messages belong to the next run.
- *
- * The request itself is always included. A message Jev routed late can sit behind the
- * session's cursor because the member already accepted newer ones; it arrived then only as
- * context, and the run needs it as its task.
+ * Input for one run, frozen at claim time. Every run starts a new private topic, so it gets
+ * the full snapshot of its branch up to the request: a Thread sees its own messages plus the
+ * main channel up to its root. Later messages belong to the next run.
  */
 export const buildManifest = async (
   tx: Transaction,
@@ -68,16 +52,11 @@ export const buildManifest = async (
     job: ChannelJobItem;
     member: ChannelMemberItem;
     request: ChannelMessageItem;
-    session: ChannelSessionItem;
     thread: ChannelThreadItem | null;
-    topic: TopicItem;
   },
 ): Promise<ChannelInputManifest> => {
-  const { job, member, request, session, thread } = params;
-  const incremental =
-    member.config?.runtime === 'native'
-      ? session.acceptedSequence > 0
-      : Boolean(params.topic.metadata?.heteroSessionId);
+  const { job, member, request, thread } = params;
+  // Jobs inherit the request's branch, so the request itself always sorts last.
   const cutoffSequence = request.sequence;
 
   const branch = thread
@@ -97,13 +76,10 @@ export const buildManifest = async (
       and(
         eq(channelMessages.channelId, job.channelId),
         lte(channelMessages.sequence, cutoffSequence),
-        incremental ? gt(channelMessages.sequence, session.acceptedSequence) : undefined,
         branch,
       ),
     )
     .orderBy(asc(channelMessages.sequence));
-  // The cutoff is the request's own sequence, so it always sorts last.
-  if (!visible.some((message) => message.id === request.id)) visible.push(request);
   const names = await rosterNames(tx, job.channelId);
   const attachments = await fileIdsByMessage(
     tx,
@@ -130,8 +106,6 @@ export const buildManifest = async (
     requestMessageId: request.id,
     requesterMemberId: job.requesterMemberId,
     self: { memberId: member.id, name: member.name ?? 'Agent' },
-    sessionGeneration: session.generation,
-    source: incremental ? 'incremental' : 'reconstructed',
     threadId: job.threadId,
     threadRootSequence: thread?.rootSequence ?? null,
   };

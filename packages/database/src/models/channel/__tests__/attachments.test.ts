@@ -78,7 +78,7 @@ describe('channel message attachments', () => {
 
     const claim = await execution.claim(channel.id, job.id, lease);
 
-    expect(claim?.run.manifest.messages).toEqual([
+    expect(claim?.job.manifest!.messages).toEqual([
       expect.objectContaining({ fileIds: [kept], id: message.id }),
     ]);
   });
