@@ -1,6 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { isRunnableProjectDirectory, startProjectTopicDraft } from './startProjectTopicDraft';
+import {
+  canStageDraftOn,
+  isRunnableProjectDirectory,
+  startProjectTopicDraft,
+} from './startProjectTopicDraft';
 
 const { chat } = vi.hoisted(() => ({
   chat: { setPendingNewTopicDirectory: vi.fn(), switchTopic: vi.fn() },
@@ -18,6 +22,22 @@ describe('isRunnableProjectDirectory', () => {
     expect(isRunnableProjectDirectory({ ...runnable, permission: 'read' })).toBe(false);
     expect(isRunnableProjectDirectory({ ...runnable, environmentId: null })).toBe(false);
     expect(isRunnableProjectDirectory({ ...runnable, instanceId: undefined })).toBe(false);
+  });
+});
+
+describe('canStageDraftOn', () => {
+  it('keeps a fixed agent on its device', () => {
+    const directory = {
+      deviceId: 'dev-a',
+      environmentId: 'env',
+      instanceId: 'ins',
+      permission: 'readWrite',
+    };
+
+    expect(canStageDraftOn(directory)).toBe(true);
+    expect(canStageDraftOn(directory, 'dev-a')).toBe(true);
+    expect(canStageDraftOn(directory, 'dev-b')).toBe(false);
+    expect(canStageDraftOn({ ...directory, permission: 'read' }, 'dev-a')).toBe(false);
   });
 });
 

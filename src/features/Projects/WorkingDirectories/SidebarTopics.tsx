@@ -30,7 +30,8 @@ import {
 import { filterTopics, type TopicListFilter } from '@/utils/client/topic';
 
 import { openProjectTopicModal } from './StartDirectoryModal';
-import { isRunnableProjectDirectory, startProjectTopicDraft } from './startProjectTopicDraft';
+import { canStageDraftOn, startProjectTopicDraft } from './startProjectTopicDraft';
+import { useAgentFixedDeviceId } from './useAgentFixedDeviceId';
 import { useProjectTopicReveal } from './useProjectTopicReveal';
 
 export function ProjectDirectoryTopics(props: { projectId: string; coordinatorAgentId: string }) {
@@ -82,6 +83,7 @@ function ProjectTopicList({
   // it is known so the unfiltered rows never paint.
   const isPreferenceLoading = !useWorkspacePreferenceReady();
   const navigate = useWorkspaceAwareNavigate();
+  const fixedDeviceId = useAgentFixedDeviceId(coordinatorAgentId);
   return (
     <Flexbox gap={1} paddingBlock={12}>
       <Flexbox horizontal align="center" justify="space-between" paddingInline={8}>
@@ -99,9 +101,9 @@ function ProjectTopicList({
             title={t('sidebar.newConversation')}
             onClick={() => {
               // Same habit as an agent's "+": a blank conversation on the first
-              // runnable directory, switchable in the composer before the first
+              // directory the coordinator can run in, switchable in the composer before the first
               // send. The modal only remains for a project with none yet.
-              const directory = directories.find(isRunnableProjectDirectory);
+              const directory = directories.find((d) => canStageDraftOn(d, fixedDeviceId));
               if (directory) {
                 startProjectTopicDraft({
                   agentId: coordinatorAgentId,

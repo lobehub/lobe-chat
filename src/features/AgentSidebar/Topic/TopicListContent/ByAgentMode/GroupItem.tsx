@@ -27,12 +27,13 @@ import { useTranslation } from 'react-i18next';
 import Avatar from '@/components/Avatar';
 import { openProjectTopicModal } from '@/features/Projects/WorkingDirectories/StartDirectoryModal';
 import {
-  isRunnableProjectDirectory,
+  canStageDraftOn,
   startProjectTopicDraft,
 } from '@/features/Projects/WorkingDirectories/startProjectTopicDraft';
+import { useAgentFixedDeviceId } from '@/features/Projects/WorkingDirectories/useAgentFixedDeviceId';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useAgentStore } from '@/store/agent';
-import { agentByIdSelectors, agentSelectors } from '@/store/agent/selectors';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useGlobalStore } from '@/store/global';
 import { type ProjectTopicSubGroupMode } from '@/store/global/initialState';
 import { systemStatusSelectors } from '@/store/global/selectors';
@@ -80,11 +81,6 @@ const GroupItem = memo<GroupItemComponentProps>(({ group }) => {
   const registeredMeta = useAgentStore((s) =>
     agentId ? agentSelectors.getAgentMetaById(agentId)(s) : undefined,
   );
-  const agencyConfig = useAgentStore((s) =>
-    agentId ? agentByIdSelectors.getAgencyConfigById(agentId)(s) : undefined,
-  );
-  const fixedDeviceId =
-    agencyConfig?.executionTargetSelectionPolicy === 'fixed' ? agencyConfig.boundDeviceId : undefined;
 
   const row = children[0] as AgentAttributedRow | undefined;
   // The unattributed bucket — or a bucket of the currently open agent — speaks
@@ -105,19 +101,14 @@ const GroupItem = memo<GroupItemComponentProps>(({ group }) => {
   // Only an attributed bucket in a project-scoped list can start a topic with
   // its agent preselected; the `no-agent` bucket has no agent to preselect.
   const canAddTopic = !!scope && !!agentId;
-  // A device section offering a directory that can't run work would stage a
-  // draft whose first send is refused, so its "+" only considers runnable ones.
-  const startDirectories = useMemo(() => {
-    if (!canAddTopic) return undefined;
-    const runnable = directories.filter(isRunnableProjectDirectory);
-    // An agent fixed to one device cannot run on any other: the send preflight
-    // in `resolveProjectDirectoryRun` refuses it, so a default picked elsewhere
-    // would open a draft that can never start. Prefer that device's directory
-    // and fall through to the modal (where one can be added) when it has none.
-    return fixedDeviceId
-      ? runnable.filter((directory) => directory.deviceId === fixedDeviceId)
-      : runnable;
-  }, [canAddTopic, directories, fixedDeviceId]);
+  // A directory that can't run work — or one on another device than the agent
+  // is fixed to — would stage a draft whose first send is refused, so both the
+  // default and the device sections' "+" only consider ones the agent can use.
+  const fixedDeviceId = useAgentFixedDeviceId(agentId);
+  const startDirectories = useMemo(
+    () => (canAddTopic ? directories.filter((d) => canStageDraftOn(d, fixedDeviceId)) : undefined),
+    [canAddTopic, directories, fixedDeviceId],
+  );
 
   const navigate = useWorkspaceAwareNavigate();
   // Same habit as an agent's "+": open a blank conversation on a directory and

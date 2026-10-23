@@ -1,4 +1,4 @@
-import { isRunnableProjectDirectory } from '@/features/Projects/WorkingDirectories/startProjectTopicDraft';
+import { canStageDraftOn } from '@/features/Projects/WorkingDirectories/startProjectTopicDraft';
 
 interface DeviceDirectoryLike {
   deviceId?: string | null;
@@ -10,15 +10,17 @@ interface DeviceDirectoryLike {
 
 /**
  * The add-topic affordance on a device group is only safe with a runnable
- * directory on THIS device — otherwise the blank conversation would be staged
- * somewhere the first send is refused, or on another device altogether.
+ * directory on THIS device that the draft's agent may run on — otherwise the
+ * blank conversation would be staged somewhere the first send is refused, or
+ * on another device altogether.
  */
 export const findDeviceTopicDirectory = <T extends DeviceDirectoryLike>(
   directories: T[],
   deviceId?: string,
+  fixedDeviceId?: string,
 ): T | undefined =>
   deviceId
-    ? directories.find((d) => d.deviceId === deviceId && isRunnableProjectDirectory(d))
+    ? directories.find((d) => d.deviceId === deviceId && canStageDraftOn(d, fixedDeviceId))
     : undefined;
 
 /**

@@ -274,6 +274,27 @@ describe('TopicByAgentGroupItem', () => {
     );
   });
 
+  /** @example Review: a fixed agent's "+" staged another device's directory, so the first send threw. */
+  it('offers a device section "+" only on the device a fixed agent is bound to', () => {
+    subGroupModes[GROUP_ID] = 'byDevice';
+    agencyConfigById.agt_acc_merge_alpha = {
+      boundDeviceId: 'device-2',
+      executionTargetSelectionPolicy: 'fixed',
+    };
+    directories[0] = { ...directories[0], ...runnable('ins-mac') };
+    directories[1] = { ...directories[1], ...runnable('ins-linux') };
+    renderGroup();
+
+    // Only the fixed device's section offers a "+".
+    expect(screen.getAllByRole('button', { name: 'directories.start' })).toHaveLength(1);
+
+    fireEvent.click(screen.getByRole('button', { name: 'sidebar.newConversation' }));
+
+    expect(startProjectTopicDraft).toHaveBeenCalledWith(
+      expect.objectContaining({ directoryId: 'binding-linux' }),
+    );
+  });
+
   it('keeps the modal for a project with no runnable directory, so one can be added', () => {
     renderGroup();
 

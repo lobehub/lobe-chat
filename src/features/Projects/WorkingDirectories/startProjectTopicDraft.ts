@@ -18,6 +18,16 @@ export const isRunnableProjectDirectory = (directory: RunnableDirectoryLike) =>
   !!directory.instanceId && !!directory.environmentId && directory.permission === 'readWrite';
 
 /**
+ * A runnable directory the draft's agent may also run in: an agent fixed to
+ * one device is refused anywhere else, so its draft must stay on that device.
+ */
+export const canStageDraftOn = (
+  directory: RunnableDirectoryLike & { deviceId?: string | null },
+  fixedDeviceId?: string,
+) =>
+  isRunnableProjectDirectory(directory) && (!fixedDeviceId || directory.deviceId === fixedDeviceId);
+
+/**
  * Open a blank project conversation on one directory, the same habit as an
  * agent's "+": no topic row is created here. The staged directory pins the
  * agent and device for the composer, and the first message creates the topic

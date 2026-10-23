@@ -44,6 +44,11 @@ describe('findDeviceTopicDirectory', () => {
     expect(findDeviceTopicDirectory(rows, 'dev-d')?.id).toBe('dir-d-ok');
   });
 
+  it('offers nothing on a device other than the one the agent is fixed to', () => {
+    expect(findDeviceTopicDirectory(directories, 'dev-a', 'dev-b')).toBeUndefined();
+    expect(findDeviceTopicDirectory(directories, 'dev-b', 'dev-b')?.id).toBe('dir-b-instance');
+  });
+
   it('returns undefined for groups without a device (favorites, unknown bucket)', () => {
     expect(findDeviceTopicDirectory(directories, undefined)).toBeUndefined();
     expect(findDeviceTopicDirectory(directories)).toBeUndefined();
