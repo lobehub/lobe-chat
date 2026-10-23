@@ -1055,6 +1055,12 @@ export class ProjectModel {
         agentTitle: agents.title,
         agentName: agents.name,
         agentAvatar: agents.avatar,
+        // The agent's execution-target pin, so a sidebar group can tell where
+        // the agent may start without loading every agent's full config.
+        agentExecutionTargetSelectionPolicy: sql<
+          string | null
+        >`${agents.agencyConfig}->>'executionTargetSelectionPolicy'`,
+        agentBoundDeviceId: sql<string | null>`${agents.agencyConfig}->>'boundDeviceId'`,
         updatedAt: topics.updatedAt,
         projectWorkingDirectoryId: topics.projectWorkingDirectoryId,
       })

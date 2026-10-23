@@ -959,6 +959,35 @@ describe('ProjectModel', () => {
     await expect(otherModel.listTopics(project.id)).rejects.toThrow('access denied');
   });
 
+  it("carries each agent's execution-target pin on its project topics", async () => {
+    const project = await createProject(model, { name: 'Pinned host' });
+    const [pinned] = await serverDB
+      .insert(agents)
+      .values({
+        agencyConfig: { boundDeviceId: 'device-mac', executionTargetSelectionPolicy: 'fixed' },
+        title: 'Pinned',
+        userId,
+      })
+      .returning();
+    const topicModel = new TopicModel(serverDB, userId);
+    await topicModel.create({ agentId: pinned.id, projectId: project.id, title: 'Pinned work' });
+    await topicModel.create({
+      agentId: project.coordinatorAgentId,
+      projectId: project.id,
+      title: 'Free work',
+    });
+
+    const list = await model.listTopics(project.id);
+    expect(list.find((t) => t.agentId === pinned.id)).toMatchObject({
+      agentBoundDeviceId: 'device-mac',
+      agentExecutionTargetSelectionPolicy: 'fixed',
+    });
+    expect(list.find((t) => t.agentId === project.coordinatorAgentId)).toMatchObject({
+      agentBoundDeviceId: null,
+      agentExecutionTargetSelectionPolicy: null,
+    });
+  });
+
   it('keeps agentless conversations visible in project listings', async () => {
     const project = await createProject(model, { name: 'Agentless host' });
     const topic = await new TopicModel(serverDB, userId).create({

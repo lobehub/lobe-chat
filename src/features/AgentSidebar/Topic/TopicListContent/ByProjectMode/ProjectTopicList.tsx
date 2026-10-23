@@ -62,6 +62,13 @@ const isStartableDirectory = (
   fixed: { boundDeviceId?: string } | undefined,
 ) => !!directory.runnable && (!fixed || directory.deviceId === fixed.boundDeviceId);
 
+/** Project topic rows carry their agent's execution-target pin. */
+interface AgentPinnedRow {
+  agentBoundDeviceId?: string | null;
+  agentExecutionTargetSelectionPolicy?: string | null;
+  agentId?: string | null;
+}
+
 const renderTopic = (topic: ChatTopic, suppressAgentAvatar?: boolean) => (
   <TopicItem
     fav={topic.favorite}
@@ -191,8 +198,19 @@ const ProjectTopicList = memo<ProjectTopicListProps>((props) => {
   const agencyConfig = useAgentStore((s) =>
     startAgentId ? agentByIdSelectors.getAgencyConfigById(startAgentId)(s) : undefined,
   );
-  const isFixed = agencyConfig?.executionTargetSelectionPolicy === 'fixed';
-  const boundDeviceId = agencyConfig?.boundDeviceId;
+  // Only agents the client has opened are in the agent store; every other
+  // agent's pin comes with its project topic rows.
+  const pinRow = startAgentId
+    ? (topics as AgentPinnedRow[]).find(
+        (topic) => topic.agentId === startAgentId && topic.agentExecutionTargetSelectionPolicy,
+      )
+    : undefined;
+  const isFixed =
+    (agencyConfig?.executionTargetSelectionPolicy ??
+      pinRow?.agentExecutionTargetSelectionPolicy) === 'fixed';
+  const boundDeviceId = agencyConfig
+    ? agencyConfig.boundDeviceId
+    : (pinRow?.agentBoundDeviceId ?? undefined);
   const startDirectories = useMemo(
     () =>
       props.startDirectories?.filter((item) =>

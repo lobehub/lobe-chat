@@ -411,6 +411,60 @@ describe('TopicByAgentGroupItem', () => {
     expect(screen.queryAllByRole('button', { name: 'directories.start' })).toHaveLength(0);
   });
 
+  /** @example Acceptance: a fixed agent not opened in this session still got a start on another device. */
+  it('reads the fixed device from the project topic rows when the agent is not loaded', () => {
+    // ROOT CAUSE: the agent store only holds agents the client has opened, so
+    // a sidebar group for any other agent saw no fixed target at all.
+    subGroupModes[GROUP_ID] = 'byDevice';
+    directories.splice(
+      0,
+      directories.length,
+      {
+        deviceId: 'device-1',
+        environmentId: 'env-1',
+        id: 'binding-mac',
+        instanceId: 'ins-mac',
+        permission: 'readWrite',
+        runnable: true,
+      },
+      {
+        deviceId: 'device-2',
+        environmentId: 'env-1',
+        id: 'binding-linux-new',
+        instanceId: 'ins-linux',
+        permission: 'readWrite',
+        runnable: true,
+      },
+    );
+    render(
+      <TopicListScopeContext value={{ projectId: 'project-1' }}>
+        <AccordionRoot defaultValue={[GROUP_ID]}>
+          <GroupItem
+            expanded
+            group={{
+              children: [
+                {
+                  agentBoundDeviceId: 'device-1',
+                  agentExecutionTargetSelectionPolicy: 'fixed',
+                  agentId: 'agt_acc_merge_alpha',
+                  createdAt: 1,
+                  id: 't1',
+                  title: 'Loose topic',
+                  updatedAt: 1,
+                },
+              ] as any,
+              id: GROUP_ID,
+              title: '验收合并-Alpha',
+            }}
+          />
+        </AccordionRoot>
+      </TopicListScopeContext>,
+    );
+
+    expect(screen.getByRole('button', { name: 'MacBook' })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'Studio Linux' })).toBeNull();
+  });
+
   const renderInProject = (agentId: string) =>
     render(
       <TopicListScopeContext value={{ coordinatorAgentId: 'agt_lead', projectId: 'prj_1' }}>
