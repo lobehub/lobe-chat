@@ -2,8 +2,9 @@
 
 import { toast } from '@lobehub/ui';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router';
+import { useLocation, useParams, useSearchParams } from 'react-router';
 
+import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { mutate as globalMutate } from '@/libs/swr';
 import { isAcceptanceListKey } from '@/libs/swr/keys';
 import { verifyService } from '@/services/verify';
@@ -19,7 +20,7 @@ import AcceptanceFocusReview from './AcceptanceFocusReview';
 
 const AcceptanceFocusWorkspace = () => {
   const { t } = useTranslation('verify');
-  const navigate = useNavigate();
+  const navigate = useWorkspaceAwareNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const query = searchParams.toString() ? `?${searchParams}` : '';

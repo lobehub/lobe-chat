@@ -386,7 +386,9 @@ const TopicItemRow = memo<TopicItemRowProps>(
     // while the user is viewing the topic, like markTopicUnread's own guard.
     const isRunningTailUnread = isMaskedRunningTail && !isTopicActive;
 
-    const hasUnread = id && (isUnreadCompleted || isRunningTailUnread);
+    // `status` is the row's own copy: a project list keeps its topics outside
+    // the chat store, so `isUnreadCompleted` never sees them there.
+    const hasUnread = id && (isUnreadCompleted || status === 'unread' || isRunningTailUnread);
 
     useEffect(() => {
       if (!activeAgentId || !id || !isUnreadCompleted || hasLocalRunningRuntime) return;

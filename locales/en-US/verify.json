@@ -582,6 +582,8 @@
   "acceptance.workspace.renameError": "Failed to rename",
   "acceptance.workspace.renameModal.description": "Renames this entry only. The source topic, task or document keeps its own title.",
   "acceptance.workspace.renameSuccess": "Renamed",
+  "acceptance.workspace.scope.personal": "Personal",
+  "acceptance.workspace.scope.switch": "Switch workspace",
   "acceptance.workspace.searchDeeper": "Search further back",
   "acceptance.workspace.searchScope": "Searched the {{count}} loaded acceptance(s).",
   "acceptance.workspace.statusError": "Failed to update status",

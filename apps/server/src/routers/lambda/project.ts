@@ -202,6 +202,8 @@ export const projectRouter = router({
         ctx.projectModel,
         requireResult(await ctx.projectModel.findByReference(input.id)),
       );
+      // TODO(2026-12-31): remove with `ProjectModel.joinTopicAgents`.
+      await ctx.projectModel.joinTopicAgents(project.id);
       const [agents, completionReviews, knowledgeBases, tasks, works] = await Promise.all([
         ctx.projectModel.listAgents(project.id),
         ctx.projectModel.listCompletionReviews(project.id),

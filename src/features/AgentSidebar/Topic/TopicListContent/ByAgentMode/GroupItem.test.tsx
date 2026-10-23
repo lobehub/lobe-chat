@@ -2,7 +2,7 @@
  * @vitest-environment happy-dom
  */
 import { AccordionRoot } from '@lobehub/ui';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { TopicListScopeContext } from '../../TopicListScope';
@@ -10,12 +10,19 @@ import GroupItem from './GroupItem';
 
 const subGroupModes: Record<string, string> = {};
 let registeredMeta: { avatar?: string; name?: string; title?: string } = {};
+const agencyConfigById: Record<
+  string,
+  { boundDeviceId?: string; executionTargetSelectionPolicy?: string }
+> = {};
 
 vi.mock('@/store/agent', () => ({
   useAgentStore: (selector: (state: unknown) => unknown) => selector({ activeAgentId: 'agent-1' }),
 }));
 
 vi.mock('@/store/agent/selectors', () => ({
+  agentByIdSelectors: {
+    getAgencyConfigById: (id: string) => () => agencyConfigById[id],
+  },
   agentSelectors: {
     currentAgentMeta: () => ({ title: '验收合并-Alpha', avatar: '🅰️' }),
     getAgentMetaById: () => () => registeredMeta,
@@ -33,14 +40,41 @@ vi.mock('@/store/global/selectors', () => ({
   },
 }));
 
-const directories: { deviceId: string; id: string; instanceId?: string }[] = [];
+const directories: {
+  deviceId: string;
+  environmentId?: string;
+  id: string;
+  instanceId?: string;
+  permission?: string;
+}[] = [];
+const runnable = (instanceId: string) => ({
+  environmentId: 'env-1',
+  instanceId,
+  permission: 'readWrite',
+});
 
 vi.mock('@/store/projectWorkingDirectory', () => ({
   useProjectDirectories: () => directories,
 }));
 
-vi.mock('@/features/Projects/WorkingDirectories/StartDirectoryModal', () => ({
+const { navigate, openProjectTopicModal, startProjectTopicDraft } = vi.hoisted(() => ({
+  navigate: vi.fn(),
   openProjectTopicModal: vi.fn(),
+  startProjectTopicDraft: vi.fn(),
+}));
+
+vi.mock('@/features/Projects/WorkingDirectories/StartDirectoryModal', () => ({
+  openProjectTopicModal,
+}));
+vi.mock(
+  '@/features/Projects/WorkingDirectories/startProjectTopicDraft',
+  async (importOriginal) => ({
+    ...(await importOriginal<object>()),
+    startProjectTopicDraft,
+  }),
+);
+vi.mock('@/features/Workspace/useWorkspaceAwareNavigate', () => ({
+  useWorkspaceAwareNavigate: () => navigate,
 }));
 
 vi.mock('@/store/device', () => ({
@@ -135,8 +169,10 @@ const renderGroup = () =>
 
 describe('TopicByAgentGroupItem', () => {
   beforeEach(() => {
+    vi.clearAllMocks();
     for (const key of Object.keys(subGroupModes)) delete subGroupModes[key];
     registeredMeta = {};
+    for (const key of Object.keys(agencyConfigById)) delete agencyConfigById[key];
     directories.splice(
       0,
       directories.length,
@@ -179,10 +215,108 @@ describe('TopicByAgentGroupItem', () => {
     // device, but the new-topic modal only lists instance-bound directories,
     // so a legacy directory opened with an unselectable raw id.
     subGroupModes[GROUP_ID] = 'byDevice';
-    directories[0] = { ...directories[0], instanceId: 'ins-mac' };
+    directories[0] = { ...directories[0], ...runnable('ins-mac') };
     renderGroup();
 
     expect(screen.getAllByRole('button', { name: 'directories.start' })).toHaveLength(1);
+  });
+
+  /** @example User report: the device "+" popped a "new topic" modal instead of opening the composer. */
+  it('starts a blank conversation on the device directory from the section "+" without a modal', () => {
+    // ROOT CAUSE: the project sidebar "+" always opened the work-location
+    // modal and created the topic row up front, unlike an agent's "+", which
+    // only opens the composer and lets the first message create the topic.
+    subGroupModes[GROUP_ID] = 'byDevice';
+    directories[1] = { ...directories[1], ...runnable('ins-linux') };
+    renderGroup();
+
+    fireEvent.click(screen.getByRole('button', { name: 'directories.start' }));
+
+    expect(startProjectTopicDraft).toHaveBeenCalledWith({
+      agentId: 'agt_acc_merge_alpha',
+      directoryId: 'binding-linux',
+      navigate,
+      projectId: 'project-1',
+    });
+    expect(openProjectTopicModal).not.toHaveBeenCalled();
+  });
+
+  /** @example Review: the agent "+" staged a read-only directory, so the first send was refused. */
+  it('skips a directory that cannot run when the agent "+" picks the default', () => {
+    directories[0] = { ...directories[0], ...runnable('ins-mac'), permission: 'read' };
+    directories[1] = { ...directories[1], ...runnable('ins-linux') };
+    renderGroup();
+
+    fireEvent.click(screen.getByRole('button', { name: 'sidebar.newConversation' }));
+
+    expect(startProjectTopicDraft).toHaveBeenCalledWith(
+      expect.objectContaining({ directoryId: 'binding-linux' }),
+    );
+  });
+
+  /** @example Review: an agent fixed to one device staged a directory on another, so the first send was refused. */
+  it('picks a directory on the device a fixed agent is bound to', () => {
+    // ROOT CAUSE: the agent "+" took the first runnable directory whatever the
+    // agent's fixed execution target was, and `resolveProjectDirectoryRun`
+    // throws "Agent is fixed to another execution target" on the first send.
+    directories[0] = { ...directories[0], ...runnable('ins-mac') };
+    directories[1] = { ...directories[1], ...runnable('ins-linux') };
+    agencyConfigById.agt_acc_merge_alpha = {
+      boundDeviceId: 'device-2',
+      executionTargetSelectionPolicy: 'fixed',
+    };
+    renderGroup();
+
+    fireEvent.click(screen.getByRole('button', { name: 'sidebar.newConversation' }));
+
+    expect(startProjectTopicDraft).toHaveBeenCalledWith(
+      expect.objectContaining({ directoryId: 'binding-linux' }),
+    );
+  });
+
+  /** @example Review: a fixed agent's "+" staged another device's directory, so the first send threw. */
+  it('offers a device section "+" only on the device a fixed agent is bound to', () => {
+    subGroupModes[GROUP_ID] = 'byDevice';
+    agencyConfigById.agt_acc_merge_alpha = {
+      boundDeviceId: 'device-2',
+      executionTargetSelectionPolicy: 'fixed',
+    };
+    directories[0] = { ...directories[0], ...runnable('ins-mac') };
+    directories[1] = { ...directories[1], ...runnable('ins-linux') };
+    renderGroup();
+
+    // Only the fixed device's section offers a "+".
+    expect(screen.getAllByRole('button', { name: 'directories.start' })).toHaveLength(1);
+
+    fireEvent.click(screen.getByRole('button', { name: 'sidebar.newConversation' }));
+
+    expect(startProjectTopicDraft).toHaveBeenCalledWith(
+      expect.objectContaining({ directoryId: 'binding-linux' }),
+    );
+  });
+
+  it('opens the modal instead of a draft for an agent fixed to a non-device target', () => {
+    subGroupModes[GROUP_ID] = 'byDevice';
+    directories[0] = { ...directories[0], ...runnable('ins-mac') };
+    directories[1] = { ...directories[1], ...runnable('ins-linux') };
+    agencyConfigById.agt_acc_merge_alpha = { executionTargetSelectionPolicy: 'fixed' };
+    renderGroup();
+
+    expect(screen.queryAllByRole('button', { name: 'directories.start' })).toHaveLength(0);
+
+    fireEvent.click(screen.getByRole('button', { name: 'sidebar.newConversation' }));
+
+    expect(startProjectTopicDraft).not.toHaveBeenCalled();
+    expect(openProjectTopicModal).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps the modal for a project with no runnable directory, so one can be added', () => {
+    renderGroup();
+
+    fireEvent.click(screen.getByRole('button', { name: 'sidebar.newConversation' }));
+
+    expect(startProjectTopicDraft).not.toHaveBeenCalled();
+    expect(openProjectTopicModal).toHaveBeenCalledTimes(1);
   });
 
   const renderInProject = (agentId: string) =>

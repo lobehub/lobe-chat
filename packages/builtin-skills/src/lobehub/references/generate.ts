@@ -4,7 +4,7 @@ Generate text, images, videos, and audio. Alias: \`lh generate\`.
 
 ## Subcommands
 
-- \`lh gen text <prompt> [-m <model>] [-p <provider>] [--stream] [--temperature <t>]\` - Generate text
+- \`lh gen text <prompt> [-m <model>] [-p <provider>] [--temperature <t>]\` - Generate text
 - \`lh gen image <prompt> [-m <model>] [-n <count>] [--width <w>] [--height <h>]\` - Generate image
 - \`lh gen video <prompt> -m <model> -p <provider> [--aspect-ratio <r>] [--duration <d>] [--resolution <res>]\` - Generate video
 - \`lh gen tts <text> [-m <model>] [-p <provider>] [-o <output>] [--voice <v>] [--speed <s>]\` - Text-to-speech using the selected provider's saved configuration
@@ -16,7 +16,7 @@ Generate text, images, videos, and audio. Alias: \`lh generate\`.
 ## Tips
 
 - Image/video generation is async; use \`status\` or \`download\` to get results
-- \`--stream\` for text generation outputs tokens as they arrive
+- Text generation returns the complete response, without incremental streaming
 - \`--pipe\` for text generation outputs only the raw text (no formatting)
 
 ## Finding Available Video / Image Models

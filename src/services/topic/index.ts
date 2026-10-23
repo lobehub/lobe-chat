@@ -202,6 +202,11 @@ export class TopicService {
     return lambdaClient.topic.updateTopicMetadata.mutate({ id, metadata });
   };
 
+  /** `unread` → `active` only while the topic is still unread; `null` when it was not. */
+  markTopicRead = (id: string) => {
+    return lambdaClient.topic.markTopicRead.mutate({ id });
+  };
+
   settleRunningOperation = (
     id: string,
     operationId: string,
