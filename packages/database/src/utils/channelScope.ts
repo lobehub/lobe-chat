@@ -1,8 +1,48 @@
 import { and, eq, getTableColumns, isNull, sql } from 'drizzle-orm';
-import type { AnyPgColumn } from 'drizzle-orm/pg-core';
+import type { AnyPgColumn, PgTable } from 'drizzle-orm/pg-core';
+import { getTableConfig } from 'drizzle-orm/pg-core';
 
 import { messages } from '../schemas/message';
 import { topics } from '../schemas/topic';
+
+interface ParentRefs {
+  messageId?: AnyPgColumn;
+  topicId?: AnyPgColumn;
+}
+
+const parentRefsByTable = new WeakMap<PgTable, ParentRefs>();
+
+/**
+ * The topic and message a row belongs to, taken from declared foreign keys rather than column
+ * names: `topicId` must reference `topics.id`, and `messageId` (or the primary key of a
+ * message's one-to-one child, such as `message_plugins.id`) must reference `messages.id`.
+ * A column that only records an id is not a parent: `llm_generation_tracing.topic_id` keeps
+ * its rows after the topic is deleted, and `agent_mails.message_id` holds an email Message-ID.
+ */
+const parentRefs = (table: PgTable): ParentRefs => {
+  const cached = parentRefsByTable.get(table);
+  if (cached) return cached;
+
+  const columns = getTableColumns(table) as Record<string, AnyPgColumn | undefined>;
+  const foreignKeys = getTableConfig(table).foreignKeys.map((fk) => fk.reference());
+  const referencing = (column: AnyPgColumn | undefined, parent: PgTable) =>
+    column &&
+    foreignKeys.some(
+      (ref) =>
+        ref.foreignTable === parent &&
+        ref.columns.length === 1 &&
+        ref.columns[0].name === column.name,
+    )
+      ? column
+      : undefined;
+
+  const refs: ParentRefs = {
+    messageId: referencing(columns.messageId, messages) ?? referencing(columns.id, messages),
+    topicId: referencing(columns.topicId, topics),
+  };
+  parentRefsByTable.set(table, refs);
+  return refs;
+};
 
 /**
  * Channel data is not an ordinary workspace conversation. Generic read/write paths fail
@@ -11,15 +51,15 @@ import { topics } from '../schemas/topic';
  * is not a membership grant and must never be sourced from a public API input.
  */
 export const channelScopeWhere = (userIdColumn: AnyPgColumn, channelId?: string) => {
-  const columns = getTableColumns(userIdColumn.table);
-  const tableName = Reflect.get(userIdColumn.table, Symbol.for('drizzle:OriginalName')) as string;
+  const table = userIdColumn.table as PgTable;
+  const columns = getTableColumns(table);
   const match = (column: AnyPgColumn) =>
     channelId === undefined ? isNull(column) : eq(column, channelId);
   const channelColumn = columns.channelId as AnyPgColumn | undefined;
   const predicates = channelColumn ? [match(channelColumn)] : [];
+  const { messageId, topicId } = parentRefs(table);
 
   // An explicit alias keeps correlated references intact in Drizzle relational queries.
-  const topicId = columns.topicId as AnyPgColumn | undefined;
   if (topicId) {
     const parentScope =
       channelId === undefined
@@ -31,11 +71,6 @@ export const channelScopeWhere = (userIdColumn: AnyPgColumn, channelId?: string)
     ))`);
   }
 
-  // Plugins use the message id as their PK; attachment/query rows have a messageId.
-  const messageId = (columns.messageId ??
-    (['message_plugins', 'message_translates', 'message_tts'].includes(tableName)
-      ? columns.id
-      : undefined)) as AnyPgColumn | undefined;
   if (messageId) {
     const parentScope =
       channelId === undefined
@@ -58,3 +93,10 @@ export const channelScopeWhere = (userIdColumn: AnyPgColumn, channelId?: string)
 
   return and(...predicates);
 };
+
+/**
+ * Excludes Channel rows for code that scopes `table` by owner directly instead of through
+ * `buildWorkspaceWhere`: digests, self-learning, summaries. Same rule as the default
+ * {@link channelScopeWhere}; AND it in next to the `notShareVisitor*` predicates.
+ */
+export const notChannelData = (table: { userId: AnyPgColumn }) => channelScopeWhere(table.userId);

@@ -43,7 +43,12 @@ Runtime/display configuration remains a snapshot; Agent access must be authorize
   The eventual router must also authenticate active workspace membership.
 - Ordinary topic/message/operation constructors, search projection, sharing and memory extraction
   exclude Channel data, even for workspace owners. Workspace membership alone does not expose it.
-  Parent scope also protects older writers that omit the child's `channelId`.
+  Parent scope also protects older writers that omit the child's `channelId`. It follows declared
+  foreign keys (`topicId` → `topics.id`; `messageId`, or a one-to-one child's `id`, →
+  `messages.id`), so a table that only records an id, such as `llm_generation_tracing.topic_id`,
+  is not parent-scoped: a Channel integration that writes such rows must scope them itself.
+  Code that filters `messages` / `topics` by owner directly instead of through
+  `buildWorkspaceWhere` must AND in `notChannelData` (nightly digest, expertise backfill).
 - Trusted execution adapters use the topic/message/operation model's explicit `channelId` option
   **after authorization**. This is an internal scope selector, not a membership authorization API.
   It also binds runtime reads/writes to the requesting user; it cannot read the public timeline.
