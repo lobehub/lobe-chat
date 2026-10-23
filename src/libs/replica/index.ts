@@ -83,6 +83,31 @@ export const cacheScope: ReplicaScope = {
   use: useSourceScope,
 };
 
+/**
+ * The identity half of a cache scope (`${userId}:${workspaceId}`), with the
+ * workspace replaced by a marker no workspace id can take.
+ */
+export const identityScopeOf = (scope: string): string => {
+  const separator = scope.indexOf(':');
+  return `${separator === -1 ? scope : scope.slice(0, separator)}:*`;
+};
+
+/**
+ * A scope partitioned by identity only, for data the server owns per user and
+ * shares across workspaces (user memories, personal model preferences).
+ *
+ * Partitioning such a resource per workspace lets a switch hydrate another
+ * workspace's older persisted copy, and leaves one `clear()` unable to reach
+ * the rows written in the others. The gates still follow the live scope, so an
+ * untrusted (identity-unresolved) scope keeps refusing writes.
+ */
+export const identityOnlyScope: ReplicaScope = {
+  canHydrate: () => cacheScope.canHydrate?.() ?? true,
+  canPersist: () => cacheScope.canPersist(),
+  get: () => identityScopeOf(cacheScope.get()),
+  use: () => identityScopeOf(cacheScope.use()),
+};
+
 export type ReplicaStorageKind = 'indexedDB' | 'localStorage' | 'memory';
 
 type AppStorageOption<TData> =

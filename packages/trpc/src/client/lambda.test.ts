@@ -192,6 +192,24 @@ describe('lambdaClient transport lanes', () => {
     expect(tokenUrl).not.toContain('agent.getAgentConfigById');
   });
 
+  // Entering a workspace revalidates every SWR key at once; batched, the read
+  // that decides whether to open workspace onboarding waited for the slowest
+  // home read and the admin stayed on the home page.
+  it('sends the workspace settings read as its own unbatched request', async () => {
+    fetchMock.mockImplementation(respondByLane);
+
+    await Promise.all([
+      lambdaClient.workspace.getSettings.query(),
+      lambdaClient.agent.getAgentConfigById.query({ agentId: 'agt_test' }),
+    ]);
+
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    const settingsUrl = requestedUrls().find((url) => url.includes('workspace.getSettings'));
+    expect(settingsUrl).toBeDefined();
+    expect(settingsUrl).not.toContain('batch=1');
+    expect(settingsUrl).not.toContain('agent.getAgentConfigById');
+  });
+
   // One-shot relay: the server reads the channel this tab subscribed from the
   // request headers, so the call carries its own headers and never shares a
   // batch with calls that must not be relayed.

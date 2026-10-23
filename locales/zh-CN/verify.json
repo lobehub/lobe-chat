@@ -582,6 +582,8 @@
   "acceptance.workspace.renameError": "重命名失败",
   "acceptance.workspace.renameModal.description": "仅重命名这条记录，来源话题 / 任务 / 文档的标题不变。",
   "acceptance.workspace.renameSuccess": "已重命名",
+  "acceptance.workspace.scope.personal": "个人",
+  "acceptance.workspace.scope.switch": "切换工作区",
   "acceptance.workspace.searchDeeper": "搜索更早的记录",
   "acceptance.workspace.searchScope": "已在载入的 {{count}} 条中搜索。",
   "acceptance.workspace.statusError": "状态更新失败",

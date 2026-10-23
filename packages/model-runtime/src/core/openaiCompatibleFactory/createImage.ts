@@ -1,4 +1,4 @@
-import { cleanObject } from '@lobechat/utils/object';
+import { cleanObject } from '../../utils/object';
 import createDebug from 'debug';
 import type { RuntimeImageGenParamsValue } from 'model-bank';
 import type OpenAI from 'openai';

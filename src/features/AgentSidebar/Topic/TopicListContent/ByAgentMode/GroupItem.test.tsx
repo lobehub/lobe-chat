@@ -9,6 +9,7 @@ import { TopicListScopeContext } from '../../TopicListScope';
 import GroupItem from './GroupItem';
 
 const subGroupModes: Record<string, string> = {};
+let registeredMeta: { avatar?: string; name?: string; title?: string } = {};
 
 vi.mock('@/store/agent', () => ({
   useAgentStore: (selector: (state: unknown) => unknown) => selector({ activeAgentId: 'agent-1' }),
@@ -17,7 +18,7 @@ vi.mock('@/store/agent', () => ({
 vi.mock('@/store/agent/selectors', () => ({
   agentSelectors: {
     currentAgentMeta: () => ({ title: '验收合并-Alpha', avatar: '🅰️' }),
-    getAgentMetaById: () => () => ({}),
+    getAgentMetaById: () => () => registeredMeta,
   },
 }));
 
@@ -135,6 +136,7 @@ const renderGroup = () =>
 describe('TopicByAgentGroupItem', () => {
   beforeEach(() => {
     for (const key of Object.keys(subGroupModes)) delete subGroupModes[key];
+    registeredMeta = {};
     directories.splice(
       0,
       directories.length,
@@ -198,6 +200,29 @@ describe('TopicByAgentGroupItem', () => {
         </AccordionRoot>
       </TopicListScopeContext>,
     );
+
+  /** @example User report: the project sidebar named an agent bucket by its role, not its name. */
+  it('names an untitled bucket after the registered agent name, not its title', () => {
+    // ROOT CAUSE: the registry fallback read `title` before `name`, so a named
+    // agent ("Cook") showed its role ("公共CC(美国 100刀)") as the group label.
+    registeredMeta = { name: 'Cook', title: '公共CC(美国 100刀)' };
+    render(
+      <TopicListScopeContext value={{ coordinatorAgentId: 'agt_lead', projectId: 'prj_1' }}>
+        <AccordionRoot>
+          <GroupItem
+            expanded={false}
+            group={{
+              children: [{ createdAt: 1, id: 't1', title: 'Plan', updatedAt: 1 }],
+              id: 'agent:agt_cook',
+            }}
+          />
+        </AccordionRoot>
+      </TopicListScopeContext>,
+    );
+
+    expect(screen.getAllByText('Cook').length).toBeGreaterThan(0);
+    expect(screen.queryByText('公共CC(美国 100刀)')).toBeNull();
+  });
 
   it("tags the project's main agent as its lead", () => {
     renderInProject('agt_lead');
