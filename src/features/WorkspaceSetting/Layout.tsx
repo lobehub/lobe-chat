@@ -40,6 +40,7 @@ const COMPACT_HEADER_TABS = new Set<string>([
   WorkspaceSettingsTabs.Stats,
   WorkspaceSettingsTabs.Storage,
   WorkspaceSettingsTabs.Teams,
+  WorkspaceSettingsTabs.Trash,
   WorkspaceSettingsTabs.Usage,
 ]);
 
