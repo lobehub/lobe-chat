@@ -14,6 +14,9 @@ export const toRecentEntityRef = (item: Pick<RecentItem, 'id' | 'type'>): Recent
 
 export interface RecentState {
   allRecentsDrawerOpen: boolean;
+  /** Home "Recent topics" per view and limit, the view of the `homeTopicRecentList` replica. */
+  homeTopicRecentMap: Record<string, RecentItem[]>;
+  homeTopicRecentReplica: ReplicaState<RecentItem[]>;
   /** Recents per query (`limit:N`), the view of the `recentList` replica. */
   recentListMap: Record<string, RecentItem[]>;
   /** Replica bookkeeping for `recentListMap`. */
@@ -28,6 +31,8 @@ export interface RecentState {
 
 export const initialRecentState: RecentState = {
   allRecentsDrawerOpen: false,
+  homeTopicRecentMap: {},
+  homeTopicRecentReplica: createReplicaState(),
   recentListMap: {},
   recentListReplica: createReplicaState(),
   resourceRecentFilesMap: {},

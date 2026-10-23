@@ -19,8 +19,11 @@ import { fileService } from '@/services/file';
 import { recentService } from '@/services/recent';
 import { taskService } from '@/services/task';
 import { useHomeStore } from '@/store/home';
+import { HOME_TOPIC_RECENT_LIMIT } from '@/store/home/slices/recent/action';
 import { createRecentQueryKey, initialRecentState } from '@/store/home/slices/recent/initialState';
 import {
+  homeTopicRecentListResource,
+  type HomeTopicRecentView,
   recentFileListResource,
   recentListResource,
   recentPageListResource,
@@ -367,5 +370,102 @@ describe('resource home recents replica', () => {
 
     await waitFor(() => expect(result.current.isHydrated).toBe(true));
     expect(homeRecentSelectors.resourceFiles({})(useHomeStore.getState())).toBeUndefined();
+  });
+});
+
+const homeTopicsOf = (view: HomeTopicRecentView) =>
+  homeRecentSelectors.homeTopics({ limit: HOME_TOPIC_RECENT_LIMIT, view })(useHomeStore.getState());
+
+describe('home topic recents replica', () => {
+  it('paints the persisted topics before the network answers', async () => {
+    await homeTopicRecentListResource.storage!.set(
+      {
+        queryKey: homeTopicRecentListResource.storageKey({
+          limit: HOME_TOPIC_RECENT_LIMIT,
+          view: 'mine',
+        }),
+        scope,
+      },
+      { data: [item('t1', 'Cached topic', 'topic')], updatedAt: 1 },
+    );
+    vi.spyOn(recentService, 'getAll').mockImplementation(() => new Promise(() => {}));
+
+    const { result } = renderHook(
+      () => useHomeStore((s) => s.useFetchHomeTopicRecents)('mine', true),
+      { wrapper },
+    );
+
+    await waitFor(() => expect(homeTopicsOf('mine')?.[0].title).toBe('Cached topic'));
+    expect(result.current.isValidating).toBe(true);
+  });
+
+  it('narrows mine and team server-side and keeps each view in its own entry', async () => {
+    const getAll = vi
+      .spyOn(recentService, 'getAll')
+      .mockImplementation(async (_limit, _types, _preview, mineOnly) => [
+        item(mineOnly ? 'mine' : 'team', 'Topic', 'topic'),
+      ]);
+
+    renderHook(
+      () => {
+        useHomeStore((s) => s.useFetchHomeTopicRecents)('mine', true);
+        useHomeStore((s) => s.useFetchHomeTopicRecents)('team', true);
+      },
+      { wrapper },
+    );
+
+    await waitFor(() => {
+      expect(homeTopicsOf('mine')?.[0].id).toBe('mine');
+      expect(homeTopicsOf('team')?.[0].id).toBe('team');
+    });
+    expect(getAll).toHaveBeenCalledWith(HOME_TOPIC_RECENT_LIMIT, ['topic'], true, true, false);
+    expect(getAll).toHaveBeenCalledWith(HOME_TOPIC_RECENT_LIMIT, ['topic'], true, false, true);
+  });
+
+  it('seeds the persisted topics before any view mounts', async () => {
+    await homeTopicRecentListResource.storage!.set(
+      {
+        queryKey: homeTopicRecentListResource.storageKey({
+          limit: HOME_TOPIC_RECENT_LIMIT,
+          view: 'mine',
+        }),
+        scope,
+      },
+      { data: [item('t1', 'Cached topic', 'topic')], updatedAt: 1 },
+    );
+    const getAll = vi.spyOn(recentService, 'getAll');
+
+    await expect(useHomeStore.getState().preHydrateHomeTopicRecents('mine')).resolves.toBe(true);
+
+    expect(homeTopicsOf('mine')?.[0].title).toBe('Cached topic');
+    expect(getAll).not.toHaveBeenCalled();
+  });
+
+  it('does not fetch while disabled', () => {
+    const getAll = vi.spyOn(recentService, 'getAll');
+    renderHook(() => useHomeStore((s) => s.useFetchHomeTopicRecents)('mine', false), { wrapper });
+    expect(getAll).not.toHaveBeenCalled();
+  });
+
+  it("never paints another workspace's topics", async () => {
+    await homeTopicRecentListResource.storage!.set(
+      {
+        queryKey: homeTopicRecentListResource.storageKey({
+          limit: HOME_TOPIC_RECENT_LIMIT,
+          view: 'mine',
+        }),
+        scope: `${scope}-other-workspace`,
+      },
+      { data: [item('x', 'Theirs', 'topic')], updatedAt: 1 },
+    );
+    vi.spyOn(recentService, 'getAll').mockImplementation(() => new Promise(() => {}));
+
+    const { result } = renderHook(
+      () => useHomeStore((s) => s.useFetchHomeTopicRecents)('mine', true),
+      { wrapper },
+    );
+
+    await waitFor(() => expect(result.current.isHydrated).toBe(true));
+    expect(homeTopicsOf('mine')).toBeUndefined();
   });
 });

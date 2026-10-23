@@ -18,6 +18,8 @@ import { setNamespace } from '@/utils/storeDebug';
 
 import { type RecentEntityRef, toRecentEntityRef } from './initialState';
 import {
+  homeTopicRecentListResource,
+  type HomeTopicRecentParams,
   type RecentFileCard,
   recentFileListResource,
   recentListResource,
@@ -37,6 +39,8 @@ export const ALL_RECENTS_LIMIT = 50;
 export const RESOURCE_RECENT_FILES_LIMIT = 8;
 /** Cards in the resource home "Recent pages" grid. */
 export const RESOURCE_RECENT_PAGES_LIMIT = 6;
+/** Rows the home "Recent topics" block fetches; the user's count setting caps what it shows. */
+export const HOME_TOPIC_RECENT_LIMIT = 15;
 
 interface RenameRecentParams {
   id: string;
@@ -77,6 +81,7 @@ export class RecentActionImpl {
   /** Server writes per entity run in order; the newest optimistic title stays on top. */
   readonly #renameQueues = new Map<RecentEntityRef, Promise<unknown>>();
   readonly #recentList;
+  readonly #homeTopicRecentList;
   readonly #recents;
   readonly #resourceRecentFiles;
   readonly #resourceRecentPages;
@@ -92,6 +97,15 @@ export class RecentActionImpl {
       set,
       stateKey: 'recentListReplica',
       view: recordLens<HomeStore, RecentItem[]>('recentListMap'),
+    });
+    this.#homeTopicRecentList = createReplicaSlice(homeTopicRecentListResource, {
+      actionPrefix: n('homeTopicRecentList'),
+      fetcher: ({ limit, view }) =>
+        recentService.getAll(limit, ['topic'], true, view === 'mine', view === 'team'),
+      get,
+      set,
+      stateKey: 'homeTopicRecentReplica',
+      view: recordLens<HomeStore, RecentItem[]>('homeTopicRecentMap'),
     });
     this.#recents = linkReplicaEntity<RecentItem>([this.#recentList]);
     this.#resourceRecentFiles = createReplicaSlice(recentFileListResource, {
@@ -149,6 +163,11 @@ export class RecentActionImpl {
     await this.#recentList.revalidate();
   };
 
+  /** Revalidate the home "Recent topics" queries of the active identity. */
+  refreshHomeTopicRecents = async (): Promise<void> => {
+    await this.#homeTopicRecentList.revalidate();
+  };
+
   /**
    * Show the new title in every loaded recents query right away, write it to
    * the owning entity, and roll back on failure. Renames of one entity reach
@@ -169,6 +188,31 @@ export class RecentActionImpl {
       if (this.#renameQueues.get(ref) === operation) this.#renameQueues.delete(ref);
     }
   };
+
+  /**
+   * Seed the persisted "Recent topics" of a view before the home route paints,
+   * so a revisit shows the last rows instead of the loading skeleton. A later
+   * `useSync` hydrate is a no-op once the slot is filled.
+   */
+  preHydrateHomeTopicRecents = (view: HomeTopicRecentParams['view']): Promise<boolean> => {
+    const scope = homeTopicRecentListResource.scope.get();
+    // The slot may still hold the previous identity's rows; drop them before seeding.
+    this.#homeTopicRecentList.ensureScope(scope);
+    return this.#homeTopicRecentList.hydrate({ limit: HOME_TOPIC_RECENT_LIMIT, view }, scope);
+  };
+
+  /**
+   * Home chat-mode "Recent topics" of one view. Read the rows with
+   * `homeRecentSelectors.homeTopics`.
+   */
+  useFetchHomeTopicRecents = (
+    view: HomeTopicRecentParams['view'],
+    enabled: boolean,
+  ): ReplicaSyncResult =>
+    this.#homeTopicRecentList.useSync(
+      { limit: HOME_TOPIC_RECENT_LIMIT, view },
+      { enabled, revalidateOnFocus: false },
+    );
 
   /** "All recents" drawer. Read the rows with `homeRecentSelectors.query`. */
   useFetchAllRecents = (open: boolean): ReplicaSyncResult =>
