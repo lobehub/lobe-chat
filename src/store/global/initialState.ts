@@ -45,6 +45,7 @@ export type WorkingSidebarTab =
   | 'overview'
   | 'params'
   | 'review'
+  | 'search'
   | 'skills'
   | 'web'
   | (string & {});

@@ -15,6 +15,7 @@ import {
   PanelRightCloseIcon,
   PanelsTopLeftIcon,
   PlusIcon,
+  SearchIcon,
   Settings2Icon,
   SquareTerminalIcon,
 } from 'lucide-react';
@@ -52,6 +53,7 @@ import { getWorkingDirectoryPathString } from '@/helpers/workingDirectoryPath';
 import { useDeferredMount } from '@/hooks/useDeferredMount';
 import { useEffectiveAgencyConfig } from '@/hooks/useEffectiveAgencyConfig';
 import { useEffectiveWorkingDirectory } from '@/hooks/useEffectiveWorkingDirectory';
+import { useFindInTopicHotkey } from '@/hooks/useHotkeys';
 import { useLocalStorageState } from '@/hooks/useLocalStorageState';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors, chatConfigByIdSelectors } from '@/store/agent/selectors';
@@ -87,6 +89,7 @@ import PullRequest from './PullRequest';
 import { useLinkedPullRequest } from './PullRequest/useLinkedPullRequest';
 import ResourcesSection from './ResourcesSection';
 import Review from './Review';
+import { TopicSearchPane } from './Search';
 import { useSandboxFilesDirectory } from './useSandboxFilesDirectory';
 import { useTabContextMenuItems } from './useTabContextMenuItems';
 import WorkspaceTab from './WorkspaceTab';
@@ -421,6 +424,8 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
       ? currentPortalView.topicId
       : undefined;
   const isCurrentTopicComments = currentCommentTopicId === topicId;
+  const searchAvailable = !!topicId;
+  useFindInTopicHotkey(searchAvailable);
   const tabDescriptors = useMemo<SidebarTabDescriptor[]>(
     () => [
       { icon: SkillsIcon, key: 'skills', label: t('workingPanel.resources.filter.skills') },
@@ -437,6 +442,9 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
             { icon: GlobeIcon, key: 'web', label: t('workingPanel.resources.filter.web') },
           ]),
       { icon: BoxesIcon, key: 'works', label: t('workingPanel.works.title') },
+      ...(searchAvailable
+        ? [{ icon: SearchIcon, key: 'search', label: t('workingPanel.search.title') }]
+        : []),
       ...(commentsAvailable
         ? [{ icon: MessageCircleIcon, key: 'comments', label: t('topicComment.title') }]
         : []),
@@ -482,6 +490,7 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
       paramsAvailable,
       pullRequest,
       reviewAvailable,
+      searchAvailable,
       t,
     ],
   );
@@ -862,6 +871,7 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
     };
 
     const workspaceGroup = group('workspace', t('workingPanel.openMenu.workspace'), [
+      'search',
       'review',
       'pr',
       'files',
@@ -1049,6 +1059,17 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
                   >
                     <TopicCommentsSidebar />
                   </Flexbox>
+                )}
+                {!!topicId && (
+                  <Activity mode={showRightPanel && activeTab === 'search' ? 'visible' : 'hidden'}>
+                    <Flexbox className={styles.pane} style={{ overflow: 'hidden' }}>
+                      <TopicSearchPane
+                        active={!!showRightPanel && activeTab === 'search'}
+                        key={topicId}
+                        topicId={topicId}
+                      />
+                    </Flexbox>
+                  </Activity>
                 )}
                 {paramsAvailable && activeTab === 'params' && (
                   <Flexbox className={styles.pane}>

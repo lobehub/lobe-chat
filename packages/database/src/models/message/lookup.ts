@@ -1,3 +1,4 @@
+import { TOPIC_MESSAGE_SEARCH_LIMIT } from '@lobechat/const';
 import type { DBMessageItem, IThreadType, TopicMessageSearchMatch } from '@lobechat/types';
 import { ThreadType } from '@lobechat/types';
 import type { SQL } from 'drizzle-orm';
@@ -19,9 +20,6 @@ import { notShareVisitorMessage } from '../../utils/shareVisitor';
 import { buildWorkspaceWhere } from '../../utils/workspace';
 import { MessageScope } from './scope';
 import { buildMessageSearchSnippet } from './searchSnippet';
-
-/** Upper bound of one find-in-topic read; the result list says when it is reached. */
-export const TOPIC_SEARCH_LIMIT = 200;
 
 export class MessageLookupQueries extends MessageScope {
   /**
@@ -305,7 +303,7 @@ export class MessageLookupQueries extends MessageScope {
    */
   searchInTopic = async ({
     keyword,
-    limit = TOPIC_SEARCH_LIMIT,
+    limit = TOPIC_MESSAGE_SEARCH_LIMIT,
     topicId,
   }: {
     keyword: string;
