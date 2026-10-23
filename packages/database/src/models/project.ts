@@ -334,8 +334,8 @@ export class ProjectModel {
    * The order spans every project in the scope — including other members'
    * private ones the caller cannot see — so the move is applied to that full
    * list and every row is renumbered. Positions never collide across members,
-   * no caller needs to send the whole list, and the scope's rows are locked so
-   * concurrent moves apply one after another. `updated_at` is left alone:
+   * no caller needs to send the whole list, and a per-scope lock makes sure
+   * concurrent moves in one scope apply one after another. `updated_at` is left alone:
    * moving a project is not an edit, and the "recently updated" order must not
    * jump.
    */
@@ -344,6 +344,13 @@ export class ProjectModel {
     if (anchorId === id) return;
 
     await this.db.transaction(async (tx) => {
+      // Serialize moves per scope before reading the order. Locking the rows in
+      // the ordered read itself is not enough: under READ COMMITTED a waiting
+      // transaction would return the order it sorted before the wait.
+      await tx.execute(
+        sql`SELECT pg_advisory_xact_lock(hashtext(${`project-order:${this.workspaceId ?? `user:${this.userId}`}`}))`,
+      );
+
       const visible = await tx
         .select({ id: projects.id })
         .from(projects)
@@ -362,8 +369,7 @@ export class ProjectModel {
         .select({ id: projects.id })
         .from(projects)
         .where(scope)
-        .orderBy(sql`${projects.sortOrder} ASC NULLS FIRST`, desc(projects.updatedAt))
-        .for('update');
+        .orderBy(sql`${projects.sortOrder} ASC NULLS FIRST`, desc(projects.updatedAt));
 
       const order = rows.map((row) => row.id).filter((rowId) => rowId !== id);
       const anchorIndex = order.indexOf(anchorId);

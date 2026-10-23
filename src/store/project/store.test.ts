@@ -40,6 +40,7 @@ vi.mock('@/services/project', () => ({
     delete: vi.fn(),
     detail: vi.fn(),
     listAll: vi.fn(),
+    move: vi.fn(),
     removeAgent: vi.fn(),
     update: vi.fn(),
     updateKnowledgeBase: vi.fn(),
@@ -156,6 +157,72 @@ describe('project store replicas', () => {
     sync.rerender();
 
     await waitFor(() => expect(useProjectStore.getState().projectListMap.all).toBeUndefined());
+  });
+
+  describe('moveProject', () => {
+    const deferred = () => {
+      let resolve!: (value: unknown) => void;
+      let reject!: (error: unknown) => void;
+      const promise = new Promise((res, rej) => {
+        resolve = res;
+        reject = rej;
+      });
+      return { promise, reject, resolve };
+    };
+
+    const loadList = async (...ids: string[]) => {
+      vi.mocked(projectService.listAll).mockResolvedValue(ok(ids.map((id) => project(id))) as any);
+      renderHook(() => useProjectStore((s) => s.useFetchProjectList)(true), { wrapper });
+      await waitFor(() =>
+        expect(useProjectStore.getState().projectListMap[PROJECT_LIST_KEY]).toHaveLength(
+          ids.length,
+        ),
+      );
+    };
+    const names = () =>
+      useProjectStore.getState().projectListMap[PROJECT_LIST_KEY]?.map((p) => p.id);
+
+    it('moves the row at once and sends queued moves only after the earlier one lands', async () => {
+      await loadList('a', 'b', 'c');
+      const first = deferred();
+      vi.mocked(projectService.move)
+        .mockReturnValueOnce(first.promise as any)
+        .mockResolvedValueOnce(ok(undefined) as any);
+      const { moveProject } = useProjectStore.getState();
+
+      const one = moveProject('c', ['c', 'a', 'b']);
+      const two = moveProject('b', ['b', 'c', 'a']);
+
+      expect(names()).toEqual(['b', 'c', 'a']);
+      await Promise.resolve();
+      expect(projectService.move).toHaveBeenCalledTimes(1);
+      expect(projectService.move).toHaveBeenLastCalledWith('c', { beforeId: 'a' });
+
+      first.resolve(ok(undefined));
+      await Promise.all([one, two]);
+      expect(projectService.move).toHaveBeenCalledTimes(2);
+      expect(projectService.move).toHaveBeenLastCalledWith('b', { beforeId: 'c' });
+    });
+
+    it('drops moves queued behind a failed one and refetches the server order', async () => {
+      await loadList('a', 'b', 'c');
+      const first = deferred();
+      vi.mocked(projectService.move).mockReturnValueOnce(first.promise as any);
+      const { moveProject } = useProjectStore.getState();
+
+      const one = moveProject('c', ['c', 'a', 'b']);
+      const two = moveProject('b', ['b', 'c', 'a']);
+      vi.mocked(projectService.listAll).mockResolvedValue(
+        ok(['a', 'b', 'c'].map((id) => project(id))) as any,
+      );
+
+      first.reject(new Error('boom'));
+      await expect(one).rejects.toThrow('boom');
+      await two;
+
+      expect(projectService.move).toHaveBeenCalledTimes(1);
+      await waitFor(() => expect(names()).toEqual(['a', 'b', 'c']));
+    });
   });
 
   describe('mutations', () => {

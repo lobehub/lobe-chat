@@ -121,6 +121,7 @@ export const useProjectStore = createWithEqualityFn<ProjectStore>()(
 
     const refreshList = () => list.revalidate(PROJECT_LIST_KEY);
     let moveQueue: Promise<unknown> = Promise.resolve();
+    let moveGeneration = 0;
 
     // A project page is keyed by its route param, so one project can sit under
     // both its id and its slug.
@@ -187,10 +188,16 @@ export const useProjectStore = createWithEqualityFn<ProjectStore>()(
           items?.slice().sort((a, b) => (position.get(a.id) ?? -1) - (position.get(b.id) ?? -1)),
         );
 
-        const write = moveQueue.then(() => projectService.move(id, anchor));
-        // Later moves wait for this one but not for its outcome.
-        moveQueue = write.catch(() => undefined);
-        // On failure the server order is the truth; refetching also undoes the optimistic move.
+        // Moves are computed against the order the user sees, which assumes
+        // every earlier move landed. Once one fails, the queued ones are stale:
+        // drop them and let the refetch show the real order.
+        const generation = moveGeneration;
+        const write = moveQueue.then(() =>
+          generation === moveGeneration ? projectService.move(id, anchor) : undefined,
+        );
+        moveQueue = write.catch(() => {
+          moveGeneration += 1;
+        });
         return write.then(
           () => undefined,
           async (error) => {
