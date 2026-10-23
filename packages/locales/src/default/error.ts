@@ -111,7 +111,7 @@ export default {
   'exceededContext.title': 'Context Window Exceeded',
 
   'requestBodyTooLarge.desc':
-    'This request is too large for the model provider, often because the conversation contains many large images or files. Compact the context to summarize the history into text and try again.',
+    'This request is too large for the model provider, often because the conversation contains many large images or files. Compact the context to summarize the history into text and try again. If the large files are in the message you just sent, edit it to remove some of them first.',
   'requestBodyTooLarge.title': 'Request Too Large',
 
   'unknownError.copyTraceId': 'Trace ID Copied',
