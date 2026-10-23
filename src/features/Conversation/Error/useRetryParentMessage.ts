@@ -30,6 +30,7 @@ export const useRetryParentMessage = (id: string) => {
   return {
     disabled: !parentId,
     loading,
+    parentId,
     retryParentMessage,
   };
 };

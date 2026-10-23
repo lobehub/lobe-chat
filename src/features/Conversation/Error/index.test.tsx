@@ -517,6 +517,24 @@ describe('ErrorMessageExtra', () => {
     expect(screen.getByText('dynamic')).toBeInTheDocument();
   });
 
+  it('offers context compaction for an oversized request body', () => {
+    render(
+      <ErrorMessageExtra
+        error={{ message: 'response.RequestBodyTooLarge' }}
+        data={{
+          error: { type: AgentRuntimeErrorType.RequestBodyTooLarge } as any,
+          id: 'msg-request-too-large',
+        }}
+      />,
+    );
+
+    expect(screen.getByText('dynamic')).toBeInTheDocument();
+    expect(dynamicComponentPropsMock).toHaveBeenCalledWith({
+      id: 'msg-request-too-large',
+      reason: 'requestBodyTooLarge',
+    });
+  });
+
   it('renders the auth guide when the refreshed error is missing type but still carries session code', () => {
     render(
       <ErrorMessageExtra
