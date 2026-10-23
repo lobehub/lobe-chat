@@ -48,7 +48,8 @@ export const channels = pgTable(
       .$defaultFn(() => idGenerator('channels'))
       .notNull(),
     /**
-     * Who created the channel. Authorization reads the owner member, not this column.
+     * Creator and personal-channel device/cleanup boundary. Channel access and role
+     * permissions are checked through membership.
      * NULL once that account is deleted: a workspace channel outlives its creator, while
      * personal channels are deleted explicitly with the account (`UserModel.deleteUser`).
      */
@@ -106,9 +107,10 @@ export const channelMembers = pgTable(
     // Agent members
     /** NULL after Agent deletion; keep membership and authored history. */
     agentId: text('agent_id').references(() => agents.id, { onDelete: 'set null' }),
-    /** Display name sent to Jev and shown in the roster. Humans resolve theirs from `users`. */
+    /** Channel identity label, retained for authored history; not an Agent configuration copy. */
     name: text('name'),
     description: text('description').notNull().default(''),
+    /** Channel-specific device/directory environment only. */
     config: jsonb('config').$type<ChannelMemberConfig>(),
     executionPaused: boolean('execution_paused').notNull().default(false),
     /** Incremented on every device or directory switch; grants bind to one revision. */

@@ -1,5 +1,6 @@
-import type { ChannelJobBlockCode } from '@lobechat/types';
+import type { ChannelJobBlockCode, LobeAgentConfig } from '@lobechat/types';
 import { and, asc, eq, isNotNull, isNull, sql } from 'drizzle-orm';
+import type { PartialDeep } from 'type-fest';
 
 import type { ChannelItem, ChannelJobItem, ChannelMemberItem, TopicItem } from '../../schemas';
 import {
@@ -12,6 +13,7 @@ import {
 } from '../../schemas';
 import type { Transaction } from '../../type';
 import { createNanoId } from '../../utils/idGenerator';
+import { resolveExecutionConfig } from './agent';
 import { findThread } from './delivery';
 import { buildManifest } from './manifest';
 import { resolveTopic } from './topic';
@@ -24,6 +26,8 @@ export interface ChannelClaimOptions {
   leaseMs: number;
   /** Process or queue worker that will drive the run. */
   leaseOwner: string;
+  /** Trusted server defaults from getServerDefaultAgentConfig(); use {} when unconfigured. */
+  serverDefaultAgentConfig: PartialDeep<LobeAgentConfig>;
 }
 
 export interface ChannelClaim {
@@ -242,7 +246,14 @@ export const claimJob = async (
     return null;
   }
 
-  if (!member.agentId) {
+  const executionConfig = await resolveExecutionConfig(
+    tx,
+    channel,
+    member,
+    requester.userId,
+    options.serverDefaultAgentConfig,
+  );
+  if (!executionConfig) {
     await block(tx, job, 'unavailable', 'The Agent is unavailable');
     return null;
   }
@@ -268,6 +279,7 @@ export const claimJob = async (
         member,
         requester.userId!,
         request.sequence,
+        executionConfig,
       );
       const manifest = buildManifest({ afterSequence, job, member, request, thread });
       const operationId = `op_${createNanoId(16)()}`;
@@ -279,8 +291,8 @@ export const claimJob = async (
         agentId: member.agentId,
         trigger: 'channel',
         status: 'idle',
-        model: member.config!.model,
-        provider: member.config!.provider,
+        model: executionConfig.model,
+        provider: executionConfig.provider,
       });
       const [updated] = await savepoint
         .update(channelJobs)
@@ -289,7 +301,7 @@ export const claimJob = async (
           blockedCode: null,
           blockedReason: null,
           deviceId: member.config!.deviceId,
-          executionConfig: member.config,
+          executionConfig,
           leaseExpiresAt: new Date(now.getTime() + options.leaseMs),
           leaseOwner: options.leaseOwner,
           manifest,

@@ -27,6 +27,20 @@ claims, retaining authored history. Optional `channels.project_id` is cleared on
 Project association does not grant Channel access. Personal channels are removed with their owner;
 workspace channels retain their public history if the creator leaves or deletes their account.
 
+`ChannelRepository.addAgent` requires an admin and a usable Agent in the current scope. The
+nullable reference exists for deletion history, not for creating an unbound Agent member. The
+member's `config` contains only the Channel device, device owner and working directory. Its name
+and description are Channel identity/routing labels, retained for public history.
+
+Every claim rechecks the actual requester's Agent access and reads the Agent's current settings.
+Configuration uses the same merge function as AgentService: system defaults, server defaults,
+personal defaults (personal scope only), then the Agent. Workers must supply trusted
+`getServerDefaultAgentConfig()` output in `serverDefaultAgentConfig` (`{}` when unconfigured).
+The job's `executionConfig` freezes those settings, the Agent runtime and the Channel environment.
+Updating Agent settings affects the next claim, including already queued requests; it never
+rewrites an earlier job snapshot. A private, trashed, deleted or moved Agent fails the requester
+access check before any topic or operation is created.
+
 ## Topic continuation
 
 Every claim reserves a new operation, but normally continues the previous topic for the same
@@ -69,6 +83,11 @@ Author names and attachment availability are resolved at read time.
   `topic.id`, actual requester/Agent and `job.operationId` into the existing runtime. Persist the
   internal transcript with ordinary models; never copy all historical Channel input again when
   continuing. CLI adapters resume from `topic.metadata.heteroSessionId`.
+- Dispatch with the job's frozen Agent settings and Channel environment, not `member.config` or
+  a fresh settings lookup. Device routing and working-directory overrides come from the Channel
+  environment whose grant/revision and locks were checked, not the Agent's default device binding.
+  Knowledge and file contents still use the ordinary authorized runtime loaders; they are not
+  copied into this settings snapshot.
 - Call `recordStart` for the reserved idle operation before acknowledging dispatch. Only an exact
   user/workspace/topic/Agent match may initialize it. Repeated starts cannot overwrite running or
   terminal executions. The runtime remains responsible for normal topic activity updates.

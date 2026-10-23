@@ -1,3 +1,5 @@
+import type { LobeAgentConfig } from './agent';
+
 /**
  * Channel: a shared conversation where people and Agents talk together (LOBE-15104).
  *
@@ -36,21 +38,22 @@ export type ChannelMemberActorType = 'agent' | 'user';
 /** Role of a human member. Agent members carry no role. */
 export type ChannelMemberRole = 'admin' | 'member' | 'owner';
 
+/** Channel-specific execution environment; Agent settings always come from the Agent. */
 export interface ChannelMemberConfig {
-  avatar?: string;
-  backgroundColor?: string;
   deviceId?: string;
   /**
    * User whose device runs this member. Device calls route by this id, never by the channel
    * creator, so a workspace channel can use another member's device after its owner approves.
    */
   deviceOwnerId?: string;
-  model: string;
-  provider: string;
-  runtime: ChannelRuntime;
-  systemRole?: string;
   /** Set only from a device's canonical-path acknowledgement before claiming work. */
   workingDirectory?: string;
+}
+
+/** Effective Agent settings and Channel environment, frozen once when a job is claimed. */
+export interface ChannelExecutionConfig extends LobeAgentConfig, ChannelMemberConfig {
+  provider: string;
+  runtime: ChannelRuntime;
 }
 
 /**

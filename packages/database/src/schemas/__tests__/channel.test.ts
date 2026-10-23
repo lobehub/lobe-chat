@@ -27,9 +27,6 @@ const workspaceId = 'channel-schema-workspace';
 const agentConfig: ChannelMemberConfig = {
   deviceId: 'device-1',
   deviceOwnerId: ownerId,
-  model: 'gpt-5',
-  provider: 'openai',
-  runtime: 'codex',
   workingDirectory: '/repo',
 };
 
@@ -42,9 +39,19 @@ const createChannel = async (title = 'Channel') => {
     .insert(channelMembers)
     .values({ actorType: 'user', channelId: channel.id, role: 'owner', userId: ownerId })
     .returning();
+  const [source] = await serverDB
+    .insert(agents)
+    .values({ userId: ownerId, workspaceId })
+    .returning();
   const [agent] = await serverDB
     .insert(channelMembers)
-    .values({ actorType: 'agent', channelId: channel.id, config: agentConfig, name: 'Codex' })
+    .values({
+      actorType: 'agent',
+      agentId: source.id,
+      channelId: channel.id,
+      config: agentConfig,
+      name: 'Codex',
+    })
     .returning();
 
   return { agent, channel, owner };

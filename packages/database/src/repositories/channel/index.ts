@@ -5,6 +5,8 @@ import type { ChannelItem, ChannelJobItem, ChannelMessageItem } from '../../sche
 import { channelJobs, channelMembers, channelMessages, channels } from '../../schemas';
 import type { LobeChatDatabase, Transaction } from '../../type';
 import { normalizeWorkspaceId } from '../../utils/workspace';
+import type { ChannelAddAgentInput } from './agent';
+import { addAgentMember } from './agent';
 import { ChannelError } from './error';
 import { retryRouting } from './routing';
 import type { ChannelSendInput } from './send';
@@ -14,6 +16,7 @@ import { stopScope } from './stop';
 import { lockChannel } from './transaction';
 import type { ChannelAccess, ChannelWriteOptions } from './types';
 
+export type { ChannelAddAgentInput } from './agent';
 export type { ChannelClaim, ChannelClaimOptions } from './claim';
 export type { ChannelErrorCode } from './error';
 export { ChannelError } from './error';
@@ -70,6 +73,12 @@ export class ChannelRepository {
         .returning();
 
       return { channel, member } satisfies ChannelAccess;
+    });
+
+  /** Adds a usable Agent reference; a missing reference is allowed only for retained history. */
+  addAgent = async (channelId: string, input: ChannelAddAgentInput) =>
+    this.write(channelId, (tx, { channel }) => addAgentMember(tx, channel, this.userId, input), {
+      minRole: 'admin',
     });
 
   /** Active channels the caller belongs to in the current scope, newest first. */

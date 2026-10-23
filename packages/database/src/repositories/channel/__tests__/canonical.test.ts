@@ -59,7 +59,10 @@ const operationOf = (id: string | null) => operationById(db, id);
 describe('canonical channel persistence', () => {
   it('attributes operations to the member Agent reference', async () => {
     const team = await setup();
-    const [source] = await db.insert(agents).values({ userId: fixture.ownerId }).returning();
+    const [source] = await db
+      .insert(agents)
+      .values({ userId: fixture.ownerId, workspaceId: fixture.workspaceId })
+      .returning();
     await db
       .update(channelMembers)
       .set({ agentId: source.id })

@@ -106,9 +106,9 @@ describe('Channel topic continuation', () => {
           .where(eq(channelMembers.id, state.agent.id));
       if (reason === 'config')
         await db
-          .update(channelMembers)
-          .set({ config: { ...state.agent.config!, model: 'changed' } })
-          .where(eq(channelMembers.id, state.agent.id));
+          .update(agents)
+          .set({ model: 'changed' })
+          .where(eq(agents.id, state.agent.agentId!));
       if (reason === 'agent') {
         const [source] = await db
           .insert(agents)

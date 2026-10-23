@@ -1,3 +1,4 @@
+import type { ChannelExecutionConfig } from '@lobechat/types';
 import { and, desc, eq, isNotNull, isNull, ne } from 'drizzle-orm';
 import isEqual from 'fast-deep-equal';
 
@@ -16,6 +17,7 @@ export const resolveTopic = async (
   member: ChannelMemberItem,
   userId: string,
   requestSequence: number,
+  executionConfig: ChannelExecutionConfig,
 ) => {
   const [previous] = await tx
     .select({ job: channelJobs, operation: agentOperations, topic: topics })
@@ -48,7 +50,7 @@ export const resolveTopic = async (
     prior.draft !== null &&
     previous.operation?.status === 'done' &&
     prior.manifest.environmentRevision === member.environmentRevision &&
-    isEqual(prior.executionConfig, member.config) &&
+    isEqual(prior.executionConfig, executionConfig) &&
     topic.agentId === member.agentId &&
     topic.userId === userId &&
     topic.workspaceId === channel.workspaceId &&

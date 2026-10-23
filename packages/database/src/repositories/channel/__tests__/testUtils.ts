@@ -1,4 +1,4 @@
-import type { ChannelMemberConfig, ChannelMemberRole } from '@lobechat/types';
+import type { ChannelMemberConfig, ChannelMemberRole, ChannelRuntime } from '@lobechat/types';
 import { eq, inArray } from 'drizzle-orm';
 
 import {
@@ -14,7 +14,13 @@ import {
 import type { LobeChatDatabase } from '../../../type';
 import { ChannelRepository } from '..';
 
-export const nativeConfig: ChannelMemberConfig = {
+type AgentFixtureConfig = ChannelMemberConfig & {
+  model: string;
+  provider: string;
+  runtime: ChannelRuntime;
+};
+
+export const nativeConfig: AgentFixtureConfig = {
   model: 'gpt-5',
   provider: 'openai',
   runtime: 'native',
@@ -25,7 +31,7 @@ export const deviceConfig = (
   workingDirectory = '/repo',
   deviceId = 'device-1',
   deviceOwnerId?: string,
-): ChannelMemberConfig => ({
+): AgentFixtureConfig => ({
   deviceId,
   deviceOwnerId,
   model: 'gpt-5',
@@ -34,7 +40,7 @@ export const deviceConfig = (
   workingDirectory,
 });
 
-export const lease = { leaseMs: 60_000, leaseOwner: 'worker-1' };
+export const lease = { serverDefaultAgentConfig: {}, leaseMs: 60_000, leaseOwner: 'worker-1' };
 
 /**
  * Users and a workspace for one test file. Each file passes its own prefix so files can
@@ -76,13 +82,23 @@ export const createChannelFixture = (db: LobeChatDatabase, prefix: string) => {
     const [channel] = await db.select().from(channels).where(eq(channels.id, channelId));
     const [source] = await db
       .insert(agents)
-      .values({ userId: ownerId, workspaceId: channel.workspaceId })
+      .values({
+        userId: ownerId,
+        workspaceId: channel.workspaceId,
+        name,
+        model: config.model,
+        provider: config.provider,
+        agencyConfig:
+          config.runtime === 'native'
+            ? undefined
+            : { heterogeneousProvider: { type: config.runtime } },
+      })
       .returning();
-    const [agent] = await db
-      .insert(channelMembers)
-      .values({ actorType: 'agent', agentId: source.id, channelId, config, name })
-      .returning();
-    return agent;
+    return new ChannelRepository(db, ownerId, channel.workspaceId).addAgent(channelId, {
+      agentId: source.id,
+      config,
+      name,
+    });
   };
 
   const addPerson = async (channelId: string, userId: string, role: ChannelMemberRole) => {

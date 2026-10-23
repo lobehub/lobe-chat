@@ -1,8 +1,8 @@
 import type {
+  ChannelExecutionConfig,
   ChannelInputManifest,
   ChannelJobBlockCode,
   ChannelJobStatus,
-  ChannelMemberConfig,
 } from '@lobechat/types';
 import { sql } from 'drizzle-orm';
 import type { AnyPgColumn } from 'drizzle-orm/pg-core';
@@ -72,7 +72,7 @@ export const channelJobs = pgTable(
     /** Where the run's input ends, frozen at claim; later messages belong to the next job. */
     manifest: jsonb('manifest').$type<ChannelInputManifest>(),
     /** Member config frozen at claim time. */
-    executionConfig: jsonb('execution_config').$type<ChannelMemberConfig>(),
+    executionConfig: jsonb('execution_config').$type<ChannelExecutionConfig>(),
     /** Device of a device-hosted run; with `workingDirectory` it forms the directory lock. */
     deviceId: varchar('device_id', { length: 64 }),
     /** Canonical working directory acknowledged by the device. */
