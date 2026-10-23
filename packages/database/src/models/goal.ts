@@ -3,7 +3,10 @@ import { randomUUID } from 'node:crypto';
 import { GOAL_CLARIFICATION_TITLE, type GoalStatus } from '@lobechat/const/goal';
 import type {
   GoalDecisionOption,
+  GoalManagerPolicy,
   GoalNodeStatus,
+  GoalRolloutPolicy,
+  GoalRolloutState,
   GoalSupervisionState,
   GoalUnderstanding,
 } from '@lobechat/types';
@@ -104,6 +107,39 @@ export class GoalModel {
   };
 
   /**
+   * Lock the unfinished goals supervised from these conversations
+   * (`subject_type = 'topic'`). Finished goals are left out: nothing dispatches
+   * for them, so the agent they were run by stays part of their record. Call
+   * inside a transaction; the locks hold the rows until it commits.
+   */
+  lockUnfinishedBySubjectTopics = async (topicIds: string[]): Promise<GoalItem[]> => {
+    if (topicIds.length === 0) return [];
+    return this.db
+      .select()
+      .from(goals)
+      .where(
+        and(
+          eq(goals.subjectType, 'topic'),
+          inArray(goals.subjectId, topicIds),
+          notInArray(goals.status, [...TERMINAL_GOAL_STATUSES]),
+          this.ownership(),
+        ),
+      )
+      .for('update');
+  };
+
+  /** The Goal that owns a graph node, or undefined when the node is not in the caller's scope. */
+  findByNode = async (nodeId: string): Promise<GoalItem | undefined> => {
+    const [row] = await this.db
+      .select({ goal: goals })
+      .from(goalNodes)
+      .innerJoin(goals, eq(goalNodes.goalId, goals.id))
+      .where(and(eq(goalNodes.id, nodeId), this.ownership()))
+      .limit(1);
+    return row?.goal;
+  };
+
+  /**
    * Patch only `config.pausedBy`, leaving every other key in the column alone.
    *
    * The coordinator writes this marker from a tick while the user edits budget
@@ -136,6 +172,35 @@ export class GoalModel {
         config: taskAgentId
           ? sql`jsonb_set(COALESCE(${goals.config}, '{}'::jsonb), '{taskAgentId}', ${JSON.stringify(taskAgentId)}::jsonb)`
           : sql`COALESCE(${goals.config}, '{}'::jsonb) - 'taskAgentId'`,
+        updatedAt: new Date(),
+      })
+      .where(and(eq(goals.id, id), this.ownership()))
+      .returning();
+    return row as GoalItem | undefined;
+  };
+
+  /**
+   * Patch only one model slot of `config` — `model`/`provider` for planning
+   * turns, `taskModel`/`taskProvider` for Tasks — or drop it with `null`, for
+   * the same reason as `updateTaskAgentId`.
+   */
+  updateModelConfig = async (
+    id: string,
+    modelConfig: { model: string; provider: string } | null,
+    slot: 'planning' | 'task' = 'planning',
+  ) => {
+    const [modelKey, providerKey] =
+      slot === 'task' ? ['taskModel', 'taskProvider'] : ['model', 'provider'];
+    const patch = modelConfig && {
+      [modelKey]: modelConfig.model,
+      [providerKey]: modelConfig.provider,
+    };
+    const [row] = await this.db
+      .update(goals)
+      .set({
+        config: patch
+          ? sql`COALESCE(${goals.config}, '{}'::jsonb) || ${JSON.stringify(patch)}::jsonb`
+          : sql`COALESCE(${goals.config}, '{}'::jsonb) - ${modelKey}::text - ${providerKey}::text`,
         updatedAt: new Date(),
       })
       .where(and(eq(goals.id, id), this.ownership()))
@@ -188,6 +253,67 @@ export class GoalModel {
       .where(and(eq(goals.id, id), this.ownership()));
   };
 
+  /**
+   * Patch only `config.rolloutState`, for the same reason as
+   * `updateUnderstanding`: the coordinator writes batch progress while the user
+   * may be editing budget on the same column. Passing `null` clears the batch.
+   */
+  updateRolloutState = async (id: string, state: GoalRolloutState | null): Promise<void> => {
+    await this.db
+      .update(goals)
+      .set({
+        config:
+          state === null
+            ? sql`COALESCE(${goals.config}, '{}'::jsonb) - 'rolloutState'`
+            : sql`jsonb_set(COALESCE(${goals.config}, '{}'::jsonb), '{rolloutState}', ${JSON.stringify(state)}::jsonb)`,
+        updatedAt: new Date(),
+      })
+      .where(and(eq(goals.id, id), this.ownership()));
+  };
+
+  /**
+   * Patch only `config.manager`: open the main Agent policy unless one is
+   * already there, which is kept as it is. The coordinator opens one when its
+   * own planner hands a goal over.
+   */
+  openManagerPolicy = async (id: string, policy: GoalManagerPolicy): Promise<void> => {
+    await this.db
+      .update(goals)
+      .set({
+        config: sql`jsonb_set(COALESCE(${goals.config}, '{}'::jsonb), '{manager}', COALESCE(${goals.config}->'manager', ${JSON.stringify(policy)}::jsonb))`,
+        updatedAt: new Date(),
+      })
+      .where(and(eq(goals.id, id), this.ownership()));
+  };
+
+  /**
+   * Remove the policy a hand-over opened, only while it is still that one: a
+   * policy a person set or changed in the meantime has another token, or none.
+   */
+  closeHandoffManagerPolicy = async (id: string, token: string): Promise<void> => {
+    await this.db
+      .update(goals)
+      .set({ config: sql`${goals.config} - 'manager'`, updatedAt: new Date() })
+      .where(
+        and(
+          eq(goals.id, id),
+          this.ownership(),
+          sql`${goals.config}->'manager'->>'openedForHandoff' = ${token}`,
+        ),
+      );
+  };
+
+  /** Patch only `config.rollout`, so auto-detection can persist the policy. */
+  updateRolloutPolicy = async (id: string, policy: GoalRolloutPolicy): Promise<void> => {
+    await this.db
+      .update(goals)
+      .set({
+        config: sql`jsonb_set(COALESCE(${goals.config}, '{}'::jsonb), '{rollout}', ${JSON.stringify(policy)}::jsonb)`,
+        updatedAt: new Date(),
+      })
+      .where(and(eq(goals.id, id), this.ownership()));
+  };
+
   /** Compare-and-swap only the supervisor namespace; concurrent budget edits survive. */
   updateSupervisorState = async (
     id: string,
@@ -213,24 +339,36 @@ export class GoalModel {
   };
 
   update = async (id: string, value: Partial<Omit<GoalItem, 'id' | 'userId'>>) => {
+    // Policy editors may carry a pre-claim or pre-release snapshot. Runtime
+    // ownership always comes from the current row, never that snapshot, and
+    // policy edits cannot replace the concurrently written incident ledger.
+    const merged = sql`(COALESCE(${JSON.stringify(value.config ?? {})}::jsonb, '{}'::jsonb) - 'planningCheckpoint' - 'planningProtocol' - 'supervisorState' - 'managerState' - 'understanding' - 'quotaRetryWakeAt' - 'rolloutState')
+      || jsonb_strip_nulls(jsonb_build_object(
+        'planningCheckpoint', ${goals.config}->'planningCheckpoint',
+        'planningProtocol', ${goals.config}->'planningProtocol',
+        'supervisorState', ${goals.config}->'supervisorState',
+        'managerState', ${goals.config}->'managerState',
+        'understanding', ${goals.config}->'understanding',
+        'quotaRetryWakeAt', ${goals.config}->'quotaRetryWakeAt',
+        'rolloutState', ${goals.config}->'rolloutState'
+      ))`;
     const [row] = await this.db
       .update(goals)
       .set({
         ...value,
-        // Policy editors may carry a pre-claim or pre-release snapshot. Runtime
-        // ownership always comes from the current row, never that snapshot, and
-        // policy edits cannot replace the concurrently written incident ledger.
+        // The batch recipe (`rollout.spec`) is the coordinator's too: a pattern
+        // break rewrites it, and a stale snapshot must not put back the recipe
+        // that just failed. The person's own rollout settings still come from
+        // the edit; a policy the edit leaves out stays as it is.
         ...(value.config !== undefined
           ? {
-              config: sql`(COALESCE(${JSON.stringify(value.config ?? {})}::jsonb, '{}'::jsonb) - 'planningCheckpoint' - 'planningProtocol' - 'supervisorState' - 'managerState' - 'understanding' - 'quotaRetryWakeAt')
-                || jsonb_strip_nulls(jsonb_build_object(
-                  'planningCheckpoint', ${goals.config}->'planningCheckpoint',
-                  'planningProtocol', ${goals.config}->'planningProtocol',
-                  'supervisorState', ${goals.config}->'supervisorState',
-                  'managerState', ${goals.config}->'managerState',
-                  'understanding', ${goals.config}->'understanding',
-                  'quotaRetryWakeAt', ${goals.config}->'quotaRetryWakeAt'
-                ))`,
+              config: sql`CASE WHEN NOT COALESCE(jsonb_exists(${goals.config}, 'rollout'), false) THEN ${merged}
+                ELSE jsonb_set(
+                  ${merged},
+                  '{rollout}',
+                  COALESCE(${merged}->'rollout', ${goals.config}->'rollout')
+                    || jsonb_strip_nulls(jsonb_build_object('spec', ${goals.config}->'rollout'->'spec'))
+                ) END`,
             }
           : {}),
         updatedAt: new Date(),
@@ -381,6 +519,11 @@ export class GoalModel {
         options: goalNodeDecisions.options,
         question: goalNodeDecisions.question,
         recommendedOptionId: goalNodeDecisions.recommendedOptionId,
+        // A held batch release is reviewed in its own report; the gate row
+        // carries where that report lives.
+        releaseGateAcceptanceId: sql<
+          string | null
+        >`case when ${goals.config} -> 'rolloutState' ->> 'releaseReviewNodeId' = ${goalNodes.id}::text then ${goals.config} -> 'rolloutState' ->> 'releaseGateAcceptanceId' end`,
         sourceTaskId: source.taskId,
         sourceTitle: source.title,
       })
@@ -395,7 +538,15 @@ export class GoalModel {
       .where(
         and(
           this.ownership(),
-          notInArray(goals.status, ['paused', 'achieved', 'failed', 'canceled']),
+          // A goal parked on its own batch gate is paused exactly because it
+          // waits on this answer, so its gate is still asked.
+          or(
+            notInArray(goals.status, ['paused', 'achieved', 'failed', 'canceled']),
+            and(
+              eq(goals.status, 'paused'),
+              sql`${goals.config} ->> 'pausedBy' in ('release_review', 'pattern_break')`,
+            ),
+          ),
           eq(goalNodeDecisions.status, 'pending'),
           eq(goalNodeDecisions.authority, 'user'),
           // In a workspace every member can see the goal, but a gate is asked
@@ -650,6 +801,8 @@ export interface PendingGoalDecisionRow {
   options: GoalDecisionOption[] | null;
   question: string;
   recommendedOptionId: string | null;
+  /** The review report of a held batch release; null for every other gate. */
+  releaseGateAcceptanceId: string | null;
   /** The Task the gate was opened for; null for a goal-level question. */
   sourceTaskId: string | null;
   sourceTitle: string | null;

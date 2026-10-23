@@ -5,6 +5,7 @@ import { useAgentManagementAccess } from '@/features/ResourcePermission/useAgent
 import {
   applyTopicDeviceBinding,
   getTopicBoundDeviceId,
+  isTopicDeviceUnknown,
   resolveWorkspaceScoped,
 } from '@/helpers/executionTarget';
 import { useAgentStore } from '@/store/agent';
@@ -32,6 +33,11 @@ export interface UseEffectiveAgencyConfigResult {
    * should wait instead of acting on a value that may flip.
    */
   isPreferenceLoading: boolean;
+  /**
+   * The conversation holds a cwd but no recorded machine, so `agencyConfig`
+   * fell back to the agent default — which may not be where that cwd lives.
+   */
+  topicDeviceUnknown: boolean;
   /**
    * The effective config still comes from the workspace-shared fallback because
    * this member has not explicitly selected an execution target. Callers must
@@ -111,6 +117,20 @@ export const useEffectiveAgencyConfig = (
       agentId,
     ),
   );
+  // A project-directory topic runs in its bound directory, so its execution
+  // target is owned by the binding rather than the picker.
+  const isProjectDirectoryTopic = useChatStore(
+    (s) =>
+      !!bindingTopicId &&
+      !!topicSelectors.getTopicById(bindingTopicId)(s)?.projectWorkingDirectoryId,
+  );
+  const topicDeviceUnknown = useChatStore((s) =>
+    isTopicDeviceUnknown(
+      bindingTopicId ? topicSelectors.getTopicById(bindingTopicId)(s) : undefined,
+      agentId,
+      agentAgencyConfig,
+    ),
+  );
   const currentDeviceId = useElectronStore((s) => s.gatewayDeviceInfo?.deviceId);
   const { agencyConfig, workspaceScoped } = applyTopicDeviceBinding(
     {
@@ -129,8 +149,12 @@ export const useEffectiveAgencyConfig = (
     agencyConfig,
     canDisplayExecutionTarget: !!agentId && !isPreferenceLoading,
     canSelectExecutionTarget:
-      !!agentId && !isPreferenceLoading && agencyConfig?.executionTargetSelectionPolicy !== 'fixed',
+      !!agentId &&
+      !isProjectDirectoryTopic &&
+      !isPreferenceLoading &&
+      agencyConfig?.executionTargetSelectionPolicy !== 'fixed',
     isPreferenceLoading,
+    topicDeviceUnknown,
     workspaceScoped,
   };
 };

@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { registerProjectCommand } from './project';
 
@@ -13,7 +13,6 @@ const { mockClient, mockResolveWorkspaceId } = vi.hoisted(() => ({
       delete: { mutate: vi.fn() },
       detail: { query: vi.fn() },
       list: { query: vi.fn() },
-      moveTask: { mutate: vi.fn() },
       rejectCompletion: { mutate: vi.fn() },
       removeAgent: { mutate: vi.fn() },
       removeKnowledgeBase: { mutate: vi.fn() },
@@ -46,6 +45,21 @@ describe('project command', () => {
     vi.clearAllMocks();
     mockResolveWorkspaceId.mockReturnValue(undefined);
     vi.spyOn(console, 'log').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('links the project page in view --json output', async () => {
+    mockClient.project.detail.query.mockResolvedValue({
+      data: { project: { id: 'prj_1', name: 'Apollo' } },
+    });
+    await createProgram().parseAsync(['node', 'test', 'project', 'view', 'prj_1', '--json']);
+    expect(JSON.parse(vi.mocked(console.log).mock.calls.at(-1)![0])).toMatchObject({
+      project: { id: 'prj_1' },
+      url: 'https://app.example.com/project/prj_1',
+    });
   });
 
   it('creates a project', async () => {

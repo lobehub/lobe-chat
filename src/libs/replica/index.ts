@@ -15,12 +15,11 @@ import {
   createSWRDriver,
 } from '@lobechat/replica/zustand';
 
-import {
-  IndexedDBQueryProjectionStorage,
-  LocalStorageQueryProjectionStorage,
-} from '@/libs/queryProjectionStorage';
 import { mutate, useClientDataSWR } from '@/libs/swr';
 import { getCacheScope, isScopeTrusted, useCacheScope } from '@/libs/swr/useCacheScope';
+
+import { notifyReplicaDevtools, registerReplicaDevtools } from './devtools';
+import { AppIndexedDBStorage, AppLocalStorage } from './storage';
 
 /**
  * LobeHub wiring of `@lobechat/replica`: replicas are partitioned like the SWR
@@ -28,23 +27,99 @@ import { getCacheScope, isScopeTrusted, useCacheScope } from '@/libs/swr/useCach
  * fetch through the app's SWR hook (workspace-augmented keys, retry policy).
  */
 
+/**
+ * Where a runtime's replicas take their partition and their persistence gates.
+ *
+ * The main SPA (the default) resolves the scope from the user store: it
+ * hydrates the last-known user's partition in parallel with the session check
+ * and resets on a scope change, and it persists only once identity resolves.
+ *
+ * The Workbench runtime never mounts the user store, so it installs its own
+ * source at boot (`apps/workbench/src/shell/workbenchReplicaScope.ts`): network
+ * only on its public surfaces, and the same hydrate-then-verify contract as the
+ * main SPA on the private routes that run its session check.
+ */
+export interface ReplicaScopeSource {
+  /** Whether a persisted projection may be painted before the network answers. */
+  canHydrate: () => boolean;
+  /** Whether a server answer may be written to the persisted projection. */
+  canPersist: () => boolean;
+  get: () => string;
+  /** React hook form of `get`; must be stable for the runtime's lifetime. */
+  use: () => string;
+}
+
+/**
+ * The scope hook and getters are referenced at call time, not while this module
+ * body runs. `@/libs/swr/useCacheScope` imports `@/store/user`, and a user-store
+ * slice imports this module — so when `useCacheScope` is the entry of that
+ * cycle this module's body executes before `useCacheScope`'s exports are
+ * initialized. Referencing them here directly would bake `undefined` into the
+ * scope (a resource would then have no `scope.get`); resolving at call time is
+ * equivalent because they are stateless delegating functions.
+ */
+const useAppCacheScope = (): string => useCacheScope();
+
+const appScopeSource: ReplicaScopeSource = {
+  canHydrate: () => true,
+  canPersist: () => isScopeTrusted(),
+  get: () => getCacheScope(),
+  use: useAppCacheScope,
+};
+
+let scopeSource: ReplicaScopeSource = appScopeSource;
+
+/** Install this runtime's scope source. Call once at boot, before any render. */
+export const setReplicaScopeSource = (source: ReplicaScopeSource): void => {
+  scopeSource = source;
+};
+
+const useSourceScope = (): string => scopeSource.use();
+
 export const cacheScope: ReplicaScope = {
-  canPersist: isScopeTrusted,
-  get: getCacheScope,
-  use: useCacheScope,
+  canHydrate: () => scopeSource.canHydrate(),
+  canPersist: () => scopeSource.canPersist(),
+  get: () => scopeSource.get(),
+  use: useSourceScope,
+};
+
+/**
+ * The identity half of a cache scope (`${userId}:${workspaceId}`), with the
+ * workspace replaced by a marker no workspace id can take.
+ */
+export const identityScopeOf = (scope: string): string => {
+  const separator = scope.indexOf(':');
+  return `${separator === -1 ? scope : scope.slice(0, separator)}:*`;
+};
+
+/**
+ * A scope partitioned by identity only, for data the server owns per user and
+ * shares across workspaces (user memories, personal model preferences).
+ *
+ * Partitioning such a resource per workspace lets a switch hydrate another
+ * workspace's older persisted copy, and leaves one `clear()` unable to reach
+ * the rows written in the others. The gates still follow the live scope, so an
+ * untrusted (identity-unresolved) scope keeps refusing writes.
+ */
+export const identityOnlyScope: ReplicaScope = {
+  canHydrate: () => cacheScope.canHydrate?.() ?? true,
+  canPersist: () => cacheScope.canPersist(),
+  get: () => identityScopeOf(cacheScope.get()),
+  use: () => identityScopeOf(cacheScope.use()),
 };
 
 export type ReplicaStorageKind = 'indexedDB' | 'localStorage' | 'memory';
 
-type AppStorageOption<TData> = ReplicaStorageKind | ReplicaStorage<TData>;
+type AppStorageOption<TData> =
+  ReplicaStorageKind | ReplicaStorage<TData> | ((namespace: string) => ReplicaStorage<TData>);
 
 const resolveStorage =
   <TData>(storage: AppStorageOption<TData> = 'indexedDB') =>
   (namespace: string): ReplicaStorage<TData> | undefined => {
+    if (typeof storage === 'function') return storage(namespace);
     if (typeof storage === 'object') return storage;
-    if (storage === 'indexedDB') return new IndexedDBQueryProjectionStorage<TData>({ namespace });
-    if (storage === 'localStorage')
-      return new LocalStorageQueryProjectionStorage<TData>({ namespace });
+    if (storage === 'indexedDB') return new AppIndexedDBStorage<TData>({ namespace });
+    if (storage === 'localStorage') return new AppLocalStorage<TData>({ namespace });
     return undefined;
   };
 
@@ -81,7 +156,8 @@ export const definePagedReplica = <
 // module in eagerly, and test suites that mock `@/libs/swr` partially must
 // still be able to import it.
 export const replicaSWRDriver = createSWRDriver({
-  mutate: (match) => mutate(match),
+  // Arguments pass through as given: SWR tells a revalidation from a write by their count.
+  mutate: (...args) => (mutate as (...args: unknown[]) => Promise<unknown>)(...args),
   useSWR: (key, fetcher, config) => useClientDataSWR(key, fetcher, config),
 });
 
@@ -101,8 +177,22 @@ export const revalidateReplica = (
 export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
   resource: ReplicaResource<TParams, TData, TFetched>,
   options: Omit<CreateReplicaSliceOptions<TStore, TParams, TData, TFetched>, 'driver'>,
-) => createCoreReplicaSlice(resource, { driver: replicaSWRDriver, ...options });
+) => {
+  const { get, set, stateKey, view } = options;
+  const slice = createCoreReplicaSlice(resource, {
+    driver: replicaSWRDriver,
+    ...options,
+    set: (partial, replace, action) => {
+      set(partial, replace, action);
+      notifyReplicaDevtools();
+    },
+  });
 
+  registerReplicaDevtools(resource, { get, slice, stateKey, view });
+  return slice;
+};
+
+export { AppIndexedDBStorage, AppLocalStorage } from './storage';
 export * from '@lobechat/replica';
 export {
   recordLens,

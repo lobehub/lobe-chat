@@ -2,22 +2,20 @@
 
 import type { WorkingDirConfig, WorkingDirEntry } from '@lobechat/types';
 import { getWorkingDirEffectivePath, getWorkingDirSourcePath } from '@lobechat/types';
-import { Flexbox, Icon, Popover, Tooltip } from '@lobehub/ui';
-import { Text } from '@lobehub/ui/base-ui';
-import { cx } from 'antd-style';
+import { cx, Flexbox, Icon, Popover, Text, Tooltip } from '@lobehub/ui';
 import { CheckIcon, ChevronDownIcon, FolderPlusIcon, SquircleDashed } from 'lucide-react';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import DirIcon from '@/features/ChatInput/ControlBar/DirIcon';
 import { formatLockedControlTooltip } from '@/features/ChatInput/utils/lockedControlTooltip';
-import { useDeviceList } from '@/features/DeviceManager/useDeviceList';
 import { openAddWorkingDirModal } from '@/features/WorkingDirectory';
 import {
   getWorkingDirectoryName,
   getWorkingDirectoryPathString,
 } from '@/helpers/workingDirectoryPath';
 import { deviceService } from '@/services/device';
+import { useDeviceList } from '@/store/device';
 
 import { taskExecutionStyles as styles } from './taskExecutionStyles';
 import TaskPickerOption from './TaskPickerOption';
@@ -51,9 +49,9 @@ const TaskWorkingDirectoryChip = memo<TaskWorkingDirectoryChipProps>(
     const { t: tDevice } = useTranslation('device');
     const [open, setOpen] = useState(false);
 
-    // Read the canonical device list (the same SWR entry `useTaskRunTarget`
-    // fetches), not the device store: a task page may render nothing that
-    // populates the store, which left the recents empty on a cold load.
+    // `useDeviceList` mounts the device replica's sync itself: a task page may
+    // render nothing else that fetches the list, which left the recents empty
+    // on a cold load.
     const { data: devices } = useDeviceList();
     const device = devices?.find((item) => item.deviceId === deviceId);
     const deviceDefaultCwd = getWorkingDirectoryPathString(device?.defaultCwd ?? undefined);

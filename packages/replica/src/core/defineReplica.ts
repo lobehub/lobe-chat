@@ -4,6 +4,28 @@ import type { ReplicaResource, ReplicaScope, ReplicaStorage } from './types';
 /** Persisted row key: one row per entry key and query. */
 export const replicaStorageKey = (key: string, query?: string) => (query ? `${key}?${query}` : key);
 
+/**
+ * Whether `storageKey` is a persisted row of entry `key`, under any query.
+ *
+ * Entry keys are free-form, so a `?` prefix alone cannot tell `foo` + a query
+ * from a plain entry `foo?bar`. A row only counts as a variant when it is
+ * exactly `replicaStorageKey(key, query)` for a query this module could have
+ * written: the rest after `key?` must be a canonical `stableQueryKey` (it
+ * parses as JSON and serializes back to itself). Row keys and the index keep
+ * their existing flat format, so rows already persisted on devices match the
+ * same way.
+ */
+export const isReplicaStorageKeyOf = (storageKey: string, key: string): boolean => {
+  if (storageKey === key) return true;
+  if (!storageKey.startsWith(`${key}?`)) return false;
+  const query = storageKey.slice(key.length + 1);
+  try {
+    return stableQueryKey(JSON.parse(query)) === query;
+  } catch {
+    return false;
+  }
+};
+
 /** Deterministic JSON: sorted keys, `undefined` dropped. */
 export const stableQueryKey = (value: unknown): string =>
   JSON.stringify(value, (_key, item) =>
@@ -41,6 +63,17 @@ export interface DefineReplicaOptions<TParams, TData, TFetched = TData, TCursor 
   name: string;
   paging?: ReplicaPagingConfig<any, TCursor>;
   /**
+   * Bound what the resource keeps in storage. `maxEntries` caps the persisted
+   * rows (storage keys: one per entry key and query) per scope; past it the
+   * least recently used rows are evicted — their persisted row, index entry
+   * and, when nothing holds it, their memory entry. Use rows (a hydrate or a
+   * persist, including a skipped unchanged one) count as recent, and the order
+   * lives in the persisted index, so it survives reloads. A row on screen (a
+   * mounted `useSync`, see `retain`), with pending optimistic writes or a
+   * `loadMore` in flight is never evicted. Unbounded by default.
+   */
+  persist?: { maxEntries?: number };
+  /**
    * Entries that never touch storage (no hydrate, no persist) — e.g. scoped
    * buckets whose rows must not land under an ordinary entry. Defaults to all.
    */
@@ -56,6 +89,13 @@ export interface DefineReplicaOptions<TParams, TData, TFetched = TData, TCursor 
   scope?: ReplicaScope;
   /** Persisted copy of the replica. Omit for a memory-only replica (no first-frame paint). */
   storage?: ReplicaStorage<TData> | ReplicaStorageFactory<TData>;
+  /**
+   * Query-cache key of the network sync, for a resource adopting an existing
+   * key that other code already revalidates by. Defaults to `replicaKeys.sync`.
+   * With a custom key, revalidate through that key — `slice.revalidate` only
+   * matches default keys.
+   */
+  syncKey?: (params: TParams) => readonly unknown[];
   /** Bump to invalidate every persisted row written by older shapes. */
   version: number;
 }
@@ -70,6 +110,7 @@ export const defineReplica = <TParams, TData, TFetched = TData, TCursor = any>(
   return {
     fetcher: options.fetcher,
     key: options.key,
+    maxPersistedEntries: options.persist?.maxEntries,
     name: options.name,
     namespace,
     paging: options.paging,
@@ -82,6 +123,7 @@ export const defineReplica = <TParams, TData, TFetched = TData, TCursor = any>(
         options.query ? stableQueryKey(options.query(params)) : undefined,
       ),
     scope: options.scope ?? DEFAULT_SCOPE,
+    syncKey: options.syncKey,
     storage,
     version: options.version,
   };

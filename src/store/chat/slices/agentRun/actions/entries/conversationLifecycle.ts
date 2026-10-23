@@ -3,7 +3,10 @@ import { createCallAgentManifest } from '@lobechat/builtin-tool-agent-management
 import { GoalIdentifier, isGoalPrompt } from '@lobechat/builtin-tool-goal';
 import { isDesktop, isHeterogeneousAgentModelId, LOADING_FLAT } from '@lobechat/const';
 import { formatSelectedSkillsContext, formatSelectedToolsContext } from '@lobechat/context-engine';
-import { isRemoteHeterogeneousType } from '@lobechat/heterogeneous-agents';
+import {
+  collectHeteroAttachedFiles,
+  isRemoteHeterogeneousType,
+} from '@lobechat/heterogeneous-agents';
 import { chainCompressContext } from '@lobechat/prompts';
 import type {
   ChatAudioItem,
@@ -14,7 +17,6 @@ import type {
   MessageMetadata,
   SendMessageParams,
   SendMessageServerResponse,
-  UIChatMessage,
 } from '@lobechat/types';
 import {
   applyTopicModelToHeterogeneousProvider,
@@ -22,11 +24,13 @@ import {
   getWorkingDirSourcePath,
   RequestTrigger,
   resolveAgentAgencyConfig,
+  toComposerUserMessage,
 } from '@lobechat/types';
 import { generateEntityId, nanoid } from '@lobechat/utils';
-import { toast } from '@lobehub/ui/base-ui';
+import { toast } from '@lobehub/ui';
 import { t } from 'i18next';
 
+import { getActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import { type ChatInputEditor } from '@/features/ChatInput';
 import { saveDraft } from '@/features/ChatInput/draftStorage';
 import {
@@ -61,8 +65,11 @@ import {
   chatConfigByIdSelectors,
 } from '@/store/agent/selectors';
 import { agentGroupByIdSelectors, getChatGroupStoreState } from '@/store/agentGroup';
-import { getPendingSandboxSelection } from '@/store/chat/pendingSandboxSelection';
-import { getPendingTopicRepos } from '@/store/chat/pendingTopicRepos';
+import {
+  getPendingSandboxSelection,
+  toSandboxTopicMetadata,
+} from '@/store/chat/pendingSandboxSelection';
+import { consumePendingTopicRepos, getPendingTopicRepos } from '@/store/chat/pendingTopicRepos';
 import {
   dbMessageSelectors,
   displayMessageSelectors,
@@ -73,19 +80,26 @@ import { selectRuntimeType } from '@/store/chat/slices/agentRun/actions/dispatch
 import { executeDirectMention } from '@/store/chat/slices/agentRun/actions/dispatch/directMentionExecutor';
 import { resolveNewThreadIntent } from '@/store/chat/slices/agentRun/actions/dispatch/newThreadIntent';
 import { buildRunLifecycle } from '@/store/chat/slices/agentRun/actions/lifecycle/buildRunLifecycle';
+import {
+  findOrphanedQueueKey,
+  sendQueuedMessages,
+} from '@/store/chat/slices/agentRun/actions/lifecycle/queuedFollowUp';
 import type { RunScope } from '@/store/chat/slices/agentRun/actions/lifecycle/types';
+import { buildQueuedFollowUpRequest } from '@/store/chat/slices/agentRun/actions/transports/gateway/execRequest';
+import {
+  canQueueOnServer,
+  findServerHeldQueueKey,
+  handOffQueuedMessage,
+  reclaimServerQueuedMessages,
+} from '@/store/chat/slices/agentRun/actions/transports/gateway/serverSteerQueue';
 import {
   getNativeHeteroSessionBindingKey,
   resolveHeteroResume,
 } from '@/store/chat/slices/agentRun/actions/transports/hetero/heteroResume';
-import type { QueuedFile } from '@/store/chat/slices/operation/types';
-import {
-  isQueueBlockingOperation,
-  mergeQueuedMessages,
-  reconstructUploadFilesFromQueue,
-} from '@/store/chat/slices/operation/types';
+import { isQueueBlockingOperation, snapshotQueuedFiles } from '@/store/chat/slices/operation/types';
 import { PortalViewType } from '@/store/chat/slices/portal/initialState';
 import { chatPortalSelectors } from '@/store/chat/slices/portal/selectors';
+import { topicListFilterOf } from '@/store/chat/slices/topic/projection';
 import { resolveTopicHeteroPin } from '@/store/chat/slices/topic/selectors';
 import { type ChatStore } from '@/store/chat/store';
 import {
@@ -127,7 +141,9 @@ import {
   parseSingleAgentMentionDirectRoute,
   processCommands,
 } from './commandBus';
+import { mergePartialPersistedMessages, resolveSendResponseMessages } from './persistedMessages';
 import { resolveExistingTopicForRun } from './resolveExistingTopic';
+import { resolveProjectDirectoryRun } from './resolveProjectDirectoryRun';
 
 /**
  * Extended params for sendMessage with context
@@ -212,46 +228,6 @@ const throwIfSendAborted = (signal?: AbortSignal) => {
     : new DOMException('Message send was cancelled', 'AbortError');
 };
 
-const attachSendTimeMetadataToUserMessage = (
-  messages: UIChatMessage[],
-  userMessageId: string,
-  metadata: MessageMetadata | undefined,
-): UIChatMessage[] => {
-  if (!metadata) return messages;
-
-  let changed = false;
-  const nextMessages = messages.map((message) => {
-    if (message.id !== userMessageId) return message;
-
-    changed = true;
-    return {
-      ...message,
-      metadata: {
-        ...(message.metadata ?? undefined),
-        ...metadata,
-      },
-    };
-  });
-
-  return changed ? nextMessages : messages;
-};
-
-const mergePartialPersistedMessages = (
-  currentMessages: UIChatMessage[],
-  persistedMessages: UIChatMessage[],
-  replacedMessageIds: string[],
-): UIChatMessage[] => {
-  const replacedIdSet = new Set(replacedMessageIds);
-  const persistedIdSet = new Set(persistedMessages.map((message) => message.id));
-
-  return [
-    ...currentMessages.filter(
-      (message) => !replacedIdSet.has(message.id) && !persistedIdSet.has(message.id),
-    ),
-    ...persistedMessages,
-  ];
-};
-
 export class ConversationLifecycleActionImpl {
   readonly #get: () => ChatStore;
 
@@ -261,29 +237,11 @@ export class ConversationLifecycleActionImpl {
     this.#get = get;
   }
 
-  /**
-   * Read the active topic-list filter from `topicDataMap` so it can be
-   * forwarded to `sendMessageInServer`. Without this, the server returns
-   * an unfiltered list which `internal_updateTopics` then writes back over
-   * the filtered sidebar — completed/cron topics reappear until the next
-   * SWR revalidation.
-   */
-  #getTopicFilter = (
-    agentId?: string,
-    groupId?: string,
-  ):
-    | { excludeStatuses?: string[]; excludeTriggers?: string[]; includeTriggers?: string[] }
-    | undefined => {
-    if (!agentId && !groupId) return undefined;
-    const data = this.#get().topicDataMap[topicMapKey({ agentId, groupId })];
-    if (!data) return undefined;
-    const { excludeStatuses, excludeTriggers } = data;
-    if (!excludeStatuses?.length && !excludeTriggers?.length) return undefined;
-    return {
-      ...(excludeStatuses?.length ? { excludeStatuses } : {}),
-      ...(excludeTriggers?.length ? { excludeTriggers } : {}),
-    };
-  };
+  /** The active topic-list filter, forwarded to `sendMessageInServer` (see `topicListFilterOf`). */
+  #getTopicFilter = (agentId?: string, groupId?: string) =>
+    agentId || groupId
+      ? topicListFilterOf(this.#get().topicDataMap[topicMapKey({ agentId, groupId })])
+      : undefined;
 
   /**
    * Land a thread the server created for this send: record it on the operation,
@@ -343,15 +301,13 @@ export class ConversationLifecycleActionImpl {
     let detachCallerAbort = () => {};
     let hasNotifiedMessageAccepted = false;
     let sendOperationId: string | undefined = undefined;
-    // Where the user was when they hit send. This send's continuations adopt the
-    // topic it creates only while the conversation is still here — the awaited
-    // preflight (access check, snapshots, topic resolution) is long enough for
-    // the user to open another topic, and following them with a switchTopic
-    // would yank both the message list and the URL back (see the
-    // `onlyIfActiveTopicIn` guards below). The agent and group are pinned too:
-    // two blank views share `activeTopicId === null`, so the topic guard alone
-    // cannot tell "still on the origin blank view" from "moved to another
-    // agent's/group's blank view".
+    // Where the user was when they hit send. Continuations adopt the topic this send
+    // creates only while the conversation is still here — the awaited preflight (access
+    // check, snapshots, topic resolution) is long enough to open another topic, and a
+    // switchTopic would yank the message list and URL back (`onlyIfActiveTopicIn`
+    // below). Agent and group are pinned too: two blank views share
+    // `activeTopicId === null`. The workspace scopes the agent CLI run it may start.
+    const sendOriginWorkspaceId = getActiveWorkspaceId();
     const sendOriginActiveTopicId = this.#get().activeTopicId || null;
     const sendOriginActiveAgentId = this.#get().activeAgentId ?? null;
     const sendOriginActiveGroupId = this.#get().activeGroupId ?? null;
@@ -473,7 +429,7 @@ export class ConversationLifecycleActionImpl {
     // switcher. A workspace-local pick is intentionally private to this member
     // and is therefore safe to execute in-process on their desktop. An existing
     // conversation then stays on the machine it already ran on.
-    const { agencyConfig, workspaceScoped } = applyTopicDeviceBinding(
+    const topicBinding = applyTopicDeviceBinding(
       {
         agencyConfig: resolveAgentAgencyConfig(agentConfig?.agencyConfig, deviceOverride, {
           canManage,
@@ -488,7 +444,33 @@ export class ConversationLifecycleActionImpl {
       ),
       getElectronStoreState().gatewayDeviceInfo?.deviceId,
     );
+    const { workspaceScoped } = topicBinding;
+    let { agencyConfig } = topicBinding;
     const isGatewayMode = this.#get().isGatewayModeEnabled(agentId);
+    const boundTopic = context.topicId
+      ? topicSelectors.getTopicById(context.topicId)(this.#get())
+      : undefined;
+    // A blank conversation opened from a project group's "+" runs in the
+    // directory it staged; the gateway transport has the server bind the topic.
+    const pendingDirectory = this.#get().pendingNewTopicDirectory;
+    const stagedDirectoryId =
+      !context.topicId &&
+      !context.isolatedTopic &&
+      !context.groupId &&
+      !directMentionRoute &&
+      pendingDirectory?.agentId === ownerAgentId
+        ? pendingDirectory.projectWorkingDirectoryId
+        : undefined;
+    const projectRun = await resolveProjectDirectoryRun({
+      agencyConfig,
+      boundDirectoryId: boundTopic?.projectWorkingDirectoryId,
+      isGatewayMode,
+      stagedDirectoryId,
+    });
+    ({ agencyConfig } = projectRun);
+    const { stagedDirectory } = projectRun;
+    if (stagedDirectory) consumePendingTopicRepos(ownerAgentId); // a cloud repo pick conflicts
+
     // Legacy agents may only carry `model: '<cli-type>'`. Keep gateway routing
     // unchanged when it is available. Recover the provider when gateway mode is
     // off so desktop can still spawn locally and non-desktop (Android/web) still
@@ -749,88 +731,78 @@ export class ConversationLifecycleActionImpl {
       !runningQueueBlockingOp &&
       !onlyAddUserMessage &&
       operationSelectors.isQueueDrainPending(operationContext)(this.#get());
-    if (runningQueueBlockingOp || queueDrainPending) {
-      // Snapshot file previews so the tray can render thumbnails AND the
-      // resumed sendMessage can rebuild audioList/imageList/videoList — by the time
-      // we drain, chatUploadFileList has long been cleared.
-      const filesPreview: QueuedFile[] = (files ?? []).map((f) => ({
-        audioMetadata: f.audioMetadata,
-        id: f.id,
-        mimeType: f.file?.type ?? '',
-        name: f.file?.name ?? f.id,
-        url: f.fileUrl || f.base64Url || f.previewUrl || '',
-      }));
-
+    /** Queue this send behind what holds `key`; on the server when the run can join it there. */
+    const queueThisSend = (key: string) => {
+      const queuedId = nanoid();
+      const queueOnServer =
+        !onlyAddUserMessage &&
+        canQueueOnServer(this.#get, key, {
+          context: operationContext,
+          isGatewayRun: runtimeType === 'gateway' && !directMentionRoute && !willCreateNewTopic,
+        });
       this.#get().enqueueMessage(
-        queueTargetKey,
+        key,
         {
-          id: nanoid(),
+          id: queuedId,
           content: message,
           editorData: editorData ?? undefined,
           files: fileIdList,
-          filesPreview: filesPreview.length > 0 ? filesPreview : undefined,
+          filesPreview: snapshotQueuedFiles(files),
           ...(forceRuntime ? { forceRuntime } : {}),
           interruptMode: 'soft',
           metadata: userMessageMetadata,
           createdAt: Date.now(),
+          ...(queueOnServer && { serverDelivery: 'appending' as const }),
         },
         runningQueueBlockingOp?.id,
       );
+      if (queueOnServer)
+        void handOffQueuedMessage(this.#get, key, operationContext, queuedId, () =>
+          buildQueuedFollowUpRequest(this.#get, {
+            context: operationContext,
+            contextSelections,
+            fileIds: fileIdList,
+            mentionedAgents: hasMentionedAgents ? mentionedAgents : undefined,
+            message,
+            pageSelections,
+            selectedSkillIds: selectedSkills.map((skill) => skill.identifier),
+            selectedToolIds: selectedTools.map((tool) => tool.identifier),
+            trigger: requestTrigger,
+          }),
+        );
       notifyMessageAccepted();
-      return;
-    }
+    };
+    if (runningQueueBlockingOp || queueDrainPending) return void queueThisSend(queueTargetKey);
 
-    // Stop may already have moved the old operation to `cancelled`, so there is
-    // no live blocker left to drain follow-ups that were queued before Stop.
-    // Fold the new send into that FIFO and immediately restart the whole batch;
-    // otherwise the new message jumps ahead and the older queue drains after it.
-    const orphanedQueueKey = queueCandidateKeys.find((key) => {
-      if ((this.#get().queuedMessages[key]?.length ?? 0) === 0) return false;
-      return (this.#get().operationsByContext[key] || []).some((id) => {
-        const operation = this.#get().operations[id];
-        return operation?.status === 'cancelled' && operation.metadata.isAborting;
-      });
-    });
+    // Nothing runs: take server-queued follow-ups back; one still being delivered keeps its place.
+    await Promise.all(queueCandidateKeys.map((key) => reclaimServerQueuedMessages(this.#get, key)));
+    const heldKey = findServerHeldQueueKey(this.#get, queueCandidateKeys);
+    if (heldKey && !onlyAddUserMessage) return void queueThisSend(heldKey);
+
+    const orphanedQueueKey = findOrphanedQueueKey(
+      this.#get,
+      queueCandidateKeys,
+      willCreateNewTopic,
+    );
     if (orphanedQueueKey && !onlyAddUserMessage) {
-      const filesPreview: QueuedFile[] = (files ?? []).map((file) => ({
-        audioMetadata: file.audioMetadata,
-        id: file.id,
-        mimeType: file.file?.type ?? '',
-        name: file.file?.name ?? file.id,
-        url: file.fileUrl || file.base64Url || file.previewUrl || '',
-      }));
       this.#get().enqueueMessage(orphanedQueueKey, {
         content: message,
         createdAt: Date.now(),
         editorData: editorData ?? undefined,
         files: fileIdList,
-        filesPreview: filesPreview.length > 0 ? filesPreview : undefined,
+        filesPreview: snapshotQueuedFiles(files),
         ...(forceRuntime ? { forceRuntime } : {}),
         id: nanoid(),
         interruptMode: 'soft',
         metadata: userMessageMetadata,
       });
-      const merged = mergeQueuedMessages(this.#get().drainQueuedMessages(orphanedQueueKey));
+      const restarted = this.#get().drainQueuedMessages(orphanedQueueKey);
       notifyMessageAccepted();
 
       setTimeout(() => {
-        this.#get()
-          .sendMessage({
-            context: operationContext,
-            editorData: merged.editorData,
-            files:
-              merged.filesPreview.length > 0
-                ? reconstructUploadFilesFromQueue(merged.filesPreview)
-                : merged.files.length > 0
-                  ? (merged.files.map((id) => ({ id })) as any)
-                  : undefined,
-            ...(merged.forceRuntime ? { forceRuntime: merged.forceRuntime } : {}),
-            message: merged.content,
-            metadata: { ...merged.metadata, steer: true },
-          })
-          .catch((error: unknown) => {
-            console.error('[sendMessage] restarting queued content after Stop failed:', error);
-          });
+        sendQueuedMessages(this.#get, operationContext, restarted).catch((error: unknown) => {
+          console.error('[sendMessage] restarting queued content after Stop failed:', error);
+        });
       }, 0);
 
       return;
@@ -964,6 +936,12 @@ export class ConversationLifecycleActionImpl {
       } else {
         targetInputEditor?.setDocument('markdown', message);
       }
+
+      // The editor snapshot covers only text. A send rejected after the composer
+      // was cleared (e.g. the server refusing an offline bound device) would
+      // otherwise still swallow the cleared uploads and context selections —
+      // hand them back to the caller that captured them before clearing.
+      onPreflightFailure?.();
     };
     const restoreUnacceptedVoiceMessageContext = () => {
       if (!optimisticUserMessageId || hasNotifiedMessageAccepted) return;
@@ -1138,6 +1116,11 @@ export class ConversationLifecycleActionImpl {
           value: {
             id: mintedTopicId,
             ...newTopicModelSnapshot,
+            // Shown under its project group from the first frame.
+            ...(stagedDirectory && {
+              projectId: stagedDirectory.projectId,
+              projectWorkingDirectoryId: stagedDirectory.id,
+            }),
             ...(operationContext.groupId ? {} : { sessionId: operationContext.agentId }),
             title: newTopicTitle,
           },
@@ -1177,7 +1160,7 @@ export class ConversationLifecycleActionImpl {
           : undefined,
       topicId: willCreateNewTopic ? undefined : operationContext.topicId,
     });
-    const currentDeviceId = getElectronStoreState().gatewayDeviceInfo?.deviceId;
+    const currentDeviceId = await getElectronStoreState().resolveGatewayDeviceId();
     // Resolve the cwd for every run that lands on a MACHINE — a hetero CLI
     // (in-process `hetero` runtime) and a NATIVE agent alike, as long as the
     // effective target routes to a device. The server can only honour a cwd the
@@ -1229,15 +1212,14 @@ export class ConversationLifecycleActionImpl {
             deviceSelectors.getDeviceDefaultCwd(runCwdDeviceId)(getDeviceStoreState()),
           fallback: heteroCwdContext?.desktopPath ?? heteroCwdContext?.homePath,
           legacyAgentWorkingDirectory: agentState.localAgentWorkingDirectoryMap[agentId],
+          // A project's staged directory, not the agent default, is the new topic's cwd.
+          topicWorkingDirectory: stagedDirectory?.path,
           workspaceScoped,
         }
       : undefined;
-    const agentWorkingDirectory = runCwdParams
-      ? resolveAgentWorkingDirectory(runCwdParams)
-      : undefined;
-    const agentWorkingDirectoryConfig = runCwdParams
-      ? resolveAgentWorkingDirectoryConfig(runCwdParams)
-      : undefined;
+    const agentWorkingDirectory = runCwdParams && resolveAgentWorkingDirectory(runCwdParams);
+    const agentWorkingDirectoryConfig =
+      runCwdParams && resolveAgentWorkingDirectoryConfig(runCwdParams);
     // Heterogeneous CLI agents (Claude Code, Codex, …) store sessions per-cwd
     // (`~/.claude/projects/<encoded-cwd>/`). Anchor their session cwd to the
     // SOURCE repo, NOT the selected worktree, so switching worktree keeps cwd +
@@ -1311,12 +1293,7 @@ export class ConversationLifecycleActionImpl {
       willCreateNewTopic && operationContext.agentId
         ? getPendingSandboxSelection(operationContext.agentId)
         : undefined;
-    const sandboxInstanceMetadata: ChatTopicMetadata | undefined = pendingSandboxSelection
-      ? {
-          sandboxInstanceId: pendingSandboxSelection.instanceId,
-          sandboxMode: pendingSandboxSelection.mode,
-        }
-      : undefined;
+    const sandboxInstanceMetadata = toSandboxTopicMetadata(pendingSandboxSelection);
     /** First-send persistence bypasses turnSetup, so both runtime paths must carry the effort snapshot. */
     const optimisticTopicMetadata =
       newTopicReasoningSnapshot || sandboxInstanceMetadata
@@ -1427,6 +1404,9 @@ export class ConversationLifecycleActionImpl {
           );
         }
         void this.#get().switchTopic(null, { skipRefreshMessage: true });
+        // Adopting the minted topic consumed the staging; the topic never came
+        // to be, so the blank conversation still belongs to that directory.
+        if (stagedDirectory) this.#get().setPendingNewTopicDirectory(pendingDirectory);
       }
       this.#get().internal_dispatchTopic(
         { ...optimisticTopicScope, type: 'deleteTopic', id: optimisticTopic.id },
@@ -1700,7 +1680,7 @@ export class ConversationLifecycleActionImpl {
       const { operationId: heteroOpId } = this.#get().startOperation({
         context: heteroExecutionContext,
         label: 'Heterogeneous Agent Execution',
-        metadata: { heterogeneousType: heterogeneousProvider.type },
+        metadata: { heteroAutoRetryAvailable: true, heterogeneousType: heterogeneousProvider.type },
         parentOperationId: operationId,
         type: 'execHeterogeneousAgent',
       });
@@ -1715,6 +1695,7 @@ export class ConversationLifecycleActionImpl {
         // may already be cleared by this point, so we read from DB instead)
         const userMsg = heteroData.messages.find((m: any) => m.id === heteroData.userMessageId);
         const persistedImageList = userMsg?.imageList;
+        const persistedAttachedFiles = userMsg ? collectHeteroAttachedFiles(userMsg) : [];
         const persistedMetadata = userMsg?.metadata as MessageMetadata | undefined;
         const effectiveContextSelections = contextSelections?.length
           ? contextSelections
@@ -1759,6 +1740,7 @@ export class ConversationLifecycleActionImpl {
 
         await executeHeterogeneousAgent(() => this.#get(), {
           assistantMessageId: heteroExecutionAssistantId,
+          attachedFiles: persistedAttachedFiles.length ? persistedAttachedFiles : undefined,
           context: heteroExecutionContext,
           contextSelections: effectiveContextSelections,
           heterogeneousProvider: effectiveHeterogeneousProvider,
@@ -1770,6 +1752,7 @@ export class ConversationLifecycleActionImpl {
           resumeSessionId,
           workingDirectory,
           workingDirectoryConfig,
+          workspaceId: sendOriginWorkspaceId,
         });
 
         if (directMentionThreadId) {
@@ -1826,13 +1809,13 @@ export class ConversationLifecycleActionImpl {
         // input loading state would drop during the execAgentTask round-trip
         // and the send button would flicker back to "send".
         const result = await this.#get().executeGatewayAgent({
-          // The ids this send's optimistic rows already render under. The
-          // server honours them, so the gateway path converges on the same ids
-          // instead of minting its own — same contract as sendMessageInServer.
+          // Ids and branch tail the optimistic rows render under; the server honours
+          // them like sendMessageInServer, so the turn stays on the visible branch.
           clientIds: {
             assistantMessageId: tempAssistantId,
             topicId: optimisticTopic?.id,
             userMessageId: tempId,
+            userMessageParentId: willCreateNewTopic ? undefined : parentId,
           },
           // Execution context: what the SERVER should act on. While creating,
           // the topic exists only client-side, so the server must see no
@@ -1856,11 +1839,16 @@ export class ConversationLifecycleActionImpl {
           clientOperations,
           replacesOperationId: replaceableGatewayOperationId,
           optimisticTopic,
+          projectWorkingDirectoryId: stagedDirectory?.id,
           // Forward @-mentioned tool ids so the server runtime enables them for
           // this run — the gateway/server path otherwise never sees the mention
           // selection (only the client runtime did). Omit when empty.
           selectedToolIds:
             selectedTools.length > 0 ? selectedTools.map((tool) => tool.identifier) : undefined,
+          // Forward selected skills so the server injects their bodies, as the
+          // client runtime does by persisting them into the message content.
+          selectedSkillIds:
+            selectedSkills.length > 0 ? selectedSkills.map((skill) => skill.identifier) : undefined,
           // Forward @-mentioned agents so the server supervisor can delegate to
           // them (multi-mention). Mirrors the client runtime's `initialContext`
           // injection: the server enables the callAgent tool and injects the
@@ -1873,6 +1861,9 @@ export class ConversationLifecycleActionImpl {
           // state while waiting for the first step_start event to replace
           // messages with the server's real IDs.
           tempMessageIds: [tempAssistantId],
+          // The server persists the user row here: build it from the metadata the
+          // optimistic row shows, the same object `sendMessageInServer` persists.
+          userMessage: toComposerUserMessage({ editorData, metadata: userMessageMetadata }),
         });
         const cancelledAfterPersistence = abortController.signal.aborted;
 
@@ -2126,25 +2117,23 @@ export class ConversationLifecycleActionImpl {
           finalMessageKey,
         );
       this.#get().moveVoiceMessages(operationContext, finalContext);
-      const persistedMessages = attachSendTimeMetadataToUserMessage(
-        data.messages,
-        data.userMessageId,
-        userMessageMetadata,
-      );
       data = {
         ...data,
-        messages: responseMeta.__isPartialMessages
-          ? mergePartialPersistedMessages(
-              this.#get().messagesMap[finalMessageKey] || [],
-              persistedMessages,
-              [tempId, tempAssistantId],
-            )
-          : persistedMessages,
+        messages: resolveSendResponseMessages({
+          currentMessages: this.#get().messagesMap[finalMessageKey] || [],
+          isPartial: !!responseMeta.__isPartialMessages,
+          messages: data.messages,
+          replacedMessageIds: [tempId, tempAssistantId],
+          userMessageId: data.userMessageId,
+          userMessageMetadata,
+        }),
       };
 
+      // The send response skips Work summaries; keep the ones earlier replies already carry.
       this.#get().replaceMessages(data.messages, {
         context: finalContext,
         action: 'sendMessage/serverResponse',
+        preserveWorks: true,
       });
 
       if (isCreateNewTopic && data.topicId) {

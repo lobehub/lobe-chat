@@ -537,6 +537,12 @@ export interface TaskRunPromptWorkspaceNode {
  * up without re-discovering everything.
  */
 export interface TaskRunPromptGoalLoop {
+  /**
+   * Questions earlier rounds put to the owner, with what came back — their
+   * answer, or the notice that none arrived. Each round starts in a fresh
+   * conversation, so without this a round re-asked what the last one asked.
+   */
+  askedQuestions?: Array<{ answer?: string; questions: string[] }>;
   /** Feedback from the automatic Acceptance review of the previous delivery. */
   automaticReviewFeedback?: string;
   /** Checks that did not pass in the previous round, with the verifier's why/suggestion. */
@@ -703,7 +709,7 @@ export const buildTaskRunPrompt = (input: TaskRunPromptInput, now?: Date): strin
           ? `cron "${task.schedulePattern}" (${task.scheduleTimezone || 'UTC'})`
           : task.automationMode;
     taskLines.push(
-      `Automation: ${cadence} — this task is a recurring loop and this run is one tick of it. When the run ends, the next tick is armed automatically; a tick with nothing to do is still a successful run. NEVER set this task to completed (or any terminal status) — that permanently stops the loop.`,
+      `Automation: ${cadence} — this task is a recurring loop and this run is one tick of it. When the run ends, the next tick is armed automatically; a tick with nothing to do, or whose condition is not met yet, is still a successful run — NEVER end the loop for that, and never set it to canceled or failed. The only exception: when the Instruction defines an end condition (e.g. "until X", "stop once Y", "after Z is done") and this tick has verified that it is now met, mark this task completed as your final step — that retires the loop once this run finishes. Do not ask the user to stop it instead.`,
     );
   }
   taskLines.push(`Instruction: ${task.instruction}`);
@@ -776,17 +782,17 @@ export const buildTaskRunPrompt = (input: TaskRunPromptInput, now?: Date): strin
       }
     }
     taskLines.push(
-      '  Run the Acceptance inside this Task, not after it: drive the real product surface and submit each artifact as soon as the criterion it proves is provable.',
+      '  Run the Acceptance inside this Task, not after it: drive the real product surface, capture each artifact as soon as the criterion it proves is provable, and publish before you finish.',
     );
     taskLines.push(
-      '  Criterion ids are minted when this run starts, so they are not listed above. Read them at runtime with `listCriteria`, or `lh verify plan state "$LOBEHUB_OPERATION_ID" --json` if you have a shell.',
+      '  Criterion ids are minted when this run starts, so they are not listed above. Read them at runtime with `listCriteria`, or `lh acceptance plan state "$LOBEHUB_OPERATION_ID" --json` if you have a shell.',
     );
     // Two builder shapes, two toolchains. The portable `acceptance` skill is
-    // pulled to disk by external CLI builders and is deliberately absent from
-    // `builtinSkills`, so naming it unconditionally hands the in-product agent
-    // an instruction it cannot act on.
+    // pulled to disk by CLI builders and absent from `builtinSkills`, so only a
+    // shell builder is pointed at it — and given no inline commands, which let
+    // builders skip the skill's capture (chapters) and publishing rules.
     taskLines.push(
-      '  With a shell: `lh acceptance install` gives you the `acceptance` skill, and `lh acceptance run result submit --operation "$LOBEHUB_OPERATION_ID" --item <checkItemId> --type screenshot --file <path>` uploads a captured artifact.',
+      "  With a shell: load the `acceptance` skill (`lh acceptance install` if it is not available) and follow its plan path for operation `$LOBEHUB_OPERATION_ID`. It owns reading the criteria, capturing evidence — chapters on every recording included — writing the round report, and publishing it into this run's round.",
     );
     taskLines.push(
       '  Without a shell: drive the product with your own tools and cite artifacts by id through `submitEvidence`.',
@@ -812,6 +818,12 @@ export const buildTaskRunPrompt = (input: TaskRunPromptInput, now?: Date): strin
     taskLines.push(
       `Goal loop${goalLoop.round ? ` — round ${goalLoop.round}${budget}` : ''}: earlier rounds did not fully meet the acceptance criteria. Focus on closing the gaps below instead of redoing finished work.`,
     );
+    taskLines.push(
+      '  This round is verified on its own: evidence from earlier rounds does not carry over. Submit evidence to this run for every required criterion, not only the unresolved ones; re-upload an earlier artifact when it still shows the current behavior.',
+    );
+    taskLines.push(
+      '  Your final response is read as the deliverable. Describe the complete delivery as it now stands, not only what changed in this round — "no code changed this round" without that context reads as missing work.',
+    );
     const reviewFeedback = [
       goalLoop.rejectComment,
       goalLoop.automaticReviewFeedback &&
@@ -829,6 +841,20 @@ export const buildTaskRunPrompt = (input: TaskRunPromptInput, now?: Date): strin
         taskLines.push(`    ${i + 1}. ${check.title}${check.why ? ` — ${check.why}` : ''}`);
       }
     }
+    if (goalLoop.askedQuestions && goalLoop.askedQuestions.length > 0) {
+      taskLines.push('  Questions earlier rounds already asked the owner, and what came back:');
+      for (const [i, asked] of goalLoop.askedQuestions.entries()) {
+        taskLines.push(`    ${i + 1}. ${asked.questions.join(' / ')}`);
+        const answer = asked.answer?.replaceAll(/\s+/g, ' ').trim();
+        taskLines.push(`       → ${answer || '(nothing came back)'}`);
+      }
+    }
+    // Each round is a fresh conversation, and a run waits on nobody: a round
+    // that asked, timed out and delivered "awaiting your confirmation" failed
+    // Acceptance, and the next round asked the same thing again.
+    taskLines.push(
+      "  Do not ask the owner again about anything an earlier round already asked or that the owner's feedback answers: treat those answers as final. If an earlier question got no answer, do not ask it again or wait for one — go with the option you would recommend, state it in your delivery as an assumption the owner can overturn, and finish the work.",
+    );
     taskLines.push(
       '  To read a previous round in full, run: `lh task topic view ' +
         task.identifier +

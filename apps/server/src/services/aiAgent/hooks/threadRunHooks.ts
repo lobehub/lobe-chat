@@ -1,4 +1,5 @@
 import type { AgentHookEvent, AgentState } from '@lobechat/agent-runtime';
+import { getLlmCallCount } from '@lobechat/agent-runtime';
 import type { ThreadMetadata } from '@lobechat/types';
 import { ThreadStatus } from '@lobechat/types';
 import debug from 'debug';
@@ -30,12 +31,13 @@ export function calculateTotalTokens(usage?: AgentState['usage']): number | unde
  */
 export type ThreadUsageBaseline = Pick<
   ThreadMetadata,
-  'totalCost' | 'totalMessages' | 'totalTokens' | 'totalToolCalls'
+  'totalCost' | 'totalLlmCalls' | 'totalMessages' | 'totalTokens' | 'totalToolCalls'
 >;
 
 export const pickThreadUsageBaseline = (metadata?: ThreadMetadata | null): ThreadUsageBaseline => ({
   totalCost: metadata?.totalCost,
   totalMessages: metadata?.totalMessages,
+  totalLlmCalls: metadata?.totalLlmCalls,
   totalTokens: metadata?.totalTokens,
   totalToolCalls: metadata?.totalToolCalls,
 });
@@ -79,6 +81,8 @@ export function createThreadMetadataCallbacks(
             operationId: state.operationId,
             startedAt,
             totalMessages: state.messages?.length ?? 0,
+            totalSteps: getLlmCallCount(state),
+            totalLlmCalls: getLlmCallCount(state),
             totalTokens: calculateTotalTokens(state.usage),
             totalToolCalls: accumulatedToolCalls,
           },
@@ -155,6 +159,8 @@ export function createThreadMetadataCallbacks(
             startedAt,
             totalCost: finalState.cost?.total,
             totalMessages: finalState.messages?.length ?? 0,
+            totalSteps: getLlmCallCount(finalState),
+            totalLlmCalls: getLlmCallCount(finalState),
             totalTokens: calculateTotalTokens(finalState.usage),
             totalToolCalls: accumulatedToolCalls,
           },
@@ -182,7 +188,7 @@ export function createThreadHooks(
   messageModel: MessageModel,
   threadId: string,
   startedAt: string,
-  sourceMessageId: string,
+  sourceMessageId: string | undefined,
   logScope: 'execSubAgent' | 'execVirtualSubAgent',
   usageBaseline: ThreadUsageBaseline = {},
 ): AgentHook[] {
@@ -199,6 +205,8 @@ export function createThreadHooks(
               startedAt,
               totalCost: usageBaseline.totalCost,
               totalMessages: state.messages?.length ?? 0,
+              totalSteps: addUsage(usageBaseline.totalLlmCalls, getLlmCallCount(state)),
+              totalLlmCalls: addUsage(usageBaseline.totalLlmCalls, getLlmCallCount(state)),
               totalTokens: addUsage(usageBaseline.totalTokens, calculateTotalTokens(state.usage)),
               totalToolCalls: addUsage(
                 usageBaseline.totalToolCalls,
@@ -255,13 +263,14 @@ export function createThreadHooks(
         }
 
         try {
-          // Update source message with summary
+          // Bridged runs publish through result control; only standalone thread
+          // runs own a source-message summary write here.
           const lastAssistantMessage = finalState.messages
             ?.slice()
             .reverse()
             .find((m: { role: string }) => m.role === 'assistant');
 
-          if (lastAssistantMessage?.content) {
+          if (sourceMessageId && lastAssistantMessage?.content) {
             await messageModel.update(sourceMessageId, {
               content: lastAssistantMessage.content,
             });
@@ -278,6 +287,8 @@ export function createThreadHooks(
               startedAt,
               totalCost: addUsage(usageBaseline.totalCost, finalState.cost?.total),
               totalMessages: finalState.messages?.length ?? 0,
+              totalSteps: addUsage(usageBaseline.totalLlmCalls, getLlmCallCount(finalState)),
+              totalLlmCalls: addUsage(usageBaseline.totalLlmCalls, getLlmCallCount(finalState)),
               totalTokens: addUsage(
                 usageBaseline.totalTokens,
                 calculateTotalTokens(finalState.usage),

@@ -2887,7 +2887,7 @@ describe('LobeOpenAICompatibleFactory', () => {
       );
     });
 
-    it('should return undefined when JSON parsing fails', async () => {
+    it('should reject when JSON parsing fails', async () => {
       const mockResponse = {
         output_text: 'invalid json string',
       };
@@ -2905,10 +2905,10 @@ describe('LobeOpenAICompatibleFactory', () => {
         },
       };
 
-      const result = await instance.generateObject(payload);
-
-      expect(consoleSpy).toHaveBeenCalledWith('parse json error:', 'invalid json string');
-      expect(result).toBeUndefined();
+      await expect(instance.generateObject(payload)).rejects.toMatchObject({
+        name: 'StructuredOutputError',
+      });
+      expect(consoleSpy).not.toHaveBeenCalled();
 
       consoleSpy.mockRestore();
     });
@@ -2931,10 +2931,10 @@ describe('LobeOpenAICompatibleFactory', () => {
         },
       };
 
-      const result = await instance.generateObject(payload);
-
-      expect(consoleSpy).toHaveBeenCalledWith('parse json error:', '');
-      expect(result).toBeUndefined();
+      await expect(instance.generateObject(payload)).rejects.toMatchObject({
+        name: 'StructuredOutputError',
+      });
+      expect(consoleSpy).not.toHaveBeenCalled();
 
       consoleSpy.mockRestore();
     });
@@ -3184,7 +3184,7 @@ describe('LobeOpenAICompatibleFactory', () => {
         );
       });
 
-      it('should return undefined when JSON parsing fails with chat completions API', async () => {
+      it('should reject when JSON parsing fails with chat completions API', async () => {
         const mockResponse = {
           choices: [
             {
@@ -3210,10 +3210,10 @@ describe('LobeOpenAICompatibleFactory', () => {
           },
         };
 
-        const result = await instance.generateObject(payload);
-
-        expect(consoleSpy).toHaveBeenCalledWith('parse json error:', 'This is not valid JSON');
-        expect(result).toBeUndefined();
+        await expect(instance.generateObject(payload)).rejects.toMatchObject({
+          name: 'StructuredOutputError',
+        });
+        expect(consoleSpy).not.toHaveBeenCalled();
 
         consoleSpy.mockRestore();
       });
@@ -3244,10 +3244,10 @@ describe('LobeOpenAICompatibleFactory', () => {
           },
         };
 
-        const result = await instance.generateObject(payload);
-
-        expect(consoleSpy).toHaveBeenCalledWith('parse json error:', '');
-        expect(result).toBeUndefined();
+        await expect(instance.generateObject(payload)).rejects.toMatchObject({
+          name: 'StructuredOutputError',
+        });
+        expect(consoleSpy).not.toHaveBeenCalled();
 
         consoleSpy.mockRestore();
       });
@@ -3322,6 +3322,96 @@ describe('LobeOpenAICompatibleFactory', () => {
     });
 
     describe('tools parameter support', () => {
+      it('preserves structured-output errors when a provider wraps generic errors', async () => {
+        const handleError = vi.fn((error: any) => ({ error }));
+        const Runtime = createOpenAICompatibleRuntime({
+          provider: 'wrapped-provider',
+          chatCompletion: { handleError },
+        });
+        const runtime = new Runtime({ apiKey: 'test' });
+        vi.spyOn(runtime['client'].chat.completions, 'create').mockResolvedValue({
+          choices: [],
+        } as any);
+        await expect(
+          runtime.generateObject({
+            messages: [{ role: 'user', content: 'Return a result' }],
+            model: 'test-model',
+            tools: [
+              { type: 'function', function: { name: 'result', parameters: { type: 'object' } } },
+            ],
+          }),
+        ).rejects.toMatchObject({
+          name: 'StructuredOutputError',
+          message: 'Invalid structured output: no tool calls returned',
+        });
+        expect(handleError).not.toHaveBeenCalled();
+      });
+
+      it.each([
+        ['missing choices', {}, 'no tool calls'],
+        ['empty choices', { choices: [] }, 'no tool calls'],
+        ['missing message', { choices: [{}] }, 'no tool calls'],
+        ['missing tools', { choices: [{ message: {} }] }, 'no tool calls'],
+        ['empty tools', { choices: [{ message: { tool_calls: [] } }] }, 'no tool calls'],
+        [
+          'invalid JSON',
+          {
+            choices: [
+              { message: { tool_calls: [{ function: { name: 'result', arguments: '{broken' } }] } },
+            ],
+          },
+          'invalid JSON',
+        ],
+        [
+          'null arguments',
+          {
+            choices: [
+              { message: { tool_calls: [{ function: { name: 'result', arguments: 'null' } }] } },
+            ],
+          },
+          'JSON object',
+        ],
+      ])(
+        'rejects %s with an actionable structured-output error',
+        async (_label, response, reason) => {
+          vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
+            response as any,
+          );
+          await expect(
+            instance.generateObject({
+              messages: [{ content: 'Return a result', role: 'user' }],
+              model: 'test-model',
+              tools: [
+                { type: 'function', function: { name: 'result', parameters: { type: 'object' } } },
+              ],
+            }),
+          ).rejects.toThrow(`Invalid structured output: ${reason}`);
+        },
+      );
+
+      it.each([
+        ['missing output', {}, 'no tool calls'],
+        ['empty output', { output: [] }, 'no tool calls'],
+        ['text output', { output: [{ type: 'message' }] }, 'no tool calls'],
+        [
+          'invalid JSON',
+          { output: [{ type: 'function_call', name: 'result', arguments: '{broken' }] },
+          'invalid JSON',
+        ],
+      ])('rejects Responses API %s', async (_label, response, reason) => {
+        vi.spyOn(instance['client'].responses, 'create').mockResolvedValue(response as any);
+        await expect(
+          instance.generateObject({
+            messages: [{ content: 'Return a result', role: 'user' }],
+            model: 'test-model',
+            responseApi: true,
+            tools: [
+              { type: 'function', function: { name: 'result', parameters: { type: 'object' } } },
+            ],
+          }),
+        ).rejects.toThrow(`Invalid structured output: ${reason}`);
+      });
+
       it('should handle tools parameter with multiple tools', async () => {
         const mockResponse = {
           choices: [
@@ -3946,7 +4036,7 @@ describe('LobeOpenAICompatibleFactory', () => {
         expect(requestPayload).not.toHaveProperty('reasoning_effort');
       });
 
-      it('should return undefined when no tool call found', async () => {
+      it('should reject when no tool call found', async () => {
         const mockResponse = {
           choices: [
             {
@@ -3971,18 +4061,15 @@ describe('LobeOpenAICompatibleFactory', () => {
           },
         };
 
-        const result = await instanceWithToolCalling.generateObject(payload);
-
-        expect(consoleSpy).toHaveBeenCalledWith(
-          'no tool call found in structured output response:',
-          mockResponse.choices[0].message,
+        await expect(instanceWithToolCalling.generateObject(payload)).rejects.toThrow(
+          'Invalid structured output: no tool calls',
         );
-        expect(result).toBeUndefined();
+        expect(consoleSpy).not.toHaveBeenCalled();
 
         consoleSpy.mockRestore();
       });
 
-      it('should return undefined when tool call arguments parsing fails', async () => {
+      it('should reject when tool call arguments parsing fails', async () => {
         const mockResponse = {
           choices: [
             {
@@ -4015,13 +4102,10 @@ describe('LobeOpenAICompatibleFactory', () => {
           },
         };
 
-        const result = await instanceWithToolCalling.generateObject(payload);
-
-        expect(consoleSpy).toHaveBeenCalledWith(
-          'parse tool call arguments error:',
-          mockResponse.choices[0].message.tool_calls[0],
+        await expect(instanceWithToolCalling.generateObject(payload)).rejects.toThrow(
+          'Invalid structured output: invalid JSON',
         );
-        expect(result).toBeUndefined();
+        expect(consoleSpy).not.toHaveBeenCalled();
 
         consoleSpy.mockRestore();
       });
@@ -4405,5 +4489,33 @@ describe('LobeOpenAICompatibleFactory', () => {
 
       await expect(instance.transcribe!({ file, model: 'whisper-1' })).rejects.toBeDefined();
     });
+  });
+});
+
+describe('schema response JSON fences', () => {
+  it.each([false, true])('accepts one JSON fence through responseApi=%s', async (responseApi) => {
+    const Runtime = createOpenAICompatibleRuntime({ provider: ModelProvider.OpenAI });
+    const runtime = new Runtime({ apiKey: 'test' });
+    const text = 'Analysis summary.\n```json\n{"ready":true}\n```';
+    if (responseApi) {
+      vi.spyOn(runtime['client'].responses, 'create').mockResolvedValue({
+        output_text: text,
+      } as any);
+    } else {
+      vi.spyOn(runtime['client'].chat.completions, 'create').mockResolvedValue({
+        choices: [{ message: { content: text } }],
+      } as any);
+    }
+    await expect(
+      runtime.generateObject({
+        model: 'gpt-4o',
+        responseApi,
+        messages: [{ role: 'user', content: 'Return ready' }],
+        schema: {
+          name: 'ready',
+          schema: { type: 'object', properties: { ready: { type: 'boolean' } } },
+        },
+      }),
+    ).resolves.toEqual({ ready: true });
   });
 });

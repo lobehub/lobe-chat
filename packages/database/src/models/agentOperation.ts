@@ -19,6 +19,7 @@ import { agentOperations } from '../schemas/agentOperations';
 import type { LobeChatDatabase } from '../type';
 import { notShareVisitorTopicRef } from '../utils/shareVisitor';
 import { buildWorkspaceWhere } from '../utils/workspace';
+import { findLiveTopicOperations, findScopedOperation } from './agentOperationQueries';
 
 /**
  * Verify rollup states. Aliases the single `VerifyRunStatus` source of truth in
@@ -660,17 +661,16 @@ export class AgentOperationModel {
    * Raw ownership-scoped lookup. Agent-share visitor runs execute under the
    * CREATOR's identity, so this DOES return their operations — required by the
    * agent runtime (execution, intervention, completion, verify, abandon), which
-   * has to resolve the operation it is currently driving no matter who started
-   * it. Creator-facing read entry points must use
+   * resolves its current operation regardless of who started it. Creator-facing reads use
    * {@link AgentOperationModel.findOwnOperationById} instead.
    */
   async findById(operationId: string) {
-    const [row] = await this.db
-      .select()
-      .from(agentOperations)
-      .where(and(eq(agentOperations.id, operationId), this.ownership()))
-      .limit(1);
-    return row ?? null;
+    return findScopedOperation(this.db, this.ownership(), operationId);
+  }
+
+  /** All resumable operations in a proven topic, independent of its UI marker. */
+  async findLiveByTopic(topicId: string) {
+    return findLiveTopicOperations(this.db, this.ownership(), topicId);
   }
 
   /** Batch lookup for callers that would otherwise issue one query per id. */

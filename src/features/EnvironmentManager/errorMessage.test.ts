@@ -11,10 +11,29 @@ describe('describeError', () => {
     );
   });
 
+  it.each([
+    ['FOLDER_NOT_EMPTY', 'environments.files.folderNotEmpty'],
+    ['INSTANCE_READ_ONLY', 'environments.files.readOnly'],
+    ['PATH_NOT_FOUND', 'environments.files.notFound'],
+    ['DUPLICATE_INSTANCE_DIRECTORY', 'environments.files.folderTaken'],
+  ])('turns the drive refusal %s into its sentence rather than the code', (code, key) => {
+    expect(describeError(new Error(code), t, 'fallback')).toBe(`<${key}>`);
+  });
+
   it('turns a path the server confined to the instance into the same line', () => {
     expect(describeError(new Error('PATH_OUTSIDE_INSTANCE'), t, 'fallback')).toBe(
       '<environments.files.invalidPath>',
     );
+  });
+
+  it.each([
+    ['SNAPSHOT_IN_PROGRESS', 'environments.instances.stopSnapshotPending'],
+    ['INSTANCE_STARTING', 'environments.instances.stopStarting'],
+    ['INSTANCE_BUILDING', 'environments.instances.stopBuilding'],
+    ['INSTANCE_BUSY', 'environments.instances.stopBusy'],
+    ['INSTANCE_STOP_FAILED', 'environments.instances.stopRefused'],
+  ])('turns the stop refusal %s into its sentence', (code, key) => {
+    expect(describeError(new Error(code), t, 'fallback')).toBe(`<${key}>`);
   });
 
   it('turns a path validation issue list into the localized line instead of raw JSON', () => {

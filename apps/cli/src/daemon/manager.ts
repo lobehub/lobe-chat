@@ -30,7 +30,10 @@ function getLogFilePath() {
 export interface DaemonStatus {
   connectionStatus: string;
   deviceId?: string;
+  /** Where `gatewayUrl` came from: `server`, `manual`, `official` or `override`. */
+  gatewaySource?: string;
   gatewayUrl: string;
+  lastRequestAt?: string;
   pid: number;
   startedAt: string;
 }
@@ -127,7 +130,10 @@ export function getRunningDaemonPid(): number | null {
 
 export function writeStatus(status: DaemonStatus): void {
   ensureDir();
-  fs.writeFileSync(getStatusPath(), JSON.stringify(status, null, 2), { mode: 0o600 });
+  const statusPath = getStatusPath();
+  const tempPath = `${statusPath}.${process.pid}.tmp`;
+  fs.writeFileSync(tempPath, JSON.stringify(status, null, 2), { mode: 0o600 });
+  fs.renameSync(tempPath, statusPath);
 }
 
 export function readStatus(): DaemonStatus | null {

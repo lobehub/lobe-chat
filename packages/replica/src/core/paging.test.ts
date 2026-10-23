@@ -144,6 +144,43 @@ describe('offset / forward paging (topic-like list)', () => {
     expect(getNextPageCursor({ ...legacy, hasMore: false }, offset)).toBeNull();
   });
 
+  describe('server-reported exhaustion (rows filtered after paging)', () => {
+    it('keeps paging past a short page the server says is not the end', () => {
+      // The server consumed a full raw window of 3 but filtered one row out.
+      const head = applyHeadPage(
+        undefined,
+        { items: rows('a', 'b'), nextCursor: 1 },
+        { pageSize: 3 },
+        offset,
+      );
+      expect(head).toMatchObject({ currentPage: 0, hasMore: true, nextCursor: 1 });
+
+      const next = applyNextPage(head, { items: rows('c'), nextCursor: 2 }, offset);
+      expect(next).toMatchObject({ currentPage: 1, hasMore: true, nextCursor: 2 });
+
+      const last = applyNextPage(next, { items: rows('d', 'e', 'f'), nextCursor: null }, offset);
+      expect(last).toMatchObject({ currentPage: 2, hasMore: false, nextCursor: null });
+    });
+
+    it('persists the server verdict for a short head page', () => {
+      const head = applyHeadPage(
+        undefined,
+        { items: rows('a', 'b'), nextCursor: 1 },
+        { pageSize: 3 },
+        offset,
+      );
+      expect(toPersistedPage(head, offset)).toMatchObject({ hasMore: true, nextCursor: 1 });
+
+      const done = applyHeadPage(
+        undefined,
+        { items: rows('a', 'b'), nextCursor: null },
+        { pageSize: 3 },
+        offset,
+      );
+      expect(toPersistedPage(done, offset)).toMatchObject({ hasMore: false, nextCursor: null });
+    });
+  });
+
   describe('persistence limits', () => {
     it('persists the head page only by default, without flags or client-only rows', () => {
       const data = { ...insertHeadItems(twoPages(), rows('tmp'), offset), isLoadingMore: true };
@@ -451,6 +488,23 @@ describe('cursor / backward paging (message-like transcript)', () => {
     const collapsed = collapseToHead(loadedTwoWindows(), messages);
     expect(mids(collapsed)).toEqual(['m7', 'm8', 'm9', 'm10']);
     expect(collapsed.nextCursor).toEqual({ createdAt: 7, id: 'm7' });
+  });
+
+  it('persists rows appended to the head after it was fetched', () => {
+    const head = applyHeadPage<Message, Cursor>(
+      undefined,
+      { items: range(1, 4), nextCursor: null },
+      { pageSize: 4 },
+      messages,
+    );
+    // A sent message and its reply land through a plain write, not a page.
+    const grown = { ...head, items: [...head.items, msg(5), msg(6)] };
+
+    expect(mids(toPersistedPage(grown, messages))).toEqual(['m1', 'm2', 'm3', 'm4', 'm5', 'm6']);
+    // With older pages loaded, only the head (and its growth) is kept.
+    const loaded = loadedTwoWindows();
+    const loadedGrown = { ...loaded, items: [...loaded.items, msg(11)] };
+    expect(mids(toPersistedPage(loadedGrown, messages))).toEqual(['m7', 'm8', 'm9', 'm10', 'm11']);
   });
 
   it('persists the newest window, capped by maxItems; a cut forgets the cursor', () => {

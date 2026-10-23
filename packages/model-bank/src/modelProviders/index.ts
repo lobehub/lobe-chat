@@ -72,6 +72,7 @@ import SuperGrokProvider from './superGrok';
 import TaichuProvider from './taichu';
 import TencentcloudProvider from './tencentcloud';
 import TogetherAIProvider from './togetherai';
+import { TypeSafeProvider } from './typesafe';
 import UnslothProvider from './unsloth';
 import UpstageProvider from './upstage';
 import V0Provider from './v0';
@@ -186,6 +187,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   Ai302Provider,
   NvidiaProvider,
   TogetherAIProvider,
+  TypeSafeProvider,
   FireworksAIProvider,
   GroqProvider,
   PerplexityProvider,
@@ -242,6 +244,46 @@ export const isProviderDisableBrowserRequest = (id: string) => {
     (v) => v.id === id && (v.disableBrowserRequest || v.settings?.disableBrowserRequest),
   );
   return !!provider;
+};
+
+/**
+ * Providers that run on the user's own machine: requests leave from the device
+ * unless `fetchOnClient` says otherwise (a desktop app or a deployment that
+ * proxies them sets it to `false`).
+ */
+const LOCAL_FETCH_ON_CLIENT_PROVIDERS = new Set(['lmstudio', 'ollama', 'unsloth']);
+
+export interface ProviderFetchOnClientConfig {
+  /** The user's choice, else the deployment's override for the provider. */
+  fetchOnClient?: boolean;
+  keyVaults?: { apiKey?: string; baseURL?: string };
+}
+
+/**
+ * Whether requests to `provider` must leave from the user's device rather than
+ * the server — the single rule the client and the server both apply, so the
+ * server never relays a call the client did not prepare for (or the reverse).
+ *
+ * 1. A provider that disables browser requests always runs on the server.
+ * 2. Local providers (Ollama / LM Studio / Unsloth) follow `fetchOnClient`, default the device.
+ * 3. Neither a base URL nor an API key: the server's own configuration.
+ * 4. Only a base URL: an endpoint the server may not reach, so the device.
+ * 5. Otherwise `fetchOnClient`, default the server.
+ */
+export const isProviderFetchOnClient = (
+  provider: string,
+  config: ProviderFetchOnClientConfig | undefined,
+): boolean => {
+  if (isProviderDisableBrowserRequest(provider)) return false;
+
+  if (LOCAL_FETCH_ON_CLIENT_PROVIDERS.has(provider)) return config?.fetchOnClient ?? true;
+
+  const hasEndpoint = !!config?.keyVaults?.baseURL;
+  const hasApiKey = !!config?.keyVaults?.apiKey;
+  if (!hasEndpoint && !hasApiKey) return false;
+  if (hasEndpoint && !hasApiKey) return true;
+
+  return config?.fetchOnClient ?? false;
 };
 
 /**

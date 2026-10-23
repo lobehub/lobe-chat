@@ -2,14 +2,14 @@ import react from '@vitejs/plugin-react';
 import { codeInspectorPlugin } from 'code-inspector-plugin';
 import type { ModulePreloadOptions, Plugin } from 'vite';
 
+import { canvasRuntime } from './canvasRuntime';
 import { viteCompletionSounds } from './completionSounds';
-import { viteEmotionSpeedy } from './emotionSpeedy';
 import { lobeIconImports } from './lobeIconImports';
 import { lobeUiImports } from './lobeUiImports';
 import { viteMarkdownImport } from './markdownImport';
 import { viteNodeModuleStub } from './nodeModuleStub';
 import { vitePlatformResolve } from './platformResolve';
-import { viteStaticStylesPrecompile } from './staticStylesPrecompile';
+import { stylexPlugin, stylexTokenModules } from './stylex';
 
 /**
  * Shared manual chunk naming — groups leaf-node modules to reduce chunk file count.
@@ -173,6 +173,22 @@ function sharedManualChunks(id: string): string | undefined {
   const antdMatch = id.match(/antd\/es\/locale\/([^/.]+)\.js/);
   if (antdMatch) {
     const locale = ANTD_LOCALE[antdMatch[1]];
+    if (locale) return `i18n-${locale}-ui-runtime`;
+  }
+
+  // The antd locale above imports per-component locales (calendar, date-picker,
+  // time-picker, rc pagination/picker) and is itself re-exported by the
+  // `antd/locale/*` entry. Lazy groups capture only matched modules, so left
+  // unmatched these land in an entry-set chunk that imports the ui-runtime chunk
+  // while ui-runtime imports it back. That cycle breaks rolldown's lazy init
+  // ("r is not a function") and every non-English locale silently falls back to
+  // English. en_US stays out: antd components import it statically as their
+  // default locale, so it belongs with the antd vendor graph.
+  const antdPartMatch = id.match(
+    /[\\/](?:antd|@rc-component[\\/][^\\/]+)[\\/](?:[^\\/]+[\\/])*locale[\\/]([A-Za-z]{2}_[A-Z]{2})\.js$/,
+  );
+  if (antdPartMatch && antdPartMatch[1] !== 'en_US') {
+    const locale = ANTD_LOCALE[antdPartMatch[1]];
     if (locale) return `i18n-${locale}-ui-runtime`;
   }
 
@@ -439,6 +455,14 @@ const splitByInitial = (
 // entry-set chunking. Requires preserveEntrySignatures: 'allow-extension'.
 export const createSharedRolldownOutput = (options: SharedRolldownOutputOptions = {}) => {
   const groups: Group[] = [
+    // The canvas runtime's own modules carry page-level CSS (base.css styles
+    // body). App chunks also reuse modules the runtime pulls in, so without a
+    // chunk of its own that CSS would ride along and restyle the App's body.
+    {
+      name: 'canvas-runtime',
+      priority: 4,
+      test: /[\\/]packages[\\/]canvas-runtime[\\/]src[\\/]/,
+    },
     {
       name: (moduleId: string) => sharedManualChunks(moduleId) ?? null,
       priority: 3,
@@ -469,13 +493,14 @@ const isDev = process.env.NODE_ENV !== 'production';
 
 interface SharedRendererOptions {
   platform: Platform;
+  stylexOverlaySrcDirs?: string[];
   tsconfigPaths?: boolean;
 }
 
 export function sharedRendererPlugins(options: SharedRendererOptions) {
   return [
+    canvasRuntime(),
     viteCompletionSounds(),
-    viteEmotionSpeedy(),
     viteMarkdownImport(),
     viteNodeModuleStub(),
     vitePlatformResolve(options.platform),
@@ -508,8 +533,8 @@ export function sharedRendererPlugins(options: SharedRendererOptions) {
         exclude: [/\.(css|json|html)$/],
         hotKeys: ['altKey', 'ctrlKey'],
       }),
+    stylexPlugin({ overlaySrcDirs: options.stylexOverlaySrcDirs }),
     react(),
-    viteStaticStylesPrecompile(),
     ...(options.platform === 'desktop' ? [] : [...lobeIconImports(), ...lobeUiImports()]),
   ];
 }
@@ -535,18 +560,15 @@ export function sharedRendererDefine(options: { isElectron: boolean; isMobile: b
 }
 
 export const sharedOptimizeDeps = {
+  exclude: [...stylexTokenModules],
   include: [
     'react',
     'react-dom',
     'react-dom/client',
     'react-router',
     'react-router/dom',
-    'antd',
-    '@ant-design/icons',
     '@lobehub/ui',
-    '@lobehub/ui/base-ui',
     '@lobehub/ui > @emotion/react',
-    'antd-style',
     'zustand',
     'zustand/middleware',
     'swr',

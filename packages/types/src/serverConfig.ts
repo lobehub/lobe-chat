@@ -19,7 +19,6 @@ import type {
  */
 export type IFeatureFlagsState = {
   enableAgentOnboarding: boolean | undefined;
-  enableAgentSelfIteration: boolean | undefined;
   /**
    * Agent Share capability: may this user publish an Agent as a shared link AND
    * open/chat on an already-live shared agent. One allowlist gates both sides.
@@ -27,6 +26,12 @@ export type IFeatureFlagsState = {
   enableAgentShare: boolean | undefined;
   enableAuthCaptcha: boolean | undefined;
   enableCheckUpdates: boolean | undefined;
+  /**
+   * Dashboards and the `lobe-dashboard` agent tool (`dashboard`). Off by
+   * default: the pages, Portal view, in-chat previews and the tool are hidden
+   * and the widget / dashboard APIs answer FORBIDDEN.
+   */
+  enableDashboard: boolean | undefined;
   enableDevDock: boolean | undefined;
   /**
    * Rollout gate for the multiplexed gateway socket. Necessary but not
@@ -34,6 +39,11 @@ export type IFeatureFlagsState = {
    * `GlobalServerConfig.agentGatewayProtocol === 2`.
    */
   enableGatewayMux: boolean | undefined;
+  /**
+   * LobeHub Mobile rollout gate for the multiplexed gateway socket and
+   * protocol-v2 payloads; independent from `enableGatewayMux`.
+   */
+  enableGatewayMuxMobile: boolean | undefined;
   enableKnowledgeBase: boolean | undefined;
   /**
    * Rollout gate for relaying LLM calls of device-only model providers to the
@@ -122,6 +132,13 @@ export interface GlobalServerConfig {
   agentGatewayUrl?: string;
   aiProvider: ServerLanguageModel;
   defaultAgent?: PartialDeep<UserDefaultAgent>;
+  /** Whether the server has DEVICE_GATEWAY_URL configured, independent of its public URL. */
+  deviceGatewayConfigured?: boolean;
+  /**
+   * Public Device Gateway base URL (`DEVICE_GATEWAY_PUBLIC_URL`). Absent when not
+   * configured; clients then keep the address they manage themselves.
+   */
+  deviceGatewayUrl?: string;
   disableEmailPassword?: boolean;
   enableBusinessFeatures?: boolean;
   enableComposio?: boolean;
@@ -140,9 +157,21 @@ export interface GlobalServerConfig {
   enableMultimodalUnderstanding?: boolean;
   enableUploadFileToServer?: boolean;
   image?: PartialDeep<UserImageConfig>;
+  /**
+   * Whether the server can relay an LLM call to a browser tab (Agent Gateway
+   * with its service token + Redis). The one-shot relay is used only then.
+   */
+  llmRelayAvailable?: boolean;
   memory?: GlobalMemoryConfig;
   multimodalUnderstanding?: MultimodalUnderstandingConfig;
   oAuthSSOProviders?: string[];
+  /**
+   * Public issuer of the built-in OIDC provider (`APP_URL` + `/oidc`) — the
+   * exact value the provider signs into tokens and discovery. Clients show
+   * this to developers instead of their own origin, which differs behind a
+   * reverse proxy or on desktop.
+   */
+  oidcIssuer?: string;
   systemAgent?: PartialDeep<UserServiceModelConfig>;
   telemetry: {
     langfuse?: boolean;

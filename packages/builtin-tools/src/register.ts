@@ -12,6 +12,7 @@ import {
 } from '@lobechat/builtin-tool-agent-builder/client';
 import {
   AgentDocumentsInspectors,
+  AgentDocumentsInterventions,
   AgentDocumentsManifest,
   AgentDocumentsRenders,
   AgentDocumentsStreamings,
@@ -28,6 +29,7 @@ import {
   BrowserManifest,
   BrowserRenders,
 } from '@lobechat/builtin-tool-browser/client';
+import { CanvasInspectors, CanvasManifest } from '@lobechat/builtin-tool-canvas/client';
 import {
   ClaudeCodeApiName,
   ClaudeCodeIdentifier,
@@ -44,6 +46,12 @@ import {
   CloudSandboxStreamings,
 } from '@lobechat/builtin-tool-cloud-sandbox/client';
 import { CredsIdentifier, CredsInterventions } from '@lobechat/builtin-tool-creds/client';
+import {
+  DashboardInspectors,
+  DashboardInterventions,
+  DashboardManifest,
+  DashboardRenders,
+} from '@lobechat/builtin-tool-dashboard/client';
 import {
   GoalInspectors,
   GoalInterventions,
@@ -166,6 +174,7 @@ import {
   WebOnboardingRenders,
 } from '@lobechat/builtin-tool-web-onboarding/client';
 import {
+  createEditLocalFileInspector,
   createReadLocalFileInspector,
   createRunCommandInspector,
   createWriteLocalFileInspector,
@@ -224,6 +233,29 @@ const heterogeneousCliStreamings: Record<string, BuiltinStreaming> = {
   write: LocalSystemStreamings[LocalSystemApiName.writeFile] as BuiltinStreaming,
 };
 
+/**
+ * Devin's ACP stream reports the CLI's inference tool names via
+ * `_meta['cognition.ai/inferenceToolName']` (exec/read/write/edit/…), so the
+ * shared command and local-file surfaces apply under those apiName keys.
+ * `edit` gets an inspector but no render: its tool result is flattened diff
+ * text, not the `diffText` patch EditLocalFile expects. `grep`/`glob` stay
+ * inspector-less too — their count icons key off lobe-shaped pluginState
+ * (totalMatches/totalCount) that ACP updates never carry, so a successful
+ * search would render as a failure.
+ */
+const devinCliInspectors: Record<string, BuiltinInspector> = {
+  edit: createEditLocalFileInspector('builtins.devin.apiName.edit') as BuiltinInspector,
+  exec: createRunCommandInspector('builtins.devin.apiName.exec') as BuiltinInspector,
+  read: createReadLocalFileInspector('builtins.devin.apiName.read') as BuiltinInspector,
+  write: createWriteLocalFileInspector('builtins.devin.apiName.write') as BuiltinInspector,
+};
+
+const devinCliRenders: Record<string, BuiltinRender> = {
+  exec: RunCommandRender as BuiltinRender,
+  read: LocalSystemRenders[LocalSystemApiName.readFile] as BuiltinRender,
+  write: LocalSystemRenders[LocalSystemApiName.writeFile] as BuiltinRender,
+};
+
 let builtinToolSurfacesRegistered = false;
 
 export const registerBuiltinToolSurfaces = (): void => {
@@ -238,6 +270,7 @@ export const registerBuiltinToolSurfaces = (): void => {
       [ClaudeCodeApiName.AskUserQuestion]: ClaudeCodeRenders[ClaudeCodeApiName.AskUserQuestion],
     },
     [DEVIN_IDENTIFIER]: {
+      ...devinCliRenders,
       [ClaudeCodeApiName.AskUserQuestion]: ClaudeCodeRenders[ClaudeCodeApiName.AskUserQuestion],
     },
     [QODER_IDENTIFIER]: ClaudeCodeRenders as Record<string, BuiltinRender>,
@@ -261,6 +294,7 @@ export const registerBuiltinToolSurfaces = (): void => {
     [RemoteDeviceManifest.identifier]: RemoteDeviceRenders as Record<string, BuiltinRender>,
     [SkillStoreManifest.identifier]: SkillStoreRenders as Record<string, BuiltinRender>,
     [SkillsManifest.identifier]: SkillsRenders as Record<string, BuiltinRender>,
+    [DashboardManifest.identifier]: DashboardRenders as Record<string, BuiltinRender>,
     [TaskManifest.identifier]: TaskRenders as Record<string, BuiltinRender>,
     [UserInteractionIdentifier]: UserInteractionRenders as Record<string, BuiltinRender>,
     [LobeActivatorManifest.identifier]: LobeActivatorRenders as Record<string, BuiltinRender>,
@@ -296,6 +330,7 @@ export const registerBuiltinToolSurfaces = (): void => {
       [ClaudeCodeApiName.AskUserQuestion]: ClaudeCodeInspectors[ClaudeCodeApiName.AskUserQuestion],
     },
     [DEVIN_IDENTIFIER]: {
+      ...devinCliInspectors,
       [ClaudeCodeApiName.AskUserQuestion]: ClaudeCodeInspectors[ClaudeCodeApiName.AskUserQuestion],
     },
     [QODER_IDENTIFIER]: ClaudeCodeInspectors as Record<string, BuiltinInspector>,
@@ -333,6 +368,8 @@ export const registerBuiltinToolSurfaces = (): void => {
     >,
     [SkillStoreManifest.identifier]: SkillStoreInspectors as Record<string, BuiltinInspector>,
     [SkillsManifest.identifier]: SkillsInspectors as Record<string, BuiltinInspector>,
+    [CanvasManifest.identifier]: CanvasInspectors,
+    [DashboardManifest.identifier]: DashboardInspectors as Record<string, BuiltinInspector>,
     [TaskManifest.identifier]: TaskInspectors as Record<string, BuiltinInspector>,
     [UserInteractionIdentifier]: UserInteractionInspectors as Record<string, BuiltinInspector>,
     [WebBrowsingManifest.identifier]: WebBrowsingInspectors as Record<string, BuiltinInspector>,
@@ -382,6 +419,10 @@ export const registerBuiltinToolSurfaces = (): void => {
       string,
       BuiltinIntervention
     >,
+    [AgentDocumentsManifest.identifier]: AgentDocumentsInterventions as Record<
+      string,
+      BuiltinIntervention
+    >,
     [ClaudeCodeIdentifier]: ClaudeCodeInterventions as Record<string, BuiltinIntervention>,
     [DROID_IDENTIFIER]: {
       [ClaudeCodeApiName.AskUserQuestion]:
@@ -406,6 +447,7 @@ export const registerBuiltinToolSurfaces = (): void => {
     [LocalSystemIdentifier]: LocalSystemInterventions as Record<string, BuiltinIntervention>,
     [MemoryManifest.identifier]: MemoryInterventions as Record<string, BuiltinIntervention>,
     [MessageManifest.identifier]: MessageInterventions as Record<string, BuiltinIntervention>,
+    [DashboardManifest.identifier]: DashboardInterventions as Record<string, BuiltinIntervention>,
     [TaskManifest.identifier]: TaskInterventions as Record<string, BuiltinIntervention>,
     [UserInteractionIdentifier]: UserInteractionInterventions as Record<
       string,

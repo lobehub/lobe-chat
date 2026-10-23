@@ -200,6 +200,27 @@ export default {
   'credits.dedicatedBudget.saveError': 'Failed to save the dedicated budget',
   'credits.dedicatedBudget.saveSuccess': 'Dedicated budget saved',
   'credits.dedicatedBudget.userPanel.label': 'Dedicated budget',
+  'credits.teamBudget.actions.add': 'Team budget',
+  'credits.teamBudget.actions.edit': 'Edit team budget',
+  'credits.teamBudget.createTitle': 'New team budget',
+  'credits.teamBudget.desc':
+    'Give each team a shared allowance — its members draw on it before their personal quotas, on top of dedicated budgets',
+  'credits.teamBudget.editTitle': 'Edit team budget',
+  'credits.teamBudget.empty': 'No team budgets yet. Add one to give a team a shared allowance.',
+  'credits.teamBudget.exists': 'This team already has a budget',
+  'credits.teamBudget.hint':
+    'Team members spend this budget before their own quota. Membership follows the team automatically.',
+  'credits.teamBudget.membersEmpty': 'This team has no members yet',
+  'credits.teamBudget.noTeamsAvailable':
+    'Every team already has a budget. Create a team under Settings → Teams first.',
+  'credits.teamBudget.removeConfirm.desc':
+    'Team members will no longer draw from this budget. The team itself is kept.',
+  'credits.teamBudget.removeConfirm.title': 'Remove this team budget?',
+  'credits.teamBudget.saveError': 'Failed to save the team budget',
+  'credits.teamBudget.saveSuccess': 'Team budget saved',
+  'credits.teamBudget.team': 'Team',
+  'credits.teamBudget.teamPlaceholder': 'Select a team',
+  'credits.teamBudget.title': 'Team Budgets',
   'credits.memberBudget.actions.addRule': 'Add rule',
   'credits.memberBudget.actions.removeRule': 'Remove rule',
   'credits.memberBudget.actions.restoreDefault': 'Restore default',
@@ -316,8 +337,7 @@ export default {
     'Your {{plan}} subscription has been upgraded successfully. Enjoy AI chatting. Your current plan includes:',
   'limitation.chat.success.title': 'Upgrade Successful',
   'limitation.chat.topupSuccess.action': 'Continue Chatting',
-  'limitation.chat.topupSuccess.desc':
-    'Your top-up credits are now active. Enjoy AI chatting. Your current plan includes:',
+  'limitation.chat.topupSuccess.desc': 'Your top-up credits are now active. Enjoy AI chatting.',
   'limitation.chat.topupSuccess.title': 'Top-up Successful',
   'limitation.expired.desc':
     'Your {{plan}} credits expired on {{expiredAt}}. Upgrade your plan now to get credits.',
@@ -380,7 +400,7 @@ export default {
   'limitation.image.success.title': 'Upgrade Successful',
   'limitation.image.topupSuccess.action': 'Continue Generating',
   'limitation.image.topupSuccess.desc':
-    'Your top-up credits are now active. Enjoy AI image generation. Your current plan includes:',
+    'Your top-up credits are now active. Enjoy AI image generation.',
   'limitation.image.topupSuccess.title': 'Top-up Successful',
   'limitation.video.budgetReady.action': 'Continue Generating',
   'limitation.video.budgetReady.desc': 'Your available credits now cover this generation.',
@@ -391,7 +411,7 @@ export default {
   'limitation.video.success.title': 'Upgrade Successful',
   'limitation.video.topupSuccess.action': 'Continue Generating',
   'limitation.video.topupSuccess.desc':
-    'Your top-up credits are now active. Enjoy AI video generation. Your current plan includes:',
+    'Your top-up credits are now active. Enjoy AI video generation.',
   'limitation.video.topupSuccess.title': 'Top-up Successful',
   'limitation.limited.action': 'Upgrade Now',
   'limitation.limited.advanceFeature': 'Upgrade to enjoy premium features:',
@@ -552,8 +572,11 @@ export default {
   'plans.plan.free.title': 'Free',
   'plans.plan.hobby.desc': 'For users with their own API who pay as they go',
   'plans.plan.hobby.title': 'Hobby',
+  'plans.plan.max.title': 'Max',
+  'plans.plan.plus.title': 'Plus',
   'plans.plan.premium.desc': 'For professional users who frequently use AI',
   'plans.plan.premium.title': 'Premium',
+  'plans.plan.pro.title': 'Pro',
   'plans.plan.starter.desc': 'For occasional AI users',
   'plans.plan.starter.title': 'Starter',
   'plans.plan.ultimate.desc': 'For heavy users who need complex AI conversations',
@@ -788,5 +811,6 @@ export default {
   'usage.storage.embeddings.used': 'Vector Storage',
   'usage.storage.file.used': 'File Usage',
   'usage.storage.sandboxStorage.used': 'Sandbox Storage',
+  'usage.storage.sandboxStorage.pool': 'Sandbox drives (workspace pool)',
   'usage.remaining': 'Remaining',
 };

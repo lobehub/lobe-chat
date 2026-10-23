@@ -26,6 +26,8 @@ export interface StartOperationDeps {
 }
 
 export interface StartOperationInput {
+  /** See {@link InternalExecAgentParams.acceptsFileWorks}. */
+  acceptsFileWorks?: boolean;
   /** See {@link InternalExecAgentParams.acceptsMemberRuntimeEnd}. */
   acceptsMemberRuntimeEnd?: boolean;
   approvalClaim: ApprovalClaimState;
@@ -48,6 +50,7 @@ export interface StartOperationInput {
   includeFinalState?: boolean;
   /** Final runtime context — base prep context with 16b/16c overrides applied. */
   initialContext: OperationPrepResult['initialContext'];
+  initialLlmCalls?: number;
   initialStepCount?: number;
   /** Relay executor the calling client declared; lands on `state.host.llmExecutor`. */
   llmExecutor?: InternalExecAgentParams['llmExecutor'];
@@ -100,6 +103,7 @@ export const startOperation = async (
     userMessageId,
   } = ctx;
   const {
+    acceptsFileWorks,
     acceptsMemberRuntimeEnd,
     approvalClaim,
     approvalSourceOperationId,
@@ -116,6 +120,7 @@ export const startOperation = async (
     evalRuntime,
     hooks,
     initialContext,
+    initialLlmCalls,
     initialStepCount,
     maxSteps,
     operationId,
@@ -169,7 +174,24 @@ export const startOperation = async (
       (approvalSourceOperationId
         ? await deps.agentRuntimeService.getLlmExecutor(approvalSourceOperationId)
         : undefined);
+    // Its `file_works` declaration too, or the continuation's terminal push
+    // would drop the file Work card the parked client can render.
+    const fileWorksAccepted =
+      acceptsFileWorks ??
+      (approvalSourceOperationId
+        ? await deps.agentRuntimeService.acceptsFileWorks(approvalSourceOperationId)
+        : undefined);
+    // The Group Agent Builder target is server state captured on the parked
+    // operation row. A continuation is the SAME builder conversation: it must
+    // re-bind to the edited group instead of relying on the resumed topic's
+    // `metadata.editingGroupId`, which older topics never received — the member
+    // tools would then answer `No active group found`. Never trusted from the
+    // resolving client; read back from the durable row.
+    const inheritedEditingGroupId = approvalSourceOperationId
+      ? await deps.agentRuntimeService.getOperationEditingGroupId(approvalSourceOperationId)
+      : undefined;
     const result = await deps.agentRuntimeService.createOperation({
+      acceptsFileWorks: fileWorksAccepted,
       acceptsMemberRuntimeEnd: memberRuntimeEndAccepted,
       clientProtocol: input.clientProtocol,
       includeFinalState: input.includeFinalState,
@@ -184,7 +206,7 @@ export const startOperation = async (
             // Mirrors `shareConfig.allowReadMemory` so `BuiltinToolsExecutor`
             // can re-check the memory tool's grant at dispatch time (the
             // actual chokepoint) via `isShareBlockedDataToolCall` — see
-            // `shareGate.ts`.
+            // `shareGate/dispatch.ts`.
             allowReadMemory: shareGate.shareConfig.allowReadMemory,
             // Mirrors `shareConfig.toolGrants` so tool runtimes resolved
             // outside `toolManifestMap` (e.g. `activateSkill`, which queries
@@ -249,7 +271,14 @@ export const startOperation = async (
         // owned by the builtin builder agent, so the edited group only rides
         // here. Read by the group-agent-builder server runtime and by the
         // `<current_group_context>` injector.
-        ...(editingGroupId ? { editingGroupId } : {}),
+        //
+        // An intervention continuation arrives without the group (the parked
+        // run's client is gone), so the parked operation's durable target
+        // stands in — the same inheritance `fileWorks` / `memberRuntimeEnd`
+        // already use. An explicit request value always wins.
+        ...(editingGroupId || inheritedEditingGroupId
+          ? { editingGroupId: editingGroupId ?? inheritedEditingGroupId }
+          : {}),
         // Run-scoped Agent Signal marker for background self-iteration / memory
         // runs — lands in state.origin.signal so the completion path can
         // project receipts/briefs. Undefined for ordinary chat runs.
@@ -262,6 +291,7 @@ export const startOperation = async (
         // inactivity-watchdog abandon path can distinguish an isolated group
         // member ('member') from a genuine callSubAgent child.
         orchestrationRole: appContext?.orchestrationRole,
+        projectId: appContext?.projectId,
         scope: appContext?.scope,
         sessionId: appContext?.sessionId,
         sourceMessageId: userMessageId ?? parentMessageId ?? undefined,
@@ -290,6 +320,7 @@ export const startOperation = async (
       projectInstructions: prep.projectInstructions,
       initialContext,
       initialMessages: prep.allMessages,
+      initialLlmCalls,
       initialStepCount,
       ...(providedApprovalResolutionRequestId && approvalSourceOperationId
         ? {

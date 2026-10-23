@@ -8,6 +8,8 @@ import { AsyncLocalStorage } from '@/utils/localStorage';
 export enum SidebarTabKey {
   Chat = 'chat',
   Community = 'community',
+  Dashboard = 'dashboard',
+  Goals = 'goals',
   Home = 'home',
   Image = 'image',
   Knowledge = 'knowledge',
@@ -26,7 +28,6 @@ export enum ChatSettingsTabs {
   Opening = 'opening',
   Plugin = 'plugin',
   Prompt = 'prompt',
-  SelfIteration = 'selfIteration',
 }
 
 export enum GroupSettingsTabs {
@@ -47,6 +48,11 @@ export type WorkingSidebarTab =
   | 'skills'
   | 'web'
   | (string & {});
+
+export const CANVAS_TAB_PREFIX = 'canvas:';
+export const canvasTabKey = (canvasId: string) => `${CANVAS_TAB_PREFIX}${canvasId}`;
+export const canvasIdOfTab = (tab: string) =>
+  tab.startsWith(CANVAS_TAB_PREFIX) ? tab.slice(CANVAS_TAB_PREFIX.length) : undefined;
 
 export const DEFAULT_RESOURCE_MANAGER_COLUMN_WIDTHS = {
   date: 160,
@@ -71,6 +77,8 @@ export enum SettingsTabs {
   Credits = 'credits',
   Creds = 'credential',
   Devices = 'devices',
+  /** The cloud sandbox's network drives — labelled “Storage”; `storage` is local data. */
+  Drive = 'drive',
   Environments = 'environments',
   Hotkey = 'hotkey',
   /** @deprecated Use ServiceModel instead */
@@ -142,13 +150,30 @@ export const MODEL_DETAIL_PANEL_EXPANDABLE_KEYS = [
 
 export type TaskViewMode = 'kanban' | 'list';
 
+/** How topics inside one byProject sidebar group are sectioned. */
+export type ProjectTopicSubGroupMode = 'none' | 'byDevice' | 'byTime' | 'byStatus';
+
 export const DEFAULT_HOME_SIDEBAR_EXPANDED_KEYS = ['recents', 'agent', 'private'];
+
+/** How the agent document tree orders sibling rows. */
+export interface AgentDocumentSort {
+  by: 'createdAt' | 'name' | 'updatedAt';
+  foldersFirst: boolean;
+  order: 'asc' | 'desc';
+}
+
+/** How the sidebar project list is ordered; `manual` follows the shared drag order. */
+export type ProjectListSortBy = 'manual' | 'createdAt' | 'updatedAt';
 
 export interface SystemStatus {
   /**
    * Agent Builder panel width
    */
   agentBuilderPanelWidth?: number;
+  /**
+   * Sort order of the agent document tree (working panel 「文档」).
+   */
+  agentDocumentSort?: AgentDocumentSort;
   /**
    * Expanded group keys of the agent view-all page. Expanded (not collapsed)
    * keys are persisted because groups default to COLLAPSED (mirrors Linear) —
@@ -193,6 +218,12 @@ export interface SystemStatus {
    * so dismissing the current one does not hide future ones.
    */
   dismissedBannerIds?: string[];
+  /**
+   * Keys of goal asks (clarification rounds, gates, sign-offs) the user waved
+   * off the approval island. Only the island honours them — the same ask stays
+   * in the Home inbox. Append-only and capped, see `appendDismissedIslandKey`.
+   */
+  dismissedIslandItemKeys?: string[];
   /**
    * Per-agent expanded state of the agent sidebar's top-level sections
    * (Tasks / Topic), keyed by agentId. Lets each agent remember its own
@@ -293,6 +324,16 @@ export interface SystemStatus {
    * number of private agents (ungrouped) to display in the Private sidebar bucket
    */
   privateAgentPageSize?: number;
+  /**
+   * Order of the sidebar project list. Device-local view setting; the manual
+   * order itself is shared and lives on `projects.sort_order`.
+   */
+  projectListSortBy?: ProjectListSortBy;
+  /**
+   * Per byProject group (keyed by the group id, e.g. `project-id:<id>`): how its
+   * topics are sectioned. Absent means `none`.
+   */
+  projectTopicSubGroupModeByGroup?: Record<string, ProjectTopicSubGroupMode>;
   readNotificationSlugs?: string[];
   /**
    * number of recent items to display
@@ -615,6 +656,18 @@ export const createInitialSystemStatus = (): SystemStatus => {
       typeof persistedStatus.showLeftPanel === 'boolean'
         ? persistedStatus.showLeftPanel
         : INITIAL_STATUS.showLeftPanel,
+    showRightPanel:
+      typeof persistedStatus.showRightPanel === 'boolean'
+        ? persistedStatus.showRightPanel
+        : INITIAL_STATUS.showRightPanel,
+    showWorkingOverview:
+      typeof persistedStatus.showWorkingOverview === 'boolean'
+        ? persistedStatus.showWorkingOverview
+        : undefined,
+    workingSidebarWidth:
+      typeof persistedStatus.workingSidebarWidth === 'number'
+        ? persistedStatus.workingSidebarWidth
+        : INITIAL_STATUS.workingSidebarWidth,
   };
 };
 

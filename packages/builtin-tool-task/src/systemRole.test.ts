@@ -17,6 +17,12 @@ describe('systemPrompt', () => {
     expect(systemPrompt).not.toContain('cannot be started with runTask/runTasks');
   });
 
+  it('embeds instruction images as markdown instead of bare urls', () => {
+    expect(systemPrompt).toContain('![alt](https://...)');
+    expect(systemPrompt).toContain('a bare URL renders as a plain link');
+    expect(systemPrompt).toContain('Never pass a bare URL');
+  });
+
   it('starts a configured cron schedule by default without running it immediately', () => {
     expect(systemPrompt).toContain(
       'start its schedule by default with updateTaskStatus(identifier, "scheduled")',
@@ -34,5 +40,12 @@ describe('systemPrompt', () => {
     // dispatcher picks up schedule-mode tasks in any non-excluded status,
     // including 'backlog', so merely leaving the task unstarted is not enough.
     expect(systemPrompt).toContain('call updateTaskStatus(identifier, "paused") instead');
+  });
+
+  it('lets an automation tick complete its task only when the instruction end condition is met', () => {
+    expect(systemPrompt).toContain('NEVER set it to canceled or failed');
+    expect(systemPrompt).toContain('an end condition the instruction itself defines');
+    expect(systemPrompt).toContain('Do not ask the user to stop the loop instead');
+    expect(systemPrompt).not.toContain('NEVER call updateTaskStatus with "completed"');
   });
 });

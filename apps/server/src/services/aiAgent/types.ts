@@ -1,3 +1,4 @@
+import type { AgentRunLlmExecutor } from '@lobechat/agent-runtime';
 import type { BotPlatformContext } from '@lobechat/context-engine';
 import type {
   BotSenderMetadata,
@@ -5,6 +6,7 @@ import type {
   ExecAgentParams,
   ExternalOriginMetadata,
   LobeAgentChatConfig,
+  MessageMetadata,
   RuntimeMentionedAgent,
   UserInterventionConfig,
   WorkingDirConfig,
@@ -67,6 +69,13 @@ export interface ExecRunContext {
   trigger?: string;
   /** User turn row id; undefined when the run starts from history (resume). */
   userMessageId?: string;
+  /**
+   * Metadata the user turn row was persisted with (attached content, steer,
+   * trigger, …); undefined when no row was created. Stages read attached content
+   * from here rather than from request fields, so a field persisted on the row
+   * is also the field the run sees.
+   */
+  userMessageMetadata?: MessageMetadata;
 }
 
 /**
@@ -74,6 +83,12 @@ export interface ExecRunContext {
  * This extends the public ExecAgentParams with server-side only options
  */
 export interface InternalExecAgentParams extends ExecAgentParams {
+  /**
+   * The calling client renders `file` Works in pushed snapshots, derived from
+   * the `streamFeatures` it declared on `aiAgent.execAgent`. See
+   * `OperationCreationParams.acceptsFileWorks`.
+   */
+  acceptsFileWorks?: boolean;
   /**
    * The calling client handles `member_runtime_end`, derived from the
    * `streamFeatures` it declared on `aiAgent.execAgent`. See
@@ -169,6 +184,8 @@ export interface InternalExecAgentParams extends ExecAgentParams {
   functionTools?: Array<{ description?: string; name: string; parameters?: Record<string, any> }>;
   /** External lifecycle hooks (auto-adapt to local/production mode) */
   hooks?: AgentHook[];
+  /** Initial LLM-call count offset for resumed operations (accumulated from previous runs) */
+  initialLlmCalls?: number;
   /** Initial step count offset for resumed operations (accumulated from previous runs) */
   initialStepCount?: number;
   /**
@@ -179,6 +196,11 @@ export interface InternalExecAgentParams extends ExecAgentParams {
    * and a refusal here destroys the message before it is ever persisted.
    */
   interactiveStart?: boolean;
+  /**
+   * The client's relay executor. Server callers may also set the channel it
+   * relays on (`channelOperationId`), which a client never can.
+   */
+  llmExecutor?: AgentRunLlmExecutor;
   /** Maximum steps for the agent operation */
   maxSteps?: number;
   /**
@@ -246,6 +268,13 @@ export interface InternalExecAgentParams extends ExecAgentParams {
     rejectionReason?: string;
     toolCallId: string;
   };
+  /**
+   * Skill identifiers the user selected for this message. Persisted on the
+   * user message (`metadata.selectedSkillIds`) and, together with the ones
+   * earlier turns of the topic selected, injected with their bodies like a
+   * pinned skill. Never widens what the skill pool already allows.
+   */
+  selectedSkillIds?: string[];
   /**
    * Tool identifiers the user @-mentioned in this message. Merged into the
    * agent's plugin set for this run (alongside `additionalPluginIds`) so a

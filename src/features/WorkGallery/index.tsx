@@ -1,9 +1,16 @@
 'use client';
 
 import type { WorkSummaryItem } from '@lobechat/types';
-import { Center, Empty, Flexbox } from '@lobehub/ui';
-import { Avatar, Button } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import {
+  Avatar,
+  Button,
+  Center,
+  createStaticStyles,
+  cssVar,
+  cx,
+  Empty,
+  Flexbox,
+} from '@lobehub/ui';
 import { PackageOpenIcon, TriangleAlertIcon } from 'lucide-react';
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +24,7 @@ import { useWorkspaceWorksInfinite } from './hooks';
 import WorkGallerySkeleton, { WorkGalleryCardsSkeleton } from './Skeleton';
 import { useOpenWork } from './useOpenWork';
 import WorkPreviewCard from './WorkPreviewCard';
+import WorksTypeTabs from './WorksTypeTabs';
 
 const styles = createStaticStyles(({ css }) => ({
   agentFilter: css`
@@ -116,6 +124,11 @@ const styles = createStaticStyles(({ css }) => ({
       border-color: ${cssVar.colorTextTertiary};
       color: ${cssVar.colorText};
     }
+  `,
+  typeBar: css`
+    flex: none;
+    padding-block: 12px 0;
+    padding-inline: 24px;
   `,
   scroll: css`
     overflow: hidden auto;
@@ -284,12 +297,7 @@ const WorkGallery = memo<WorkGalleryProps>(({ galleryKey }) => {
               </div>
               <div className={styles.cardList}>
                 {group.items.map((item) => (
-                  <WorkPreviewCard
-                    item={item}
-                    key={item.id}
-                    onOpen={handleOpen}
-                    onRemoved={reload}
-                  />
+                  <WorkPreviewCard item={item} key={item.id} onOpen={handleOpen} />
                 ))}
               </div>
             </section>
@@ -312,10 +320,20 @@ const WorkGallery = memo<WorkGalleryProps>(({ galleryKey }) => {
     );
   };
 
+  const typeTabs = (
+    <Flexbox className={styles.typeBar}>
+      <WorksTypeTabs activeKey={galleryKey} />
+    </Flexbox>
+  );
+
   return isLoadingInitial && items.length === 0 ? (
-    <WorkGallerySkeleton />
+    <Flexbox className={styles.container}>
+      {typeTabs}
+      <WorkGallerySkeleton />
+    </Flexbox>
   ) : (
     <Flexbox className={styles.container}>
+      {typeTabs}
       {agentIds.length > 0 && (
         <Flexbox horizontal align={'center'} className={styles.filterBar} gap={4}>
           <Button

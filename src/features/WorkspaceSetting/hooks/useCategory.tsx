@@ -1,5 +1,5 @@
 import { isDesktop } from '@lobechat/const';
-import { Avatar } from '@lobehub/ui/base-ui';
+import { Avatar } from '@lobehub/ui';
 import { SkillsIcon } from '@lobehub/ui/icons';
 import {
   AppWindowIcon,
@@ -16,18 +16,21 @@ import {
   EllipsisIcon,
   FlaskConical,
   HandCoins,
+  HardDriveIcon,
   Info,
   KeyboardIcon,
   KeyIcon,
   KeyRound,
   Map,
   MessageCircleIcon,
+  MessagesSquareIcon,
   MonitorSmartphoneIcon,
   PaletteIcon,
   ScrollText,
   Sparkles,
   TagIcon,
   Users,
+  UsersRound,
 } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -76,8 +79,6 @@ export const useWorkspaceSettingCategory = (): WorkspaceSettingCategoryGroup[] =
   const { allowed: canCreateContent } = usePermission('create_content');
   const enableOAuthApps = useUserStore(labPreferSelectors.enableOAuthApps);
   const enableIntegrations = useUserStore(labPreferSelectors.enableIntegrations);
-  // Behind the same experiment that gates the persistent sandbox itself: a tab
-  // for environments nothing can run in would be a dead end.
   const enablePersistentSandbox = useUserStore(labPreferSelectors.enablePersistentSandbox);
   const { hideDocs } = useServerConfigStore(featureFlagsSelectors);
   const [avatar, username] = useUserStore((s) => [
@@ -122,6 +123,14 @@ export const useWorkspaceSettingCategory = (): WorkspaceSettingCategoryGroup[] =
               key: WorkspaceSettingsTabs.Hotkey,
               label: t('tab.hotkey'),
             },
+            // Follow-up chips / input completion act on the member's own chat
+            // surface, so every role configures them here — the workspace
+            // Service Model page stays admin-only.
+            {
+              icon: MessagesSquareIcon,
+              key: WorkspaceSettingsTabs.ChatPreference,
+              label: t('tab.chatPreference'),
+            },
             // The System Bot binding is a per-user identity (owned by userId,
             // not the workspace); reaching a workspace's agents happens via the
             // scope selector on the page itself.
@@ -159,14 +168,28 @@ export const useWorkspaceSettingCategory = (): WorkspaceSettingCategoryGroup[] =
               label: t('workspaceSetting.tab.members'),
             },
             {
+              icon: UsersRound,
+              key: WorkspaceSettingsTabs.Teams,
+              label: t('workspaceSetting.tab.teams'),
+            },
+            {
               icon: MonitorSmartphoneIcon,
               key: WorkspaceSettingsTabs.Devices,
               label: t('tab.devices'),
             },
-            enablePersistentSandbox && {
+            // Always there: a code environment is a definition, written down before
+            // anything runs it, and useful with or without a drive to run it on.
+            {
               icon: ContainerIcon,
               key: WorkspaceSettingsTabs.Environments,
               label: t('tab.environments'),
+            },
+            // The public drive and the member's own, with the pool's usage —
+            // behind the same lab switch as the composer's folder picker.
+            enablePersistentSandbox && {
+              icon: HardDriveIcon,
+              key: WorkspaceSettingsTabs.Drive,
+              label: t('tab.drive'),
             },
             {
               icon: BellIcon,
