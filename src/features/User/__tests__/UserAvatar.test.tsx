@@ -36,8 +36,9 @@ describe('UserAvatar', () => {
     });
 
     render(<UserAvatar />);
-    // When user has no avatar url, <Avatar /> falls back to initials rendering (not an <img />)
-    expect(screen.getByText('TE')).toBeInTheDocument();
+    // When user has no avatar url, <Avatar /> renders a generated fallback labelled with the username (not an <img />)
+    expect(screen.getByRole('img', { name: mockUsername })).toBeInTheDocument();
+    expect(screen.queryByAltText(mockUsername)).not.toBeInTheDocument();
   });
 
   it('should show LobeChat and default avatar when the user is not logged in', () => {
