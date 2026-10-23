@@ -218,4 +218,19 @@ CREATE UNIQUE INDEX IF NOT EXISTS "channel_threads_root_unique" ON "channel_thre
 CREATE INDEX IF NOT EXISTS "channels_user_id_idx" ON "channels" USING btree ("user_id");--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "channels_direct_unique" ON "channels" USING btree ("agent_id","user_id",coalesce("workspace_id", '')) WHERE "channels"."agent_id" IS NOT NULL;--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "channels_project_id_idx" ON "channels" USING btree ("project_id") WHERE "channels"."project_id" IS NOT NULL;--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "channels_workspace_visibility_idx" ON "channels" USING btree ("workspace_id","visibility");
+CREATE INDEX IF NOT EXISTS "channels_workspace_visibility_idx" ON "channels" USING btree ("workspace_id","visibility");--> statement-breakpoint
+-- Hard deletes can arrive through existing Agent/account/workspace cascades. Never erase
+-- a physical writer lock with its owning row: the caller must stop it and confirm exit first.
+CREATE OR REPLACE FUNCTION "channel_preserve_active_writer"() RETURNS trigger AS $$
+BEGIN
+  IF OLD.writer_held THEN
+    RAISE EXCEPTION 'Stop active Channel replies before deleting their owner'
+      USING ERRCODE = '55006';
+  END IF;
+  RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;--> statement-breakpoint
+DROP TRIGGER IF EXISTS "channel_preserve_active_writer" ON "channel_jobs";--> statement-breakpoint
+CREATE TRIGGER "channel_preserve_active_writer"
+  BEFORE DELETE ON "channel_jobs"
+  FOR EACH ROW EXECUTE FUNCTION "channel_preserve_active_writer"();
