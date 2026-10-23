@@ -67,6 +67,7 @@ the next free number of that prefix.
 - **L-S23** A hand-built `node_modules` symlink farm runs unit tests but cannot start the dev server; clone a working checkout's `node_modules` instead of a fresh install, which this lockfile-less repo resolves against a moving registry.
 - **L-S24** Read the dev server's URL from its own log, and treat "ready" as any status but `000` — `/` answers `302` to `/signin` when signed out.
 - **L-S25** `dev:static` 的 Electron 重启会清空 `dist/renderer`（renderer Vite dev server 启动即删 outDir）；`start`/`restart` 后必须重建 renderer 再驱动，否则页面只有 Internal Server Error。
+- **L-S26** 根 `.env` 起不来时不修它、也不用 mock：开一个没有 `.env` 的 worktree，走 `init-dev-env.sh setup-db` → `seed-user` → `dev`。
 
 ## Entries
 
@@ -618,3 +619,17 @@ dev.mjs 每次启动都会拉起 renderer Vite dev server，而后者启动即�
 **Rule:** 文本类执行记录用 `.txt` 或 `.json` 保存；必须用 Markdown 排版时，另附一份同内容的
 `.txt`。发布后用 `lh acceptance run result list --run <id> --json` 核对每项 verdict。已发布的轮次
 用 `lh acceptance run result submit --type text --file <x>.txt --verdict ...` 补交，不要新开一轮。
+
+### L-S26 — 根 `.env` 坏了就硬修，或者退回 mock
+
+`since 2026-10-23` · `holds-while: init-dev-env.sh 在根 .env 存在时直接退出，dev-server.md 只写了「有 .env 用现有配置」这一条分支`
+
+**Trap:** repo 根目录有 `.env`（Neon 口令已失效，或 `DATABASE_URL` 被指到本地库但 schema 落后、缺
+`agent_history_jobs`），于是走了「有 `.env` 就用现有配置」的分支：`bun run dev` 起来但登录 500，
+`setup-auth.sh` 又提示 `root .env exists; do not seed or modify this DB`。接下来会去改根 `.env`、
+改 `node_modules` 里的依赖硬救，或者干脆退回「真组件 + mock 数据截图」交差——最后一种不算验收证据。
+
+**Rule:** 根 `.env` 起不来就离开它：`git worktree add /tmp/<slug> <ref>` 开一棵没有根 `.env` 的树，
+按 `init-dev-env.sh setup-db` → `seed-user` → `dev` 起自带 agent-testing 环境（Postgres/Redis 容器跨
+worktree 复用）。之后按 L-S21 用绝对路径调用脚本，按 L-S24 从日志取端口，并把 worktree 路径写进
+report。不要在被改坏的根 `.env` 上继续调试，也不要用 mock 截图替代起不来的 dev server。
