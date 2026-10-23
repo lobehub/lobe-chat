@@ -112,3 +112,27 @@ describe('mobileRouter page routes', () => {
     expect(matches?.at(-1)?.route.path).toBe(':id');
   });
 });
+
+describe('mobileRouter acceptance routes', () => {
+  it('keeps the personal report and check routes unprefixed', () => {
+    expect(matchRoutes(mobileRoutes, '/acceptance/acc_1')?.at(-1)?.route.path).toBe(
+      '/acceptance/:acceptanceId',
+    );
+    expect(
+      matchRoutes(mobileRoutes, '/acceptance/acc_1/check/chk_1')?.at(-1)?.params,
+    ).toMatchObject({ acceptanceId: 'acc_1', checkId: 'chk_1' });
+  });
+
+  it('mirrors the report and check routes under a workspace slug', () => {
+    const report = matchRoutes(mobileRoutes, '/my-team/acceptance/acc_1');
+    const check = matchRoutes(mobileRoutes, '/my-team/acceptance/acc_1/check/chk_1');
+
+    expect(report?.some((match) => match.route.path === ':workspaceSlug')).toBe(true);
+    expect(report?.at(-1)?.route.path).toBe('acceptance/:acceptanceId');
+    expect(report?.at(-1)?.params).toMatchObject({
+      acceptanceId: 'acc_1',
+      workspaceSlug: 'my-team',
+    });
+    expect(check?.at(-1)?.params).toMatchObject({ acceptanceId: 'acc_1', checkId: 'chk_1' });
+  });
+});

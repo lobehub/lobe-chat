@@ -754,6 +754,8 @@ export default {
   'acceptance.workspace.renameSuccess': 'Renamed',
   'acceptance.workspace.statusError': 'Failed to update status',
   'acceptance.workspace.statusSuccess': 'Status updated',
+  'acceptance.workspace.scope.personal': 'Personal',
+  'acceptance.workspace.scope.switch': 'Switch workspace',
   'acceptance.workspace.title': 'Acceptance',
   'actions.backToApp': 'Back to {{name}}',
   'actions.goToApp': 'Go to {{name}}',

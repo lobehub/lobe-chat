@@ -22,7 +22,10 @@ export const commentIdFromHash = (hash: string): string | undefined => {
 export const commentAnchorUrl = (commentId: string) => {
   if (typeof window === 'undefined') return '';
   const { origin, pathname, search } = window.location;
-  return `${origin}${pathname}${search}#${commentAnchorId(commentId)}`;
+  // A shared link must open for anyone the report is public to, and the
+  // workspace-prefixed route only mounts for members — drop the slug.
+  const publicPath = pathname.replace(/^\/[^/]+(?=\/acceptance\/)/, '');
+  return `${origin}${publicPath}${search}#${commentAnchorId(commentId)}`;
 };
 
 /** How long a linked comment is held in view while the evidence above it loads. */
