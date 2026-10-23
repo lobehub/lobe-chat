@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-import type { RouteObject } from 'react-router';
+import type { LoaderFunctionArgs, RouteObject } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
 
 import { workspaceHomeRouteMeta } from '@/features/Workspace/routeMeta';
@@ -40,7 +40,9 @@ describe('home topic recents loader wiring', () => {
     const { homeTopicRecentsLoader: realLoader } =
       await import('@/routes/(main)/home/homeTopicRecentsLoader');
 
-    await expect(homeTopicRecentsLoader()).resolves.toBeNull();
-    expect(realLoader).toHaveBeenCalled();
+    const args = { params: { workspaceSlug: 'acme' } } as unknown as LoaderFunctionArgs;
+
+    await expect(homeTopicRecentsLoader(args)).resolves.toBeNull();
+    expect(realLoader).toHaveBeenCalledWith(args);
   });
 });

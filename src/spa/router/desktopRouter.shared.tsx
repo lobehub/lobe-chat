@@ -1,14 +1,6 @@
 'use client';
 
-import {
-  BrainCircuit,
-  Download,
-  Image,
-  Scale,
-  Settings,
-  ShapesIcon,
-  Video,
-} from 'lucide-react';
+import { BrainCircuit, Download, Image, Scale, Settings, ShapesIcon, Video } from 'lucide-react';
 import { createElement, type ReactElement } from 'react';
 import type { RouteObject } from 'react-router';
 
