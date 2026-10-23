@@ -1,5 +1,7 @@
 import { createStaticStyles } from '@lobehub/ui';
 
+import { RAIL_INSET_END } from './utils';
+
 export const minimapStyles = createStaticStyles(({ css, cssVar }) => ({
   container: css`
     pointer-events: none;
@@ -7,7 +9,7 @@ export const minimapStyles = createStaticStyles(({ css, cssVar }) => ({
     position: absolute;
     z-index: 1;
     inset-block: 16px 120px;
-    inset-inline-end: 8px;
+    inset-inline-end: ${RAIL_INSET_END}px;
 
     display: flex;
     flex-direction: column;
