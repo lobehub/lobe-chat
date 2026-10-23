@@ -98,3 +98,20 @@ export const toActivity = ({ activity, memory }: RawActivityItem): MemoryActivit
   when: iso(activity.startsAt, activity.capturedAt, memory.capturedAt, memory.createdAt),
   whenIsExact: !!activity.startsAt,
 });
+
+/**
+ * `queryMemories` joins contexts to their parent memories, so a context linked to several live
+ * parents comes back once per parent. Keep the first row per id.
+ */
+export const uniqueById = <T extends { id: string }>(items: T[]): T[] => {
+  const seen = new Set<string>();
+  return items.filter((item) => {
+    if (seen.has(item.id)) return false;
+    seen.add(item.id);
+    return true;
+  });
+};
+
+/** Adds rows fetched later (next page, search, deep link) without duplicating loaded ones. */
+export const mergeById = <T extends { id: string }>(current: T[], incoming: T[]): T[] =>
+  uniqueById([...current, ...incoming]);

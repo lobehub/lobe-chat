@@ -2,7 +2,7 @@ import { Button, Empty, SearchBar } from '@lobehub/ui';
 import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
 import * as stylex from '@stylexjs/stylex';
 import { SearchXIcon } from 'lucide-react';
-import { memo, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 
 import { useEntityDataContext } from '../context';
 import { lastTouchedOf } from '../derive';
@@ -55,6 +55,7 @@ const styles = stylex.create({
   },
   groupName: { color: cssVar.colorTextSecondary, fontWeight: 500 },
   noMatch: { paddingBlock: '48px' },
+  more: { color: cssVar.colorTextSecondary, flexShrink: 0 },
 });
 
 const matches = (entity: MemoryEntity, keyword: string) =>
@@ -64,7 +65,28 @@ const matches = (entity: MemoryEntity, keyword: string) =>
 
 const EntityList = memo(() => {
   const [keyword, setKeyword] = useState('');
-  const { entities: contexts, links, truncated } = useEntityDataContext();
+  const { entities: contexts, hasMore, links, loadMore, searchRemote, total } =
+    useEntityDataContext();
+  const [loadingMore, setLoadingMore] = useState(false);
+
+  // With pages still unloaded, a keyword also asks the server so older contexts can be found.
+  const needle = keyword.trim();
+  useEffect(() => {
+    if (!hasMore || !needle) return;
+    const timer = setTimeout(() => {
+      searchRemote(needle).catch(() => undefined);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [hasMore, needle, searchRemote]);
+
+  const handleLoadMore = async () => {
+    setLoadingMore(true);
+    try {
+      await loadMore();
+    } finally {
+      setLoadingMore(false);
+    }
+  };
   const { select, selectedId } = useSelection();
 
   const groups = useMemo(() => {
@@ -99,7 +121,7 @@ const EntityList = memo(() => {
         <div {...stylex.props(styles.heading)}>
           <h1 {...stylex.props(styles.title)}>情境</h1>
           <span {...stylex.props(styles.count)}>
-            {truncated ? `最近 ${contexts.length} 条` : contexts.length}
+            {hasMore ? `${contexts.length} / ${total}` : contexts.length}
           </span>
         </div>
         <SearchBar
@@ -140,6 +162,17 @@ const EntityList = memo(() => {
               ))}
             </section>
           ))
+        )}
+        {hasMore && !needle && (
+          <Button
+            block
+            loading={loadingMore}
+            type={'text'}
+            {...stylex.props(styles.more)}
+            onClick={handleLoadMore}
+          >
+            加载更早的情境
+          </Button>
         )}
       </div>
     </aside>

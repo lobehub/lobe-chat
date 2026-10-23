@@ -3,7 +3,7 @@
 import { Center, Empty } from '@lobehub/ui';
 import * as stylex from '@stylexjs/stylex';
 import { LayersIcon } from 'lucide-react';
-import { memo, useMemo } from 'react';
+import { memo, useEffect, useMemo } from 'react';
 
 import { EntityDataContext } from './context';
 import { lastTouchedOf } from './derive';
@@ -24,6 +24,13 @@ const styles = stylex.create({
 const MemoryEntities = memo(() => {
   const data = useEntityData();
   const { selectedId } = useSelection();
+  const { ensureContext, entities, isLoading } = data;
+
+  // A deep link (e.g. "open in memory" from a chat) may point past the loaded pages.
+  useEffect(() => {
+    if (isLoading || !selectedId || entities.some((e) => e.id === selectedId)) return;
+    ensureContext(selectedId).catch(() => undefined);
+  }, [ensureContext, entities, isLoading, selectedId]);
 
   // Nothing picked yet (or the pick was deleted): open the page that moved most recently.
   const entity = useMemo(() => {
