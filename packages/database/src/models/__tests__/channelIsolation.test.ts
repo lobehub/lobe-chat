@@ -3,13 +3,16 @@ import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
-import { ChannelExecutionRepository } from '../../repositories/channel';
+import { ChannelExecutionRepository, ChannelRepository } from '../../repositories/channel';
 import {
   createChannelFixture,
   jobsOf,
   lease,
 } from '../../repositories/channel/__tests__/testUtils';
+import type { FtsSearchBackendScope } from '../../repositories/ftsSearch';
 import { FtsSearchRepo, PgLikeFtsSearchBackend } from '../../repositories/ftsSearch';
+import { pgLikeDialect } from '../../repositories/ftsSearch/pgLike/dialect';
+import { PostgresFtsSearchBackend } from '../../repositories/ftsSearch/postgres/backend';
 import { FtsSearchDocumentBuilder } from '../../repositories/ftsSearchDocument/builder';
 import {
   agentOperations,
@@ -253,5 +256,56 @@ describe('Channel compatibility with ordinary conversation APIs', () => {
       await builder.buildByIds('messages', [state.publicMessage.id, state.privateMessage.id]),
     ).toEqual([]);
     expect(await builder.buildByIds('topics', [state.legacyTopic.id])).toHaveLength(1);
+  });
+
+  it('excludes personal Channel data from personal search that filters above the scored scan', async () => {
+    // pg_search moves personal-mode scope above its scored scan; LIKE matching in that same
+    // shape runs the path without ParadeDB.
+    class LiftedScanBackend extends PostgresFtsSearchBackend {
+      readonly key = 'lifted-scan';
+
+      constructor(scope: FtsSearchBackendScope) {
+        super(db, scope, { ...pgLikeDialect, isolatesScoredScan: true, key: 'lifted-scan' });
+      }
+    }
+    const owner = new ChannelRepository(db, fixture.ownerId);
+    const { channel } = await owner.create({ title: 'Personal' });
+    const agent = await fixture.addAgent(channel.id, 'Agent');
+    const request = await owner.send(channel.id, {
+      content: 'boundarytoken personal request',
+      mentions: [agent.id],
+      requestKey: 'personal',
+      routing: 'fallback',
+    });
+    const [job] = await jobsOf(db, request.id);
+    const claim = (await new ChannelExecutionRepository(db).claim(channel.id, job.id, lease))!;
+    await db
+      .update(topics)
+      .set({ title: 'boundarytoken personal run' })
+      .where(eq(topics.id, claim.topic.id));
+    // A topic-less row from a runtime writer is excluded by its own marker, not its parent.
+    await db.insert(messages).values({
+      channelId: channel.id,
+      content: 'boundarytoken personal orphan',
+      role: 'assistant',
+      userId: fixture.ownerId,
+    });
+    const ordinaryTopic = await new TopicModel(db, fixture.ownerId).create({
+      title: 'boundarytoken personal ordinary',
+    });
+    const ordinaryMessage = await new MessageModel(db, fixture.ownerId).create({
+      content: 'boundarytoken personal ordinary message',
+      role: 'user',
+      topicId: ordinaryTopic.id,
+    });
+
+    const scope = { userId: fixture.ownerId };
+    const search = new FtsSearchRepo(db, scope.userId, undefined, undefined, {
+      backend: new LiftedScanBackend(scope),
+    });
+    const found = async (type: 'message' | 'topic') =>
+      (await search.search({ query: 'boundarytoken', type })).map((row) => row.id);
+    expect(await found('topic')).toEqual([ordinaryTopic.id]);
+    expect(await found('message')).toEqual([ordinaryMessage.id]);
   });
 });
