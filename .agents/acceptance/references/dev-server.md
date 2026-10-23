@@ -135,8 +135,7 @@ Leave the shared `postgres` database holding the other session's rows.
 
 The containers are the part that costs nothing the second time (`setup-db` is a
 no-op when they are up); the price of this path is one checkout plus a
-dependency copy. Record the worktree path in the report. Never substitute mock data for a dev server that
-failed to boot — a mocked screenshot is not evidence.
+dependency copy. Record the worktree path in the report.
 
 ## When a server restart is needed
 
