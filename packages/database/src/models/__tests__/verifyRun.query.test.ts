@@ -30,7 +30,9 @@ const pinCreatedAt = async (runId: string, iso: string) => {
 };
 
 const seedOperation = async (operationId: string, owner = userId, ws?: string) => {
-  await serverDB.insert(agentOperations).values({ id: operationId, status: 'running', userId: owner, workspaceId: ws });
+  await serverDB
+    .insert(agentOperations)
+    .values({ id: operationId, status: 'running', userId: owner, workspaceId: ws });
   return operationId;
 };
 
@@ -159,6 +161,9 @@ describe('VerifyRunModel.visibility', () => {
     const theirs = await model(otherUserId).create({ source: 'agent' });
 
     await model().setVisibility(mine.id, 'private');
+    // Target the foreign round by id too: the run-id predicate alone would
+    // update it, so a missing owner check has to show up as a flipped row.
+    await model().setVisibility(theirs.id, 'private');
 
     const reload = async (runId: string) =>
       serverDB.query.verifyRuns.findFirst({ where: (t, { eq }) => eq(t.id, runId) });
@@ -207,7 +212,7 @@ describe('VerifyRunModel.appendGroupFeedback', () => {
     ]);
   });
 
-  it("refuses a round it cannot see", async () => {
+  it('refuses a round it cannot see', async () => {
     const theirs = await model(otherUserId).create({ source: 'agent' });
 
     await expect(
@@ -264,7 +269,7 @@ describe('VerifyRunModel.update', () => {
 });
 
 describe('VerifyRunModel.create ownership guard', () => {
-  it("rejects an operation that is not visible to the caller", async () => {
+  it('rejects an operation that is not visible to the caller', async () => {
     await seedOperation('op-guard-invisible', otherUserId);
 
     await expect(model().create({ operationId: 'op-guard-invisible' })).rejects.toThrow(

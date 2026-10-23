@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { getTestDB } from '../../core/getTestDB';
 import {
   goalEvents,
+  goalNodeDecisions,
   goalNodes,
   goalNodeWorkVersions,
   goals,
@@ -116,7 +117,10 @@ describe('GoalGraphModel.recordGoalUpdate', () => {
   it('appends an updated event on the goal with its reason and operation', async () => {
     const goal = await createGoal();
 
-    await graphModel.recordGoalUpdate(goal.id, { operationId: 'op-bind', reason: 'bound to topic' });
+    await graphModel.recordGoalUpdate(goal.id, {
+      operationId: 'op-bind',
+      reason: 'bound to topic',
+    });
 
     const { events } = (await graphModel.listEvents(goal.id, { limit: 10 }))!;
     expect(events[0]).toMatchObject({
@@ -232,8 +236,9 @@ describe('GoalGraphModel.removeDraftNodes', () => {
       eventType: 'unlinked',
       reason: 'planner re-scope',
     });
-    expect(events.find((event) => event.entityId === second!.id && event.eventType === 'unlinked'))
-      .toBeUndefined();
+    expect(
+      events.find((event) => event.entityId === second!.id && event.eventType === 'unlinked'),
+    ).toBeUndefined();
   });
 
   it('returns 0 for an empty list or a goal it cannot see', async () => {
@@ -314,6 +319,26 @@ describe('GoalGraphModel decision maintenance', () => {
     return { decision: decision!, goal, node: node! };
   };
 
+  /**
+   * A pending decision filed under a goal the caller does not own.
+   *
+   * `pendingDecision` creates both halves as the caller, so the goal/decision
+   * pair itself is what a foreign call would be rejected by. Here the pair
+   * belongs together under `owner`, which leaves only the ownership check
+   * between the caller and the decision.
+   */
+  const foreignPendingDecision = async (owner: string) => {
+    const graph = new GoalGraphModel(serverDB, owner);
+    const goal = await createGoal('Decision goal', owner);
+    const node = await graph.createNode(goal.id, { kind: 'decision', title: 'Ship?' });
+    const decision = await graph.createDecision(goal.id, node!.id, {
+      authority: 'user',
+      options,
+      question: 'Ship it?',
+    });
+    return { decision: decision!, goal, node: node! };
+  };
+
   it('rewrites the options while the decision is pending', async () => {
     const { decision, goal } = await pendingDecision();
 
@@ -357,12 +382,19 @@ describe('GoalGraphModel decision maintenance', () => {
   });
 
   it('refuses decisions on a goal it cannot see', async () => {
-    const { decision } = await pendingDecision();
-    const theirs = await createGoal('Theirs', otherUserId);
+    const { decision, goal, node } = await foreignPendingDecision(otherUserId);
 
-    await expect(graphModel.cancelDecision(theirs.id, decision.id, 'nope')).resolves.toBeUndefined();
+    await expect(graphModel.cancelDecision(goal.id, decision.id, 'nope')).resolves.toBeUndefined();
     await expect(
-      graphModel.updatePendingDecisionOptions(theirs.id, decision.id, options),
+      graphModel.updatePendingDecisionOptions(goal.id, decision.id, options),
     ).resolves.toBeUndefined();
+
+    // The decision really does hang off the goal the call named — only the
+    // owner check stopped it, so a dropped `ownedGoal` would reach real rows.
+    const reloaded = await serverDB.query.goalNodeDecisions.findFirst({
+      where: eq(goalNodeDecisions.nodeId, node.id),
+    });
+    expect(reloaded).toMatchObject({ id: decision.id, status: 'pending' });
+    expect(reloaded?.canceledAt).toBeNull();
   });
 });

@@ -149,7 +149,32 @@ describe('WidgetModel guards and scheduling', () => {
   });
 
   it('defaults the due query window when options are omitted', async () => {
+    const schedule = async (title: string, nextRunAt: Date) => {
+      const widget = await model.create({
+        schedulePattern: '0 * * * *',
+        scheduleTimezone: 'UTC',
+        title,
+      });
+      const version = await model.createVersion(widget!.id, script(1));
+      await model.publishVersion(widget!.id, version!.id);
+      await model.setSchedule(widget!.id, {
+        nextRunAt,
+        schedulePattern: '0 * * * *',
+        scheduleTimezone: 'UTC',
+      });
+      return widget!;
+    };
+
+    // A populated table is what makes the defaults observable: an empty read
+    // stays green for any cutoff or limit.
+    await schedule('Due earlier', new Date('2026-10-01T00:00:00.000Z'));
+    await schedule('Due later', new Date('2026-10-02T00:00:00.000Z'));
+    await schedule('Not due yet', new Date('2030-01-01T00:00:00.000Z'));
+
     const due = await WidgetModel.findDue(serverDB);
-    expect(Array.isArray(due)).toBe(true);
+
+    // Both due rows and no future one: the omitted window is "now", and the
+    // omitted limit cannot be 0.
+    expect(due.map((row) => row.widget.title)).toEqual(['Due earlier', 'Due later']);
   });
 });

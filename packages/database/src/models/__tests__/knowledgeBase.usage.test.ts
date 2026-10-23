@@ -40,8 +40,15 @@ const seedFile = async (id: string, size: number, ownerId = userId) => {
   });
 };
 
-const linkFile = async (knowledgeBaseId: string, fileId: string, ownerId = userId) => {
-  await serverDB.insert(knowledgeBaseFiles).values({ fileId, knowledgeBaseId, userId: ownerId });
+const linkFile = async (
+  knowledgeBaseId: string,
+  fileId: string,
+  ownerId = userId,
+  workspaceId?: string,
+) => {
+  await serverDB
+    .insert(knowledgeBaseFiles)
+    .values({ fileId, knowledgeBaseId, userId: ownerId, workspaceId });
 };
 
 beforeEach(async () => {
@@ -171,8 +178,12 @@ describe('KnowledgeBaseModel.deleteAllWithFiles creator scope', () => {
       userId,
       workspaceId: workspace.id,
     });
-    await linkFile(mine.id, 'shared-link');
-    await linkFile(theirs.id, 'shared-link');
+    // The links carry the workspace scope the clear-all reads them back with.
+    // Seeded without it they would be invisible to `deleteAllWithFiles`, which
+    // would then never even try to delete the file — leaving the assertion
+    // green with the surviving-KB rule removed.
+    await linkFile(mine.id, 'shared-link', userId, workspace.id);
+    await linkFile(theirs.id, 'shared-link', userId, workspace.id);
 
     await scoped.deleteAllWithFiles(true, { restrictToCreator: true });
 

@@ -23,6 +23,8 @@ interface SeedArgs {
   ownerId?: string;
   parentId?: string;
   plugin?: boolean;
+  /** Owner of the plugin row only, so the two ownership guards can be probed apart. */
+  pluginOwnerId?: string;
   state?: Record<string, unknown>;
   toolCallId?: string | null;
   topicId?: string | null;
@@ -62,7 +64,7 @@ const seedToolMessage = async (args: SeedArgs) => {
     state: args.state,
     toolCallId: args.toolCallId === undefined ? `tc-${args.id}` : args.toolCallId,
     type: args.type === undefined ? undefined : args.type,
-    userId: owner,
+    userId: args.pluginOwnerId ?? owner,
   });
 };
 
@@ -259,19 +261,45 @@ describe('MessageModel.listMessagePluginsByIds', () => {
 
   it('excludes other users and visitor-topic rows', async () => {
     await seedToolMessage({ id: 'plug-mine', topicId: 'plugin-topic' });
+    // Seeded inside the requested topic, so the topic pin cannot reject them:
+    // the ownership guards are the only thing standing between these rows and
+    // the result. One row breaks each guard on its own, so dropping either
+    // predicate alone turns this test red.
     await seedToolMessage({
       id: 'plug-theirs',
       ownerId: otherUserId,
-      topicId: 'plugin-other-topic',
+      pluginOwnerId: otherUserId,
+      topicId: 'plugin-topic',
+    });
+    await seedToolMessage({
+      id: 'plug-theirs-message',
+      ownerId: otherUserId,
+      pluginOwnerId: userId,
+      topicId: 'plugin-topic',
+    });
+    await seedToolMessage({
+      id: 'plug-theirs-plugin',
+      pluginOwnerId: otherUserId,
+      topicId: 'plugin-topic',
     });
     await seedToolMessage({ id: 'plug-visitor-call', topicId: 'plugin-visitor-topic' });
 
     const rows = await messageModel.listMessagePluginsByIds({
-      ids: ['plug-mine', 'plug-theirs', 'plug-visitor-call'],
+      ids: ['plug-mine', 'plug-theirs', 'plug-theirs-message', 'plug-theirs-plugin'],
       topicId: 'plugin-topic',
     });
 
     expect(rows.map((row) => row.id)).toEqual(['plug-mine']);
+
+    // The visitor topic has to be queried on its own: the topic pin hides these
+    // rows from the topic above, so only a direct query proves the visitor
+    // guard is load-bearing.
+    await expect(
+      messageModel.listMessagePluginsByIds({
+        ids: ['plug-visitor-call', 'plug-mine'],
+        topicId: 'plugin-visitor-topic',
+      }),
+    ).resolves.toEqual([]);
   });
 });
 

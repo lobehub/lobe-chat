@@ -374,14 +374,47 @@ describe('GoalModel coordinator config', () => {
         .values({ id: 'goal-ws', name: 'goal-ws', primaryOwnerId: userId, slug: 'goal-ws' });
       const workspaceModel = new GoalModel(serverDB, userId, 'goal-ws');
       const goal = await workspaceModel.create({ subjectType: 'standalone', title: 'Workspace' });
-      await new GoalGraphModel(serverDB, userId, 'goal-ws').createNode(goal.id, {
+      const node = await new GoalGraphModel(serverDB, userId, 'goal-ws').createNode(goal.id, {
         kind: 'task',
         title: 'W1',
       });
 
+      // Same shape as the personal roll-up above, but the task only reaches the
+      // graph through the workspace branch of the ownership predicate — and a
+      // workspace goal that rolled up nothing would still list a row.
+      await serverDB.insert(tasks).values({
+        createdByUserId: userId,
+        id: 'goal-ws-run-task',
+        identifier: 'T-WSRUN',
+        instruction: 'do it',
+        seq: 1,
+        workspaceId: 'goal-ws',
+      });
+      await serverDB
+        .update(goalNodes)
+        .set({ taskId: 'goal-ws-run-task' })
+        .where(eq(goalNodes.id, node!.id));
+
+      await serverDB
+        .insert(topics)
+        .values({ id: 'goal-ws-run-topic', userId, workspaceId: 'goal-ws' });
+      await serverDB.insert(taskTopics).values({
+        createdAt: new Date('2026-01-01T00:00:00Z'),
+        seq: 1,
+        taskId: 'goal-ws-run-task',
+        topicId: 'goal-ws-run-topic',
+        userId,
+        workspaceId: 'goal-ws',
+      });
+      await serverDB
+        .update(topics)
+        .set({ completedAt: new Date('2026-01-01T00:01:00Z'), totalCost: 7 })
+        .where(eq(topics.id, 'goal-ws-run-topic'));
+
       const { goals: items } = await workspaceModel.list();
 
       expect(items.map((row) => row.goal.id)).toEqual([goal.id]);
+      expect(items[0]).toMatchObject({ totalRunCost: 7, totalRunDuration: 60_000 });
     });
   });
 });
