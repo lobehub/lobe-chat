@@ -39,6 +39,7 @@ export class MessageModel {
   findMessageQueriesById: MessageLookupQueries['findMessageQueriesById'];
   queryBySessionId: MessageLookupQueries['queryBySessionId'];
   queryByKeyword: MessageLookupQueries['queryByKeyword'];
+  searchInTopic: MessageLookupQueries['searchInTopic'];
 
   queryByIds: MessageByIdsQueries['queryByIds'];
 
@@ -150,6 +151,7 @@ export class MessageModel {
     this.findMessageQueriesById = lookups.findMessageQueriesById;
     this.queryBySessionId = lookups.queryBySessionId;
     this.queryByKeyword = lookups.queryByKeyword;
+    this.searchInTopic = lookups.searchInTopic;
     this.queryByIds = byIds.queryByIds;
     this.queryWithWhere = page.queryWithWhere;
     this.queryLastUserMessageByTopics = conversation.queryLastUserMessageByTopics;

@@ -31,6 +31,7 @@ import {
   assertCanUseMessageTargets,
   assertCanUseTopicTargets,
   assertCanViewMessageTargets,
+  assertCanViewTopicTargets,
 } from './_helpers/conversationResourceGuard';
 import { getMessagesPageSizeSchema } from './_helpers/getMessagesPageSize';
 import { messagesByCursorInputSchema, readMessagesByCursor } from './_helpers/messagesByCursor';
@@ -677,6 +678,15 @@ export const messageRouter = router({
       if (input.topicId) await assertCreatorTopicTargets(guardCtx(ctx), [input.topicId]);
 
       return ctx.messageModel.deleteMessagesBySession(null, input.topicId, input.groupId);
+    }),
+
+  /** Find-in-topic: literal keyword matches across a topic's whole history. */
+  searchInTopic: messageProcedure
+    .input(z.object({ keyword: z.string().max(200), topicId: z.string() }))
+    .query(async ({ input, ctx }) => {
+      await assertCanViewTopicTargets(guardCtx(ctx), [input.topicId]);
+
+      return ctx.messageModel.searchInTopic(input);
     }),
 
   searchMessages: messageSearchProcedure
