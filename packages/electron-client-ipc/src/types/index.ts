@@ -15,6 +15,7 @@ export * from './localFilePreviewFailure';
 export * from './localSystem';
 export * from './mcpInstall';
 export * from './notification';
+export * from './portStream';
 export * from './proxy';
 export * from './proxyTRPCRequest';
 export * from './route';

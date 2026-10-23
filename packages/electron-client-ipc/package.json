@@ -5,7 +5,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./types": "./src/types/index.ts",
-    "./types/heterogeneous-agent": "./src/types/heterogeneousAgent.ts"
+    "./types/heterogeneous-agent": "./src/types/heterogeneousAgent.ts",
+    "./types/port-stream": "./src/types/portStream.ts"
   },
   "main": "src/index.ts",
   "types": "src/index.ts",

@@ -5,6 +5,7 @@ import { contextBridge, ipcRenderer } from 'electron';
 import { readSystemLanguageArg } from '~common/systemLanguage';
 
 import { invoke } from './invoke';
+import { openPortStream, setupPortStreamForwarding } from './portStream';
 import { onStreamInvoke } from './streamer';
 
 const screenCaptureSessionListeners = new Set<(session: ScreenCaptureSession) => void>();
@@ -29,6 +30,8 @@ export const setupElectronApi = () => {
   } catch (error) {
     console.error(error);
   }
+
+  setupPortStreamForwarding();
 
   contextBridge.exposeInMainWorld('electronAPI', {
     getDesktopBootstrapIdentity: () => ipcRenderer.sendSync('desktop:get-bootstrap-identity'),
@@ -63,6 +66,7 @@ export const setupElectronApi = () => {
       };
     },
     onStreamInvoke,
+    openPortStream,
   });
 
   const os = require('node:os');

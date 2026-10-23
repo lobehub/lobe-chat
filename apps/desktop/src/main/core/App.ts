@@ -41,6 +41,7 @@ import { CoreUpdateManager } from './infrastructure/coreOta/CoreUpdateManager';
 import { I18nManager } from './infrastructure/I18nManager';
 import { IoCContainer } from './infrastructure/IoCContainer';
 import { LocalFileProtocolManager } from './infrastructure/LocalFileProtocolManager';
+import { PortStreamManager } from './infrastructure/PortStreamManager';
 import { ProtocolManager } from './infrastructure/ProtocolManager';
 import { RendererUrlManager } from './infrastructure/RendererUrlManager';
 import { SecurityUpdatePolicy } from './infrastructure/SecurityUpdatePolicy';
@@ -78,6 +79,7 @@ export class App {
   localFileProtocolManager: LocalFileProtocolManager;
   binaryManager: BinaryManager;
   screenCaptureManager: ScreenCaptureManager;
+  portStreamManager: PortStreamManager;
   permissionGuide: PermissionGuide;
   chromeFlags: string[] = ['OverlayScrollbar', 'FluentOverlayScrollbar', 'FluentScrollbar'];
 
@@ -174,6 +176,7 @@ export class App {
     this.protocolManager = new ProtocolManager(this);
     this.binaryManager = new BinaryManager(this);
     this.screenCaptureManager = new ScreenCaptureManager(this);
+    this.portStreamManager = new PortStreamManager();
     this.permissionGuide = new PermissionGuide(this);
 
     this.coreUpdateManager = new CoreUpdateManager(this);

@@ -103,6 +103,17 @@ export interface HeterogeneousAgentSessionError {
   workingDirectory?: string;
 }
 
+/**
+ * One message on a local session's port stream (`HETERO_SESSION_PORT_STREAM`).
+ * Events, completion and errors share one ordered stream, replacing the
+ * `heteroAgentEvent` / `heteroAgentSessionComplete` / `heteroAgentSessionError`
+ * broadcasts for renderers that open it.
+ */
+export type HeterogeneousAgentSessionStreamMessage<TEvent = unknown> =
+  | { event: TEvent; type: 'event' }
+  | { type: 'complete' }
+  | { error: HeterogeneousAgentSessionError | string; type: 'error' };
+
 export type HeterogeneousAgentRuntimeState =
   'starting' | 'running' | 'monitoring' | 'idle' | 'stale' | 'closing' | 'closed' | 'error';
 

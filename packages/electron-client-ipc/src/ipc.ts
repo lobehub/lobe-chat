@@ -1,5 +1,6 @@
 import type {
   DesktopBootstrapIdentity,
+  PortStreamOpenParams,
   RendererMemoryInfo,
   ScreenCaptureSession,
   StreamInvokeRequestParams,
@@ -58,6 +59,7 @@ declare global {
         params: StreamInvokeRequestParams,
         callbacks: StreamerCallbacks,
       ) => () => void;
+      openPortStream?: (params: PortStreamOpenParams) => Promise<void>;
     };
   }
 }

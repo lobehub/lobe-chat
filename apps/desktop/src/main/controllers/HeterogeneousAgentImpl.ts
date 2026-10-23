@@ -125,7 +125,7 @@ import {
   spawnManaged,
 } from '@lobechat/utils/managedProcess';
 import { sleep } from '@lobechat/utils/sleep';
-import { app as electronApp, BrowserWindow } from 'electron';
+import { app as electronApp } from 'electron';
 import { isPlainObject } from 'es-toolkit';
 import semver from 'semver';
 
@@ -134,6 +134,7 @@ import type { App } from '@/core/App';
 import { detectHeterogeneousCliCommand } from '@/modules/binaries';
 import { resolveCliScript, withEmbeddedCliEnv } from '@/modules/cliEmbedding';
 import { getHeterogeneousAgentDriver, withCodexContextArgs } from '@/modules/heterogeneousAgent';
+import { broadcastHeteroIpc, endHeteroSessionStream } from '@/modules/heterogeneousAgent/broadcast';
 import {
   consumeCodexRateLimitResetCredit as consumeCodexRateLimitResetCreditRequest,
   fetchCodexQuota,
@@ -1306,11 +1307,7 @@ export default class HeterogeneousAgentCtr {
   // ─── Broadcast ───
 
   private broadcast<T>(channel: string, data: T) {
-    for (const win of BrowserWindow.getAllWindows()) {
-      if (!win.isDestroyed()) {
-        win.webContents.send(channel, data);
-      }
-    }
+    broadcastHeteroIpc(this.app.portStreamManager, channel, data);
   }
 
   // ─── AskUserQuestion MCP server () ───
@@ -3917,6 +3914,7 @@ export default class HeterogeneousAgentCtr {
 
     await session.hostedProviderBinding?.cleanup();
     this.sessions.delete(params.sessionId);
+    endHeteroSessionStream(this.app.portStreamManager, params.sessionId);
   }
 
   async respondPermission(): Promise<void> {

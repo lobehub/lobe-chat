@@ -103,6 +103,7 @@ import {
   shouldHydrateResumeReplay,
 } from './resumeReplay';
 import { buildLobeHubSessionEnv } from './sessionEnv';
+import { type HeteroSessionSubscription, subscribeHeteroSession } from './sessionSubscription';
 
 /** Mirrors `idGenerator('threads', 16)` on the server so sync-allocated ids have the same shape. */
 const generateThreadId = () => `thd_${createNanoId(16)()}`;
@@ -327,49 +328,6 @@ const toStreamRetryMetadata = (
     errorStatus: pickFiniteNumber(data.errorStatus, data.status, data.statusCode, data.httpStatus),
     maxAttempts: pickFiniteNumber(data.maxAttempts),
     provider: pickString(data.provider),
-  };
-};
-
-/**
- * Subscribe to Electron IPC broadcasts. As of phase 0, the main
- * process runs JSONL framing + adapter conversion + `toStreamEvent` itself
- * (`AgentStreamPipeline` from `@lobechat/heterogeneous-agents/spawn`), so the
- * renderer receives ready-made `AgentStreamEvent`s with no per-event adapter
- * step. Returns unsubscribe function.
- */
-const subscribeBroadcasts = (
-  sessionId: string,
-  callbacks: {
-    onComplete: () => void;
-    onError: (error: HeterogeneousAgentSessionError | string) => void;
-    onStreamEvent: (event: AgentStreamEvent) => void;
-  },
-): (() => void) => {
-  if (!window.electron?.ipcRenderer) return () => {};
-
-  const ipc = window.electron.ipcRenderer;
-
-  const onStreamEvent = (_e: any, data: { event: AgentStreamEvent; sessionId: string }) => {
-    if (data.sessionId === sessionId) callbacks.onStreamEvent(data.event);
-  };
-  const onComplete = (_e: any, data: { sessionId: string }) => {
-    if (data.sessionId === sessionId) callbacks.onComplete();
-  };
-  const onError = (
-    _e: any,
-    data: { error: HeterogeneousAgentSessionError | string; sessionId: string },
-  ) => {
-    if (data.sessionId === sessionId) callbacks.onError(data.error);
-  };
-
-  const unsubscribeStreamEvent = ipc.on('heteroAgentEvent' as any, onStreamEvent);
-  const unsubscribeComplete = ipc.on('heteroAgentSessionComplete' as any, onComplete);
-  const unsubscribeError = ipc.on('heteroAgentSessionError' as any, onError);
-
-  return () => {
-    unsubscribeStreamEvent();
-    unsubscribeComplete();
-    unsubscribeError();
   };
 };
 
@@ -683,7 +641,7 @@ export const executeHeterogeneousAgent = async (
   };
 
   let ipcRunSessionId: string | undefined;
-  let unsubscribe: (() => void) | undefined;
+  let sessionSubscription: HeteroSessionSubscription | undefined;
   let completed = false;
   let fallbackPromise: Promise<void> | undefined;
   let resumeFallbackTriggered = false;
@@ -2380,7 +2338,7 @@ export const executeHeterogeneousAgent = async (
       }
     };
 
-    unsubscribe = subscribeBroadcasts(ipcRunSessionId, {
+    sessionSubscription = subscribeHeteroSession(ipcRunSessionId, {
       onStreamEvent: handleStreamEvent,
 
       onComplete: () => {
@@ -2663,25 +2621,28 @@ export const executeHeterogeneousAgent = async (
         )
       : undefined;
 
-    // Send the prompt — blocks until process exits
-    const sendResult = await heterogeneousAgentService.sendPrompt({
-      agentId: context.agentId,
-      assistantMessageId,
-      imageList,
-      userId: userProfileSelectors.userId(getUserStoreState()),
-      workspaceId: workspaceId ?? undefined,
-      operationId,
-      // `/goal` travels as system-context instructions; the CLI gets only the
-      // request so its own `/goal` command does not take the message over.
-      prompt: appendAttachedFilesToPrompt(stripGoalCommand(message), attachedFiles),
-      ...(replayTranscript
-        ? { replayTranscript: true, replayTranscriptConfigDir, replayTranscriptStartedAt }
-        : {}),
-      ...(resumeReplayMessages?.length ? { resumeReplayMessages } : {}),
-      sessionId: ipcRunSessionId,
-      systemContext: systemContext || undefined,
-      topicId: context.topicId ?? undefined,
-    });
+    // Send the prompt — blocks until process exits. Then let the session stream
+    // catch up, so `complete` / `error` are handled before the outcome is read.
+    const sendResult = await heterogeneousAgentService
+      .sendPrompt({
+        agentId: context.agentId,
+        assistantMessageId,
+        imageList,
+        userId: userProfileSelectors.userId(getUserStoreState()),
+        workspaceId: workspaceId ?? undefined,
+        operationId,
+        // `/goal` travels as system-context instructions; the CLI gets only the
+        // request so its own `/goal` command does not take the message over.
+        prompt: appendAttachedFilesToPrompt(stripGoalCommand(message), attachedFiles),
+        ...(replayTranscript
+          ? { replayTranscript: true, replayTranscriptConfigDir, replayTranscriptStartedAt }
+          : {}),
+        ...(resumeReplayMessages?.length ? { resumeReplayMessages } : {}),
+        sessionId: ipcRunSessionId,
+        systemContext: systemContext || undefined,
+        topicId: context.topicId ?? undefined,
+      })
+      .finally(() => sessionSubscription?.sync());
     const replayOutcome = (sendResult as HeterogeneousAgentExecutionOutcome | undefined)?.replay;
     if (replayOutcome) outcome = { replay: replayOutcome };
     await waitForCompletionCallback();
@@ -2795,7 +2756,7 @@ export const executeHeterogeneousAgent = async (
     }
   } finally {
     await waitForCompletionCallback();
-    unsubscribe?.();
+    sessionSubscription?.unsubscribe();
     // The desktop IPC session only owns this run's config and process handles.
     // Multi-turn resume uses the native agentSessionId persisted above, so the
     // IPC session must be released after every run instead of accumulating in
