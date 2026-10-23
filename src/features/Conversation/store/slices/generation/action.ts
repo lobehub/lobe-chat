@@ -33,8 +33,6 @@ import {
   settleGenerationEntry,
 } from './heteroRun';
 
-};
-
 export {
   ensureEffectiveAgencyAccess,
   getEffectiveAgencyConfig,
