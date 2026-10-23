@@ -185,10 +185,7 @@ export class MessageByIdsQueries extends MessageScope {
           files,
           and(
             eq(files.id, messagesFiles.fileId),
-            buildWorkspaceWhere(
-              { channelId: this.channelId, userId: this.userId, workspaceId: this.workspaceId },
-              files,
-            ),
+            buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, files),
           ),
         )
         .where(inArray(messagesFiles.messageId, messageIds)),
@@ -221,7 +218,7 @@ export class MessageByIdsQueries extends MessageScope {
             .where(
               and(
                 buildWorkspaceWhere(
-                  { channelId: this.channelId, userId: this.userId, workspaceId: this.workspaceId },
+                  { userId: this.userId, workspaceId: this.workspaceId },
                   threads,
                 ),
                 inArray(threads.sourceMessageId, taskMessageIds),
@@ -410,10 +407,7 @@ export class MessageByIdsQueries extends MessageScope {
 
     // 1. Query MessageGroups for this topic, optionally filtered by time range
     const whereConditions = [
-      buildWorkspaceWhere(
-        { channelId: this.channelId, userId: this.userId, workspaceId: this.workspaceId },
-        messageGroups,
-      ),
+      buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, messageGroups),
       eq(messageGroups.topicId, topicId),
       ...(includeVisitor ? [] : [notShareVisitorTopicRef(messageGroups.topicId)]),
     ];

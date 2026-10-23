@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "108ab1cb-25b9-4181-9e1e-3b8a71427f7e",
+  "id": "0f7fedc8-a0f0-4bab-ac27-d83f4a57415d",
   "policies": {},
   "prevId": "441054df-5d72-4ff2-b7fc-742c8cfb5db5",
   "roles": {},
@@ -6441,12 +6441,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "channel_id": {
-          "name": "channel_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
         "workspace_id": {
           "name": "workspace_id",
           "type": "text",
@@ -6706,21 +6700,6 @@
         }
       },
       "indexes": {
-        "agent_operations_channel_id_idx": {
-          "name": "agent_operations_channel_id_idx",
-          "columns": [
-            {
-              "expression": "channel_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
         "agent_operations_user_id_idx": {
           "name": "agent_operations_user_id_idx",
           "columns": [
@@ -10323,371 +10302,6 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.channel_jobs": {
-      "name": "channel_jobs",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "channel_id": {
-          "name": "channel_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "member_id": {
-          "name": "member_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "message_id": {
-          "name": "message_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "thread_id": {
-          "name": "thread_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "requester_member_id": {
-          "name": "requester_member_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "delivery_key": {
-          "name": "delivery_key",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'initial'"
-        },
-        "status": {
-          "name": "status",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'queued'"
-        },
-        "blocked_reason": {
-          "name": "blocked_reason",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "blocked_code": {
-          "name": "blocked_code",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "operation_id": {
-          "name": "operation_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "manifest": {
-          "name": "manifest",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "execution_config": {
-          "name": "execution_config",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "device_id": {
-          "name": "device_id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "working_directory": {
-          "name": "working_directory",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "accepted_at": {
-          "name": "accepted_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "lease_owner": {
-          "name": "lease_owner",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "lease_expires_at": {
-          "name": "lease_expires_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "writer_held": {
-          "name": "writer_held",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "isolated_at": {
-          "name": "isolated_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "draft": {
-          "name": "draft",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "publication_revoked": {
-          "name": "publication_revoked",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "published_message_id": {
-          "name": "published_message_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {
-        "channel_jobs_delivery_unique": {
-          "name": "channel_jobs_delivery_unique",
-          "columns": [
-            {
-              "expression": "message_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "member_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "delivery_key",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "channel_jobs_channel_status_idx": {
-          "name": "channel_jobs_channel_status_idx",
-          "columns": [
-            {
-              "expression": "channel_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "status",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "channel_jobs_member_queue_idx": {
-          "name": "channel_jobs_member_queue_idx",
-          "columns": [
-            {
-              "expression": "member_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "status",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "created_at",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "channel_jobs_lease_expires_idx": {
-          "name": "channel_jobs_lease_expires_idx",
-          "columns": [
-            {
-              "expression": "lease_expires_at",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "where": "\"channel_jobs\".\"writer_held\" AND \"channel_jobs\".\"isolated_at\" IS NULL",
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "channel_jobs_active_member_unique": {
-          "name": "channel_jobs_active_member_unique",
-          "columns": [
-            {
-              "expression": "member_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "where": "\"channel_jobs\".\"writer_held\" AND \"channel_jobs\".\"isolated_at\" IS NULL",
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "channel_jobs_active_directory_unique": {
-          "name": "channel_jobs_active_directory_unique",
-          "columns": [
-            {
-              "expression": "device_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "working_directory",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "where": "\"channel_jobs\".\"device_id\" IS NOT NULL AND \"channel_jobs\".\"working_directory\" IS NOT NULL AND \"channel_jobs\".\"writer_held\"",
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "channel_jobs_channel_id_channels_id_fk": {
-          "name": "channel_jobs_channel_id_channels_id_fk",
-          "tableFrom": "channel_jobs",
-          "tableTo": "channels",
-          "columnsFrom": ["channel_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "channel_jobs_operation_id_agent_operations_id_fk": {
-          "name": "channel_jobs_operation_id_agent_operations_id_fk",
-          "tableFrom": "channel_jobs",
-          "tableTo": "agent_operations",
-          "columnsFrom": ["operation_id"],
-          "columnsTo": ["id"],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        },
-        "channel_jobs_member_fk": {
-          "name": "channel_jobs_member_fk",
-          "tableFrom": "channel_jobs",
-          "tableTo": "channel_members",
-          "columnsFrom": ["channel_id", "member_id"],
-          "columnsTo": ["channel_id", "id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "channel_jobs_requester_fk": {
-          "name": "channel_jobs_requester_fk",
-          "tableFrom": "channel_jobs",
-          "tableTo": "channel_members",
-          "columnsFrom": ["channel_id", "requester_member_id"],
-          "columnsTo": ["channel_id", "id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "channel_jobs_message_fk": {
-          "name": "channel_jobs_message_fk",
-          "tableFrom": "channel_jobs",
-          "tableTo": "channel_messages",
-          "columnsFrom": ["channel_id", "message_id"],
-          "columnsTo": ["channel_id", "id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "channel_jobs_thread_fk": {
-          "name": "channel_jobs_thread_fk",
-          "tableFrom": "channel_jobs",
-          "tableTo": "channel_threads",
-          "columnsFrom": ["channel_id", "thread_id"],
-          "columnsTo": ["channel_id", "id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "channel_jobs_operation_id_unique": {
-          "name": "channel_jobs_operation_id_unique",
-          "nullsNotDistinct": false,
-          "columns": ["operation_id"]
-        },
-        "channel_jobs_scope_unique": {
-          "name": "channel_jobs_scope_unique",
-          "nullsNotDistinct": false,
-          "columns": ["channel_id", "id"]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
     "public.channel_member_grants": {
       "name": "channel_member_grants",
       "schema": "",
@@ -11077,6 +10691,684 @@
       },
       "isRLSEnabled": false
     },
+    "public.channels": {
+      "name": "channels",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "workspace_id": {
+          "name": "workspace_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "project_id": {
+          "name": "project_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sequence": {
+          "name": "sequence",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "archived": {
+          "name": "archived",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "visibility": {
+          "name": "visibility",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'private'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "channels_user_id_idx": {
+          "name": "channels_user_id_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "channels_project_id_idx": {
+          "name": "channels_project_id_idx",
+          "columns": [
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "where": "\"channels\".\"project_id\" IS NOT NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "channels_workspace_visibility_idx": {
+          "name": "channels_workspace_visibility_idx",
+          "columns": [
+            {
+              "expression": "workspace_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "visibility",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "channels_user_id_users_id_fk": {
+          "name": "channels_user_id_users_id_fk",
+          "tableFrom": "channels",
+          "tableTo": "users",
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "channels_workspace_id_workspaces_id_fk": {
+          "name": "channels_workspace_id_workspaces_id_fk",
+          "tableFrom": "channels",
+          "tableTo": "workspaces",
+          "columnsFrom": ["workspace_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "channels_project_id_projects_id_fk": {
+          "name": "channels_project_id_projects_id_fk",
+          "tableFrom": "channels",
+          "tableTo": "projects",
+          "columnsFrom": ["project_id"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.channel_jobs": {
+      "name": "channel_jobs",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "channel_id": {
+          "name": "channel_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "member_id": {
+          "name": "member_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "message_id": {
+          "name": "message_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "thread_id": {
+          "name": "thread_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "requester_member_id": {
+          "name": "requester_member_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "delivery_key": {
+          "name": "delivery_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'initial'"
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'queued'"
+        },
+        "blocked_reason": {
+          "name": "blocked_reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "blocked_code": {
+          "name": "blocked_code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "claimed_at": {
+          "name": "claimed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "topic_id": {
+          "name": "topic_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "operation_id": {
+          "name": "operation_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "manifest": {
+          "name": "manifest",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "execution_config": {
+          "name": "execution_config",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "device_id": {
+          "name": "device_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "working_directory": {
+          "name": "working_directory",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "accepted_at": {
+          "name": "accepted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lease_owner": {
+          "name": "lease_owner",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lease_expires_at": {
+          "name": "lease_expires_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "writer_held": {
+          "name": "writer_held",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "isolated_at": {
+          "name": "isolated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "draft": {
+          "name": "draft",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "publication_revoked": {
+          "name": "publication_revoked",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "published_message_id": {
+          "name": "published_message_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "channel_jobs_delivery_unique": {
+          "name": "channel_jobs_delivery_unique",
+          "columns": [
+            {
+              "expression": "message_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "member_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "delivery_key",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "channel_jobs_channel_status_idx": {
+          "name": "channel_jobs_channel_status_idx",
+          "columns": [
+            {
+              "expression": "channel_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "channel_jobs_continuation_idx": {
+          "name": "channel_jobs_continuation_idx",
+          "columns": [
+            {
+              "expression": "member_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "requester_member_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "thread_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "claimed_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "channel_jobs_topic_idx": {
+          "name": "channel_jobs_topic_idx",
+          "columns": [
+            {
+              "expression": "topic_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "published_message_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "channel_jobs_member_queue_idx": {
+          "name": "channel_jobs_member_queue_idx",
+          "columns": [
+            {
+              "expression": "member_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "channel_jobs_lease_expires_idx": {
+          "name": "channel_jobs_lease_expires_idx",
+          "columns": [
+            {
+              "expression": "lease_expires_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "where": "\"channel_jobs\".\"writer_held\" AND \"channel_jobs\".\"isolated_at\" IS NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "channel_jobs_active_member_unique": {
+          "name": "channel_jobs_active_member_unique",
+          "columns": [
+            {
+              "expression": "member_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"channel_jobs\".\"writer_held\" AND \"channel_jobs\".\"isolated_at\" IS NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "channel_jobs_active_directory_unique": {
+          "name": "channel_jobs_active_directory_unique",
+          "columns": [
+            {
+              "expression": "device_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "working_directory",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"channel_jobs\".\"device_id\" IS NOT NULL AND \"channel_jobs\".\"working_directory\" IS NOT NULL AND \"channel_jobs\".\"writer_held\"",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "channel_jobs_channel_id_channels_id_fk": {
+          "name": "channel_jobs_channel_id_channels_id_fk",
+          "tableFrom": "channel_jobs",
+          "tableTo": "channels",
+          "columnsFrom": ["channel_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "channel_jobs_topic_id_topics_id_fk": {
+          "name": "channel_jobs_topic_id_topics_id_fk",
+          "tableFrom": "channel_jobs",
+          "tableTo": "topics",
+          "columnsFrom": ["topic_id"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "channel_jobs_operation_id_agent_operations_id_fk": {
+          "name": "channel_jobs_operation_id_agent_operations_id_fk",
+          "tableFrom": "channel_jobs",
+          "tableTo": "agent_operations",
+          "columnsFrom": ["operation_id"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "channel_jobs_member_fk": {
+          "name": "channel_jobs_member_fk",
+          "tableFrom": "channel_jobs",
+          "tableTo": "channel_members",
+          "columnsFrom": ["channel_id", "member_id"],
+          "columnsTo": ["channel_id", "id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "channel_jobs_requester_fk": {
+          "name": "channel_jobs_requester_fk",
+          "tableFrom": "channel_jobs",
+          "tableTo": "channel_members",
+          "columnsFrom": ["channel_id", "requester_member_id"],
+          "columnsTo": ["channel_id", "id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "channel_jobs_message_fk": {
+          "name": "channel_jobs_message_fk",
+          "tableFrom": "channel_jobs",
+          "tableTo": "channel_messages",
+          "columnsFrom": ["channel_id", "message_id"],
+          "columnsTo": ["channel_id", "id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "channel_jobs_thread_fk": {
+          "name": "channel_jobs_thread_fk",
+          "tableFrom": "channel_jobs",
+          "tableTo": "channel_threads",
+          "columnsFrom": ["channel_id", "thread_id"],
+          "columnsTo": ["channel_id", "id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "channel_jobs_operation_id_unique": {
+          "name": "channel_jobs_operation_id_unique",
+          "nullsNotDistinct": false,
+          "columns": ["operation_id"]
+        },
+        "channel_jobs_scope_unique": {
+          "name": "channel_jobs_scope_unique",
+          "nullsNotDistinct": false,
+          "columns": ["channel_id", "id"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.channel_message_files": {
+      "name": "channel_message_files",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "message_id": {
+          "name": "message_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "file_id": {
+          "name": "file_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sort_order": {
+          "name": "sort_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "channel_message_files_file_idx": {
+          "name": "channel_message_files_file_idx",
+          "columns": [
+            {
+              "expression": "file_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "channel_message_files_message_id_channel_messages_id_fk": {
+          "name": "channel_message_files_message_id_channel_messages_id_fk",
+          "tableFrom": "channel_message_files",
+          "tableTo": "channel_messages",
+          "columnsFrom": ["message_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "channel_message_files_file_id_files_id_fk": {
+          "name": "channel_message_files_file_id_files_id_fk",
+          "tableFrom": "channel_message_files",
+          "tableTo": "files",
+          "columnsFrom": ["file_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "channel_message_files_message_file_unique": {
+          "name": "channel_message_files_message_file_unique",
+          "nullsNotDistinct": false,
+          "columns": ["message_id", "file_id"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.channel_messages": {
       "name": "channel_messages",
       "schema": "",
@@ -11102,6 +11394,12 @@
         "sequence": {
           "name": "sequence",
           "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -11292,15 +11590,6 @@
         }
       },
       "foreignKeys": {
-        "channel_messages_id_messages_id_fk": {
-          "name": "channel_messages_id_messages_id_fk",
-          "tableFrom": "channel_messages",
-          "tableTo": "messages",
-          "columnsFrom": ["id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
         "channel_messages_channel_id_channels_id_fk": {
           "name": "channel_messages_channel_id_channels_id_fk",
           "tableFrom": "channel_messages",
@@ -11435,165 +11724,6 @@
           "columns": ["channel_id", "id"]
         }
       },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.channels": {
-      "name": "channels",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "workspace_id": {
-          "name": "workspace_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "project_id": {
-          "name": "project_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "title": {
-          "name": "title",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "sequence": {
-          "name": "sequence",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
-        },
-        "archived": {
-          "name": "archived",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "visibility": {
-          "name": "visibility",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'private'"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {
-        "channels_user_id_idx": {
-          "name": "channels_user_id_idx",
-          "columns": [
-            {
-              "expression": "user_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "channels_project_id_idx": {
-          "name": "channels_project_id_idx",
-          "columns": [
-            {
-              "expression": "project_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "where": "\"channels\".\"project_id\" IS NOT NULL",
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "channels_workspace_visibility_idx": {
-          "name": "channels_workspace_visibility_idx",
-          "columns": [
-            {
-              "expression": "workspace_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "visibility",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "channels_user_id_users_id_fk": {
-          "name": "channels_user_id_users_id_fk",
-          "tableFrom": "channels",
-          "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        },
-        "channels_workspace_id_workspaces_id_fk": {
-          "name": "channels_workspace_id_workspaces_id_fk",
-          "tableFrom": "channels",
-          "tableTo": "workspaces",
-          "columnsFrom": ["workspace_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "channels_project_id_projects_id_fk": {
-          "name": "channels_project_id_projects_id_fk",
-          "tableFrom": "channels",
-          "tableTo": "projects",
-          "columnsFrom": ["project_id"],
-          "columnsTo": ["id"],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -22704,17 +22834,11 @@
           "primaryKey": false,
           "notNull": false
         },
-        "channel_id": {
-          "name": "channel_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
         "user_id": {
           "name": "user_id",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "session_id": {
           "name": "session_id",
@@ -22811,21 +22935,6 @@
         }
       },
       "indexes": {
-        "messages_channel_id_idx": {
-          "name": "messages_channel_id_idx",
-          "columns": [
-            {
-              "expression": "channel_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
         "messages_created_at_idx": {
           "name": "messages_created_at_idx",
           "columns": [
@@ -23065,15 +23174,6 @@
         }
       },
       "foreignKeys": {
-        "messages_channel_id_channels_id_fk": {
-          "name": "messages_channel_id_channels_id_fk",
-          "tableFrom": "messages",
-          "tableTo": "channels",
-          "columnsFrom": ["channel_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
         "messages_user_id_users_id_fk": {
           "name": "messages_user_id_users_id_fk",
           "tableFrom": "messages",
@@ -23168,12 +23268,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
-      "checkConstraints": {
-        "messages_owner_check": {
-          "name": "messages_owner_check",
-          "value": "\"messages\".\"user_id\" IS NOT NULL OR \"messages\".\"channel_id\" IS NOT NULL"
-        }
-      },
+      "checkConstraints": {},
       "isRLSEnabled": false
     },
     "public.messages_files": {
@@ -23196,14 +23291,7 @@
           "name": "user_id",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
-        },
-        "sort_order": {
-          "name": "sort_order",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
+          "notNull": true
         },
         "workspace_id": {
           "name": "workspace_id",
@@ -35112,17 +35200,11 @@
           "primaryKey": false,
           "notNull": false
         },
-        "channel_id": {
-          "name": "channel_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
         "user_id": {
           "name": "user_id",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "client_id": {
           "name": "client_id",
@@ -35267,37 +35349,6 @@
         }
       },
       "indexes": {
-        "topics_channel_id_idx": {
-          "name": "topics_channel_id_idx",
-          "columns": [
-            {
-              "expression": "channel_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "topics_public_channel_unique": {
-          "name": "topics_public_channel_unique",
-          "columns": [
-            {
-              "expression": "channel_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "where": "\"topics\".\"mode\" = 'channel'",
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
         "topics_client_id_user_id_unique": {
           "name": "topics_client_id_user_id_unique",
           "columns": [
@@ -35620,15 +35671,6 @@
           "onDelete": "set null",
           "onUpdate": "no action"
         },
-        "topics_channel_id_channels_id_fk": {
-          "name": "topics_channel_id_channels_id_fk",
-          "tableFrom": "topics",
-          "tableTo": "channels",
-          "columnsFrom": ["channel_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
         "topics_user_id_users_id_fk": {
           "name": "topics_user_id_users_id_fk",
           "tableFrom": "topics",
@@ -35651,12 +35693,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
-      "checkConstraints": {
-        "topics_owner_check": {
-          "name": "topics_owner_check",
-          "value": "\"topics\".\"user_id\" IS NOT NULL OR \"topics\".\"channel_id\" IS NOT NULL"
-        }
-      },
+      "checkConstraints": {},
       "isRLSEnabled": false
     },
     "public.topic_comment_mentions": {

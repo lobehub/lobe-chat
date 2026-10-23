@@ -734,7 +734,6 @@ table agent_mails {
 table agent_operations {
   id text [pk, not null]
   user_id text [not null]
-  channel_id text
   workspace_id text
   agent_id text
   topic_id text
@@ -779,7 +778,6 @@ table agent_operations {
   updated_at "timestamp with time zone" [not null, default: `now()`]
 
   indexes {
-    channel_id [name: 'agent_operations_channel_id_idx']
     user_id [name: 'agent_operations_user_id_idx']
     workspace_id [name: 'agent_operations_workspace_id_idx']
     agent_id [name: 'agent_operations_agent_id_idx']
@@ -1293,6 +1291,8 @@ table channel_jobs {
   status text [not null, default: 'queued']
   blocked_reason text
   blocked_code text
+  claimed_at "timestamp with time zone"
+  topic_id text
   operation_id text [unique]
   manifest jsonb
   execution_config jsonb
@@ -1313,6 +1313,8 @@ table channel_jobs {
     (channel_id, id) [name: 'channel_jobs_scope_unique', unique]
     (message_id, member_id, delivery_key) [name: 'channel_jobs_delivery_unique', unique]
     (channel_id, status) [name: 'channel_jobs_channel_status_idx']
+    (member_id, requester_member_id, thread_id, claimed_at) [name: 'channel_jobs_continuation_idx']
+    (topic_id, published_message_id) [name: 'channel_jobs_topic_idx']
     (member_id, status, created_at) [name: 'channel_jobs_member_queue_idx']
     lease_expires_at [name: 'channel_jobs_lease_expires_idx']
     member_id [name: 'channel_jobs_active_member_unique', unique]
@@ -1324,11 +1326,24 @@ table channel_jobs {
   }
 }
 
+table channel_message_files {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  message_id text [not null]
+  file_id text [not null]
+  sort_order integer [not null]
+
+  indexes {
+    (message_id, file_id) [name: 'channel_message_files_message_file_unique', unique]
+    file_id [name: 'channel_message_files_file_idx']
+  }
+}
+
 table channel_messages {
   id text [pk, not null]
   channel_id text [not null]
   thread_id text
   sequence integer [not null]
+  content text [not null]
   author_member_id uuid [not null]
   mentions jsonb [not null, default: `[]`]
   request_key text [not null]
@@ -2660,8 +2675,7 @@ table messages {
   trace_id text
   observation_id text
   client_id text
-  channel_id text
-  user_id text
+  user_id text [not null]
   session_id text
   topic_id text
   thread_id text
@@ -2679,8 +2693,6 @@ table messages {
   updated_at "timestamp with time zone" [not null, default: `now()`]
 
   indexes {
-    channel_id [name: 'messages_channel_id_idx']
-    
     created_at [name: 'messages_created_at_idx']
     (client_id, user_id) [name: 'message_client_id_user_unique', unique]
     topic_id [name: 'messages_topic_id_idx']
@@ -2702,8 +2714,7 @@ table messages {
 table messages_files {
   file_id text [not null]
   message_id text [not null]
-  user_id text
-  sort_order integer [not null, default: 0]
+  user_id text [not null]
   workspace_id text
 
   indexes {
@@ -4130,8 +4141,7 @@ table topics {
   group_id text
   project_id text
   project_working_directory_id uuid
-  channel_id text
-  user_id text
+  user_id text [not null]
   client_id text
   description text
   history_summary text
@@ -4157,9 +4167,6 @@ table topics {
   updated_at "timestamp with time zone" [not null, default: `now()`]
 
   indexes {
-    channel_id [name: 'topics_channel_id_idx']
-    
-    channel_id [name: 'topics_public_channel_unique', unique]
     (client_id, user_id) [name: 'topics_client_id_user_id_unique', unique]
     created_at [name: 'topics_created_at_idx']
     user_id [name: 'topics_user_id_idx']

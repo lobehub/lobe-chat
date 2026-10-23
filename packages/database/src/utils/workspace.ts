@@ -1,7 +1,6 @@
 import { and, eq, isNull, or, type SQL } from 'drizzle-orm';
 import type { AnyPgColumn } from 'drizzle-orm/pg-core';
 
-import { channelScopeWhere } from './channelScope';
 import { notTrashed } from './softDelete';
 
 /**
@@ -105,8 +104,6 @@ export function buildWorkspaceWhere(
      * internals only. Every ordinary read must leave this unset.
      */
     includeTrashed?: boolean;
-    /** Trusted runtime only: exact Channel scope, additionally pinned to its execution user. */
-    channelId?: string;
     userId: string;
     workspaceId?: string;
   },
@@ -117,13 +114,9 @@ export function buildWorkspaceWhere(
     workspaceId: AnyPgColumn;
   },
 ): SQL {
-  const channelScope = channelScopeWhere(cols.userId, ctx.channelId);
-  return and(
-    buildScopeWhere(ctx, cols),
-    channelScope,
-    ctx.channelId === undefined || !channelScope ? undefined : eq(cols.userId, ctx.userId),
-    ctx.includeTrashed || !isTrashFlag(cols.isDeleted) ? undefined : notTrashed(cols.isDeleted),
-  ) as SQL;
+  const base = buildScopeWhere(ctx, cols);
+  if (ctx.includeTrashed || !isTrashFlag(cols.isDeleted)) return base;
+  return and(base, notTrashed(cols.isDeleted)) as SQL;
 }
 
 /**

@@ -246,7 +246,7 @@ export const query = async (
               // Workspace sidebars filter maintenance actions client-side by
               // ownership (own vs workspace scope) — the filter needs the row
               // owner even in the slim projection.
-              userId: sql<string>`${topics.userId}`,
+              userId: topics.userId,
               ...detailColumns,
             } as any)
             .from(topics)
@@ -331,7 +331,7 @@ export const query = async (
               // Workspace sidebars filter maintenance actions client-side by
               // ownership (own vs workspace scope) — the filter needs the row
               // owner even in the slim projection.
-              userId: sql<string>`${topics.userId}`,
+              userId: topics.userId,
               ...detailColumns,
             } as any)
             .from(topics)
@@ -408,7 +408,7 @@ export const query = async (
             // Workspace sidebars filter maintenance actions client-side by
             // ownership (own vs workspace scope) — the filter needs the row
             // owner even in the slim projection.
-            userId: sql<string>`${topics.userId}`,
+            userId: topics.userId,
             ...detailColumns,
           } as any)
           .from(topics)
@@ -545,7 +545,6 @@ export const queryTopics = async (
     return ctx.db
       .select({
         ...getTableColumns(topics),
-        userId: sql<string>`${topics.userId}`,
         metadata: topicMetadataWithCreator(ctx.db, ctx.messageOwnership()),
         parentVisibility: parentVisibilityColumn,
         runStartedAt: runStartedAtColumn,
@@ -585,7 +584,6 @@ export const queryTopics = async (
   const rows = await ctx.db
     .select({
       ...getTableColumns(topics),
-      userId: sql<string>`${topics.userId}`,
       metadata: topicMetadataWithCreator(ctx.db, ctx.messageOwnership()),
       lastAssistantMessage: sql<string | null>`(${lastAssistantMessageSubquery})`.as(
         'last_assistant_message',

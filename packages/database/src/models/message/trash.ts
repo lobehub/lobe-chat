@@ -56,10 +56,7 @@ export class MessageTrashMutations extends MessageScope {
           topics,
           and(
             eq(messages.topicId, topics.id),
-            buildWorkspaceWhere(
-              { channelId: this.channelId, userId: this.userId, workspaceId: this.workspaceId },
-              topics,
-            ),
+            buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, topics),
           ),
         )
         .where(and(this.ownership(), inArray(messages.id, ids)));
@@ -107,10 +104,7 @@ export class MessageTrashMutations extends MessageScope {
               topics,
               and(
                 eq(messages.topicId, topics.id),
-                buildWorkspaceWhere(
-                  { channelId: this.channelId, userId: this.userId, workspaceId: this.workspaceId },
-                  topics,
-                ),
+                buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, topics),
               ),
             )
             .where(and(this.ownership(), inArray(messages.id, companionIds)));

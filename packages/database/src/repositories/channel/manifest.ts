@@ -1,6 +1,6 @@
 import type { ChannelContextMessage, ChannelInputManifest } from '@lobechat/types';
 import { CHANNEL_DELETED_USER_NAME } from '@lobechat/types';
-import { and, asc, eq, isNull, lte, or, sql as canonicalSql } from 'drizzle-orm';
+import { and, asc, eq, gt, isNull, lte, notExists, or } from 'drizzle-orm';
 
 import type {
   ChannelJobItem,
@@ -8,8 +8,7 @@ import type {
   ChannelMessageItem,
   ChannelThreadItem,
 } from '../../schemas';
-import { channelMembers, channelMessages, users } from '../../schemas';
-import { messages } from '../../schemas/message';
+import { channelJobs, channelMembers, channelMessages, users } from '../../schemas';
 import type { LobeChatDatabase, Transaction } from '../../type';
 import { fileIdsByMessage } from './attachments';
 
@@ -41,23 +40,19 @@ const rosterNames = async (db: LobeChatDatabase | Transaction, channelId: string
   );
 };
 
-/**
- * Input for one run, frozen at claim time. Every run starts a new private topic, so it gets
- * the full snapshot of its branch up to the request: a Thread sees its own messages plus the
- * main channel up to its root. Later messages belong to the next run.
- *
- * The manifest stores where that snapshot ends, not its messages, so a job does not grow with
- * its branch; {@link readManifestMessages} reads them.
- */
+/** Freeze the new public input window; a fresh topic receives the full branch. */
 export const buildManifest = (params: {
+  afterSequence: number;
   job: ChannelJobItem;
   member: ChannelMemberItem;
   request: ChannelMessageItem;
   thread: ChannelThreadItem | null;
 }): ChannelInputManifest => {
-  const { job, member, request, thread } = params;
+  const { afterSequence, job, member, request, thread } = params;
 
   return {
+    afterSequence,
+    environmentRevision: member.environmentRevision,
     // Jobs inherit the request's branch, so the request itself always sorts last.
     cutoffSequence: request.sequence,
     requestMessageId: request.id,
@@ -79,6 +74,7 @@ const manifestScope = (channelId: string, manifest: ChannelInputManifest) => {
   return and(
     eq(channelMessages.channelId, channelId),
     lte(channelMessages.sequence, manifest.cutoffSequence),
+    gt(channelMessages.sequence, manifest.afterSequence),
     threadId
       ? or(eq(channelMessages.threadId, threadId), mainPrefix)
       : isNull(channelMessages.threadId),
@@ -95,18 +91,35 @@ export const readManifestMessages = async (
   db: LobeChatDatabase | Transaction,
   channelId: string,
   manifest: ChannelInputManifest,
+  topicId: string | null,
 ): Promise<ChannelContextMessage[]> => {
-  const scope = manifestScope(channelId, manifest);
+  const scope = and(
+    manifestScope(channelId, manifest),
+    // A continued topic already contains its own answers. They may have been published
+    // after the next request was queued, so the input cursor alone cannot exclude them.
+    manifest.afterSequence > 0 && topicId
+      ? notExists(
+          db
+            .select({ id: channelJobs.id })
+            .from(channelJobs)
+            .where(
+              and(
+                eq(channelJobs.topicId, topicId),
+                eq(channelJobs.publishedMessageId, channelMessages.id),
+              ),
+            ),
+        )
+      : undefined,
+  );
   const visible = await db
     .select({
       authorMemberId: channelMessages.authorMemberId,
-      content: canonicalSql<string>`coalesce(${messages.content}, '')`,
+      content: channelMessages.content,
       id: channelMessages.id,
       sequence: channelMessages.sequence,
       threadId: channelMessages.threadId,
     })
     .from(channelMessages)
-    .innerJoin(messages, eq(messages.id, channelMessages.id))
     .where(scope)
     .orderBy(asc(channelMessages.sequence));
   const names = await rosterNames(db, channelId);

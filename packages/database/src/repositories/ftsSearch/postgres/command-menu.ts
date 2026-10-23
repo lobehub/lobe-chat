@@ -154,7 +154,6 @@ export async function searchTopics(
   const hits = db
     .select({
       agentId: topics.agentId,
-      channelId: topics.channelId,
       content: topics.content,
       createdAt: topics.createdAt,
       favorite: topics.favorite,
@@ -218,7 +217,7 @@ export async function searchTopics(
     .leftJoin(agents, and(eq(hits.agentId, agents.id), buildWorkspaceWhere(context.scope, agents)))
     .where(
       and(
-        context.liftedScopeWhere(hits.workspaceId, hits.channelId),
+        context.liftedScopeWhere(hits.workspaceId),
         agentId ? eq(hits.agentId, agentId) : undefined,
       ),
     )
@@ -272,7 +271,6 @@ export async function searchMessages(
   const hits = db
     .select({
       agentId: messages.agentId,
-      channelId: messages.channelId,
       content: messages.content,
       createdAt: messages.createdAt,
       groupId: messages.groupId,
@@ -336,7 +334,7 @@ export async function searchMessages(
     .leftJoin(topics, and(eq(hits.topicId, topics.id), buildWorkspaceWhere(context.scope, topics)))
     .where(
       and(
-        context.liftedScopeWhere(hits.workspaceId, hits.channelId),
+        context.liftedScopeWhere(hits.workspaceId),
         agentId ? eq(hits.agentId, agentId) : undefined,
         // ParadeDB rejects regex predicates inside the scored BM25 scan. Blank content cannot
         // match content @@@, so filtering after the candidate pool preserves eligible hits.

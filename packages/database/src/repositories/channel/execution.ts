@@ -115,7 +115,7 @@ export class ChannelExecutionRepository {
    */
   input = async (channelId: string, jobId: string): Promise<ChannelContextMessage[]> => {
     const [job] = await this.db
-      .select({ manifest: channelJobs.manifest })
+      .select({ manifest: channelJobs.manifest, topicId: channelJobs.topicId })
       .from(channelJobs)
       .where(
         and(
@@ -126,7 +126,7 @@ export class ChannelExecutionRepository {
       );
     if (!job?.manifest) throw new ChannelError('NOT_FOUND', 'Claimed job not found');
 
-    return readManifestMessages(this.db, channelId, job.manifest);
+    return readManifestMessages(this.db, channelId, job.manifest, job.topicId);
   };
 
   /** The runtime took the input; only now may the job publish. */

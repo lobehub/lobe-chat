@@ -4,7 +4,7 @@ import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../../core/getTestDB';
-import { channelThreads, messages, topics } from '../../../schemas';
+import { channelMessages, channelThreads, messages, topics } from '../../../schemas';
 import type { LobeChatDatabase } from '../../../type';
 import { createChannelFixture, jobsOf } from './testUtils';
 
@@ -15,27 +15,18 @@ beforeEach(fixture.setup);
 afterEach(fixture.cleanup);
 
 describe('ChannelRepository.send', () => {
-  it('stores public content once in canonical messages under a channel-owned topic', async () => {
+  it('stores public content independently of ordinary messages and topics', async () => {
     const { asMember, channel } = await fixture.createTeamChannel();
-    const input = { content: 'Canonical', requestKey: 'canonical', routing: 'fallback' as const };
+    const input = { content: 'Public', requestKey: 'public', routing: 'fallback' as const };
     const first = await asMember.send(channel.id, input);
     expect(await asMember.send(channel.id, input)).toEqual(first);
-    const rows = await db.select().from(messages).where(eq(messages.id, first.id));
-    expect(rows).toEqual([
-      expect.objectContaining({
-        channelId: channel.id,
-        content: input.content,
-        userId: null,
-        threadId: null,
-      }),
-    ]);
-    const [topic] = await db.select().from(topics).where(eq(topics.id, rows[0].topicId!));
-    expect(topic).toMatchObject({
-      channelId: channel.id,
-      mode: 'channel',
-      trigger: 'channel',
-      userId: null,
-    });
+    expect(await db.select().from(channelMessages).where(eq(channelMessages.id, first.id))).toEqual(
+      [first],
+    );
+    expect(await db.select().from(messages).where(eq(messages.id, first.id))).toEqual([]);
+    expect(
+      await db.select().from(topics).where(eq(topics.workspaceId, fixture.workspaceId)),
+    ).toEqual([]);
   });
 
   it('queues a job per mentioned Agent, on behalf of the sender', async () => {

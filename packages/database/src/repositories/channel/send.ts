@@ -1,10 +1,9 @@
 import type { ChannelRoutingMode } from '@lobechat/types';
 import { CHANNEL_LIMITS } from '@lobechat/types';
-import { and, asc, eq, getTableColumns, inArray, sql as canonicalSql } from 'drizzle-orm';
+import { and, asc, eq, inArray } from 'drizzle-orm';
 
 import type { ChannelMessageItem } from '../../schemas';
 import { channelMessages, channelThreads, files } from '../../schemas';
-import { messages } from '../../schemas/message';
 import type { Transaction } from '../../type';
 import { isUuid } from '../../utils/uuid';
 import { buildWorkspaceWhere } from '../../utils/workspace';
@@ -63,12 +62,8 @@ export const sendMessage = async (
   const threadId = input.threadId || null;
 
   const [existing] = await tx
-    .select({
-      ...getTableColumns(channelMessages),
-      content: canonicalSql<string>`coalesce(${messages.content}, '')`,
-    })
+    .select()
     .from(channelMessages)
-    .innerJoin(messages, eq(messages.id, channelMessages.id))
     .where(
       and(
         eq(channelMessages.channelId, channel.id),
@@ -148,7 +143,7 @@ export const sendMessage = async (
     routingStatus: routed.status,
     threadId,
   });
-  await attachFiles(tx, { fileIds, messageId: message.id, workspaceId: channel.workspaceId });
+  await attachFiles(tx, { fileIds, messageId: message.id });
   const delivered = await deliver(tx, message, recipients, member.id);
   if (delivered.length) {
     await tx

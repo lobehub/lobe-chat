@@ -369,16 +369,15 @@ export class TopicCommentModel {
     const workspaceId = this.requireWorkspaceId();
 
     return this.db.transaction(async (tx) => {
-      const visibleTopic = and(notTrashed(topics.isDeleted), isNull(topics.channelId));
       const [topic] = await tx
         .select({ id: topics.id, userId: topics.userId, workspaceId: topics.workspaceId })
         .from(topics)
-        .where(and(eq(topics.id, params.topicId), visibleTopic))
+        .where(and(eq(topics.id, params.topicId), notTrashed(topics.isDeleted)))
         .limit(1)
         .for('update');
 
       // Covers missing, cross-workspace and personal-mode (workspaceId NULL) topics
-      if (!topic?.userId || topic.workspaceId !== workspaceId)
+      if (!topic || topic.workspaceId !== workspaceId)
         throw new Error(TOPIC_COMMENT_TOPIC_NOT_FOUND);
 
       let parentAuthorUserId: string | null | undefined;

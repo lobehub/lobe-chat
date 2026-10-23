@@ -27,6 +27,7 @@ import type { FileItem, NewFile, NewGlobalFile } from '../schemas';
 import {
   agentsFiles,
   asyncTasks,
+  channelMessageFiles,
   chunks,
   documentChunks,
   documents,
@@ -304,6 +305,12 @@ export class FileModel {
         .where(eq(messagesFiles.fileId, id))
         .limit(1);
       if (messageReference) return;
+      const [channelReference] = await trx
+        .select({ id: channelMessageFiles.fileId })
+        .from(channelMessageFiles)
+        .where(eq(channelMessageFiles.fileId, id))
+        .limit(1);
+      if (channelReference) return;
 
       const [sessionReference] = await trx
         .select({ id: filesToSessions.fileId })
@@ -723,8 +730,8 @@ export class FileModel {
    * so a file still referenced elsewhere would silently disappear from there.
    * A candidate is therefore preserved (excluded) when it is still attached:
    * - to a message in another topic (or a message with no topic),
-   * - at the session level (`files_to_sessions`), which outlives a single topic.
-   * Canonical message references include channel-owned attachments.
+   * - at the session level (`files_to_sessions`), which outlives a single topic, or
+   * - to a public Channel message (`channel_message_files`).
    *
    * Session-level files are likewise never returned, matching the behaviour
    * documented on {@link findFilesToInitInSandbox}.
@@ -739,7 +746,7 @@ export class FileModel {
     const candidateIds = candidates.map((row) => row.id);
     if (candidateIds.length === 0) return [];
 
-    const [messageRefsOutsideTopic, sessionRefs] = await Promise.all([
+    const [messageRefsOutsideTopic, sessionRefs, channelRefs] = await Promise.all([
       // same file attached to a message in a different topic (or no topic)
       this.db
         .selectDistinct({ id: messagesFiles.fileId })
@@ -761,11 +768,16 @@ export class FileModel {
             eq(filesToSessions.userId, this.userId),
           ),
         ),
+      this.db
+        .selectDistinct({ id: channelMessageFiles.fileId })
+        .from(channelMessageFiles)
+        .where(inArray(channelMessageFiles.fileId, candidateIds)),
     ]);
 
     const referencedElsewhere = new Set<string>([
       ...messageRefsOutsideTopic.map((row) => row.id),
       ...sessionRefs.map((row) => row.id),
+      ...channelRefs.map((row) => row.id),
     ]);
 
     return candidateIds.filter((id) => !referencedElsewhere.has(id));

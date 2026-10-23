@@ -1,6 +1,6 @@
 import type { ChannelMessageRoutingSource, ChannelMessageRoutingStatus } from '@lobechat/types';
 import { sql } from 'drizzle-orm';
-import type { AnyPgColumn, PgTableExtraConfigValue } from 'drizzle-orm/pg-core';
+import type { PgTableExtraConfigValue } from 'drizzle-orm/pg-core';
 import {
   foreignKey,
   index,
@@ -16,7 +16,7 @@ import {
 import { idGenerator } from '../utils/idGenerator';
 import { createdAt } from './_helpers';
 import { channelMembers, channels } from './channel';
-import { messages } from './message';
+import { files } from './file';
 
 export const channelThreads = pgTable(
   'channel_threads',
@@ -46,19 +46,20 @@ export const channelThreads = pgTable(
   ],
 );
 
-/** Routing and sequencing extension of canonical public messages. Content lives in messages. */
+/** Public Channel timeline, independent of Agent conversation messages. */
 export const channelMessages = pgTable(
   'channel_messages',
   {
     id: text('id')
       .primaryKey()
-      .references((): AnyPgColumn => messages.id, { onDelete: 'cascade' })
+      .$defaultFn(() => idGenerator('channelMessages'))
       .notNull(),
     channelId: text('channel_id')
       .references(() => channels.id, { onDelete: 'cascade' })
       .notNull(),
     threadId: text('thread_id'),
     sequence: integer('sequence').notNull(),
+    content: text('content').notNull(),
     authorMemberId: uuid('author_member_id').notNull(),
     /** Mentioned member ids. Mentioned Agents run; mentioned people are only notified. */
     mentions: jsonb('mentions').$type<string[]>().notNull().default([]),
@@ -108,5 +109,24 @@ export const channelMessages = pgTable(
 );
 
 export type ChannelThreadItem = typeof channelThreads.$inferSelect;
-export type ChannelMessageItem = typeof channelMessages.$inferSelect & { content: string };
-export type NewChannelMessage = typeof channelMessages.$inferInsert & { content: string };
+export type ChannelMessageItem = typeof channelMessages.$inferSelect;
+export type NewChannelMessage = typeof channelMessages.$inferInsert;
+
+/** Public attachment links are independent of internal conversation messages. */
+export const channelMessageFiles = pgTable(
+  'channel_message_files',
+  {
+    id: uuid('id').defaultRandom().primaryKey().notNull(),
+    messageId: text('message_id')
+      .references(() => channelMessages.id, { onDelete: 'cascade' })
+      .notNull(),
+    fileId: text('file_id')
+      .references(() => files.id, { onDelete: 'cascade' })
+      .notNull(),
+    sortOrder: integer('sort_order').notNull(),
+  },
+  (t) => [
+    unique('channel_message_files_message_file_unique').on(t.messageId, t.fileId),
+    index('channel_message_files_file_idx').on(t.fileId),
+  ],
+);

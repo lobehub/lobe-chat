@@ -88,7 +88,7 @@ export class TopicSummaryModel {
       .select({
         id: topics.id,
         lastMessageUpdatedAt,
-        userId: sql<string>`${topics.userId}`,
+        userId: topics.userId,
         workspaceId: topics.workspaceId,
       })
       .from(topics)
@@ -97,8 +97,6 @@ export class TopicSummaryModel {
       .where(
         and(
           gte(topics.createdAt, topicCreatedAfter),
-          isNull(topics.channelId),
-          isNotNull(topics.userId),
           // System-scoped read — no `buildWorkspaceWhere` funnel here, so the
           // recycle-bin gate is spelled out: never spend an LLM call on a
           // trashed topic.

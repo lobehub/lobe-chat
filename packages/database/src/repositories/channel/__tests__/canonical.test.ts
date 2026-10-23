@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { and, eq } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../../core/getTestDB';
@@ -7,6 +7,7 @@ import {
   agentOperations,
   agents,
   channelMembers,
+  channelMessages,
   channelThreads,
   messages,
   topics,
@@ -78,15 +79,13 @@ describe('canonical channel persistence', () => {
       const team = await setup(config);
       const claim = await team.claim();
       expect(claim.topic).toMatchObject({
-        channelId: team.channel.id,
         userId: fixture.memberId,
-        agentId: null,
-        mode: 'channel_runtime',
+        agentId: team.agent.agentId,
+        mode: 'default',
         trigger: 'channel',
       });
       expect(await operationOf(claim.job.operationId)).toMatchObject({
         userId: fixture.memberId,
-        channelId: team.channel.id,
         workspaceId: fixture.workspaceId,
         topicId: claim.topic.id,
         model: config.model,
@@ -97,11 +96,10 @@ describe('canonical channel persistence', () => {
     },
   );
 
-  it('gives each run its own topic and keeps private transcript out of manifests', async () => {
+  it('reuses the topic and supplies only new public input after a completed run', async () => {
     const team = await setup();
     const first = await team.claim();
     await db.insert(messages).values({
-      channelId: team.channel.id,
       topicId: first.topic.id,
       userId: fixture.memberId,
       role: 'assistant',
@@ -113,10 +111,10 @@ describe('canonical channel persistence', () => {
     await execution.publish(team.channel.id, first.job.id);
 
     const second = await team.claim();
-    expect(second.topic.id).not.toBe(first.topic.id);
+    expect(second.topic.id).toBe(first.topic.id);
     expect(
       (await execution.input(team.channel.id, second.job.id)).map((message) => message.content),
-    ).toEqual(['Request 1', 'Final answer', 'Request 2']);
+    ).toEqual(['Request 2']);
 
     await execution.accepted(team.channel.id, first.job.id, {});
     await execution.fail(team.channel.id, first.job.id, { message: 'Late failure' });
@@ -124,7 +122,7 @@ describe('canonical channel persistence', () => {
     expect((await jobById(db, first.job.id)).status).toBe('completed');
   });
 
-  it.each(['same requester', 'other requester', 'deleted topic', 'branch'])(
+  it.each(['other requester', 'deleted topic', 'branch'])(
     'starts the next run (%s) in a new topic and preserves old run identity',
     async (reason) => {
       const team = await setup();
@@ -183,13 +181,10 @@ describe('canonical channel persistence', () => {
       await db
         .select()
         .from(agentOperations)
-        .where(eq(agentOperations.channelId, second.channel.id)),
+        .where(eq(agentOperations.agentId, second.agent.agentId!)),
     ).toHaveLength(0);
     expect(
-      await db
-        .select()
-        .from(topics)
-        .where(and(eq(topics.channelId, second.channel.id), eq(topics.mode, 'channel_runtime'))),
+      await db.select().from(topics).where(eq(topics.agentId, second.agent.agentId!)),
     ).toHaveLength(0);
   });
 
@@ -201,13 +196,8 @@ describe('canonical channel persistence', () => {
       .set({ primaryOwnerId: fixture.memberId })
       .where(eq(workspaces.id, fixture.workspaceId));
     await db.delete(users).where(eq(users.id, fixture.ownerId));
-    const [publicTopic] = await db
-      .select()
-      .from(topics)
-      .where(and(eq(topics.channelId, team.channel.id), eq(topics.mode, 'channel')));
-    expect(publicTopic.userId).toBeNull();
     expect(
-      await db.select().from(messages).where(eq(messages.id, claim.job.messageId)),
+      await db.select().from(channelMessages).where(eq(channelMessages.id, claim.job.messageId)),
     ).toHaveLength(1);
   });
 

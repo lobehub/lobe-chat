@@ -3,7 +3,7 @@ import { getTestDB } from '@lobechat/database/test-utils';
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { agents, channels, messages, topics, users } from '@/database/schemas';
+import { agents, messages, topics, users } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
 
 import { ExpertiseIngestionService } from './ingestion';
@@ -187,53 +187,5 @@ describe('ExpertiseIngestionService historical topic resolution', () => {
     expect(listed.map((t) => t.topicId)).not.toEqual(
       expect.arrayContaining(['topic-visitor-explicit', 'topic-visitor-legacy']),
     );
-  });
-
-  // Channel runs write their private topic and messages under the requester's userId,
-  // but a Channel transcript is not the agent's own conversation history.
-  it('excludes Channel topics from historical topic candidates', async () => {
-    const [channel] = await serverDB
-      .insert(channels)
-      .values({ title: 'Channel', userId })
-      .returning();
-    await serverDB.insert(topics).values([
-      // Reached through the message-agent arm: a run topic carries no agent.
-      {
-        channelId: channel.id,
-        id: 'topic-channel-run',
-        mode: 'channel_runtime',
-        trigger: 'channel',
-        userId,
-      },
-      // Reached through the legacy topic-agent arm.
-      { agentId: 'hist-agent', channelId: channel.id, id: 'topic-channel-legacy', userId },
-    ]);
-    await serverDB.insert(messages).values([
-      {
-        agentId: 'hist-agent',
-        channelId: channel.id,
-        content: 'channel run',
-        createdAt: new Date('2026-01-07T00:00:00Z'),
-        id: 'msg-channel-run',
-        role: 'assistant',
-        topicId: 'topic-channel-run',
-        userId,
-      },
-      {
-        content: 'channel legacy',
-        createdAt: new Date('2026-01-08T00:00:00Z'),
-        id: 'msg-channel-legacy',
-        role: 'user',
-        topicId: 'topic-channel-legacy',
-        userId,
-      },
-    ]);
-
-    const service = new ExpertiseIngestionService(serverDB, userId);
-
-    await expect(service.countHistoricalTopics('hist-agent')).resolves.toBe(2);
-
-    const listed = await service.listHistoricalTopics('hist-agent', { limit: 50 });
-    expect(listed.map((t) => t.topicId).sort()).toEqual(['topic-explicit', 'topic-legacy']);
   });
 });

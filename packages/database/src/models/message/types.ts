@@ -238,8 +238,6 @@ export interface ShareVisitorWriteOptions {
  * construction and stop threading per-call opt-ins through their code.
  */
 export interface MessageModelOptions {
-  /** Server-internal execution scope; authorize the run before constructing this model. */
-  channelId?: string;
   includeShareVisitor?: boolean;
 }
 

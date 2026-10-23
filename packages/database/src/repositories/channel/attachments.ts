@@ -1,7 +1,7 @@
 import type { SQLWrapper } from 'drizzle-orm';
 import { asc, inArray } from 'drizzle-orm';
 
-import { messagesFiles } from '../../schemas';
+import { channelMessageFiles } from '../../schemas';
 import type { LobeChatDatabase, Transaction } from '../../type';
 
 /**
@@ -11,18 +11,16 @@ import type { LobeChatDatabase, Transaction } from '../../type';
  */
 export const attachFiles = async (
   tx: Transaction,
-  params: { fileIds: string[]; messageId: string; workspaceId: string | null },
+  params: { fileIds: string[]; messageId: string },
 ) => {
-  const { fileIds, messageId, workspaceId } = params;
+  const { fileIds, messageId } = params;
   if (!fileIds.length) return;
 
-  await tx.insert(messagesFiles).values(
+  await tx.insert(channelMessageFiles).values(
     fileIds.map((fileId, sortOrder) => ({
       fileId,
       messageId,
       sortOrder,
-      userId: null,
-      workspaceId,
     })),
   );
 };
@@ -40,10 +38,10 @@ export const fileIdsByMessage = async (
   if (Array.isArray(messageIds) && !messageIds.length) return result;
 
   const rows = await tx
-    .select({ fileId: messagesFiles.fileId, messageId: messagesFiles.messageId })
-    .from(messagesFiles)
-    .where(inArray(messagesFiles.messageId, messageIds))
-    .orderBy(asc(messagesFiles.messageId), asc(messagesFiles.sortOrder));
+    .select({ fileId: channelMessageFiles.fileId, messageId: channelMessageFiles.messageId })
+    .from(channelMessageFiles)
+    .where(inArray(channelMessageFiles.messageId, messageIds))
+    .orderBy(asc(channelMessageFiles.messageId), asc(channelMessageFiles.sortOrder));
   for (const { fileId, messageId } of rows) {
     const list = result.get(messageId);
     if (list) list.push(fileId);

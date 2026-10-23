@@ -50,12 +50,6 @@ export const agentOperations = pgTable(
      * so this column is intentionally not a foreign key.
      */
     userId: text('user_id').notNull(),
-    /**
-     * Channel whose job reserved this operation. Not a foreign key for the same reason as
-     * `userId`: deleting the channel keeps its usage history, and the stale id keeps the row
-     * out of ordinary operation reads.
-     */
-    channelId: text('channel_id'),
     workspaceId: text('workspace_id').references(() => workspaces.id, { onDelete: 'cascade' }),
 
     agentId: text('agent_id').references(() => agents.id, { onDelete: 'set null' }),
@@ -142,7 +136,6 @@ export const agentOperations = pgTable(
     ...timestamps,
   },
   (t) => [
-    index('agent_operations_channel_id_idx').on(t.channelId),
     index('agent_operations_user_id_idx').on(t.userId),
     index('agent_operations_workspace_id_idx').on(t.workspaceId),
     index('agent_operations_agent_id_idx').on(t.agentId),

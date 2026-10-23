@@ -1,22 +1,20 @@
 import type { ChannelJobBlockCode } from '@lobechat/types';
-import { and, asc, eq, getTableColumns, isNotNull, isNull, sql as canonicalSql } from 'drizzle-orm';
+import { and, asc, eq, isNotNull, isNull, sql } from 'drizzle-orm';
 
 import type { ChannelItem, ChannelJobItem, ChannelMemberItem, TopicItem } from '../../schemas';
 import {
   agentOperations,
-  agents,
   channelJobs,
   channelMemberGrants,
   channelMembers,
   channelMessages,
   devices,
-  topics,
 } from '../../schemas';
-import { messages } from '../../schemas/message';
 import type { Transaction } from '../../type';
 import { createNanoId } from '../../utils/idGenerator';
 import { findThread } from './delivery';
 import { buildManifest } from './manifest';
+import { resolveTopic } from './topic';
 import { audit } from './transaction';
 
 export interface ChannelClaimOptions {
@@ -32,7 +30,7 @@ export interface ChannelClaim {
   /** The claimed job, with its reserved `operationId` and frozen `manifest`. */
   job: ChannelJobItem;
   member: ChannelMemberItem;
-  /** Fresh private topic of this run; also the operation's `topicId`. */
+  /** Ordinary Agent topic, reused when safe; also the operation's `topicId`. */
   topic: TopicItem;
 }
 
@@ -219,12 +217,8 @@ export const claimJob = async (
   if (busy) return null;
 
   const [request] = await tx
-    .select({
-      ...getTableColumns(channelMessages),
-      content: canonicalSql<string>`coalesce(${messages.content}, '')`,
-    })
+    .select()
     .from(channelMessages)
-    .innerJoin(messages, eq(messages.id, channelMessages.id))
     .where(eq(channelMessages.id, job.messageId));
   // Queued before an environment switch: never run an old instruction in the new directory.
   if (request.sequence <= member.environmentCutoff) {
@@ -248,6 +242,11 @@ export const claimJob = async (
     return null;
   }
 
+  if (!member.agentId) {
+    await block(tx, job, 'unavailable', 'The Agent is unavailable');
+    return null;
+  }
+
   const blocked = (await deviceBlock(tx, channel, member)) ?? (await directoryBlock(tx, member));
   if (blocked) {
     await block(tx, job, blocked.code, blocked.reason);
@@ -255,7 +254,6 @@ export const claimJob = async (
   }
 
   const thread = await findThread(tx, channel.id, job.threadId);
-  const manifest = buildManifest({ job, member, request, thread });
 
   const now = new Date();
   let claimed: Omit<ChannelClaim, 'member'>;
@@ -263,33 +261,22 @@ export const claimJob = async (
     // A savepoint, so losing the directory race to another channel keeps this transaction
     // and leaves no topic or operation behind.
     claimed = await tx.transaction(async (savepoint) => {
-      const [topic] = await savepoint
-        .insert(topics)
-        .values({
-          channelId: channel.id,
-          userId: requester.userId,
-          workspaceId: channel.workspaceId,
-          mode: 'channel_runtime',
-          trigger: 'channel',
-          agentId: null,
-        })
-        .returning();
-      const configuredAgent = member.agentId
-        ? (
-            await savepoint
-              .select({ id: agents.id })
-              .from(agents)
-              .where(eq(agents.id, member.agentId))
-          )[0]
-        : undefined;
+      const { topic, afterSequence } = await resolveTopic(
+        savepoint,
+        channel,
+        job,
+        member,
+        requester.userId!,
+        request.sequence,
+      );
+      const manifest = buildManifest({ afterSequence, job, member, request, thread });
       const operationId = `op_${createNanoId(16)()}`;
       await savepoint.insert(agentOperations).values({
         id: operationId,
         userId: requester.userId!,
-        channelId: channel.id,
         workspaceId: channel.workspaceId,
         topicId: topic.id,
-        agentId: configuredAgent?.id,
+        agentId: member.agentId,
         trigger: 'channel',
         status: 'idle',
         model: member.config!.model,
@@ -298,6 +285,7 @@ export const claimJob = async (
       const [updated] = await savepoint
         .update(channelJobs)
         .set({
+          claimedAt: sql`clock_timestamp()`,
           blockedCode: null,
           blockedReason: null,
           deviceId: member.config!.deviceId,
@@ -306,6 +294,7 @@ export const claimJob = async (
           leaseOwner: options.leaseOwner,
           manifest,
           operationId,
+          topicId: topic.id,
           status: 'running',
           workingDirectory: member.config!.workingDirectory,
           writerHeld: true,
@@ -323,7 +312,7 @@ export const claimJob = async (
   }
 
   await audit(tx, channel.id, 'run_claimed', job.id, {
-    cutoff: manifest.cutoffSequence,
+    cutoff: claimed.job.manifest!.cutoffSequence,
     operationId: claimed.job.operationId,
   });
 

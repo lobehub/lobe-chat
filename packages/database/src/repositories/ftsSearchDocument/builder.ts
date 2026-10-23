@@ -18,7 +18,6 @@ import {
   userPersonaDocuments,
 } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
-import { channelScopeWhere } from '../../utils/channelScope';
 import { notAgentShareDocument } from '../../utils/documentVisibility';
 import { notAgentShareFile, notAgentShareFileReference } from '../../utils/fileVisibility';
 import { searchableMessage } from '../../utils/searchableMessage';
@@ -346,14 +345,11 @@ export class FtsSearchDocumentBuilder {
       })
       .from(topics)
       .where(
-        and(
-          channelScopeWhere(topics.userId),
-          selection.ids
-            ? inArray(topics.id, selection.ids)
-            : selection.afterId
-              ? gt(topics.id, selection.afterId)
-              : undefined,
-        ),
+        selection.ids
+          ? inArray(topics.id, selection.ids)
+          : selection.afterId
+            ? gt(topics.id, selection.afterId)
+            : undefined,
       )
       .orderBy(asc(topics.id))
       .limit(selection.limit);
@@ -1039,7 +1035,6 @@ export class FtsSearchDocumentBuilder {
       .where(
         and(
           searchableMessage(),
-          channelScopeWhere(messages.userId),
           selection.ids
             ? inArray(messages.id, selection.ids)
             : and(

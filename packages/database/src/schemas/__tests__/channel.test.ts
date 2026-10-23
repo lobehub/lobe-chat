@@ -1,6 +1,6 @@
 // @vitest-environment node
 import type { ChannelInputManifest, ChannelMemberConfig } from '@lobechat/types';
-import { eq, inArray, sql } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
@@ -10,13 +10,11 @@ import {
   channelJobs,
   channelMemberGrants,
   channelMembers,
+  channelMessageFiles,
   channelMessages,
   channels,
   files,
-  messages,
-  messagesFiles,
   projects,
-  topics,
   users,
   workspaces,
 } from '..';
@@ -53,16 +51,12 @@ const createChannel = async (title = 'Channel') => {
 };
 
 const createMessage = async (channelId: string, authorMemberId: string, sequence: number) => {
-  const [canonical] = await serverDB
-    .insert(messages)
-    .values({ channelId, content: `message ${sequence}`, role: 'user', userId: null })
-    .returning();
   const [message] = await serverDB
     .insert(channelMessages)
     .values({
       authorMemberId,
       channelId,
-      id: canonical.id,
+      content: `message ${sequence}`,
       requestKey: `request-${sequence}`,
       routingStatus: 'directed',
       sequence,
@@ -72,6 +66,8 @@ const createMessage = async (channelId: string, authorMemberId: string, sequence
 };
 
 const manifest = (requesterMemberId: string, memberId: string): ChannelInputManifest => ({
+  afterSequence: 0,
+  environmentRevision: 0,
   cutoffSequence: 1,
   requestMessageId: 'unused',
   requesterMemberId,
@@ -95,7 +91,6 @@ const createClaimedJob = async (
     .insert(agentOperations)
     .values({
       id: `op_${channel.id}_${sequence}`,
-      channelId: channel.id,
       userId: ownerId,
       status: 'idle',
       workspaceId,
@@ -131,56 +126,6 @@ afterEach(async () => {
 });
 
 describe('channel schema', () => {
-  it('rejects ownerless ordinary rows and permits channel-owned rows', async () => {
-    const { channel } = await createChannel();
-    await expect(serverDB.insert(topics).values({ userId: null })).rejects.toThrow();
-    await expect(
-      serverDB.insert(messages).values({ role: 'user', userId: null }),
-    ).rejects.toThrow();
-    await expect(
-      serverDB
-        .insert(topics)
-        .values({ channelId: channel.id, mode: 'channel', trigger: 'channel', userId: null }),
-    ).resolves.toBeDefined();
-    await expect(
-      serverDB
-        .insert(topics)
-        .values({ channelId: channel.id, mode: 'channel', trigger: 'channel', userId: null }),
-    ).rejects.toThrow();
-    await expect(
-      serverDB.insert(messages).values({ channelId: channel.id, role: 'user', userId: null }),
-    ).resolves.toBeDefined();
-  });
-
-  it('adds the messages and topics channel constraints without validating existing rows', async () => {
-    // Validation would scan both tables while 0184 holds ACCESS EXCLUSIVE on them; rows that
-    // predate 0184 satisfy the constraints anyway (channel_id NULL, user_id NOT NULL).
-    const constraints = await serverDB.execute(sql`
-      SELECT conname, convalidated FROM pg_constraint
-      WHERE conname IN (
-        'messages_channel_id_channels_id_fk',
-        'messages_owner_check',
-        'topics_channel_id_channels_id_fk',
-        'topics_owner_check'
-      )
-      ORDER BY conname
-    `);
-    expect(constraints.rows).toEqual([
-      { conname: 'messages_channel_id_channels_id_fk', convalidated: false },
-      { conname: 'messages_owner_check', convalidated: false },
-      { conname: 'topics_channel_id_channels_id_fk', convalidated: false },
-      { conname: 'topics_owner_check', convalidated: false },
-    ]);
-
-    // Unvalidated constraints still apply to every new row.
-    await expect(
-      serverDB.insert(messages).values({ channelId: 'missing', role: 'user', userId: null }),
-    ).rejects.toThrow();
-    await expect(
-      serverDB.insert(topics).values({ channelId: 'missing', mode: 'channel', userId: null }),
-    ).rejects.toThrow();
-  });
-
   describe('members', () => {
     it('enforces Agent references and preserves authored history after Agent deletion', async () => {
       const { agent, channel, owner } = await createChannel();
@@ -292,7 +237,7 @@ describe('channel schema', () => {
       await expect(createMessage(first.channel.id, second.owner.id, 2)).rejects.toThrow();
     });
 
-    it('keeps canonical attachments unique and drops them with the file', async () => {
+    it('keeps Channel attachments unique and drops them with the file', async () => {
       const first = await createChannel('First');
       const message = await createMessage(first.channel.id, first.owner.id, 1);
       const [file] = await serverDB
@@ -301,8 +246,8 @@ describe('channel schema', () => {
         .returning();
       const attach = () =>
         serverDB
-          .insert(messagesFiles)
-          .values({ fileId: file.id, messageId: message.id, sortOrder: 0, userId: null });
+          .insert(channelMessageFiles)
+          .values({ fileId: file.id, messageId: message.id, sortOrder: 0 });
 
       await attach();
       await expect(attach()).rejects.toThrow();
@@ -311,8 +256,8 @@ describe('channel schema', () => {
 
       const remaining = await serverDB
         .select()
-        .from(messagesFiles)
-        .where(eq(messagesFiles.messageId, message.id));
+        .from(channelMessageFiles)
+        .where(eq(channelMessageFiles.messageId, message.id));
       expect(remaining).toHaveLength(0);
       const [kept] = await serverDB
         .select()
@@ -443,12 +388,12 @@ describe('channel schema', () => {
         .where(eq(channelJobs.channelId, fixture.channel.id));
       expect(members).toHaveLength(0);
       expect(jobs).toHaveLength(0);
-      // Usage history outlives the channel, and the stale id keeps it out of ordinary reads.
+      // Ordinary execution history outlives its Channel source.
       const [operation] = await serverDB
         .select()
         .from(agentOperations)
         .where(eq(agentOperations.id, job.operationId!));
-      expect(operation).toMatchObject({ channelId: fixture.channel.id });
+      expect(operation).toMatchObject({ id: job.operationId, userId: ownerId });
     });
   });
 });

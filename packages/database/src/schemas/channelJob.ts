@@ -24,12 +24,13 @@ import { createdAt, timestamptz, updatedAt } from './_helpers';
 import { agentOperations } from './agentOperations';
 import { channelMembers, channels } from './channel';
 import { channelMessages, channelThreads } from './channelMessage';
+import { topics } from './topic';
 
 /**
  * One delivery of one message to one Agent member; each member drains its jobs FIFO.
  *
- * Claiming a job reserves one canonical `agent_operations` row whose `topicId` is a fresh
- * private topic for that run; execution status, errors, usage and traces live on the
+ * Claiming a job reserves one canonical `agent_operations` row in a normal Agent
+ * topic (continued when safe); execution status, errors, usage and traces live on the
  * operation. The job keeps only what the operation cannot: the frozen input, the execution
  * lease, the writer lock and publication of the final reply.
  */
@@ -60,6 +61,10 @@ export const channelJobs = pgTable(
     blockedCode: text('blocked_code').$type<ChannelJobBlockCode>(),
 
     // Execution, set when the job is claimed
+    /** Actual claim time under the Channel lock; delayed routing can invert request order. */
+    claimedAt: timestamptz('claimed_at'),
+    /** Source-side link to the ordinary Agent conversation. */
+    topicId: text('topic_id').references(() => topics.id, { onDelete: 'set null' }),
     /** Canonical execution reserved at claim time; NULL while the job waits. */
     operationId: text('operation_id')
       .unique()
@@ -102,6 +107,13 @@ export const channelJobs = pgTable(
     unique('channel_jobs_scope_unique').on(t.channelId, t.id),
     uniqueIndex('channel_jobs_delivery_unique').on(t.messageId, t.memberId, t.deliveryKey),
     index('channel_jobs_channel_status_idx').on(t.channelId, t.status),
+    index('channel_jobs_continuation_idx').on(
+      t.memberId,
+      t.requesterMemberId,
+      t.threadId,
+      t.claimedAt,
+    ),
+    index('channel_jobs_topic_idx').on(t.topicId, t.publishedMessageId),
     index('channel_jobs_member_queue_idx').on(t.memberId, t.status, t.createdAt),
     index('channel_jobs_lease_expires_idx')
       .on(t.leaseExpiresAt)

@@ -261,7 +261,6 @@ export const recomputeTopicUsage = async (
   userId: string,
   topicId: string,
   workspaceId?: string,
-  channelId?: string,
 ): Promise<void> => {
   // Serialize concurrent recomputes for the same topic before any aggregate
   // read (see the concurrency note above). Every caller touches messages /
@@ -271,9 +270,7 @@ export const recomputeTopicUsage = async (
   const [locked] = await trx
     .select({ id: topics.id })
     .from(topics)
-    .where(
-      and(eq(topics.id, topicId), buildWorkspaceWhere({ channelId, userId, workspaceId }, topics)),
-    )
+    .where(and(eq(topics.id, topicId), buildWorkspaceWhere({ userId, workspaceId }, topics)))
     .for('update');
 
   if (!locked) return;
@@ -288,12 +285,9 @@ export const recomputeTopicUsage = async (
   // agent_operations both carry user_id/workspace_id): in team mode rows are
   // scoped by workspace_id (creator user_id is not part of the filter); in
   // personal mode by user_id with workspace_id IS NULL.
-  const rowOwnership = and(
-    workspaceId
-      ? sql`workspace_id = ${workspaceId}`
-      : sql`user_id = ${userId} AND workspace_id IS NULL`,
-    channelId ? sql`channel_id = ${channelId} AND user_id = ${userId}` : sql`channel_id IS NULL`,
-  )!;
+  const rowOwnership = workspaceId
+    ? sql`workspace_id = ${workspaceId}`
+    : sql`user_id = ${userId} AND workspace_id IS NULL`;
 
   const { rows } = await trx.execute(sql`
     SELECT
@@ -334,12 +328,7 @@ export const recomputeTopicUsage = async (
         updatedAt: topics.updatedAt,
         usage: null,
       })
-      .where(
-        and(
-          eq(topics.id, topicId),
-          buildWorkspaceWhere({ channelId, userId, workspaceId }, topics),
-        ),
-      );
+      .where(and(eq(topics.id, topicId), buildWorkspaceWhere({ userId, workspaceId }, topics)));
     return;
   }
 
@@ -444,7 +433,5 @@ export const recomputeTopicUsage = async (
       updatedAt: topics.updatedAt,
       usage,
     })
-    .where(
-      and(eq(topics.id, topicId), buildWorkspaceWhere({ channelId, userId, workspaceId }, topics)),
-    );
+    .where(and(eq(topics.id, topicId), buildWorkspaceWhere({ userId, workspaceId }, topics)));
 };

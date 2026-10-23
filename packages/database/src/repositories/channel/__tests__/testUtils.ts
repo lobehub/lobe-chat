@@ -3,6 +3,7 @@ import { eq, inArray } from 'drizzle-orm';
 
 import {
   agentOperations,
+  agents,
   channelJobs,
   channelMembers,
   channels,
@@ -72,9 +73,14 @@ export const createChannelFixture = (db: LobeChatDatabase, prefix: string) => {
   };
 
   const addAgent = async (channelId: string, name: string, config = nativeConfig) => {
+    const [channel] = await db.select().from(channels).where(eq(channels.id, channelId));
+    const [source] = await db
+      .insert(agents)
+      .values({ userId: ownerId, workspaceId: channel.workspaceId })
+      .returning();
     const [agent] = await db
       .insert(channelMembers)
-      .values({ actorType: 'agent', channelId, config, name })
+      .values({ actorType: 'agent', agentId: source.id, channelId, config, name })
       .returning();
     return agent;
   };

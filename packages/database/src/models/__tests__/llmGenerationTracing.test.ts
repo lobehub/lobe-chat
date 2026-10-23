@@ -169,24 +169,5 @@ describe('LlmGenerationTracingModel', () => {
       expect(rows).toHaveLength(1);
       expect(rows[0].id).toBe(id);
     });
-
-    // topic_id only records where the generation ran; it is not a foreign key, and the
-    // trace outlives the topic. Channel parent scope must not hide it.
-    it('keeps a trace readable after its topic is deleted', async () => {
-      const model = new LlmGenerationTracingModel(serverDB, userId);
-      const { id } = await model.record({
-        promptHash: 'aaaaaa',
-        promptVersion: 'v1.0',
-        scenario: 'topic_title',
-        success: true,
-        topicId: 'tpc_deleted_topic',
-      });
-
-      expect(await model.findById(id)).toMatchObject({ id, topicId: 'tpc_deleted_topic' });
-      expect(await model.listRecent()).toHaveLength(1);
-      expect(
-        await model.updateFeedback(id, { signal: 'positive', source: 'explicit_thumbs' }),
-      ).toEqual({ updated: true });
-    });
   });
 });

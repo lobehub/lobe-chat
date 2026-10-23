@@ -75,8 +75,6 @@ export type {
  * `jsonbNullTest.test.ts` is the source-shape guard that holds the line.
  */
 export interface TopicModelOptions {
-  /** Server-internal execution scope; authorize the run before constructing this model. */
-  channelId?: string;
   /**
    * Opt IN to agent-share visitor topics. Visitor conversations persist under
    * the CREATOR's `userId` (only `topics.senderId` marks them), so every
@@ -99,7 +97,6 @@ export class TopicModel {
     options: TopicModelOptions = {},
   ) {
     this.ctx = createTopicModelContext({
-      channelId: options.channelId,
       db,
       ftsSearchCandidateSource,
       includeShareVisitor: options.includeShareVisitor ?? false,

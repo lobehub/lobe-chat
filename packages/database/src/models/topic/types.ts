@@ -43,8 +43,6 @@ export interface TopicListItem extends TopicItem {
    * (e.g. client-mode runs) — callers must keep a fallback.
    */
   runStartedAt?: Date | null;
-  /** Ordinary lists exclude Channel-owned rows; their creator remains non-null. */
-  userId: string;
 }
 
 /**

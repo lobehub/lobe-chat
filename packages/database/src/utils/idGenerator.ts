@@ -15,6 +15,7 @@ const prefixes = {
   agents: 'agt',
   budget: 'bgt',
   channelJobs: 'chn_job',
+  channelMessages: 'chn_msg',
   channelMemberGrants: 'chn_grant',
   channelThreads: 'chn_thread',
   channels: 'chn',

@@ -22,15 +22,7 @@ export interface PostgresFtsSearchWorkspaceScopedColumns {
 export interface PostgresFtsSearchContext {
   db: LobeChatDatabase;
   dialect: PostgresFtsSearchDialect;
-  /**
-   * Scope that personal mode applies above the scored scan: `workspace_id IS NULL`, and
-   * `channel_id IS NULL` for tables that carry Channel data (`topics`, `messages`), because
-   * the lifted scan scope keeps only the user filter.
-   */
-  liftedScopeWhere: (
-    workspaceIdColumn: SQLWrapper,
-    channelIdColumn?: SQLWrapper,
-  ) => SQL | undefined;
+  liftedScopeWhere: (workspaceIdColumn: SQLWrapper) => SQL | undefined;
   liftsAgentFilter: boolean;
   /**
    * Whether non-indexed exclusions (restricted knowledge bases) sit above the
@@ -54,10 +46,9 @@ export interface PostgresFtsSearchContext {
  * therefore stay outside the scan whenever the score ordering remains valid.
  *
  * The workspace filter is currently not a fast field in the BM25 indexes. In
- * personal mode we keep the user filter in the scan and lift the
- * `workspace_id IS NULL` half above it, together with the Channel exclusion,
- * using a deeper candidate pool to keep personal rows from being displaced by
- * workspace or Channel rows.
+ * personal mode we keep the user filter in the scan and lift only the
+ * `workspace_id IS NULL` half above it, using a deeper candidate pool to keep
+ * personal rows from being displaced by workspace rows.
  */
 const WORKSPACE_FILTER_CANDIDATE_MULTIPLIER = 5;
 
@@ -101,10 +92,8 @@ export function createPostgresFtsSearchContext(
   return {
     db,
     dialect,
-    liftedScopeWhere: (workspaceIdColumn, channelIdColumn) =>
-      liftsWorkspaceFilter
-        ? (and(isNull(workspaceIdColumn), channelIdColumn && isNull(channelIdColumn)) as SQL)
-        : undefined,
+    liftedScopeWhere: (workspaceIdColumn) =>
+      liftsWorkspaceFilter ? (isNull(workspaceIdColumn) as SQL) : undefined,
     liftsAgentFilter,
     liftsExclusionFilter: dialect.isolatesScoredScan,
     liftsWorkspaceFilter,

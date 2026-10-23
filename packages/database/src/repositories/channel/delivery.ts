@@ -12,11 +12,8 @@ import {
   channelMessages,
   channels,
   channelThreads,
-  messages,
-  topics,
 } from '../../schemas';
 import type { Transaction } from '../../type';
-import { idGenerator } from '../../utils/idGenerator';
 import { ChannelError } from './error';
 
 /** The Thread a message belongs to, or null for the main channel. */
@@ -126,37 +123,10 @@ export const appendMessage = async (
     .set({ sequence: sql`${channels.sequence} + 1` })
     .where(eq(channels.id, values.channelId))
     .returning({ sequence: channels.sequence });
-  const [topic] = await tx
-    .select()
-    .from(topics)
-    .where(and(eq(topics.channelId, values.channelId), eq(topics.mode, 'channel')));
-  if (!topic) throw new ChannelError('NOT_FOUND', 'Public channel topic not found');
-  const [author] = await tx
-    .select()
-    .from(channelMembers)
-    .where(
-      and(
-        eq(channelMembers.id, values.authorMemberId),
-        eq(channelMembers.channelId, values.channelId),
-      ),
-    );
-  if (!author) throw new ChannelError('NOT_FOUND', 'Author not found');
-  const { content, ...extension } = values;
-  const id = values.id ?? idGenerator('messages');
-  await tx.insert(messages).values({
-    id,
-    content,
-    channelId: values.channelId,
-    topicId: topic.id,
-    userId: null,
-    workspaceId: topic.workspaceId,
-    role: author.actorType === 'agent' ? 'assistant' : 'user',
-    parentId: values.replyToId,
-  });
   const [message] = await tx
     .insert(channelMessages)
-    .values({ ...extension, id, sequence })
+    .values({ ...values, sequence })
     .returning();
 
-  return { ...message, content };
+  return message;
 };

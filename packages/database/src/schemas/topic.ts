@@ -1,9 +1,7 @@
 import type { ChatTopicMetadata, ThreadMetadata } from '@lobechat/types';
 import { isNotNull, sql } from 'drizzle-orm';
-import type { AnyPgColumn } from 'drizzle-orm/pg-core';
 import {
   boolean,
-  check,
   index,
   integer,
   jsonb,
@@ -19,7 +17,6 @@ import { z } from 'zod';
 import { createNanoId, idGenerator } from '../utils/idGenerator';
 import { amountNumeric, createdAt, softDeleteColumns, timestamps, timestamptz } from './_helpers';
 import { agents } from './agent';
-import { channels } from './channel';
 import { chatGroups } from './chatGroup';
 import { documents } from './file';
 import { projects, projectWorkingDirectories } from './project';
@@ -47,10 +44,9 @@ export const topics = pgTable(
       () => projectWorkingDirectories.id,
       { onDelete: 'set null' },
     ),
-    channelId: text('channel_id').references((): AnyPgColumn => channels.id, {
-      onDelete: 'cascade',
-    }),
-    userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
+    userId: text('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
     clientId: text('client_id'),
     description: text('description'),
     historySummary: text('history_summary'),
@@ -99,11 +95,6 @@ export const topics = pgTable(
     ...timestamps,
   },
   (t) => [
-    index('topics_channel_id_idx').on(t.channelId),
-    check('topics_owner_check', sql`${t.userId} IS NOT NULL OR ${t.channelId} IS NOT NULL`),
-    uniqueIndex('topics_public_channel_unique')
-      .on(t.channelId)
-      .where(sql`${t.mode} = 'channel'`),
     uniqueIndex('topics_client_id_user_id_unique').on(t.clientId, t.userId),
     index('topics_created_at_idx').on(t.createdAt),
     index('topics_user_id_idx').on(t.userId),

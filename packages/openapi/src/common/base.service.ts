@@ -543,11 +543,7 @@ export abstract class BaseService implements IBaseService {
           const topicList = await this.db.query.topics.findMany({
             where: inArray(topics.id, targetInfoIds.targetTopicIds),
           });
-          // Channel ownership is membership-based, not the topic creator's permission.
-          if (topicList.some((topic) => topic.channelId || !topic.userId)) {
-            return { isPermitted: false };
-          }
-          userIds = topicList.flatMap((topic) => (topic.userId ? [topic.userId] : []));
+          userIds = topicList.map((t) => t.userId);
           break;
         }
         case !!targetInfoIds.targetProviderIds?.length: {

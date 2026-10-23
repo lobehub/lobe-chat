@@ -151,7 +151,6 @@ export class MessageWriteMutations extends MessageScope {
       { userId: this.userId, workspaceId: this.workspaceId },
       {
         ...normalizedMessage,
-        channelId: this.channelId ?? null,
         // Sanitize content to strip null bytes that PostgreSQL rejects
         content: sanitizeNullBytes(normalizedMessage.content),
         // TODO: remove this when the client is updated
@@ -385,7 +384,7 @@ export class MessageWriteMutations extends MessageScope {
       buildWorkspacePayload(
         { userId: this.userId, workspaceId: this.workspaceId },
         // TODO: need a better way to handle this
-        { ...m, channelId: this.channelId ?? null, role: m.role as any },
+        { ...m, role: m.role as any },
       ),
     );
 
@@ -427,12 +426,6 @@ export class MessageWriteMutations extends MessageScope {
           this.db.transaction(async (trx) => {
             // 1. insert message files
             if (imageList && imageList.length > 0) {
-              const [target] = await trx
-                .select({ id: messages.id })
-                .from(messages)
-                .where(and(eq(messages.id, id), this.ownership()))
-                .for('update');
-              if (!target) return;
               await runTimedStage(
                 timing,
                 'db.message.update.imageFiles.insert',
@@ -495,14 +488,7 @@ export class MessageWriteMutations extends MessageScope {
               await runTimedStage(
                 timing,
                 'db.message.update.topic.recomputeUsage',
-                () =>
-                  recomputeTopicUsage(
-                    trx,
-                    this.userId,
-                    updated.topicId!,
-                    this.workspaceId,
-                    this.channelId,
-                  ),
+                () => recomputeTopicUsage(trx, this.userId, updated.topicId!, this.workspaceId),
                 { topicCount: 1 },
               );
             }

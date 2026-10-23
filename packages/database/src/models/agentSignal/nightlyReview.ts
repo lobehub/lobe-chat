@@ -17,7 +17,6 @@ import { alias } from 'drizzle-orm/pg-core';
 
 import { agents, messagePlugins, messages, topics, users, userSettings } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
-import { notChannelData } from '../../utils/channelScope';
 import { normalizeInboxAgentTitle } from '../../utils/inboxAgent';
 import { notShareVisitorMessage } from '../../utils/shareVisitor';
 import { notTrashed } from '../../utils/softDelete';
@@ -335,9 +334,6 @@ export class AgentSignalNightlyReviewModel {
           // Share-visitor traffic bills to the creator but is not the
           // creator's own activity — keep it out of the nightly digest.
           notShareVisitorMessage(),
-          // Channel runs carry the requester's userId, but their transcripts are
-          // Channel data, not the user's own conversations.
-          notChannelData(messages),
           agentFilter,
           gte(messages.createdAt, options.windowStart),
           lte(messages.createdAt, options.windowEnd),

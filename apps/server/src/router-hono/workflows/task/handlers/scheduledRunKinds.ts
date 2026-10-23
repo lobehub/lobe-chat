@@ -42,7 +42,6 @@ const runResumeAfterRateLimit: ScheduledRunHandlers['resume_after_rate_limit'] =
   run,
   { claimId, db, topic, workspaceId },
 ) => {
-  if (!topic.userId || topic.channelId) throw new Error('Channel runs require their coordinator');
   // Scheduled runs execute under the creator (`topic.userId` is billing
   // owner). When the topic is an agent-share visitor conversation this ends
   // up mutating visitor rows, so opt into the visitor scope for reads too —
@@ -113,7 +112,6 @@ const runDelayedStart: ScheduledRunHandlers['delayed_start'] = async (
   run,
   { db, topic, workspaceId },
 ) => {
-  if (!topic.userId || topic.channelId) throw new Error('Channel runs require their coordinator');
   // Scheduled runs execute under the creator (`topic.userId` is billing
   // owner). When the topic is an agent-share visitor conversation this ends
   // up mutating visitor rows, so opt into the visitor scope for reads too —

@@ -1,8 +1,8 @@
 /**
  * Channel: a shared conversation where people and Agents talk together (LOBE-15104).
  *
- * Public content lives in canonical messages, with channel_messages routing extensions.
- * Each run executes in its own private canonical topic, distinct from the public timeline.
+ * Public content lives in channel_messages. Channel jobs trigger ordinary Agent topics
+ * and operations; the internal transcript stays separate from the public timeline.
  */
 
 export const CHANNEL_RUNTIMES = [
@@ -112,11 +112,15 @@ export interface ChannelContextMessage {
 
 /**
  * A run's input, frozen at claim time as a cutoff rather than a copy of the messages: the run
- * receives every message visible to its branch up to `cutoffSequence`, read on demand.
+ * receives new branch messages in (afterSequence, cutoffSequence], read on demand.
  */
 export interface ChannelInputManifest {
+  /** Exclusive lower bound: already consumed public input in the continued topic. */
+  afterSequence: number;
   /** Immutable at claim time; later public messages belong to the next run. */
   cutoffSequence: number;
+  /** Environment revision frozen at claim; a changed environment starts a fresh topic. */
+  environmentRevision: number;
   /** The member that triggered this run; its user is the execution identity. */
   requesterMemberId: string;
   requestMessageId: string;

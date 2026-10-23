@@ -75,7 +75,6 @@ const isPersistedOperationVisible = async ({
   const [row] = await db
     .select({
       agentId: agentOperations.agentId,
-      channelId: agentOperations.channelId,
       userId: agentOperations.userId,
       workspaceId: agentOperations.workspaceId,
     })
@@ -86,8 +85,6 @@ const isPersistedOperationVisible = async ({
     .limit(1);
 
   if (!row) return undefined;
-  // Channel execution context is runtime-only, even for its initiating user.
-  if (row.channelId) return false;
   if (row.userId === userId) return true;
 
   if (!row.workspaceId || !workspaceId || row.workspaceId !== workspaceId || !row.agentId) {

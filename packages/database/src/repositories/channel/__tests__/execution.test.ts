@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { and, eq, sql } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../../core/getTestDB';
@@ -9,7 +9,6 @@ import {
   channelMessages,
   channels,
   channelThreads,
-  messages,
   topics,
 } from '../../../schemas';
 import type { LobeChatDatabase } from '../../../type';
@@ -84,6 +83,8 @@ describe('ChannelExecutionRepository', () => {
       writerHeld: true,
     });
     expect(claim?.job.manifest).toEqual({
+      afterSequence: 0,
+      environmentRevision: 0,
       cutoffSequence: 1,
       requestMessageId: message.id,
       requesterMemberId: member.id,
@@ -122,8 +123,7 @@ describe('ChannelExecutionRepository', () => {
       routingStatus: 'reply',
       sequence: 2,
     });
-    const [canonicalReply] = await db.select().from(messages).where(eq(messages.id, replyId));
-    expect(canonicalReply.content).toBe('Fixed');
+    expect(reply.content).toBe('Fixed');
     expect((await operationOf(job.id)).status).toBe('running');
     expect((await jobById(job.id)).status).toBe('completed');
 
@@ -140,7 +140,7 @@ describe('ChannelExecutionRepository', () => {
     expect(await jobById(job.id)).toMatchObject(releasedState);
   });
 
-  it('starts every run in a new private topic with the full branch snapshot', async () => {
+  it('continues the Agent topic and its hetero session with only new public input', async () => {
     const { agent, asMember, channel, job } = await mentionAgent();
     const first = (await execution.claim(channel.id, job.id, lease))!;
     await execution.accepted(channel.id, job.id, { nativeSessionId: 'session-1' });
@@ -157,11 +157,9 @@ describe('ChannelExecutionRepository', () => {
     const [nextJob] = await jobsOf(db, next.id);
     const second = (await execution.claim(channel.id, nextJob.id, lease))!;
 
-    expect(second.topic.id).not.toBe(first.topic.id);
-    expect(second.topic.metadata?.heteroSessionId).toBeUndefined();
-    expect((await execution.input(channel.id, nextJob.id)).map((m) => m.sequence)).toEqual([
-      1, 2, 3,
-    ]);
+    expect(second.topic.id).toBe(first.topic.id);
+    expect(second.topic.metadata?.heteroSessionId).toBe('session-1');
+    expect((await execution.input(channel.id, nextJob.id)).map((m) => m.sequence)).toEqual([3]);
     expect((await operationById(db, second.job.operationId)).topicId).toBe(second.topic.id);
   });
 
@@ -195,6 +193,8 @@ describe('ChannelExecutionRepository', () => {
 
     // The job stores where its input ends, so its size does not grow with the branch.
     expect(mainClaim.job.manifest).toEqual({
+      afterSequence: 0,
+      environmentRevision: 0,
       cutoffSequence: mainRequest.sequence,
       requestMessageId: mainRequest.id,
       requesterMemberId: member.id,
@@ -301,13 +301,10 @@ describe('ChannelExecutionRepository', () => {
         await db
           .select()
           .from(agentOperations)
-          .where(eq(agentOperations.channelId, other.channel.id)),
+          .where(eq(agentOperations.agentId, otherAgent.agentId!)),
       ).toHaveLength(0);
       expect(
-        await db
-          .select()
-          .from(topics)
-          .where(and(eq(topics.channelId, other.channel.id), eq(topics.mode, 'channel_runtime'))),
+        await db.select().from(topics).where(eq(topics.agentId, otherAgent.agentId!)),
       ).toHaveLength(0);
       expect(await jobById(job.id)).toMatchObject({
         blockedCode: 'directory_locked',

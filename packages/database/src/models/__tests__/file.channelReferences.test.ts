@@ -46,7 +46,7 @@ const attachInChannel = async (fileId: string) => {
 
 describe('FileModel channel message references', () => {
   it('deleteUnreferenced keeps a file attached to a channel message', async () => {
-    // Channel attachments have no user owner; canonical joins must still protect the file.
+    // Channel attachments have their own relation; cleanup must still protect the file.
     const id = await createFile('channel.txt');
     await attachInChannel(id);
 
