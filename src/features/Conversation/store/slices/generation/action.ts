@@ -1,5 +1,5 @@
 import { AgentManagementIdentifier } from '@lobechat/builtin-tool-agent-management';
-import { HETERO_CONTINUE_PROMPT, LOADING_FLAT } from '@lobechat/const';
+import { LOADING_FLAT } from '@lobechat/const';
 import {
   collectHeteroAttachedFiles,
   type HeteroAttachedFileRef,
@@ -62,6 +62,7 @@ import { userProfileSelectors } from '@/store/user/selectors';
 
 import { type Store as ConversationStore } from '../../action';
 import { dataSelectors } from '../data/selectors';
+import { continueHeteroAfterError } from './continueHeteroAfterError';
 import { MAX_HETERO_AUTO_RETRIES } from './heteroRetryConfig';
 
 const buildRetryInitialContext = (editorData: Record<string, any> | null | undefined) => {
@@ -106,7 +107,7 @@ const buildRetryInitialContext = (editorData: Record<string, any> | null | undef
  * this identical two-line tail; centralized here so they converge on one adapter
  * instead of hand-rolling completion at each call site.
  */
-const settleGenerationEntry = (
+export const settleGenerationEntry = (
   chatStore: ReturnType<typeof useChatStore.getState>,
   operationId: string,
   notify?: () => void,
@@ -1067,104 +1068,8 @@ export const generationSlice: StateCreator<
     }
   },
 
-  continueHeteroAfterError: async (groupMessageId: string) => {
-    const { context, dbMessages, displayMessages, hooks } = get();
-    const chatStore = useChatStore.getState();
-
-    const group = displayMessages.find((m) => m.id === groupMessageId);
-    const erroredStep = group?.children?.at(-1);
-    if (!erroredStep) return;
-
-    // Only the dedicated hetero status errors (rate limit, upstream overload,
-    // auth, missing CLI) mean "the run died but its session survives". A generic
-    // tool/provider error on a grouped reply is not resumable this way.
-    if (!isHeterogeneousAgentStatusGuideError(erroredStep.error?.body)) return;
-
-    await ensureEffectiveAgencyAccess(context.agentId);
-    const { agencyConfig, isWorkspaceAgent, workspaceScoped } = getEffectiveAgencyConfig(
-      context.agentId,
-      context.topicId
-        ? topicSelectors.getTopicById(context.topicId)(useChatStore.getState())
-        : undefined,
-    );
-    const heterogeneousProvider = agencyConfig?.heterogeneousProvider;
-    const runtimeType = selectRuntimeType({
-      boundDeviceId: agencyConfig?.boundDeviceId,
-      executionTarget: agencyConfig?.executionTarget,
-      heterogeneousProvider,
-      isGatewayMode: chatStore.isGatewayModeEnabled(context.agentId),
-      isWorkspaceAgent,
-      workspaceScoped,
-    });
-    const agentId = context.agentId;
-
-    const resumeSessionId = agentId
-      ? resolveHeteroRunContext(chatStore, context, agentId).resumeSessionId
-      : undefined;
-
-    // Nothing to continue from: the failed step IS the group's head (the run
-    // died before producing a second step, so no work was preserved anyway), or
-    // the topic has no CLI session left to resume (never started, or its cwd
-    // moved). Both degrade to replacing the whole turn.
-    const hasEarlierSteps = erroredStep.id !== groupMessageId;
-    if (
-      runtimeType !== 'hetero' ||
-      !heterogeneousProvider ||
-      !hasEarlierSteps ||
-      !resumeSessionId
-    ) {
-      await get().delAndRegenerateMessage(groupMessageId);
-      return;
-    }
-
-    // A step that streamed content or landed tool calls before dying is worth
-    // keeping: clear its error and chain the continuation onto it. A step that
-    // carries nothing but the error (its content echo was suppressed) would
-    // render as an empty block, so drop it and chain onto its parent instead.
-    const hasSalvageableWork =
-      !!erroredStep.tools?.length ||
-      (!!erroredStep.content && erroredStep.content !== LOADING_FLAT);
-
-    const continueParentId = hasSalvageableWork
-      ? erroredStep.id
-      : dbMessages.find((m) => m.id === erroredStep.id)?.parentId;
-    if (!continueParentId) {
-      await get().delAndRegenerateMessage(groupMessageId);
-      return;
-    }
-
-    const { operationId } = chatStore.startOperation({
-      context: { ...context, messageId: groupMessageId },
-      type: 'regenerate',
-    });
-
-    try {
-      if (hasSalvageableWork) await get().updateMessageError(erroredStep.id, null);
-      else await get().deleteAssistantMessage(erroredStep.id);
-
-      // Chaining off the run's tail (not off the user message) keeps the new
-      // steps inside the same assistantGroup, so the bubble grows instead of
-      // being replaced.
-      await runHeterogeneousFromExistingMessage(chatStore, {
-        context,
-        heterogeneousProvider,
-        parentMessageId: continueParentId,
-        parentOperationId: operationId,
-        prompt: HETERO_CONTINUE_PROMPT,
-      });
-
-      settleGenerationEntry(chatStore, operationId, () =>
-        hooks.onRegenerateComplete?.(groupMessageId),
-      );
-    } catch (error) {
-      // Settle the wrapper op on failure — see delAndRegenerateMessage.
-      chatStore.failOperation(operationId, {
-        message: error instanceof Error ? error.message : String(error),
-        type: 'RegenerateError',
-      });
-      throw error;
-    }
-  },
+  continueHeteroAfterError: (groupMessageId: string) =>
+    continueHeteroAfterError(get, groupMessageId),
 
   scheduleHeteroContinuation: async ({ failedAssistantMessageId, rateLimit }) => {
     const { context, dbMessages } = get();
