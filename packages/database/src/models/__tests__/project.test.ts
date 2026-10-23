@@ -53,15 +53,30 @@ describe('ProjectModel', () => {
     await serverDB.delete(users);
   });
 
-  describe('reorder', () => {
-    it('lists projects in the saved order, with unplaced ones first', async () => {
+  describe('move', () => {
+    const ids = async (m: ProjectModel) => (await m.list()).map((p) => p.name);
+
+    it('places a project before or after another and keeps the order', async () => {
       const a = await createProject(model, { name: 'A' });
       const b = await createProject(model, { name: 'B' });
       const c = await createProject(model, { name: 'C' });
+      expect(await ids(model)).toEqual(['C', 'B', 'A']);
 
-      await model.reorder([a.id, c.id]);
+      await model.move(a.id, { beforeId: c.id });
+      expect(await ids(model)).toEqual(['A', 'C', 'B']);
 
-      expect((await model.list()).map((p) => p.id)).toEqual([b.id, a.id, c.id]);
+      await model.move(a.id, { afterId: b.id });
+      expect(await ids(model)).toEqual(['C', 'B', 'A']);
+      expect((await model.findById(c.id))?.sortOrder).toBe(0);
+    });
+
+    it('lists projects never placed above placed ones', async () => {
+      const a = await createProject(model, { name: 'A' });
+      const b = await createProject(model, { name: 'B' });
+      await model.move(a.id, { beforeId: b.id });
+      await createProject(model, { name: 'New' });
+
+      expect(await ids(model)).toEqual(['New', 'A', 'B']);
     });
 
     it('keeps updatedAt so the recently-updated order does not move', async () => {
@@ -69,24 +84,46 @@ describe('ProjectModel', () => {
       const b = await createProject(model, { name: 'B' });
       const before = await model.findByIds([a.id, b.id]);
 
-      await model.reorder([b.id, a.id]);
+      await model.move(a.id, { beforeId: b.id });
 
-      const after = await model.findByIds([a.id, b.id]);
-      for (const row of after) {
+      for (const row of await model.findByIds([a.id, b.id])) {
         const original = before.find((p) => p.id === row.id)!;
         expect(row.updatedAt.getTime()).toBe(original.updatedAt.getTime());
       }
-      expect((await model.list()).map((p) => p.id)).toEqual([b.id, a.id]);
     });
 
-    it('does not touch projects outside the caller scope', async () => {
+    it('rejects projects outside the caller scope', async () => {
       const mine = await createProject(model, { name: 'Mine' });
       const theirs = await createProject(otherModel, { name: 'Theirs' });
 
-      await model.reorder([theirs.id, mine.id]);
-
+      await expect(model.move(theirs.id, { beforeId: mine.id })).rejects.toThrow(
+        'Project not found',
+      );
       expect((await otherModel.findById(theirs.id))?.sortOrder).toBeNull();
-      expect((await model.findById(mine.id))?.sortOrder).toBe(1);
+    });
+
+    it("keeps each member's private projects in place when another member moves", async () => {
+      await serverDB.insert(workspaces).values({
+        id: 'project-order-workspace',
+        name: 'Project Order Workspace',
+        primaryOwnerId: userId,
+        slug: 'project-order-workspace',
+      });
+      const alice = new ProjectModel(serverDB, userId, 'project-order-workspace');
+      const bob = new ProjectModel(serverDB, otherUserId, 'project-order-workspace');
+      const publicA = await createProject(alice, { name: 'PublicA' });
+      const publicB = await createProject(alice, { name: 'PublicB' });
+      const privateA = await createProject(alice, { name: 'PrivateA', visibility: 'private' });
+      const privateB = await createProject(bob, { name: 'PrivateB', visibility: 'private' });
+
+      await alice.move(privateA.id, { beforeId: publicA.id });
+      await alice.move(publicB.id, { afterId: publicA.id });
+      expect(await ids(alice)).toEqual(['PrivateA', 'PublicA', 'PublicB']);
+
+      await bob.move(privateB.id, { afterId: publicB.id });
+
+      expect(await ids(alice)).toEqual(['PrivateA', 'PublicA', 'PublicB']);
+      expect(await ids(bob)).toEqual(['PublicA', 'PublicB', 'PrivateB']);
     });
   });
 

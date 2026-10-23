@@ -51,11 +51,15 @@ interface ProjectStore extends ProjectStoreState {
     slug?: string;
   }) => Promise<ProjectListItem>;
   deleteProject: (id: string) => Promise<void>;
+  /**
+   * Drop a project at a new place in the shared manual order. `ids` is the list
+   * as the user now sees it; the list moves at once and the write is queued
+   * behind earlier moves so they land in drop order.
+   */
+  moveProject: (id: string, ids: string[]) => Promise<void>;
   refreshProjectList: () => Promise<void>;
   removeProjectAgent: (projectId: string, agentId: string) => Promise<void>;
   removeProjectKnowledgeBase: (projectId: string, knowledgeBaseId: string) => Promise<void>;
-  /** Save the shared manual order (top first); the list moves before the write lands. */
-  reorderProjects: (ids: string[]) => Promise<void>;
   updateProject: (
     id: string,
     input: Parameters<typeof projectService.update>[1],
@@ -116,6 +120,7 @@ export const useProjectStore = createWithEqualityFn<ProjectStore>()(
     const projectEntity = linkReplicaEntity<ProjectListItem>([list, detail]);
 
     const refreshList = () => list.revalidate(PROJECT_LIST_KEY);
+    let moveQueue: Promise<unknown> = Promise.resolve();
 
     // A project page is keyed by its route param, so one project can sit under
     // both its id and its slug.
@@ -173,24 +178,26 @@ export const useProjectStore = createWithEqualityFn<ProjectStore>()(
       refreshProjectList: async () => {
         await refreshList();
       },
-      reorderProjects: async (ids) => {
-        const previous = get().projectListMap[PROJECT_LIST_KEY];
-        const position = new Map(ids.map((id, index) => [id, index]));
+      moveProject: (id, ids) => {
+        const index = ids.indexOf(id);
+        const anchor =
+          index < ids.length - 1 ? { beforeId: ids[index + 1] } : { afterId: ids[index - 1] };
+        const position = new Map(ids.map((itemId, i) => [itemId, i]));
         list.update(PROJECT_LIST_KEY, (items) =>
-          items
-            ?.map((item) =>
-              position.has(item.id) ? { ...item, sortOrder: position.get(item.id)! } : item,
-            )
-            .sort((a, b) => (position.get(a.id) ?? -1) - (position.get(b.id) ?? -1)),
+          items?.slice().sort((a, b) => (position.get(a.id) ?? -1) - (position.get(b.id) ?? -1)),
         );
-        try {
-          await projectService.reorder(ids);
-        } catch (error) {
-          list.update(PROJECT_LIST_KEY, () => previous);
-          throw error;
-        } finally {
-          void refreshList();
-        }
+
+        const write = moveQueue.then(() => projectService.move(id, anchor));
+        // Later moves wait for this one but not for its outcome.
+        moveQueue = write.catch(() => undefined);
+        // On failure the server order is the truth; refetching also undoes the optimistic move.
+        return write.then(
+          () => undefined,
+          async (error) => {
+            await refreshList();
+            throw error;
+          },
+        );
       },
       removeProjectAgent: async (projectId, agentId) => {
         patchDetail(projectId, (value) => ({

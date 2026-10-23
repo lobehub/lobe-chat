@@ -5,7 +5,8 @@ import {
   DndContext,
   type DragEndEvent,
   KeyboardSensor,
-  PointerSensor,
+  MouseSensor,
+  TouchSensor,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
@@ -42,6 +43,29 @@ const suppressNextClick = () => {
   setTimeout(() => window.removeEventListener('click', swallow, { capture: true }), 0);
 };
 
+// Pressing on a row's own buttons (the ⋯ menu) must never pick the row up.
+const startsOnRowAction = (event: Event) =>
+  event.target instanceof Element && !!event.target.closest('.nav-item-actions');
+
+class RowMouseSensor extends MouseSensor {
+  static activators = [
+    {
+      eventName: 'onMouseDown' as const,
+      handler: ({ nativeEvent }: { nativeEvent: MouseEvent }) =>
+        nativeEvent.button === 0 && !startsOnRowAction(nativeEvent),
+    },
+  ];
+}
+
+class RowTouchSensor extends TouchSensor {
+  static activators = [
+    {
+      eventName: 'onTouchStart' as const,
+      handler: ({ nativeEvent }: { nativeEvent: TouchEvent }) => !startsOnRowAction(nativeEvent),
+    },
+  ];
+}
+
 const SortableProjectItem = memo<{ project: ProjectListItem }>(({ project }) => {
   const { attributes, isDragging, listeners, setNodeRef, transform, transition } = useSortable({
     id: project.id,
@@ -72,7 +96,7 @@ SortableProjectItem.displayName = 'SortableProjectItem';
 const SortableProjectList = memo<{ projects: ProjectListItem[] }>(({ projects }) => {
   const { t } = useTranslation('project');
   const sortBy = useGlobalStore(systemStatusSelectors.projectListSortBy);
-  const reorderProjects = useProjectStore((s) => s.reorderProjects);
+  const moveProject = useProjectStore((s) => s.moveProject);
   // The manual order is shared by the workspace, so only editors may change it.
   const canManage = useCanManageProject();
 
@@ -80,7 +104,9 @@ const SortableProjectList = memo<{ projects: ProjectListItem[] }>(({ projects })
   const ids = useMemo(() => sorted.map((p) => p.id), [sorted]);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(RowMouseSensor, { activationConstraint: { distance: 5 } }),
+    // A press-and-hold picks a row up on touch, so a vertical swipe still scrolls the sidebar.
+    useSensor(RowTouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
 
@@ -92,7 +118,8 @@ const SortableProjectList = memo<{ projects: ProjectListItem[] }>(({ projects })
     if (!over || active.id === over.id) return;
 
     try {
-      await reorderProjects(
+      await moveProject(
+        String(active.id),
         arrayMove(ids, ids.indexOf(String(active.id)), ids.indexOf(String(over.id))),
       );
     } catch (error) {

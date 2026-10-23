@@ -350,15 +350,17 @@ export const projectRouter = router({
     }
   }),
 
-  /** Save the shared manual order of the scope's projects (top first). */
-  reorder: projectWriteProcedure
-    .input(z.object({ ids: z.array(z.string()).min(1).max(1000) }))
-    .mutation(async ({ ctx, input }) => {
+  /** Move one project in the scope's shared manual order, next to another project. */
+  move: projectWriteProcedure
+    .input(
+      idInput.and(z.union([z.object({ beforeId: z.string() }), z.object({ afterId: z.string() })])),
+    )
+    .mutation(async ({ ctx, input: { id, ...anchor } }) => {
       try {
-        await ctx.projectModel.reorder(input.ids);
-        return { message: 'Projects reordered', success: true };
+        await ctx.projectModel.move(id, anchor);
+        return { message: 'Project moved', success: true };
       } catch (error) {
-        mapProjectError(error, 'reorder');
+        mapProjectError(error, 'move');
       }
     }),
 
