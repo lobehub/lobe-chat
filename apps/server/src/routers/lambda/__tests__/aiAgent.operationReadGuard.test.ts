@@ -85,7 +85,7 @@ describe('aiAgentRouter operation read guard', () => {
 
   afterEach(async () => {
     await serverDB.delete(agentOperations).where(eq(agentOperations.id, operationId));
-    await serverDB.delete(channels).where(eq(channels.creatorId, ownerId));
+    await serverDB.delete(channels).where(eq(channels.userId, ownerId));
     await cleanupTestUser(serverDB, visitorId);
     await cleanupTestUser(serverDB, ownerId);
     vi.clearAllMocks();
@@ -137,7 +137,7 @@ describe('aiAgentRouter operation read guard', () => {
     it('hides Channel execution from ordinary status, intervention and journal reads', async () => {
       const [channel] = await serverDB
         .insert(channels)
-        .values({ creatorId: ownerId, title: 'Channel' })
+        .values({ title: 'Channel', userId: ownerId })
         .returning();
       await serverDB
         .update(agentOperations)
