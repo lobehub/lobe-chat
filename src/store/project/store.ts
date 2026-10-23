@@ -54,6 +54,8 @@ interface ProjectStore extends ProjectStoreState {
   refreshProjectList: () => Promise<void>;
   removeProjectAgent: (projectId: string, agentId: string) => Promise<void>;
   removeProjectKnowledgeBase: (projectId: string, knowledgeBaseId: string) => Promise<void>;
+  /** Save the shared manual order (top first); the list moves before the write lands. */
+  reorderProjects: (ids: string[]) => Promise<void>;
   updateProject: (
     id: string,
     input: Parameters<typeof projectService.update>[1],
@@ -170,6 +172,25 @@ export const useProjectStore = createWithEqualityFn<ProjectStore>()(
       },
       refreshProjectList: async () => {
         await refreshList();
+      },
+      reorderProjects: async (ids) => {
+        const previous = get().projectListMap[PROJECT_LIST_KEY];
+        const position = new Map(ids.map((id, index) => [id, index]));
+        list.update(PROJECT_LIST_KEY, (items) =>
+          items
+            ?.map((item) =>
+              position.has(item.id) ? { ...item, sortOrder: position.get(item.id)! } : item,
+            )
+            .sort((a, b) => (position.get(a.id) ?? -1) - (position.get(b.id) ?? -1)),
+        );
+        try {
+          await projectService.reorder(ids);
+        } catch (error) {
+          list.update(PROJECT_LIST_KEY, () => previous);
+          throw error;
+        } finally {
+          void refreshList();
+        }
       },
       removeProjectAgent: async (projectId, agentId) => {
         patchDetail(projectId, (value) => ({

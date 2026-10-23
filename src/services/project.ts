@@ -51,6 +51,8 @@ class ProjectService {
 
   delete = async (id: string) => lambdaClient.project.delete.mutate({ id });
 
+  reorder = async (ids: string[]) => lambdaClient.project.reorder.mutate({ ids });
+
   create = async (
     params: {
       avatar?: string;

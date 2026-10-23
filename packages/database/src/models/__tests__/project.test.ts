@@ -53,6 +53,43 @@ describe('ProjectModel', () => {
     await serverDB.delete(users);
   });
 
+  describe('reorder', () => {
+    it('lists projects in the saved order, with unplaced ones first', async () => {
+      const a = await createProject(model, { name: 'A' });
+      const b = await createProject(model, { name: 'B' });
+      const c = await createProject(model, { name: 'C' });
+
+      await model.reorder([a.id, c.id]);
+
+      expect((await model.list()).map((p) => p.id)).toEqual([b.id, a.id, c.id]);
+    });
+
+    it('keeps updatedAt so the recently-updated order does not move', async () => {
+      const a = await createProject(model, { name: 'A' });
+      const b = await createProject(model, { name: 'B' });
+      const before = await model.findByIds([a.id, b.id]);
+
+      await model.reorder([b.id, a.id]);
+
+      const after = await model.findByIds([a.id, b.id]);
+      for (const row of after) {
+        const original = before.find((p) => p.id === row.id)!;
+        expect(row.updatedAt.getTime()).toBe(original.updatedAt.getTime());
+      }
+      expect((await model.list()).map((p) => p.id)).toEqual([b.id, a.id]);
+    });
+
+    it('does not touch projects outside the caller scope', async () => {
+      const mine = await createProject(model, { name: 'Mine' });
+      const theirs = await createProject(otherModel, { name: 'Theirs' });
+
+      await model.reorder([theirs.id, mine.id]);
+
+      expect((await otherModel.findById(theirs.id))?.sortOrder).toBeNull();
+      expect((await model.findById(mine.id))?.sortOrder).toBe(1);
+    });
+  });
+
   it('lets several projects share one main agent', async () => {
     const shared = await new AgentModel(serverDB, userId).create({ title: 'Planner' });
     const first = await createProject(model, { name: 'First' });

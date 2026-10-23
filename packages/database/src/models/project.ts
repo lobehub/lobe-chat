@@ -318,12 +318,35 @@ export class ProjectModel {
       .from(projects)
       .leftJoin(agents, eq(agents.id, projects.coordinatorAgentId))
       .where(and(this.readable(), statusWhere))
-      .orderBy(desc(projects.updatedAt))
+      // Manual order first; projects never placed (null) lead, newest first.
+      .orderBy(sql`${projects.sortOrder} ASC NULLS FIRST`, desc(projects.updatedAt))
       .limit(limit)
       .offset(offset);
     // Coordinators are virtual agents the client agent list never loads, so the
     // list carries their display meta for the owner column.
     return rows.map(({ coordinatorAgent, project }) => ({ ...project, coordinatorAgent }));
+  }
+
+  /**
+   * Persist the manual project order of the caller's scope: `ids[i]` gets
+   * position `i`. Shared by every member of the workspace. Ids the caller
+   * cannot manage are skipped. `updated_at` is left alone — moving a project is
+   * not an edit, and the "recently updated" order must not jump.
+   */
+  async reorder(ids: string[]) {
+    if (ids.length === 0) return;
+
+    const position = sql.join(
+      ids.map((id, index) => sql`WHEN ${id} THEN ${index}`),
+      sql` `,
+    );
+    await this.db
+      .update(projects)
+      .set({
+        sortOrder: sql`(CASE ${projects.id} ${position} END)::integer`,
+        updatedAt: sql`${projects.updatedAt}`,
+      })
+      .where(and(inArray(projects.id, ids), this.manageable()));
   }
 
   async update(id: string, input: UpdateProjectInput) {

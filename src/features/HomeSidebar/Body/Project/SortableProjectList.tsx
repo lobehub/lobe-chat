@@ -1,0 +1,117 @@
+'use client';
+
+import {
+  closestCenter,
+  DndContext,
+  type DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { toast } from '@lobehub/ui';
+import { memo, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { useCanManageProject } from '@/features/Projects/useCanManageProject';
+import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
+import type { ProjectListItem } from '@/store/project';
+import { useProjectStore } from '@/store/project';
+
+import ProjectItem from './ProjectItem';
+import { sortProjects } from './sortProjects';
+
+// The row is a link: a click fires on pointerup after a drag, so swallow the
+// one click that follows a drop instead of navigating to the dragged project.
+const suppressNextClick = () => {
+  const swallow = (event: MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
+  window.addEventListener('click', swallow, { capture: true, once: true });
+  // A drop that lands off the row produces no click; don't eat a later one.
+  setTimeout(() => window.removeEventListener('click', swallow, { capture: true }), 0);
+};
+
+const SortableProjectItem = memo<{ project: ProjectListItem }>(({ project }) => {
+  const { attributes, isDragging, listeners, setNodeRef, transform, transition } = useSortable({
+    id: project.id,
+  });
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{
+        opacity: isDragging ? 0.6 : undefined,
+        position: 'relative',
+        transform: CSS.Translate.toString(transform),
+        transition,
+        zIndex: isDragging ? 1 : undefined,
+      }}
+      {...attributes}
+      {...listeners}
+      // Stop the browser's native link drag from hijacking the pointer.
+      onDragStart={(e) => e.preventDefault()}
+    >
+      <ProjectItem project={project} />
+    </div>
+  );
+});
+
+SortableProjectItem.displayName = 'SortableProjectItem';
+
+const SortableProjectList = memo<{ projects: ProjectListItem[] }>(({ projects }) => {
+  const { t } = useTranslation('project');
+  const sortBy = useGlobalStore(systemStatusSelectors.projectListSortBy);
+  const reorderProjects = useProjectStore((s) => s.reorderProjects);
+  // The manual order is shared by the workspace, so only editors may change it.
+  const canManage = useCanManageProject();
+
+  const sorted = useMemo(() => sortProjects(projects, sortBy), [projects, sortBy]);
+  const ids = useMemo(() => sorted.map((p) => p.id), [sorted]);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
+
+  if (sortBy !== 'manual' || !canManage)
+    return sorted.map((project) => <ProjectItem key={project.id} project={project} />);
+
+  const handleDragEnd = async ({ active, over }: DragEndEvent) => {
+    suppressNextClick();
+    if (!over || active.id === over.id) return;
+
+    try {
+      await reorderProjects(
+        arrayMove(ids, ids.indexOf(String(active.id)), ids.indexOf(String(over.id))),
+      );
+    } catch (error) {
+      console.error('Failed to save project order', error);
+      toast.error(t('sidebar.reorderError'));
+    }
+  };
+
+  return (
+    <DndContext collisionDetection={closestCenter} sensors={sensors} onDragEnd={handleDragEnd}>
+      <SortableContext items={ids} strategy={verticalListSortingStrategy}>
+        {sorted.map((project) => (
+          <SortableProjectItem key={project.id} project={project} />
+        ))}
+      </SortableContext>
+    </DndContext>
+  );
+});
+
+SortableProjectList.displayName = 'SortableProjectList';
+
+export default SortableProjectList;
