@@ -3,9 +3,9 @@ import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../../core/getTestDB';
+import { UserModel } from '../../../models/user';
 import { channelJobs, channelMemberGrants, channelMembers, devices } from '../../../schemas';
 import type { LobeChatDatabase } from '../../../type';
-import { UserModel } from '../../user';
 import { ChannelExecutionModel, ChannelModel } from '..';
 import { createChannelFixture, deviceConfig, jobsOf, lease } from './testUtils';
 

@@ -3,9 +3,9 @@ import { eq, inArray, sql } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../../core/getTestDB';
+import { UserModel } from '../../../models/user';
 import { channelMembers, channels, users, workspaces } from '../../../schemas';
 import type { LobeChatDatabase } from '../../../type';
-import { UserModel } from '../../user';
 import { ChannelError, ChannelModel } from '..';
 
 const serverDB: LobeChatDatabase = await getTestDB();

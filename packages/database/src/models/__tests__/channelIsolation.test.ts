@@ -3,6 +3,12 @@ import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
+import { ChannelExecutionModel } from '../../repositories/channel';
+import {
+  createChannelFixture,
+  jobsOf,
+  lease,
+} from '../../repositories/channel/__tests__/testUtils';
 import { FtsSearchRepo, PgLikeFtsSearchBackend } from '../../repositories/ftsSearch';
 import { FtsSearchDocumentBuilder } from '../../repositories/ftsSearchDocument/builder';
 import {
@@ -14,8 +20,6 @@ import {
   topics,
 } from '../../schemas';
 import { AgentOperationModel } from '../agentOperation';
-import { ChannelExecutionModel } from '../channel';
-import { createChannelFixture, jobsOf, lease } from '../channel/__tests__/testUtils';
 import { MessageModel } from '../message';
 import { TopicModel } from '../topic';
 import { TopicShareModel } from '../topicShare';
