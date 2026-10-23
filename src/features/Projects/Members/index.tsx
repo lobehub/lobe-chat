@@ -107,9 +107,8 @@ export function ProjectMemberSettings({ detail }: { detail: ProjectDetail }) {
     const name =
       directoryAgentName(agent, isInbox, t('inbox.title', { ns: 'chat' })) ?? defaultName;
     const values = { name, previous };
-    // A coordinator provisioned for the project is virtual without a slug; builtins
-    // such as LobeAI are virtual too but carry one, and the server keeps them.
-    const dedicated = Boolean(coordinator?.agent.virtual && !coordinator.agent.slug);
+    // The server decides: only a coordinator provisioned for this project is retired.
+    const dedicated = Boolean(coordinator && detail.coordinatorRetiresOnReplace);
     confirmModal({
       content: !coordinator
         ? undefined

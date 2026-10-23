@@ -67,6 +67,9 @@ export class ProjectCoordinatorRepository {
     await db.update(topics).set({ agentId: toId }).where(eq(topics.agentId, fromId));
     await db.update(threads).set({ agentId: toId }).where(eq(threads.agentId, fromId));
     await db.update(messages).set({ agentId: toId }).where(eq(messages.agentId, fromId));
+    // `target_id` has no foreign key; a user turn addressed to the coordinator
+    // would drop out of the successor's thread view if it kept the old id.
+    await db.update(messages).set({ targetId: toId }).where(eq(messages.targetId, fromId));
     await db.update(tasks).set({ assigneeAgentId: toId }).where(eq(tasks.assigneeAgentId, fromId));
     await db
       .update(tasks)

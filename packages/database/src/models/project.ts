@@ -1,7 +1,7 @@
 import { BUILTIN_AGENT_SLUGS, createProjectCoordinatorAgentConfig } from '@lobechat/builtin-agents';
 import { INBOX_SESSION_ID } from '@lobechat/const';
 import type { ProjectStatus, ProjectVisibility } from '@lobechat/types';
-import { and, asc, desc, eq, inArray, isNull, max, or, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, inArray, isNull, max, ne, or, sql } from 'drizzle-orm';
 
 import { agents } from '../schemas/agent';
 import { chatGroupsAgents } from '../schemas/chatGroup';
@@ -212,7 +212,7 @@ export class ProjectModel {
    * (user agents, LobeAI) stay with their sessions intact.
    */
   private async deleteDedicatedCoordinator(db: LobeChatDatabase, agentId: string) {
-    if (!(await this.isDedicatedCoordinator(agentId, db))) return;
+    if (!(await this.isDedicatedCoordinator(agentId, { db }))) return;
     await new AgentModel(db, this.userId, this.workspaceId).delete(agentId);
   }
 
@@ -220,7 +220,17 @@ export class ProjectModel {
    * A coordinator provisioned for one project: a virtual, non-builtin agent no
    * project still leads and no group or session holds.
    */
-  async isDedicatedCoordinator(agentId: string, db: LobeChatDatabase = this.db) {
+  async isDedicatedCoordinator(
+    agentId: string,
+    {
+      db = this.db,
+      exceptProjectId,
+    }: {
+      db?: LobeChatDatabase;
+      /** Ask before handing this project over: its own lead does not count as "still used". */
+      exceptProjectId?: string;
+    } = {},
+  ) {
     const [agent] = await db
       .select({ slug: agents.slug, virtual: agents.virtual })
       .from(agents)
@@ -236,7 +246,12 @@ export class ProjectModel {
     const [stillUsed] = await db
       .select({ id: projects.id })
       .from(projects)
-      .where(eq(projects.coordinatorAgentId, agentId))
+      .where(
+        and(
+          eq(projects.coordinatorAgentId, agentId),
+          exceptProjectId ? ne(projects.id, exceptProjectId) : undefined,
+        ),
+      )
       .limit(1);
     if (stillUsed) return false;
 

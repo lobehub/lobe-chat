@@ -213,17 +213,23 @@ export const projectRouter = router({
       );
       // TODO(2026-12-31): remove with `ProjectModel.joinTopicAgents`.
       await ctx.projectModel.joinTopicAgents(project.id);
-      const [agents, completionReviews, knowledgeBases, tasks, works] = await Promise.all([
-        ctx.projectModel.listAgents(project.id),
-        ctx.projectModel.listCompletionReviews(project.id),
-        ctx.projectModel.listKnowledgeBases(project.id),
-        ctx.projectModel.listTasks(project.id),
-        ctx.projectModel.listWorks(project.id),
-      ]);
+      const [agents, completionReviews, knowledgeBases, tasks, works, coordinatorRetires] =
+        await Promise.all([
+          ctx.projectModel.listAgents(project.id),
+          ctx.projectModel.listCompletionReviews(project.id),
+          ctx.projectModel.listKnowledgeBases(project.id),
+          ctx.projectModel.listTasks(project.id),
+          ctx.projectModel.listWorks(project.id),
+          ctx.projectModel.isDedicatedCoordinator(project.coordinatorAgentId, {
+            exceptProjectId: project.id,
+          }),
+        ]);
       return {
         data: {
           agents,
           completionReviews,
+          /** Replacing the main agent hands its history over and deletes it. */
+          coordinatorRetiresOnReplace: coordinatorRetires,
           knowledgeBases,
           permissions: ctx.projectModel.getPermissions(project),
           project,

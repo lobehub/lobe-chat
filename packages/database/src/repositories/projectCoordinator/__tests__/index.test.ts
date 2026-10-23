@@ -63,6 +63,16 @@ describe('ProjectCoordinatorRepository.replaceCoordinator', () => {
         userId,
       })
       .returning();
+    const [addressed] = await serverDB
+      .insert(messages)
+      .values({
+        content: 'Plan the release',
+        role: 'user',
+        targetId: coordinatorId,
+        topicId: topic.id,
+        userId,
+      })
+      .returning();
     const task = await new TaskModel(serverDB, userId).create({
       assigneeAgentId: coordinatorId,
       createdByAgentId: coordinatorId,
@@ -116,6 +126,9 @@ describe('ProjectCoordinatorRepository.replaceCoordinator', () => {
     ]);
     expect(await serverDB.select().from(messages).where(eq(messages.id, message.id))).toEqual([
       expect.objectContaining({ agentId: lead.id }),
+    ]);
+    expect(await serverDB.select().from(messages).where(eq(messages.id, addressed.id))).toEqual([
+      expect.objectContaining({ targetId: lead.id }),
     ]);
     expect(await serverDB.select().from(tasks).where(eq(tasks.id, task.id))).toEqual([
       expect.objectContaining({ assigneeAgentId: lead.id, createdByAgentId: lead.id }),
