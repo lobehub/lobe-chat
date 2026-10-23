@@ -15,10 +15,11 @@ import type {
   ToolStateChunkData,
 } from '@lobechat/agent-gateway-client';
 import { isSessionTerminalEvent } from '@lobechat/agent-gateway-client';
+import { LOADING_FLAT } from '@lobechat/const';
 import { normalizeHeterogeneousMessageError } from '@lobechat/heterogeneous-agents/errors';
 import { normalizeChatMessageError } from '@lobechat/model-runtime/errors';
-import type { BuiltinToolResult, ConversationContext, UIChatMessage } from '@lobechat/types';
-import { isClientLlmWaitableError } from '@lobechat/types';
+import type { ConversationContext, UIChatMessage } from '@lobechat/types';
+import { INTERRUPT_STOP_SNAPSHOT_MAX_LENGTH, isClientLlmWaitableError } from '@lobechat/types';
 import { isRecord, pickNonEmptyString, toRecord } from '@lobechat/utils/object';
 
 import { readConversationMessages } from '@/helpers/conversationMessageRead';
@@ -43,17 +44,15 @@ import {
   isCompletedRuntimeEnd,
   resolveRuntimeEndStatus,
 } from './runtimeEndReason';
-
-// Lazy-loaded to break the import cycle:
-//   gateway.ts → gatewayEventHandler.ts → executors/index.ts (which pulls in
-//   tool client barrels that import `@/store/chat/store`) → chat store
-//   creation → `new GatewayActionImpl(...)` while gateway.ts is still
-//   mid-evaluation, so the class binding is undefined.
-const loadGetExecutor = async () => {
-  const mod = await import('@/store/tool/slices/builtin/executors');
-  await mod.registerBuiltinToolExecutors();
-  return mod.getExecutor;
-};
+import { registerGatewayStopFreeze } from './stopFreeze';
+import {
+  dispatchOnAfterCall,
+  dispatchOnBeforeCall,
+  getToolId,
+  isToolStateChunkData,
+  preserveToolResultMessageIds,
+  unwrapToolPayload,
+} from './toolPayload';
 
 /**
  * Fetch messages from DB and replace them in the chat store's dbMessagesMap.
@@ -97,159 +96,6 @@ const shouldSkipMessageFetch = (
   event: AgentStreamEvent,
   runtimeType: 'gateway' | 'hetero',
 ): boolean => runtimeType === 'hetero' && event.data?.skipMessageFetch === true;
-
-const getToolId = (tool: unknown): string | undefined =>
-  isRecord(tool) ? pickNonEmptyString(tool.id) : undefined;
-
-const getToolResultMessageId = (tool: unknown): string | undefined =>
-  isRecord(tool) ? pickNonEmptyString(tool.result_msg_id) : undefined;
-
-const isToolStateChunkData = (data: unknown): data is ToolStateChunkData =>
-  isRecord(data) &&
-  data.chunkType === 'tool_state' &&
-  data.snapshotMode === 'replace' &&
-  typeof data.toolCallId === 'string' &&
-  data.toolCallId.length > 0 &&
-  Number.isInteger(data.snapshotSeq) &&
-  (data.snapshotSeq as number) > 0 &&
-  isRecord(data.pluginState);
-
-const preserveToolResultMessageIds = (
-  toolsCalling: unknown[],
-  existingTools: unknown,
-): unknown[] => {
-  if (!Array.isArray(existingTools)) return toolsCalling;
-
-  const resultMsgIdByToolId = new Map<string, string>();
-  for (const tool of existingTools) {
-    const toolId = getToolId(tool);
-    const resultMsgId = getToolResultMessageId(tool);
-    if (toolId && resultMsgId) resultMsgIdByToolId.set(toolId, resultMsgId);
-  }
-
-  if (resultMsgIdByToolId.size === 0) return toolsCalling;
-
-  let changed = false;
-  const merged = toolsCalling.map((tool) => {
-    const toolId = getToolId(tool);
-    if (!toolId || getToolResultMessageId(tool)) return tool;
-
-    const resultMsgId = resultMsgIdByToolId.get(toolId);
-    if (!resultMsgId || !isRecord(tool)) return tool;
-
-    changed = true;
-    return { ...tool, result_msg_id: resultMsgId };
-  });
-
-  return changed ? merged : toolsCalling;
-};
-
-interface ChatToolPayloadLike {
-  apiName?: unknown;
-  arguments?: unknown;
-  id?: unknown;
-  identifier?: unknown;
-}
-
-interface ToolPayloadIdentity {
-  apiName: string;
-  identifier: string;
-  params: unknown;
-  toolCallId?: string;
-}
-
-/**
- * Extract `{ identifier, apiName, params, toolCallId }` from a stream event's
- * tool payload. Returns `undefined` when the payload is malformed so the
- * caller can skip dispatch without throwing.
- */
-const readToolPayload = (
-  payload: ChatToolPayloadLike | undefined,
-): ToolPayloadIdentity | undefined => {
-  const identifier = typeof payload?.identifier === 'string' ? payload.identifier : undefined;
-  const apiName = typeof payload?.apiName === 'string' ? payload.apiName : undefined;
-  if (!identifier || !apiName) return undefined;
-
-  let params: unknown = payload?.arguments;
-  if (typeof params === 'string') {
-    try {
-      params = JSON.parse(params);
-    } catch {
-      params = {};
-    }
-  } else if (params == null) {
-    params = {};
-  }
-
-  const toolCallId = typeof payload?.id === 'string' ? payload.id : undefined;
-  return { apiName, identifier, params, toolCallId };
-};
-
-/**
- * Route a `tool_start` event to the executor's optional `onBeforeCall` hook so
- * tool packages can react before their own mutations dispatch (e.g.
- * optimistic UI). Fires for both client- and server-runtime tools.
- */
-const dispatchOnBeforeCall = async (
-  data: ToolStartData | undefined,
-  topicId?: string,
-): Promise<void> => {
-  const payload = data?.toolCalling as ChatToolPayloadLike | undefined;
-  const identity = readToolPayload(payload);
-  if (!identity) return;
-
-  const getExecutor = await loadGetExecutor();
-  const executor = getExecutor(identity.identifier);
-  if (!executor?.onBeforeCall) return;
-
-  await executor.onBeforeCall({ ...identity, topicId });
-};
-
-/**
- * Real gateway `tool_end` events ship `data.payload` as the
- * `{ parentMessageId, toolCalling }` wrapper, NOT a flat `ChatToolPayload`
- * (see `apps/server/src/modules/AgentRuntime/RuntimeExecutors.ts` — both the
- * single-tool and batch publish sites). Unwrap defensively, falling back to
- * the flat shape so we tolerate test fixtures / future emission paths that
- * pass the payload directly.
- */
-const unwrapToolPayload = (raw: unknown): ChatToolPayloadLike | undefined => {
-  if (!raw || typeof raw !== 'object') return undefined;
-  const wrapper = raw as { toolCalling?: unknown };
-  if (wrapper.toolCalling && typeof wrapper.toolCalling === 'object') {
-    return wrapper.toolCalling as ChatToolPayloadLike;
-  }
-  return raw as ChatToolPayloadLike;
-};
-
-/**
- * Route a `tool_end` event to the executor's optional `onAfterCall` hook so
- * tool packages can react to their own mutations (e.g. invalidate store
- * caches) regardless of whether the tool ran client- or server-side.
- */
-const dispatchOnAfterCall = async (
-  data: ToolEndData | undefined,
-  topicId?: string,
-): Promise<void> => {
-  const identity = readToolPayload(unwrapToolPayload(data?.payload));
-  if (!identity) return;
-
-  const getExecutor = await loadGetExecutor();
-  const executor = getExecutor(identity.identifier);
-  if (!executor?.onAfterCall) return;
-
-  const result = (data?.result ?? {}) as BuiltinToolResult;
-
-  await executor.onAfterCall({
-    ...identity,
-    // Gateway/hetero tool_end events carry the terminal outcome beside
-    // `result`, while client-tool results already include `result.success`.
-    // Normalize both shapes so hook-only heterogeneous executors do not treat
-    // a successful shell command as failed and skip git/worktree side effects.
-    result: { ...result, success: result.success ?? data?.isSuccess },
-    topicId,
-  });
-};
 
 type GatewayMessageLike = { id: string; role?: string };
 type HeteroStreamStartData = StreamStartData & { newStep?: boolean };
@@ -371,6 +217,41 @@ export const createGatewayEventHandler = (
   // landed — otherwise the optimistic `tmp_*` placeholder messages stay in
   // the store indefinitely).
   let hasStreamedContent = false;
+
+  /**
+   * Set by Stop. Reply text keeps accumulating but is no longer rendered, so
+   * the bubble stays at exactly the text sent as the stop snapshot, which the
+   * server cuts its persisted reply back to. Reasoning and tool calls are not
+   * cut server-side, so they keep rendering.
+   */
+  let stopFrozen = false;
+  const unregisterStopFreeze =
+    runtimeType === 'gateway'
+      ? registerGatewayStopFreeze(operationId, {
+          // Freeze only when a snapshot goes out: without one the server keeps
+          // everything it generates, so the bubble must keep showing it.
+          freeze: () => {
+            if (!hasStreamedContent) return undefined;
+
+            // An empty bubble (still thinking, or text not rendered yet) is a
+            // snapshot too: without it the server keeps text the user never saw.
+            // Until the first text chunk the bubble holds the loading
+            // placeholder, which is not reply text.
+            const shown =
+              dbMessageSelectors.getDbMessageById(currentAssistantMessageId)(get())?.content ?? '';
+            const content = shown === LOADING_FLAT && !accumulatedContent ? '' : shown;
+            // Over the interrupt input limit the whole Stop request would be
+            // rejected; stopping matters more than the trim.
+            if (content.length > INTERRUPT_STOP_SNAPSHOT_MAX_LENGTH) return undefined;
+
+            stopFrozen = true;
+            return { assistantMessageId: currentAssistantMessageId, content };
+          },
+          unfreeze: () => {
+            stopFrozen = false;
+          },
+        })
+      : undefined;
 
   // Active reasoning sub-op id. Mirrors the LLM `StreamingHandler` lifecycle so
   // `isMessageInReasoning(messageId)` (which drives the Thinking UI's
@@ -576,6 +457,7 @@ export const createGatewayEventHandler = (
         endReasoningIfNeeded();
         accumulatedContent = relayRender.content;
       }
+      if (stopFrozen) return;
       // The whole reply so far, not the delta: a chunk that raced ahead of
       // `stream_start` (the message shell not in the store yet) is not lost.
       get().internal_dispatchMessage(
@@ -600,7 +482,7 @@ export const createGatewayEventHandler = (
     );
   };
 
-  return (event: AgentStreamEvent) => {
+  const handleEvent = (event: AgentStreamEvent) => {
     if (terminalState) return;
 
     // Subagent (`Agent`/`Task`) inner-tool events are tagged `data.subagent` and
@@ -619,6 +501,7 @@ export const createGatewayEventHandler = (
     // same session once a client resumes it.
     if (isSessionTerminalEvent(event)) {
       terminalState = event.type === 'error' ? 'error' : 'completed';
+      unregisterStopFreeze?.();
       // A relayed attempt this tab still runs for the run is moot now.
       llmRelayExecutor.cancelOperation(event.operationId || gatewayOperationId);
     }
@@ -806,14 +689,16 @@ export const createGatewayEventHandler = (
                 accumulatedContent = data.content;
               }
               hasStreamedContent = true;
-              get().internal_dispatchMessage(
-                {
-                  id: currentAssistantMessageId,
-                  type: 'updateMessage',
-                  value: { content: accumulatedContent },
-                },
-                dispatchContext,
-              );
+              if (!stopFrozen) {
+                get().internal_dispatchMessage(
+                  {
+                    id: currentAssistantMessageId,
+                    type: 'updateMessage',
+                    value: { content: accumulatedContent },
+                  },
+                  dispatchContext,
+                );
+              }
             }
           }
 
@@ -901,14 +786,16 @@ export const createGatewayEventHandler = (
             // empty completed assistant bubble while waiting for terminal SoT.
             accumulatedContent = finalContent;
             hasStreamedContent = true;
-            get().internal_dispatchMessage(
-              {
-                id: currentAssistantMessageId,
-                type: 'updateMessage',
-                value: { content: accumulatedContent },
-              },
-              dispatchContext,
-            );
+            if (!stopFrozen) {
+              get().internal_dispatchMessage(
+                {
+                  id: currentAssistantMessageId,
+                  type: 'updateMessage',
+                  value: { content: accumulatedContent },
+                },
+                dispatchContext,
+              );
+            }
           }
           get().internal_toggleToolCallingStreaming(currentAssistantMessageId, undefined);
           endReasoningIfNeeded();
@@ -1313,6 +1200,12 @@ export const createGatewayEventHandler = (
                 action: 'gateway/agent_runtime_end',
               });
             }
+          } else if (data?.reason === 'interrupted' && stopFrozen && hasStreamedContent) {
+            // This client's Stop froze the reply. The interrupt publishes this
+            // event before the stopped step ends and trims the saved reply to
+            // the frozen text, so a DB read now returns the untrimmed reply
+            // (or its placeholder). Keep the frozen bubble; later reads see
+            // the trimmed reply, which matches it.
           } else if (data?.messagePatchMode) {
             if (
               typeof data.messageRevision === 'number' &&
@@ -1521,4 +1414,12 @@ export const createGatewayEventHandler = (
       }
     }
   };
+
+  return Object.assign(handleEvent, {
+    /**
+     * Release this run's Stop control. A terminal event already does; call it
+     * on every session end, since some (auth failure, silent end) send none.
+     */
+    dispose: () => unregisterStopFreeze?.(),
+  });
 };

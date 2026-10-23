@@ -49,6 +49,7 @@ export type ExecuteStepDeps = Pick<
   | 'handleGroupMemberTimeout'
   | 'humanIntervention'
   | 'injectQueuedFollowUp'
+  | 'messageModel'
   | 'parkForClientLlm'
   | 'publishSubAgentProgress'
   | 'queryStepEntryMessages'

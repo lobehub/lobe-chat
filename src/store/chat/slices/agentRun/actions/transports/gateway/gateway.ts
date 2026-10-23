@@ -75,7 +75,11 @@ import { createGatewayEventBuffer } from './gatewayEventBuffer';
 import { createGatewayEventHandler } from './gatewayEventHandler';
 import { createGatewayEventRouter } from './gatewayEventRouter';
 import { createGatewayMemberStreamHandler, mergeGroupSnapshot } from './gatewayMemberStreamHandler';
-import { awaitStartRequest, interruptGatewayTaskOrThrow } from './gatewayStartRequest';
+import {
+  awaitStartRequest,
+  interruptGatewayRunOnStop,
+  interruptGatewayTaskOrThrow,
+} from './gatewayStartRequest';
 import {
   type GatewayMuxIdentity,
   getGatewayMux,
@@ -1472,17 +1476,13 @@ export class GatewayActionImpl {
     // depend on any metadata lookup. The returned promise preserves an
     // unconfirmed device shutdown so Send now can keep its queued message.
     this.#get().onOperationCancel(gatewayOpId, async () => {
-      if (agentShareId) {
-        await shareChatService
-          .interruptTask(agentShareId, result.topicId, result.operationId)
-          .catch((err) => console.error('[Gateway] share interruptTask failed:', err));
-        return;
-      }
-
-      await interruptGatewayTaskOrThrow({
-        operationId: result.operationId,
-        topicId: result.topicId,
+      const isOwnerRun = await interruptGatewayRunOnStop({
+        agentShareId,
+        gatewayOpId,
+        interrupt: { operationId: result.operationId, topicId: result.topicId },
+        shareTopicId: result.topicId,
       });
+      if (!isOwnerRun) return;
       await serverSteerQueue.reclaimServerQueuedMessages(
         this.#get,
         messageMapKey(resolvedMessageContext),
@@ -1552,6 +1552,7 @@ export class GatewayActionImpl {
           topicId: result.topicId,
         }),
       onSessionComplete: ({ authFailed, completion, succeeded, terminalReceived }) => {
+        eventHandler.dispose();
         // The gateway event handler already completed the op via the shared run
         // lifecycle on `agent_runtime_end` / `error`. Only complete here as the
         // terminal-missing fallback so the op never sticks `running`.
@@ -1803,17 +1804,13 @@ export class GatewayActionImpl {
     // Forward local-op cancellation to the server-side agent loop via tRPC.
     // See note in executeGatewayAgent for details.
     this.#get().onOperationCancel(gatewayOpId, async () => {
-      // Share visitors have no access to the owner-scoped interrupt (and no
-      // device runtimes to confirm), so they go through the share mirror —
-      // same split as executeGatewayAgent's cancel path.
-      if (agentShareId) {
-        await shareChatService
-          .interruptTask(agentShareId, topicId, operationId)
-          .catch((err) => console.error('[Gateway] share interruptTask failed:', err));
-        return;
-      }
-
-      await interruptGatewayTaskOrThrow({ operationId });
+      const isOwnerRun = await interruptGatewayRunOnStop({
+        agentShareId,
+        gatewayOpId,
+        interrupt: { operationId },
+        shareTopicId: topicId,
+      });
+      if (!isOwnerRun) return;
       await serverSteerQueue.reclaimServerQueuedMessages(this.#get, messageMapKey(context));
 
       this.#settleLocalTopicAfterConfirmedStop({
@@ -1924,6 +1921,7 @@ export class GatewayActionImpl {
           topicId,
         }),
       onSessionComplete: ({ authFailed, completion, succeeded, terminalReceived }) => {
+        eventHandler.dispose();
         // A reconnect-local operation has no remaining work once the session
         // completion callback fires. Real streamed terminals are completed by
         // the shared run lifecycle; every terminal-missing fallback (including

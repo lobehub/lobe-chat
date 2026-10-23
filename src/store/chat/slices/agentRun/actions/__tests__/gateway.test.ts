@@ -4248,6 +4248,7 @@ describe('GatewayActionImpl', () => {
           'share-1',
           'topic-1',
           'server-op-1',
+          undefined,
         );
         expect(aiAgentService.interruptTask).not.toHaveBeenCalled();
       });
