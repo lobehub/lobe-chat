@@ -1,4 +1,6 @@
 import type {
+  AcceptanceAccessRequest,
+  AcceptanceAccessRequestStatus,
   AcceptanceCommentAttachmentRef,
   AcceptanceCommentKind,
   AcceptanceCommentMetadata,
@@ -382,6 +384,69 @@ export class AcceptanceCommentModel {
       )
       .returning({ id: acceptanceComments.id });
     return deleted.length > 0;
+  };
+
+  /**
+   * One person's standing access request on one acceptance: their newest
+   * surviving `access_request` row, whatever its answer. Withdrawing the request
+   * (deleting the row) is how a requester gives a grant back, and a moderator
+   * taking it down takes the grant with it.
+   */
+  findLatestAccessRequest = async (acceptanceId: string, authorUserId: string) => {
+    const [row] = await this.db
+      .select()
+      .from(acceptanceComments)
+      .where(
+        and(
+          eq(acceptanceComments.acceptanceId, acceptanceId),
+          eq(acceptanceComments.authorUserId, authorUserId),
+          eq(acceptanceComments.kind, 'access_request'),
+          isNull(acceptanceComments.parentCommentId),
+          isNull(acceptanceComments.deletedAt),
+        ),
+      )
+      .orderBy(desc(acceptanceComments.createdAt), desc(acceptanceComments.id))
+      .limit(1);
+    return row;
+  };
+
+  /** Whether a decider has granted this person `permission` on this acceptance. */
+  hasAccessGrant = async (
+    acceptanceId: string,
+    userId: string,
+    permission: AcceptanceAccessRequest['permission'],
+  ) => {
+    const request = (await this.findLatestAccessRequest(acceptanceId, userId))?.metadata
+      ?.accessRequest;
+    return request?.status === 'granted' && request.permission === permission;
+  };
+
+  /**
+   * Move an access request from `from` to `next`. Conditional on the status the
+   * caller read, so two deciders answering at once cannot both win — the second
+   * update matches nothing and returns undefined.
+   */
+  answerAccessRequest = async (
+    id: string,
+    from: AcceptanceAccessRequestStatus,
+    next: AcceptanceAccessRequest,
+  ) => {
+    const [row] = await this.db
+      .update(acceptanceComments)
+      .set({
+        metadata: sql`jsonb_set(coalesce(${acceptanceComments.metadata}, '{}'::jsonb), '{accessRequest}', ${JSON.stringify(next)}::jsonb)`,
+        updatedAt: new Date(),
+      })
+      .where(
+        and(
+          eq(acceptanceComments.id, id),
+          eq(acceptanceComments.kind, 'access_request'),
+          isNull(acceptanceComments.deletedAt),
+          sql`${acceptanceComments.metadata} -> 'accessRequest' ->> 'status' = ${from}`,
+        ),
+      )
+      .returning();
+    return row;
   };
 
   /** Mark a thread root handled (or reopen it). Replies are not resolvable. */

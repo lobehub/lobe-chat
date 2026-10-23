@@ -16,6 +16,7 @@ const dynamicComponentPropsMock = vi.hoisted(() => vi.fn());
 
 const serverConfigMock = vi.hoisted(() => ({ enableBusinessFeatures: false }));
 const shareContextMock = vi.hoisted(() => ({ topicShareId: '' }));
+const transcriptSourceMock = vi.hoisted(() => ({ value: 'chat' as 'chat' | 'static' }));
 const delAndRegenerateMessageMock = vi.hoisted(() => vi.fn());
 const detectHeterogeneousAgentCommandMock = vi.hoisted(() => vi.fn());
 const cancelHeteroContinuationMock = vi.hoisted(() => vi.fn());
@@ -182,6 +183,7 @@ vi.mock('@/features/Conversation/store', () => ({
   useConversationStore: (selector: (state: unknown) => unknown) =>
     selector({
       context: { ...conversationContextMock, ...shareContextMock },
+      transcriptSource: transcriptSourceMock.value,
       cancelHeteroContinuation: cancelHeteroContinuationMock,
       delAndRegenerateMessage: delAndRegenerateMessageMock,
       deleteMessage: vi.fn(),
@@ -217,6 +219,7 @@ describe('ErrorMessageExtra', () => {
     businessSlot.render = false;
     serverConfigMock.enableBusinessFeatures = false;
     shareContextMock.topicShareId = '';
+    transcriptSourceMock.value = 'chat';
     businessErrorContentMock.mockReturnValue({
       errorType: undefined,
       hideMessage: false,
@@ -269,6 +272,23 @@ describe('ErrorMessageExtra', () => {
           data={{
             error: { body: { provider: 'openai' }, type: 'ProviderBizError' } as any,
             id: 'msg-orphan-block',
+          }}
+        />,
+      );
+
+      expect(screen.queryByText('card-retry')).toBeNull();
+    });
+
+    it('offers no retry on a static transcript, which nothing could regenerate', () => {
+      transcriptSourceMock.value = 'static';
+      displayMessageMock.set('msg-static', { parentId: 'user-1' });
+
+      render(
+        <ErrorMessageExtra
+          error={{ message: 'provider exploded' }}
+          data={{
+            error: { body: { provider: 'openai' }, type: 'ProviderBizError' } as any,
+            id: 'msg-static',
           }}
         />,
       );
