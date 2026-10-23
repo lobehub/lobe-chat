@@ -77,6 +77,41 @@ describe('direct Channel identity', () => {
     },
   );
 
+  it('reuses one direct conversation per person, Agent and scope', async () => {
+    const agent = await createAgent();
+    const repository = new ChannelRepository(db, fixture.ownerId, fixture.workspaceId);
+    const [first, second] = await Promise.all([
+      repository.create({ agentId: agent.id, title: 'Direct' }),
+      repository.create({ agentId: agent.id, title: 'Again' }),
+    ]);
+    expect(second.channel.id).toBe(first.channel.id);
+    expect(second.member.id).toBe(first.member.id);
+    expect(await db.select().from(channels).where(eq(channels.agentId, agent.id))).toHaveLength(1);
+    await expect(
+      db.insert(channels).values({
+        agentId: agent.id,
+        title: 'Duplicate',
+        userId: fixture.ownerId,
+        workspaceId: fixture.workspaceId,
+      }),
+    ).rejects.toThrow();
+
+    const other = await new ChannelRepository(db, fixture.memberId, fixture.workspaceId).create({
+      agentId: agent.id,
+      title: 'Direct',
+    });
+    expect(other.channel.id).not.toBe(first.channel.id);
+
+    // A transferred Agent starts a new conversation in its new scope.
+    await db.update(agents).set({ workspaceId: null }).where(eq(agents.id, agent.id));
+    const personal = await new ChannelRepository(db, fixture.ownerId).create({
+      agentId: agent.id,
+      title: 'Direct',
+    });
+    expect(personal.channel.id).not.toBe(first.channel.id);
+    expect(personal.channel.workspaceId).toBeNull();
+  });
+
   it('keeps a group unbound even when it contains a single Agent', async () => {
     const team = await fixture.createTeamChannel();
     await fixture.addAgent(team.channel.id, 'Only Agent');

@@ -25,7 +25,10 @@ an ordinary conversation/execution. The job points to it from the source side.
 
 A direct conversation binds `channels.userId` (its human participant) and `channels.agentId`.
 `ChannelRepository.create({ agentId, title })` checks Agent access, creates both members atomically,
-and requires private visibility. Only that human participant can access it, even if another
+and requires private visibility. It opens the default conversation: a unique index on Agent, person
+and scope keeps one per pair, so repeated or concurrent calls return the existing channel. The scope
+is part of the key because a transferred Agent starts a new conversation in its new workspace.
+Only that human participant can access it, even if another
 membership is accidentally granted. It accepts no additional Agent members and routes unmentioned
 messages directly to the bound Agent. Group channels leave `agentId` NULL, including groups with
 only one Agent. Deleting a bound Agent cascades its direct conversations and their public history.
@@ -42,8 +45,9 @@ The claimed manifest freezes the replying Agent ID so rebinding a member cannot 
 Member, grant, message and job IDs are database-generated UUIDs; message references use UUID
 columns as well. Agent members reference `agents.id`; deletion clears that reference and blocks
 new claims, retaining group history. Optional `channels.project_id` is cleared on project deletion.
-Project association does not grant Channel access. Personal channels are removed with their owner;
-workspace groups retain their public history if the creator leaves or deletes their account.
+Project association does not grant Channel access. Personal channels and direct conversations,
+including workspace ones, are removed with their owner; workspace groups retain their public history
+if the creator leaves or deletes their account.
 
 `ChannelRepository.addAgent` requires an admin and a usable Agent in the current scope. The
 nullable reference exists for deletion history, not for creating an unbound Agent member. The
@@ -117,9 +121,12 @@ Author names and attachment availability are resolved at read time.
   Operation completion is not proof that a device process ended. Only `releaseWriter` after
   confirmed termination, or a trusted `notSubmitted` failure, releases the writer. Isolation frees
   the member but keeps the device/directory lock. Never retry an unknown delivery.
-- Before hard-deleting a Channel or its bound Agent, future deletion endpoints must stop active
-  writers and confirm physical termination. The storage cascade removes jobs and directory locks;
-  it does not stop external processes. This unactivated foundation does not provide that orchestration.
+- Existing hard-delete paths already reach Channel rows: Agent deletion (including trash purge,
+  session and group deletion) cascades direct conversations, `UserModel.deleteUser` removes
+  personal channels and direct conversations, and workspace deletion cascades every channel in it.
+  The storage cascade removes jobs and directory locks; it does not stop external processes.
+  Before Channel creation is exposed, these paths must stop active writers and confirm physical
+  termination first. This unactivated foundation does not provide that orchestration.
 - Deleting a Channel deletes its jobs/public history, not ordinary conversations or execution
   records. Deleting a topic/operation clears the corresponding job reference; it does not delete
   the Channel timeline or release an unconfirmed writer.

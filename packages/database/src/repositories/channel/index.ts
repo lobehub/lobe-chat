@@ -50,7 +50,7 @@ export class ChannelRepository {
     this.workspaceId = normalizeWorkspaceId(workspaceId);
   }
 
-  /** Creates the channel with the caller as its owner member. */
+  /** Opens the unique direct conversation, or creates a group with its initial members. */
   create = async (params: {
     agentId?: string;
     agents?: ChannelAddAgentInput[];
@@ -58,26 +58,36 @@ export class ChannelRepository {
     visibility?: ChannelVisibility;
   }) =>
     this.db.transaction(async (tx) => {
+      const { agentId } = params;
       if (
-        params.agentId !== undefined &&
-        (!params.agentId.trim() || params.visibility === 'public' || !!params.agents?.length)
+        agentId !== undefined &&
+        (!agentId.trim() || params.visibility === 'public' || !!params.agents?.length)
       )
         throw new ChannelError(
           'BAD_REQUEST',
           'A direct conversation requires an Agent and private visibility',
         );
-      if (params.agentId)
-        await requireChannelAgent(tx, this.workspaceId, this.userId, params.agentId);
-      const [channel] = await tx
-        .insert(channels)
-        .values({
-          agentId: params.agentId,
-          userId: this.userId,
-          title: params.title,
-          visibility: params.visibility,
-          workspaceId: this.workspaceId,
-        })
-        .returning();
+      if (agentId) {
+        await requireChannelAgent(tx, this.workspaceId, this.userId, agentId);
+        const existing = await this.findDirect(tx, agentId);
+        if (existing) return existing;
+      }
+      const insert = tx.insert(channels).values({
+        agentId,
+        userId: this.userId,
+        title: params.title,
+        visibility: params.visibility,
+        workspaceId: this.workspaceId,
+      });
+      // A concurrent open of the same direct conversation wins the unique index; reuse its row.
+      const [channel] = agentId
+        ? await insert.onConflictDoNothing().returning()
+        : await insert.returning();
+      if (!channel) {
+        const existing = agentId ? await this.findDirect(tx, agentId) : undefined;
+        if (existing) return existing;
+        throw new ChannelError('CONFLICT', 'The direct conversation is unavailable');
+      }
       const [member] = await tx
         .insert(channelMembers)
         .values({
@@ -89,8 +99,7 @@ export class ChannelRepository {
         })
         .returning();
 
-      if (params.agentId)
-        await addAgentMember(tx, channel, this.userId, { agentId: params.agentId });
+      if (agentId) await addAgentMember(tx, channel, this.userId, { agentId });
       for (const agent of params.agents ?? [])
         await addAgentMember(tx, channel, this.userId, agent);
 
@@ -226,6 +235,25 @@ export class ChannelRepository {
       }
       return retryRouting(tx, channelId, messageId);
     });
+
+  private findDirect = async (
+    tx: Transaction,
+    agentId: string,
+  ): Promise<ChannelAccess | undefined> => {
+    const [row] = await tx
+      .select({ channel: channels, member: channelMembers })
+      .from(channels)
+      .innerJoin(channelMembers, eq(channelMembers.channelId, channels.id))
+      .where(
+        and(
+          eq(channels.agentId, agentId),
+          eq(channels.userId, this.userId),
+          this.membershipWhere(),
+        ),
+      )
+      .limit(1);
+    return row;
+  };
 
   private membershipWhere() {
     return and(
