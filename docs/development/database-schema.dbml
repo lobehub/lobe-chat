@@ -1387,7 +1387,7 @@ table channels {
 
   indexes {
     user_id [name: 'channels_user_id_idx']
-    agent_id [name: 'channels_agent_id_idx']
+    (agent_id, user_id, workspace_id) [name: 'channels_direct_unique', unique]
 
     project_id [name: 'channels_project_id_idx']
     (workspace_id, visibility) [name: 'channels_workspace_visibility_idx']

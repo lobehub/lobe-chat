@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../../core/getTestDB';
 import { UserModel } from '../../../models/user';
-import { channelMembers, channels, users, workspaces } from '../../../schemas';
+import { agents, channelMembers, channels, users, workspaces } from '../../../schemas';
 import type { LobeChatDatabase } from '../../../type';
 import { ChannelError, ChannelRepository } from '..';
 
@@ -232,10 +232,20 @@ describe('ChannelRepository', () => {
   });
 
   describe('account deletion', () => {
-    it('deletes personal channels and keeps workspace channels without a creator', async () => {
+    it('deletes personal channels and direct conversations, keeping workspace groups without a creator', async () => {
       const { channel: personal } = await new ChannelRepository(serverDB, memberId).create({
         title: 'Personal',
       });
+      // Owned by someone else, so the Agent cascade cannot hide a missing cleanup.
+      const [agent] = await serverDB
+        .insert(agents)
+        .values({ userId: ownerId, workspaceId })
+        .returning();
+      const { channel: direct } = await new ChannelRepository(
+        serverDB,
+        memberId,
+        workspaceId,
+      ).create({ agentId: agent.id, title: 'Direct' });
       const { channel: team } = await new ChannelRepository(serverDB, memberId, workspaceId).create(
         {
           title: 'Team',
@@ -248,7 +258,7 @@ describe('ChannelRepository', () => {
       const remaining = await serverDB
         .select()
         .from(channels)
-        .where(inArray(channels.id, [personal.id, team.id]));
+        .where(inArray(channels.id, [personal.id, direct.id, team.id]));
       expect(remaining).toEqual([expect.objectContaining({ userId: null, id: team.id })]);
       expect(
         (await new ChannelRepository(serverDB, ownerId, workspaceId).findAccess(team.id))?.channel

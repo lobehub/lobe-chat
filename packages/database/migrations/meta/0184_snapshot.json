@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "c7710862-0e71-435d-8864-b81f547c544d",
+  "id": "b3d8ea2d-0a0c-4db5-8444-9d8bb8ab6f15",
   "policies": {},
   "prevId": "441054df-5d72-4ff2-b7fc-742c8cfb5db5",
   "roles": {},
@@ -11716,17 +11716,29 @@
           "method": "btree",
           "with": {}
         },
-        "channels_agent_id_idx": {
-          "name": "channels_agent_id_idx",
+        "channels_direct_unique": {
+          "name": "channels_direct_unique",
           "columns": [
             {
               "expression": "agent_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
+            },
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "coalesce(\"workspace_id\", '')",
+              "asc": true,
+              "isExpression": true,
+              "nulls": "last"
             }
           ],
-          "isUnique": false,
+          "isUnique": true,
           "where": "\"channels\".\"agent_id\" IS NOT NULL",
           "concurrently": false,
           "method": "btree",

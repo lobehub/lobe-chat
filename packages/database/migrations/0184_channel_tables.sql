@@ -216,6 +216,6 @@ CREATE INDEX IF NOT EXISTS "channel_messages_request_sequence_idx" ON "channel_m
 CREATE INDEX IF NOT EXISTS "channel_messages_routing_pending_idx" ON "channel_messages" USING btree ("channel_id","id") WHERE "channel_messages"."routing_status" = 'pending';--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "channel_threads_root_unique" ON "channel_threads" USING btree ("channel_id","root_message_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "channels_user_id_idx" ON "channels" USING btree ("user_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "channels_agent_id_idx" ON "channels" USING btree ("agent_id") WHERE "channels"."agent_id" IS NOT NULL;--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS "channels_direct_unique" ON "channels" USING btree ("agent_id","user_id",coalesce("workspace_id", '')) WHERE "channels"."agent_id" IS NOT NULL;--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "channels_project_id_idx" ON "channels" USING btree ("project_id") WHERE "channels"."project_id" IS NOT NULL;--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "channels_workspace_visibility_idx" ON "channels" USING btree ("workspace_id","visibility");

@@ -88,8 +88,10 @@ export const channels = pgTable(
   },
   (t) => [
     index('channels_user_id_idx').on(t.userId),
-    index('channels_agent_id_idx')
-      .on(t.agentId)
+    // One direct conversation per person, Agent and scope. The scope is part of the key because
+    // an Agent can be transferred to another workspace; leading `agent_id` serves the cascade.
+    uniqueIndex('channels_direct_unique')
+      .on(t.agentId, t.userId, sql`coalesce(${t.workspaceId}, '')`)
       .where(sql`${t.agentId} IS NOT NULL`),
     check(
       'channels_direct_visibility_check',
