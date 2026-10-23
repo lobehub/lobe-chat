@@ -1,5 +1,6 @@
 import { TRPCError } from '@trpc/server';
 import { and, eq } from 'drizzle-orm';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
@@ -53,6 +54,9 @@ const procedure = wsCompatProcedure.use(serverDatabase).use(async (opts) => {
 });
 const write = procedure.use(withScopedPermission('agent:update'));
 
+/** Per-agent permission lookups each hit the database; a large project must not fan out unbounded. */
+const CONFIG_ACCESS_LOOKUP_CONCURRENCY = 5;
+
 /**
  * An agent's bound device is edit-level config (see `redactAgentConfig`): a
  * reader without full config access keeps the pin's policy but not its device,
@@ -74,8 +78,9 @@ const redactAgentDevicePins = async <
     ...new Set(rows.flatMap((row) => (row.agentId && row.agentBoundDeviceId ? [row.agentId] : []))),
   ];
   const fullAccess = new Set<string>();
-  await Promise.all(
-    pinnedAgentIds.map(async (agentId) => {
+  await pMap(
+    pinnedAgentIds,
+    async (agentId) => {
       const access = await getResourceConfigAccess(
         {
           db: ctx.serverDB,
@@ -87,7 +92,8 @@ const redactAgentDevicePins = async <
         agentId,
       );
       if (access === 'full') fullAccess.add(agentId);
-    }),
+    },
+    { concurrency: CONFIG_ACCESS_LOOKUP_CONCURRENCY },
   );
   return rows.map((row) =>
     row.agentBoundDeviceId && !(row.agentId && fullAccess.has(row.agentId))
