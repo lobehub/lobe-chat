@@ -16,7 +16,7 @@ This is Phase 0: the rule set is a private workspace package (`@lobechat/alint`)
 | `no-unguarded-response-field`      | error    | `src/**/*.tsx`                                                | a newer client must survive an older server omitting a response field   |
 | `no-inferred-service-types`        | warn     | `src/**/*.{ts,tsx}`                                           | payload types live in `@lobechat/types`, not `Awaited<ReturnType<…>>`   |
 | `no-node-in-browser`               | error    | browser code in `src/` (not `app/`, `libs/`), package `*.tsx` | no Node-only npm package where the SPA runs it (paths: ESLint)          |
-| `no-benchmark-in-tests`            | warn     | `**/*.test.ts(x)` except `packages/database`                  | a unit test asserts on behaviour, not on a wall-clock measurement       |
+| `no-benchmark-in-tests`            | error    | `**/*.test.ts(x)` except `packages/database`                  | a unit test asserts on behaviour, not on a wall-clock measurement       |
 | `no-unsafe-user-url-fetch`         | warn     | `apps/server/src`                                             | user-controlled URLs must use SSRF-safe transport (#16601)              |
 | `no-unscoped-resource-mutation`    | warn     | database models/repositories                                  | ownership checks for resource and junction mutations (#13683, #16586)   |
 | `no-untrusted-path-io`             | warn     | server and Electron main process                              | confine uploaded/remote filenames before filesystem IO (#13684, #13937) |
@@ -135,6 +135,15 @@ Defaults are DeepSeek `deepseek-flash` at `https://api.deepseek.com/v1`; overrid
 
 Treat findings like a reviewer's comment: fix them, or explain in the PR why the rule's carve-out applies. Locally, `bun run check --alint` fails on `error` findings like any other lint error.
 
+## Promotions, 2026-10-24
+
+Read from every ALint check run on the 686 pull requests with a run between 2026-10-10 and 10-23, each standing finding checked against the code at the PR head:
+
+- `no-benchmark-in-tests` → `error`: 2 of 2 findings true (a `Date.now()` difference under 800 ms, a linear-time guard under 500 ms), neither near a carve-out. Two findings is a thin sample; the rule is promoted on the owner's call.
+- `ui-edit-in-modal` → `error`: 3 true (a device heading that turns into an input, the Kanban "add task" composer, counted twice), 3 false. The false ones are now carve-outs with fixtures: rename on the ResourceHome page tree (the explorer-tree convention), and a file that only renders a child field component (`InlineField`, `RenameInput`), whose own file is where an inline input would be reported. The "add task" composer gained a `bad-*` fixture.
+
+Known legacy spots that turn the check red when someone edits those lines: `src/features/DeviceManager/DeviceDetail.tsx` (inline device rename), `src/store/chat/slices/agentRun/actions/__tests__/streamingExecutor.test.ts` and `packages/canvas/src/validate/text.test.ts` (wall-clock bounds).
+
 ## Promotions, 2026-10-01
 
 Read from every ALint check run on the 126 pull requests active 2026-09-29 → 10-01 (298 runs, 34 distinct warnings), each finding checked against the code:
@@ -176,7 +185,7 @@ The `ui-*` rules encode the product owner's recurring acceptance rejections. The
 | `ui-button-hierarchy`     | PR check (error) | narrowed         | 62         | only two primaries in one group, a primary on every list row, a small empty-state CTA |
 | `ui-lightweight-errors`   | PR check         | \~70%            | 73         | one readable error line, raw details folded                                           |
 | `ui-content-width`        | PR check (pages) | \~100%           | 7          | page bodies sit in `SettingContainer` or a max-width column                           |
-| `ui-edit-in-modal`        | PR check         | \~57%            | 36         | edit / rename / add opens a modal, not an inline input or a popover input             |
+| `ui-edit-in-modal`        | PR check (error) | narrowed         | 36         | edit / rename / add opens a modal, not an inline input or a popover input             |
 | `ui-view-switch-tabs`     | PR check         | \~50%            | 20         | whole views switch with `Tabs`, the active tab in the URL                             |
 | `ui-no-decorative-chrome` | audit            | \~56%            | 1441       | no wrapper borders, fills, restating titles, bold labels, extra dividers              |
 | `ui-restrained-color`     | audit            | \~53%            | 830        | color for state only; gray metadata and types; tokens, not literals                   |
