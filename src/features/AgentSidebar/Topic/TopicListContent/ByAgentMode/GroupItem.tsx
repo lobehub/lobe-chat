@@ -208,6 +208,7 @@ const GroupItem = memo<GroupItemComponentProps>(({ group }) => {
           // repeat the avatar at its leading position.
           suppressAgentAvatar
           mode={subGroupMode}
+          startAgentId={agentId}
           startDirectories={startDirectories}
           topics={children}
           onStartInDirectory={canAddTopic ? handleAddTopic : undefined}

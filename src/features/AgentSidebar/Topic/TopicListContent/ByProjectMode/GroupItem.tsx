@@ -359,6 +359,7 @@ const GroupItem = memo<GroupItemComponentProps>(({ group, expanded }) => {
       <AccordionPanel contentStyle={{ padding: 0 }}>
         <ProjectTopicList
           mode={subGroupMode}
+          startAgentId={targetAgentId}
           startDirectories={projectId ? projectDirectories : project ? [project] : undefined}
           topics={children}
           onStartInDirectory={!scope && targetAgentId ? handleStartInDirectory : undefined}
