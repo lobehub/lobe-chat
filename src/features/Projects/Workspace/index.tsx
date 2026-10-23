@@ -6,12 +6,11 @@ import {
   cssVar,
   Flexbox,
   Segmented,
-  Tag,
   Text,
   TextArea,
   toast,
 } from '@lobehub/ui';
-import { SendHorizontalIcon, SparklesIcon } from 'lucide-react';
+import { SendHorizontalIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
@@ -60,28 +59,6 @@ const styles = createStaticStyles(({ css }) => ({
       padding-block: 32px 48px;
     }
   `,
-  prompt: css`
-    cursor: pointer;
-
-    padding-block: 5px;
-    padding-inline: 10px;
-    border: 0;
-    border-radius: 999px;
-
-    color: ${cssVar.colorTextSecondary};
-
-    background: ${cssVar.colorFillQuaternary};
-
-    &:disabled {
-      cursor: not-allowed;
-      opacity: 0.5;
-    }
-
-    &:hover:not(:disabled) {
-      color: ${cssVar.colorText};
-      background: ${cssVar.colorFillTertiary};
-    }
-  `,
   shell: css`
     overflow: hidden;
     height: 100%;
@@ -112,72 +89,46 @@ const ProjectComposer = ({ project }: { project: ProjectDetail['project'] }) => 
       toast.error(t(mode === 'task' ? 'overview.createTaskFailed' : 'overview.sendFailed'));
     }
   };
-  const prompts = [
-    t('overview.prompts.summarizeProgress'),
-    t('overview.prompts.planMilestone'),
-    t('overview.prompts.findBlockers'),
-  ];
 
   return (
-    <Flexbox gap={10}>
-      <Flexbox className={styles.composer}>
-        <TextArea
-          autoFocus
-          autoSize={{ maxRows: 7, minRows: 3 }}
-          className={styles.textarea}
-          disabled={sending}
-          value={message}
-          placeholder={t(
-            mode === 'task' ? 'overview.taskPlaceholder' : 'overview.composerPlaceholder',
-          )}
-          onChange={(event) => setMessage(event.target.value)}
-          onKeyDown={(event) => {
-            if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') void submit();
-          }}
+    <Flexbox className={styles.composer}>
+      <TextArea
+        autoFocus
+        autoSize={{ maxRows: 7, minRows: 3 }}
+        className={styles.textarea}
+        disabled={sending}
+        value={message}
+        placeholder={t(
+          mode === 'task' ? 'overview.taskPlaceholder' : 'overview.composerPlaceholder',
+        )}
+        onChange={(event) => setMessage(event.target.value)}
+        onKeyDown={(event) => {
+          if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') void submit();
+        }}
+      />
+      <Flexbox
+        horizontal
+        align={'center'}
+        className={styles.composerFooter}
+        justify={'space-between'}
+      >
+        <Segmented
+          size={'small'}
+          value={mode}
+          options={[
+            { label: t('overview.mode.chat'), value: 'chat' },
+            { label: t('overview.mode.task'), value: 'task' },
+          ]}
+          onChange={(value) => setMode(value as ProjectComposerMode)}
         />
-        <Flexbox
-          horizontal
-          align={'center'}
-          className={styles.composerFooter}
-          justify={'space-between'}
-        >
-          <Flexbox horizontal align={'center'} gap={8}>
-            <Segmented
-              size={'small'}
-              value={mode}
-              options={[
-                { label: t('overview.mode.chat'), value: 'chat' },
-                { label: t('overview.mode.task'), value: 'task' },
-              ]}
-              onChange={(value) => setMode(value as ProjectComposerMode)}
-            />
-            <Tag icon={<SparklesIcon size={12} />}>{project.name}</Tag>
-            <Text fontSize={12} type={'secondary'}>
-              {t(mode === 'task' ? 'overview.taskModeHint' : 'overview.contextEnabled')}
-            </Text>
-          </Flexbox>
-          <Button
-            aria-label={t(mode === 'task' ? 'overview.createTask' : 'overview.startConversation')}
-            disabled={!message.trim()}
-            icon={SendHorizontalIcon}
-            loading={sending}
-            type={'primary'}
-            onClick={submit}
-          />
-        </Flexbox>
-      </Flexbox>
-      <Flexbox horizontal gap={8} wrap={'wrap'}>
-        {prompts.map((prompt) => (
-          <button
-            className={styles.prompt}
-            disabled={sending}
-            key={prompt}
-            type={'button'}
-            onClick={() => setMessage(prompt)}
-          >
-            {prompt}
-          </button>
-        ))}
+        <Button
+          aria-label={t(mode === 'task' ? 'overview.createTask' : 'overview.startConversation')}
+          disabled={!message.trim()}
+          icon={SendHorizontalIcon}
+          loading={sending}
+          type={'primary'}
+          onClick={submit}
+        />
       </Flexbox>
     </Flexbox>
   );
