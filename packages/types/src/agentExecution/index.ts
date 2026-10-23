@@ -4,7 +4,7 @@ import type { LobeAgentChatConfig } from '../agent/chatConfig';
 import type { CreateThreadWithMessageParams } from '../aiChat';
 import type { DeviceUnavailableErrorData } from '../device';
 import { workingDirConfigSchema } from '../device';
-import type { ContextSelection, PageSelection, TaskDetail, UIChatMessage } from '../message';
+import type { ComposerUserMessage, TaskDetail, UIChatMessage } from '../message';
 import type { ChatTopic } from '../topic';
 
 export * from './credentialFacts';
@@ -174,6 +174,14 @@ export interface ExecAgentAppContext {
    */
   orchestrationRole?: 'supervisor' | 'member';
   /**
+   * Project the run belongs to. On a NEW topic it is written onto the row, so
+   * a conversation started from the project home is born inside the project
+   * even without a working directory. For an existing topic the server
+   * resolves it from the topic (or the run's task) and fills it in here, so
+   * every downstream stage reads one value.
+   */
+  projectId?: string;
+  /**
    * Project working directory a NEW topic is born in — the blank conversation a
    * project group's "+" opened. The topic is bound to it and the run routes to
    * the directory's device. Ignored when a topicId is already provided.
@@ -325,12 +333,6 @@ export interface ExecAgentParams {
    * pushing whole `uiMessages` snapshots to it. Absent ⇒ 1.
    */
   clientProtocol?: 1 | 2;
-  /**
-   * Content the user attached to this message from the conversation, a page or
-   * code (the composer's "add to chat"). Persisted on the user message as
-   * `metadata.contextSelections` and injected into this turn's context.
-   */
-  contextSelections?: ContextSelection[];
   /** Explicit device ID to bind to the topic and activate for this run */
   deviceId?: string;
   /** Optional existing message IDs to include in context */
@@ -357,11 +359,6 @@ export interface ExecAgentParams {
   localDeviceId?: string;
   /** Override the agent's default model */
   model?: string;
-  /**
-   * Page-editor selections attached to this message, mirrored from
-   * `contextSelections` for compatibility. Persisted as `metadata.pageSelections`.
-   */
-  pageSelections?: PageSelection[];
   /**
    * Parent operation ID when this run is a sub-agent invocation. Forwarded
    * to `agent_operations.parent_operation_id` so analytics can join the
@@ -400,6 +397,13 @@ export interface ExecAgentParams {
    * input — derived from the request context.
    */
   userAgent?: string;
+  /**
+   * The composer-authored part of the user message this send creates: rich-text
+   * `editorData` and attached content (`metadata.contextSelections`, …). The
+   * same shape `aiChat.sendMessageInServer` persists, so a gateway send stores
+   * the row a client-runtime send would. See `ComposerUserMessageSchema`.
+   */
+  userMessage?: ComposerUserMessage;
 }
 
 /**

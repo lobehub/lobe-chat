@@ -1,5 +1,8 @@
+import type { TaskTopicHandoff } from '@lobechat/types';
+
 import { AgentModel } from '@/database/models/agent';
 import { TaskModel } from '@/database/models/task';
+import { TaskTopicModel } from '@/database/models/taskTopic';
 import type { LobeChatDatabase } from '@/database/type';
 import { EditLockService } from '@/server/services/editLock';
 import { TaskService } from '@/server/services/task';
@@ -14,9 +17,36 @@ import type {
   CreateTaskRequest,
   RunTaskRequest,
   TaskListQuery,
+  TaskRunListQuery,
   UpdateTaskRequest,
   UpdateTaskStatusRequest,
 } from '../types/task.type';
+
+const DEFAULT_RUN_LIMIT = 20;
+
+type TaskRunRow = Awaited<ReturnType<TaskTopicModel['findWithHandoff']>>[number];
+
+// The brief-emission audit itself stays private; only its verdict leaves, as
+// `notable` — whether the lifecycle judged this run worth surfacing (always for
+// schedule ticks and errors, the LLM judge's call for heartbeat ticks).
+const toPublicRun = (row: TaskRunRow) => {
+  const handoff = (row.handoff ?? {}) as TaskTopicHandoff;
+  return {
+    agentId: row.agentId,
+    completedAt: row.completedAt,
+    content: handoff.content ?? null,
+    createdAt: row.createdAt,
+    keyFindings: handoff.keyFindings ?? [],
+    nextAction: handoff.nextAction ?? null,
+    notable: handoff.briefDecision ? handoff.briefDecision.emit : null,
+    seq: row.seq,
+    status: row.status,
+    summary: handoff.summary ?? null,
+    title: handoff.title ?? row.title ?? null,
+    topicId: row.topicId,
+    trigger: row.trigger,
+  };
+};
 
 /**
  * Tasks REST service.
@@ -29,11 +59,13 @@ import type {
 export class TaskRestService extends BaseService {
   private readonly taskModel: TaskModel;
   private readonly taskService: TaskService;
+  private readonly taskTopicModel: TaskTopicModel;
 
   constructor(db: LobeChatDatabase, userId: string | null, workspaceId?: string) {
     super(db, userId, workspaceId);
     this.taskModel = new TaskModel(db, userId ?? '', workspaceId);
     this.taskService = new TaskService(db, userId ?? '', workspaceId);
+    this.taskTopicModel = new TaskTopicModel(db, userId ?? '', workspaceId);
   }
 
   async listTasks(query: TaskListQuery): ServiceResult<unknown> {
@@ -112,15 +144,22 @@ export class TaskRestService extends BaseService {
   }
 
   async runTask(id: string, input: RunTaskRequest): ServiceResult<unknown> {
-    // The runner behind the in-app "Run" (tRPC `task.run`): it resolves the task
-    // through the visibility-aware model and refuses an archived task or a second
-    // concurrent run with errors the controller maps to 404 / 412 / 409.
+    const task = await this.taskModel.resolve(id);
+    if (!task) throw this.createNotFoundError('Task not found');
+    // Same runner as the in-app "Run now" (tRPC `task.run`), so the archived-task
+    // refusal, run bookkeeping and rollback on a failed start all apply here too.
     const runner = new TaskRunnerService(this.db, this.userId, this.workspaceId);
-    return runner.runTask({
-      continueTopicId: input.continueTopicId,
-      extraPrompt: input.prompt,
-      taskId: id,
-    });
+    return runner.runTask({ extraPrompt: input.prompt, taskId: task.id });
+  }
+
+  async listRuns(id: string, query: TaskRunListQuery): ServiceResult<unknown> {
+    const task = await this.taskModel.resolve(id);
+    if (!task) throw this.createNotFoundError('Task not found');
+    const rows = await this.taskTopicModel.findWithHandoff(
+      task.id,
+      query.limit ?? DEFAULT_RUN_LIMIT,
+    );
+    return rows.map(toPublicRun);
   }
 
   async deleteTask(id: string): ServiceResult<unknown> {

@@ -1,5 +1,6 @@
 'use client';
 
+import { agentDisplayName } from '@lobechat/types';
 import {
   AccordionHeader,
   AccordionItem,
@@ -11,25 +12,33 @@ import {
   createStaticStyles,
   cssVar,
   cx,
+  type DropdownItem,
+  DropdownMenu,
   Flexbox,
+  Icon,
+  Tag,
   Text,
 } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
-import { PlusIcon } from 'lucide-react';
-import { memo } from 'react';
+import { ListFilter, LucideCheck, PlusIcon } from 'lucide-react';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Avatar from '@/components/Avatar';
 import { openProjectTopicModal } from '@/features/Projects/WorkingDirectories/StartDirectoryModal';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
+import { useGlobalStore } from '@/store/global';
+import { type ProjectTopicSubGroupMode } from '@/store/global/initialState';
+import { systemStatusSelectors } from '@/store/global/selectors';
 import { useProjectDirectories } from '@/store/projectWorkingDirectory';
 
-import TopicItem from '../../List/Item';
 import { useTopicListScope } from '../../TopicListScope';
+import ProjectTopicList from '../ByProjectMode/ProjectTopicList';
 import { type GroupItemComponentProps } from '../GroupedAccordion';
 
 const AGENT_GROUP_PREFIX = 'agent:';
+const SUB_GROUP_MODES: ProjectTopicSubGroupMode[] = ['none', 'byDevice', 'byTime', 'byStatus'];
 
 const styles = createStaticStyles(({ css }) => ({
   avatarWrap: css`
@@ -77,24 +86,57 @@ const GroupItem = memo<GroupItemComponentProps>(({ group }) => {
     row?.agentAvatar || registeredMeta?.avatar || (isOwnBucket ? activeMeta.avatar : undefined);
   const name =
     title ??
-    registeredMeta?.title ??
-    registeredMeta?.name ??
-    (isOwnBucket ? (activeMeta.title ?? activeMeta.name) : undefined) ??
+    agentDisplayName(registeredMeta) ??
+    (isOwnBucket ? agentDisplayName(activeMeta) : undefined) ??
     t('groupTitle.byAgent.unknown');
+
+  const isCoordinator = !!agentId && agentId === scope?.coordinatorAgentId;
 
   // Only an attributed bucket in a project-scoped list can start a topic with
   // its agent preselected; the `no-agent` bucket has no agent to preselect.
   const canAddTopic = !!scope && !!agentId;
-  const handleAddTopic = () => {
+  // The new-topic modal's picker only lists instance-bound directories; a
+  // device section offering any other directory would open with an unselectable
+  // work location, so its "+" only considers instance-bound ones.
+  const startDirectories = useMemo(
+    () => (canAddTopic ? directories.filter((directory) => directory.instanceId) : undefined),
+    [canAddTopic, directories],
+  );
+
+  const handleAddTopic = (initialDirectoryId?: string) => {
     if (!scope || !agentId) return;
     openProjectTopicModal({
       coordinatorAgentId: scope.coordinatorAgentId ?? agentId,
       directories,
       initialAgentId: agentId,
+      initialDirectoryId,
       projectId: scope.projectId,
       title: tProject('sidebar.newConversation'),
     });
   };
+
+  // The agent bucket already sits inside one project, so its rows skip the
+  // directory line; a second-level split (device / time / status) is what
+  // tells the topics apart. Same per-group preference as the project rows.
+  const storedSubGroupMode = useGlobalStore(systemStatusSelectors.projectTopicSubGroupMode(id));
+  const subGroupMode = SUB_GROUP_MODES.includes(storedSubGroupMode) ? storedSubGroupMode : 'none';
+  const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
+  const subGroupMenuItems = useMemo<DropdownItem[]>(
+    () => [
+      {
+        children: SUB_GROUP_MODES.map((mode) => ({
+          icon: subGroupMode === mode ? <Icon icon={LucideCheck} /> : <div />,
+          key: `sub-group-${mode}`,
+          label: tProject(`topics.subGroup.${mode}`),
+          onClick: () => updateSystemStatus({ projectTopicSubGroupModeByGroup: { [id]: mode } }),
+        })),
+        key: 'sub-group',
+        label: tProject('topics.subGroup.title'),
+        type: 'group',
+      },
+    ],
+    [id, subGroupMode, tProject, updateSystemStatus],
+  );
 
   return (
     <AccordionItem value={id}>
@@ -107,47 +149,53 @@ const GroupItem = memo<GroupItemComponentProps>(({ group }) => {
             <Text ellipsis fontSize={14} style={{ flex: 1 }}>
               {name}
             </Text>
+            {isCoordinator && (
+              <Tag color={'primary'} size={'small'}>
+                {tProject('sidebar.coordinatorTag')}
+              </Tag>
+            )}
           </Flexbox>
         </AccordionTrigger>
-        {canAddTopic && (
-          <div
-            className={cx(
-              'accordion-action',
-              accordionStyles.action,
-              accordionStyles.actionBorderless,
+        <div
+          className={cx(
+            'accordion-action',
+            accordionStyles.action,
+            accordionStyles.actionBorderless,
+          )}
+        >
+          <Flexbox horizontal align={'center'} gap={4}>
+            <DropdownMenu items={subGroupMenuItems}>
+              <ActionIcon
+                icon={ListFilter}
+                size={'small'}
+                title={tProject('topics.subGroup.title')}
+                onClick={(e) => e.stopPropagation()}
+              />
+            </DropdownMenu>
+            {canAddTopic && (
+              <ActionIcon
+                icon={PlusIcon}
+                size={'small'}
+                title={tProject('sidebar.newConversation')}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleAddTopic();
+                }}
+              />
             )}
-          >
-            <ActionIcon
-              icon={PlusIcon}
-              size={'small'}
-              title={tProject('sidebar.newConversation')}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleAddTopic();
-              }}
-            />
-          </div>
-        )}
+          </Flexbox>
+        </div>
       </AccordionHeader>
       <AccordionPanel contentStyle={{ padding: 0 }}>
-        <Flexbox gap={1} paddingBlock={1}>
-          {children.map((topic) => (
-            <TopicItem
-              // The group header already names the owning agent — the row
-              // must not repeat the avatar at its leading position.
-              showWorkingDirectory
-              suppressAgentAvatar
-              fav={topic.favorite}
-              id={topic.id}
-              key={topic.id}
-              metadata={topic.metadata}
-              runStartedAt={topic.runStartedAt}
-              status={topic.status}
-              title={topic.title}
-              userId={topic.userId}
-            />
-          ))}
-        </Flexbox>
+        <ProjectTopicList
+          // The group header already names the owning agent — the row must not
+          // repeat the avatar at its leading position.
+          suppressAgentAvatar
+          mode={subGroupMode}
+          startDirectories={startDirectories}
+          topics={children}
+          onStartInDirectory={canAddTopic ? handleAddTopic : undefined}
+        />
       </AccordionPanel>
     </AccordionItem>
   );

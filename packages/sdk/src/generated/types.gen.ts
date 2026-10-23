@@ -8564,7 +8564,7 @@ export type GetApiV1ModelsData = {
         pageSize?: string;
         enabled?: string | null;
         provider?: string | null;
-        type?: 'chat' | 'embedding' | 'tts' | 'asr' | 'image' | 'text2video' | 'text2music' | 'realtime' | 'stt' | null;
+        type?: 'chat' | 'embedding' | 'tts' | 'asr' | 'image' | 'text2video' | 'text2music' | 'realtime' | 'decision' | 'stt' | null;
     };
     url: '/api/v1/models';
 };
@@ -8646,7 +8646,7 @@ export type PostApiV1ModelsData = {
         releasedAt?: string | null;
         sort?: number | null;
         source?: 'remote' | 'custom' | 'builtin' | null;
-        type?: 'chat' | 'embedding' | 'tts' | 'asr' | 'image' | 'text2video' | 'text2music' | 'realtime' | 'stt' | null;
+        type?: 'chat' | 'embedding' | 'tts' | 'asr' | 'image' | 'text2video' | 'text2music' | 'realtime' | 'decision' | 'stt' | null;
         id: string;
         providerId: string;
     };
@@ -8791,7 +8791,7 @@ export type PatchApiV1ModelsByProviderIdByModelIdData = {
         releasedAt?: string | null;
         sort?: number | null;
         source?: 'remote' | 'custom' | 'builtin' | null;
-        type?: 'chat' | 'embedding' | 'tts' | 'asr' | 'image' | 'text2video' | 'text2music' | 'realtime' | 'stt' | null;
+        type?: 'chat' | 'embedding' | 'tts' | 'asr' | 'image' | 'text2video' | 'text2music' | 'realtime' | 'decision' | 'stt' | null;
     };
     path: {
         modelId: string;
@@ -11194,6 +11194,7 @@ export type PatchApiV1TasksByIdData = {
             [key: string]: unknown;
         };
         description?: string | null;
+        heartbeatInterval?: number;
         instruction?: string;
         name?: string;
         parentTaskId?: string | null;
@@ -11326,19 +11327,18 @@ export type PatchApiV1TasksByIdStatusResponses = {
 
 export type PatchApiV1TasksByIdStatusResponse = PatchApiV1TasksByIdStatusResponses[keyof PatchApiV1TasksByIdStatusResponses];
 
-export type PostApiV1TasksByIdRunData = {
-    body: {
-        continueTopicId?: string;
-        prompt?: string;
-    };
+export type GetApiV1TasksByIdRunsData = {
+    body?: never;
     path: {
         id: string;
     };
-    query?: never;
-    url: '/api/v1/tasks/{id}/run';
+    query?: {
+        limit?: number;
+    };
+    url: '/api/v1/tasks/{id}/runs';
 };
 
-export type PostApiV1TasksByIdRunErrors = {
+export type GetApiV1TasksByIdRunsErrors = {
     /**
      * Validation Error
      */
@@ -11373,9 +11373,9 @@ export type PostApiV1TasksByIdRunErrors = {
     500: ApiError;
 };
 
-export type PostApiV1TasksByIdRunError = PostApiV1TasksByIdRunErrors[keyof PostApiV1TasksByIdRunErrors];
+export type GetApiV1TasksByIdRunsError = GetApiV1TasksByIdRunsErrors[keyof GetApiV1TasksByIdRunsErrors];
 
-export type PostApiV1TasksByIdRunResponses = {
+export type GetApiV1TasksByIdRunsResponses = {
     /**
      * Successful response
      */
@@ -11389,7 +11389,71 @@ export type PostApiV1TasksByIdRunResponses = {
     };
 };
 
-export type PostApiV1TasksByIdRunResponse = PostApiV1TasksByIdRunResponses[keyof PostApiV1TasksByIdRunResponses];
+export type GetApiV1TasksByIdRunsResponse = GetApiV1TasksByIdRunsResponses[keyof GetApiV1TasksByIdRunsResponses];
+
+export type PostApiV1TasksByIdRunsData = {
+    body: {
+        prompt?: string;
+    };
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/tasks/{id}/runs';
+};
+
+export type PostApiV1TasksByIdRunsErrors = {
+    /**
+     * Validation Error
+     */
+    400: {
+        success: false;
+        error: Array<unknown>;
+        data: unknown;
+    };
+    /**
+     * Authentication required
+     */
+    401: ApiError;
+    /**
+     * Insufficient permission
+     */
+    403: ApiError;
+    /**
+     * Resource not found
+     */
+    404: ApiError;
+    /**
+     * Resource conflict
+     */
+    409: ApiError;
+    /**
+     * Rate limit exceeded
+     */
+    429: ApiError;
+    /**
+     * Internal server error
+     */
+    500: ApiError;
+};
+
+export type PostApiV1TasksByIdRunsError = PostApiV1TasksByIdRunsErrors[keyof PostApiV1TasksByIdRunsErrors];
+
+export type PostApiV1TasksByIdRunsResponses = {
+    /**
+     * Successful response
+     */
+    202: {
+        data?: Array<unknown> | {
+            [key: string]: unknown;
+        } | null;
+        message?: string;
+        success: true;
+        timestamp: string;
+    };
+};
+
+export type PostApiV1TasksByIdRunsResponse = PostApiV1TasksByIdRunsResponses[keyof PostApiV1TasksByIdRunsResponses];
 
 export type GetApiV1TopicsData = {
     body?: never;

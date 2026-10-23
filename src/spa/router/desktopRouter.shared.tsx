@@ -46,12 +46,7 @@ import { taskRouteMeta, tasksRouteMeta } from '@/features/AgentTasks/routeMeta';
 import { agentsRouteMeta } from '@/features/AgentViewAll/routeMeta';
 import { dashboardRouteMeta, dashboardsRouteMeta } from '@/features/Dashboard/routeMeta';
 import { pageRouteMeta } from '@/features/Pages/routeMeta';
-import {
-  projectAcceptanceRouteMeta,
-  projectConversationRouteMeta,
-  projectDirectoriesRouteMeta,
-  projectsRouteMeta,
-} from '@/features/Projects/routeMeta';
+import { projectsRouteMeta } from '@/features/Projects/routeMeta';
 import ResourceCategorySkeleton from '@/features/ResourceHome/Skeleton';
 import { createSettingsRouteMeta, settingsRouteMeta } from '@/features/Settings/features/routeMeta';
 import { workspaceHomeRouteMeta } from '@/features/Workspace/routeMeta';
@@ -83,6 +78,7 @@ import { identitiesListLoader } from '@/spa/router/identitiesListLoader';
 import { libraryTreeLoader } from '@/spa/router/libraryTreeLoader';
 import { pageListLoader } from '@/spa/router/pageListLoader';
 import { preferenceListLoader } from '@/spa/router/preferenceListLoader';
+import { projectWorkspaceRoute } from '@/spa/router/projectWorkspaceRoutes';
 import { agentAccessLoader, agentGroupAccessLoader } from '@/spa/router/resourceAccessLoader';
 import { NoRouteSkeleton, routeMeta } from '@/spa/router/routeMeta';
 import { scheduledTaskListLoader } from '@/spa/router/scheduledTaskListLoader';
@@ -1062,103 +1058,8 @@ export const sharedMainAreaChildren: RouteObject[] = [
     path: 'dashboard',
   },
 
-  // Task workspace routes (cross-agent)
-  {
-    children: [
-      {
-        element: redirectElement('conversation'),
-        index: true,
-      },
-      {
-        element: dynamicElement(
-          () => import('@/routes/(main)/project/[projectId]/conversation'),
-          'Desktop > Project Conversation',
-          { preloadId: 'project-conversation' },
-        ),
-        handle: { meta: projectConversationRouteMeta },
-        path: 'conversation/:topicId?',
-      },
-      {
-        element: dynamicElement(
-          () => import('@/routes/(main)/project/[projectId]/tasks'),
-          'Desktop > Project Tasks',
-        ),
-        handle: { meta: tasksRouteMeta },
-        loader: scheduledTaskListLoader,
-        path: 'tasks',
-      },
-      {
-        element: dynamicElement(
-          () => import('@/routes/(main)/project/[projectId]/settings'),
-          'Desktop > Project Working Directories',
-          { preloadId: 'project-settings' },
-        ),
-        handle: { meta: projectDirectoriesRouteMeta },
-        path: 'settings/:section?',
-      },
-      {
-        element: dynamicElement(
-          () => import('@/routes/(main)/project/[projectId]/goals'),
-          'Desktop > Project Goals',
-        ),
-        handle: { meta: goalsRouteMeta },
-        path: 'goals',
-      },
-      {
-        children: [
-          {
-            element: dynamicElement(
-              () => import('@/routes/(main)/project/[projectId]/dashboard'),
-              'Desktop > Project Dashboards',
-              { preloadId: 'dashboard' },
-            ),
-            handle: { meta: dashboardsRouteMeta },
-            index: true,
-          },
-          {
-            element: dynamicElement(
-              () => import('@/routes/(main)/project/[projectId]/dashboard/[dashboardId]'),
-              'Desktop > Project Dashboard Detail',
-              { preloadId: 'dashboard' },
-            ),
-            handle: { meta: dashboardRouteMeta },
-            path: ':dashboardId',
-          },
-        ],
-        // Off unless the `dashboard` feature flag is on: the gate leaves for the project.
-        element: dynamicLayout(
-          () => import('@/routes/(main)/project/[projectId]/dashboard/_layout'),
-          'Desktop > Project Dashboards > Layout',
-          { preloadId: 'dashboard' },
-        ),
-        path: 'dashboard',
-      },
-      {
-        children: [
-          {
-            element: dynamicElement(
-              () => import('@/routes/(main)/acceptance/empty'),
-              'Desktop > Project Acceptance > Empty',
-            ),
-            index: true,
-          },
-        ],
-        element: dynamicLayout(
-          () => import('@/routes/(main)/project/[projectId]/acceptance'),
-          'Desktop > Project Acceptance',
-        ),
-        handle: { meta: projectAcceptanceRouteMeta },
-        path: 'acceptance',
-      },
-    ],
-    element: dynamicLayout(
-      () => import('@/routes/(main)/project/_layout'),
-      'Desktop > Project Workspace > Layout',
-      { preloadId: 'project' },
-    ),
-    errorElement: <ErrorBoundary resetPath=".." />,
-    path: 'project/:projectId',
-  },
+  // Project workspace routes
+  projectWorkspaceRoute,
 
   {
     children: taskWorkspaceChildren,

@@ -8,6 +8,7 @@ import {
   AccordionTrigger,
   ActionIcon,
   cx,
+  Flexbox,
   Text,
 } from '@lobehub/ui';
 import { ArrowRightIcon, PlusIcon } from 'lucide-react';
@@ -57,12 +58,20 @@ const Project = memo<ProjectProps>(({ itemKey }) => {
             accordionStyles.actionBorderless,
           )}
         >
-          <ActionIcon
-            icon={ArrowRightIcon}
-            size="small"
-            title={t('list.viewAll')}
-            onClick={() => navigate('/projects')}
-          />
+          <Flexbox horizontal align="center" gap={2}>
+            <ActionIcon
+              icon={ArrowRightIcon}
+              size="small"
+              title={t('list.viewAll')}
+              onClick={() => navigate('/projects')}
+            />
+            <ActionIcon
+              icon={PlusIcon}
+              size="small"
+              title={t('create.title')}
+              onClick={() => openCreateProjectModal()}
+            />
+          </Flexbox>
         </div>
       </AccordionHeader>
       <AccordionPanel>

@@ -10,11 +10,15 @@ import type { TopicGroupMode, TopicSortBy } from '@/types/topic';
 
 import { useAgentTopicGroupMode } from './hooks/useAgentTopicGroupMode';
 import { useTopicListScope } from './TopicListScope';
+import { useOnlyMineFilterItem } from './useOnlyMineFilterItem';
+import { useProjectTopicFilterItems } from './useProjectTopicFilterItems';
 
 export const useTopicFilterDropdownMenu = (): (() => DropdownItem[]) => {
   const { t } = useTranslation('topic');
   const { topicGroupMode, updateTopicGroupMode } = useAgentTopicGroupMode();
   const scope = useTopicListScope();
+  const projectFilterItems = useProjectTopicFilterItems();
+  const onlyMineItem = useOnlyMineFilterItem();
 
   const [topicSortBy, topicIncludeCompleted, updatePreference] = useUserStore((s) => [
     preferenceSelectors.topicSortBy(s),
@@ -25,9 +29,10 @@ export const useTopicFilterDropdownMenu = (): (() => DropdownItem[]) => {
   return useCallback(() => {
     // "by agent" and "by device" only exist where topics span multiple agents
     // and machines — the project-scoped list. A single agent's own sidebar
-    // hides them.
+    // hides them. The project-scoped list already is one project, so it hides
+    // "by project" instead.
     const groupModes: TopicGroupMode[] = scope
-      ? ['byStatus', 'byTime', 'byProject', 'byAgent', 'byDevice', 'flat']
+      ? ['byStatus', 'byTime', 'byAgent', 'byDevice', 'flat']
       : ['byStatus', 'byTime', 'byProject', 'flat'];
     const sortByOptions: TopicSortBy[] = ['createdAt', 'updatedAt'];
 
@@ -62,6 +67,8 @@ export const useTopicFilterDropdownMenu = (): (() => DropdownItem[]) => {
       { type: 'divider' as const },
       {
         children: [
+          // A project spans agents and devices; narrow its topics by either.
+          ...projectFilterItems(),
           {
             icon: topicIncludeCompleted ? <Icon icon={LucideCheck} /> : <div />,
             key: 'showCompleted',
@@ -70,6 +77,7 @@ export const useTopicFilterDropdownMenu = (): (() => DropdownItem[]) => {
               updatePreference({ topicIncludeCompleted: !topicIncludeCompleted });
             },
           },
+          ...(onlyMineItem ? [onlyMineItem] : []),
         ],
         key: 'filter',
         label: t('filter.filter'),
@@ -80,8 +88,10 @@ export const useTopicFilterDropdownMenu = (): (() => DropdownItem[]) => {
     topicGroupMode,
     topicSortBy,
     topicIncludeCompleted,
+    onlyMineItem,
     updatePreference,
     updateTopicGroupMode,
+    projectFilterItems,
     scope,
     t,
   ]);

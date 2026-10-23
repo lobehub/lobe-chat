@@ -69,9 +69,10 @@ export class MessageLookupQueries extends MessageScope {
     const associatedSessionId = agentSession[0]?.sessionId;
 
     // Build condition to match both new (agentId) and legacy (sessionId) data
-    return associatedSessionId
+    const agentCondition = associatedSessionId
       ? or(eq(messages.agentId, agentId), eq(messages.sessionId, associatedSessionId))
       : eq(messages.agentId, agentId);
+    return or(agentCondition, this.matchLegacyInbox(agentId));
   };
 
   findById = async (id: string) => {

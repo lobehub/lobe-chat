@@ -241,7 +241,10 @@ export const useTopicItemDropdownMenu = ({
         label: t('actions.copyLink'),
         onClick: async () => {
           if (!activeAgentId) return;
-          const url = `${appOrigin}${AGENT_CHAT_TOPIC_URL(activeAgentId, id)}`;
+          const url = `${appOrigin}${buildWorkspaceAwarePath(
+            AGENT_CHAT_TOPIC_URL(activeAgentId, id),
+            activeWorkspaceSlug,
+          )}`;
           await copyToClipboard(url);
           toast.success(t('actions.copyLinkSuccess'));
         },

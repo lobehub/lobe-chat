@@ -306,6 +306,7 @@ export class ServerToolTransport implements ToolTransport {
               memoryToolPermission: context.state.world?.agent?.chatConfig?.memory?.toolPermission,
               messageId: context.state.origin?.sourceMessageId,
               operationId,
+              projectId: context.state.origin?.projectId,
               projectSkills: resolveRunProjectSkills(context.state.plan),
               rootOperationId: operationId,
               scope: context.state.origin?.scope,

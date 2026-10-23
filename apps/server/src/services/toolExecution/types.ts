@@ -304,6 +304,8 @@ export interface ToolExecutionContext {
   onWorkRegistration?: (intent: WorkRegistrationIntent) => void;
   /** Agent runtime operation ID for structured tool outcome identity. */
   operationId?: string;
+  /** Project the run belongs to; scopes project knowledge and created tasks. */
+  projectId?: string;
   /**
    * Filesystem skills (name + absolute SKILL.md path) discovered on the
    * execution device. Used by the Skills runtime to load them on demand via the

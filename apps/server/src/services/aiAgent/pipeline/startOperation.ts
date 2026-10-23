@@ -289,6 +289,7 @@ export const startOperation = async (
         // inactivity-watchdog abandon path can distinguish an isolated group
         // member ('member') from a genuine callSubAgent child.
         orchestrationRole: appContext?.orchestrationRole,
+        projectId: appContext?.projectId,
         scope: appContext?.scope,
         sessionId: appContext?.sessionId,
         sourceMessageId: userMessageId ?? parentMessageId ?? undefined,

@@ -34,8 +34,8 @@ export const isReadOnlyAcceptanceDecider = (
   canApprove: boolean,
 ) => Boolean(bundle) && !canReviewAcceptance(bundle) && canApprove;
 
-/** Authors give region feedback through the check's rejection action. */
+/** Evidence discussion follows comment access, independently of review decisions. */
 export const canCommentOnAcceptanceEvidence = (
   bundle: { isOwner: boolean } | null | undefined,
   canComment: boolean,
-) => canComment && bundle?.isOwner === false;
+) => canComment && Boolean(bundle);

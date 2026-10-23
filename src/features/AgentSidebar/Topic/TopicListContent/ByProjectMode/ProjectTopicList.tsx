@@ -47,7 +47,7 @@ const STATUS_ICON: Record<string, ExecutionStatusVisual> = {
   ...TOPIC_GROUP_VISUALS,
 };
 
-const renderTopic = (topic: ChatTopic) => (
+const renderTopic = (topic: ChatTopic, suppressAgentAvatar?: boolean) => (
   <TopicItem
     fav={topic.favorite}
     id={topic.id}
@@ -55,6 +55,7 @@ const renderTopic = (topic: ChatTopic) => (
     metadata={topic.metadata}
     runStartedAt={topic.runStartedAt}
     status={topic.status}
+    suppressAgentAvatar={suppressAgentAvatar}
     title={topic.title}
     userId={topic.userId}
   />
@@ -66,11 +67,12 @@ interface SubGroupItemProps {
   icon?: Pick<ExecutionStatusVisual, 'color' | 'icon'>;
   onStartInDirectory?: (projectWorkingDirectoryId: string) => void;
   startDirectoryId?: string;
+  suppressAgentAvatar?: boolean;
   title: string;
 }
 
 const SubGroupItem = memo<SubGroupItemProps>(
-  ({ expanded, group, icon, onStartInDirectory, startDirectoryId, title }) => {
+  ({ expanded, group, icon, onStartInDirectory, startDirectoryId, suppressAgentAvatar, title }) => {
     const { t: tProject } = useTranslation('project');
     // A folded section keeps the project row's running / awaiting / failed
     // counts and unread dot, so a device section still says how much it does.
@@ -121,7 +123,7 @@ const SubGroupItem = memo<SubGroupItemProps>(
         </AccordionHeader>
         <AccordionPanel contentStyle={{ padding: 0 }}>
           <Flexbox gap={1} paddingBlock={1}>
-            {group.children.map(renderTopic)}
+            {group.children.map((topic) => renderTopic(topic, suppressAgentAvatar))}
           </Flexbox>
         </AccordionPanel>
       </AccordionItem>
@@ -139,6 +141,8 @@ interface ProjectTopicListProps {
   onStartInDirectory?: (projectWorkingDirectoryId: string) => void;
   /** The group's project directories a device section's "+" may start in. */
   startDirectories?: ProjectDirectory[];
+  /** Set when the parent group header already names the owning agent. */
+  suppressAgentAvatar?: boolean;
   topics: ChatTopic[];
 }
 
@@ -147,7 +151,7 @@ interface ProjectTopicListProps {
  * or status (picked from the group's "more" menu).
  */
 const ProjectTopicList = memo<ProjectTopicListProps>((props) => {
-  const { mode, onStartInDirectory, startDirectories, topics } = props;
+  const { mode, onStartInDirectory, startDirectories, suppressAgentAvatar, topics } = props;
   const { t } = useTranslation('topic');
   const topicSortBy = useUserStore(preferenceSelectors.topicSortBy);
   const field = topicSortBy === 'createdAt' ? 'createdAt' : 'updatedAt';
@@ -233,7 +237,7 @@ const ProjectTopicList = memo<ProjectTopicListProps>((props) => {
   if (!groups) {
     return (
       <Flexbox gap={1} paddingBlock={1}>
-        {topics.map(renderTopic)}
+        {topics.map((topic) => renderTopic(topic, suppressAgentAvatar))}
       </Flexbox>
     );
   }
@@ -251,6 +255,7 @@ const ProjectTopicList = memo<ProjectTopicListProps>((props) => {
           group={group}
           key={group.id}
           startDirectoryId={getStartDirectoryId(group)}
+          suppressAgentAvatar={suppressAgentAvatar}
           title={getTitle(group)}
           icon={
             mode === 'byStatus'

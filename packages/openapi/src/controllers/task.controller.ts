@@ -7,11 +7,12 @@ import type {
   RunTaskRequest,
   TaskIdParam,
   TaskListQuery,
+  TaskRunListQuery,
   UpdateTaskRequest,
   UpdateTaskStatusRequest,
 } from '../types/task.type';
 
-/** Tasks controller — list, inspect, create, patch, transition, run and delete tasks. */
+/** Tasks controller — list, inspect, create, patch, transition and delete tasks. */
 export class TaskController extends BaseController {
   private async service(c: Context): Promise<TaskRestService> {
     return new TaskRestService(await this.getDatabase(), this.getUserId(c), this.getWorkspaceId(c));
@@ -74,13 +75,25 @@ export class TaskController extends BaseController {
     }
   }
 
-  /** POST /api/v1/tasks/:id/run */
+  /** POST /api/v1/tasks/:id/runs */
   async runTask(c: Context): Promise<Response> {
     try {
       const { id } = this.getParams<TaskIdParam>(c);
       const body = await this.getBody<RunTaskRequest>(c);
       const service = await this.service(c);
-      return this.success(c, await service.runTask(id, body), 'Task run started');
+      return this.success(c, await service.runTask(id, body ?? {}), 'Task run started', 202);
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /** GET /api/v1/tasks/:id/runs */
+  async listRuns(c: Context): Promise<Response> {
+    try {
+      const { id } = this.getParams<TaskIdParam>(c);
+      const query = this.getQuery<TaskRunListQuery>(c);
+      const service = await this.service(c);
+      return this.success(c, await service.listRuns(id, query), 'Task runs retrieved successfully');
     } catch (error) {
       return this.handleError(c, error);
     }

@@ -128,12 +128,16 @@ export const topicKeys = {
     'topic:scheduledRunWatch',
     topicId,
   ]),
-  search: def('topic:search', (keywords: string, agentId?: string, groupId?: string) => [
+  search: def(
     'topic:search',
-    keywords,
-    agentId,
-    groupId,
-  ]),
+    (keywords: string, agentId?: string, groupId?: string, onlyMine?: boolean) => [
+      'topic:search',
+      keywords,
+      agentId,
+      groupId,
+      onlyMine,
+    ],
+  ),
 };
 
 // ---- acceptance comment -------------------------------------------------
@@ -209,40 +213,10 @@ export const isDocumentCommentKeyForEvent = (
   return false;
 };
 
-// ---- agent builder (opening-suggestion chips) ---------------------------
-// Persisted to the localStorage tier (see `CACHE_TIERS.local`) so revisits skip
-// the LLM generation instead of paying a skeleton + a generateJSON call every
-// page load. `contextSummary` is intentionally NOT part of the key so config
-// autosaves for the same target don't refetch; manual refresh revalidates the
-// same key in place (see `useBuilderSuggestions`). `locale` IS part of the key:
-// chips are generated in the UI language, so a persisted entry must not be
-// served after a language switch.
-export const agentBuilderKeys = {
-  suggestions: def(
-    'agentBuilder:suggestions',
-    (mode: string, builderAgentId: string, targetId: string | undefined, locale?: string) => [
-      'agentBuilder:suggestions',
-      mode,
-      builderAgentId,
-      targetId,
-      locale ?? null,
-    ],
-  ),
-};
-
 // ---- group --------------------------------------------------------------
 export const groupKeys = {
   /** Agent picker for the "create group" modal. */
   queryAgentsForCreate: def('group:queryAgentsForCreate', () => ['group:queryAgentsForCreate']),
-};
-
-// ---- session ------------------------------------------------------------
-export const sessionKeys = {
-  createSession: def('session:createSession', (groupId: string | undefined) => [
-    'session:createSession',
-    groupId,
-  ]),
-  list: def('session:list', (isLogin: boolean | undefined) => ['session:list', isLogin]),
 };
 
 // ---- thread -------------------------------------------------------------
@@ -328,23 +302,6 @@ export const briefKeys = {
 // ---- agent config / available / search ----------------------------------
 export const agentConfigKeys = {
   search: def('agent:search', (keyword?: string) => ['agent:search', keyword]),
-};
-
-// ---- aiModel ------------------------------------------------------------
-// The provider model list and the provider list live in `@lobechat/replica`
-// resources now (see `src/store/aiInfra/slices/*/projection.ts`); only the
-// paged disabled-models fetch and the per-model reasoning config are SWR keys.
-export const aiModelKeys = {
-  disabledModelsPage: def('aiModel:disabledModelsPage', (providerId: string, offset: number) => [
-    'aiModel:disabledModelsPage',
-    providerId,
-    offset,
-  ]),
-  reasoningConfig: def('aiModel:reasoningConfig', (provider: string, model: string) => [
-    'aiModel:reasoningConfig',
-    provider,
-    model,
-  ]),
 };
 
 // ---- image generation ---------------------------------------------------
@@ -925,25 +882,6 @@ export const topicActionKeys = {
 };
 
 // ---- misc remaining domains ---------------------------------------------
-/**
- * Daily task-template recommendation cache schema version. Bump this when the
- * persisted recommendation row shape changes incompatibly so desktop clients
- * stop reading stale localStorage SWR entries.
- */
-export const TASK_TEMPLATE_RECOMMENDATION_CACHE_VERSION = 2;
-const TASK_TEMPLATE_DAILY_RECOMMEND_ROOT = `taskTemplate:listDailyRecommend:v${TASK_TEMPLATE_RECOMMENDATION_CACHE_VERSION}`;
-
-export const taskTemplateKeys = {
-  listDailyRecommend: def(
-    TASK_TEMPLATE_DAILY_RECOMMEND_ROOT,
-    (refreshSeed: unknown, recommendationCount: number, locale: string) => [
-      TASK_TEMPLATE_DAILY_RECOMMEND_ROOT,
-      refreshSeed,
-      recommendationCount,
-      locale,
-    ],
-  ),
-};
 export const resourceKeys = {
   list: def('resource:list', (params: unknown, workspaceId: string | null) => [
     'resource:list',
@@ -971,6 +909,8 @@ export const imessageKeys = {
 };
 // Desktop/electron IPC fetches — roots keep their existing `electron:getXxx` value.
 export const electronKeys = {
+  /** Claude Code logins held on this machine (device-local, never persisted). */
+  claudeCodeAccounts: def('electron:claudeCodeAccounts', () => ['electron:claudeCodeAccounts']),
   appTrayVisible: def('electron:getAppTrayVisible', () => ['electron:getAppTrayVisible']),
   desktopHotkeys: def('electron:getDesktopHotkeys', () => ['electron:getDesktopHotkeys']),
   gatewayDeviceInfo: def('electron:getGatewayDeviceInfo', () => ['electron:getGatewayDeviceInfo']),
@@ -995,11 +935,9 @@ export const matchDomain =
  */
 export const swrKeys = {
   agent: agentConfigKeys,
-  agentBuilder: agentBuilderKeys,
   agentDocument: agentDocumentSWRKeys,
   agentHome: agentHomeKeys,
   agentSignal: agentSignalKeys,
-  aiModel: aiModelKeys,
   auth: authKeys,
   brief: briefKeys,
   changelog: changelogKeys,
@@ -1031,10 +969,8 @@ export const swrKeys = {
   recommendations: recommendationsKeys,
   resource: resourceKeys,
   serverConfig: serverConfigKeys,
-  session: sessionKeys,
   share: shareKeys,
   stats: statsKeys,
-  taskTemplate: taskTemplateKeys,
   thread: threadKeys,
   tool: toolKeys,
   topic: topicKeys,

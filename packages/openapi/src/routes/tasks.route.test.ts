@@ -1,11 +1,6 @@
 import { Hono } from 'hono';
 import { describe, expect, it, vi } from 'vitest';
 
-// The route module pulls in the db graph (via the permission middleware) and the
-// better-auth graph (via `requireAuth`) at import time; this test is only about
-// the gates the route itself declares, so both are stubbed. The permission
-// middleware is deliberately NOT stubbed: the API-key scope narrowing inside it
-// is exactly what these cases exercise.
 vi.mock('@/database/core/db-adaptor', () => ({ getServerDB: vi.fn() }));
 vi.mock('@/database/models/rbac', () => ({
   RbacModel: class {
@@ -17,15 +12,20 @@ vi.mock('../middleware/auth', () => ({
 }));
 vi.mock('../controllers/task.controller', () => ({
   TaskController: class {
+    listRuns(c: any) {
+      return c.json({ data: [], success: true });
+    }
     runTask(c: any) {
-      return c.json({ data: { body: c.req.valid('json'), id: c.req.param('id') }, success: true });
+      return c.json({ data: { topicId: 'tpc-1' }, success: true }, 202);
+    }
+    updateTask(c: any) {
+      return c.json({ data: { id: 'task-1' }, success: true });
     }
   },
 }));
 
 const { default: TaskRoutes } = await import('./tasks.route');
 
-/** A request authenticated as an API key holding exactly `scopes`. */
 const requestAs = (scopes: string[], path: string, init?: { body?: unknown; method?: string }) => {
   const app = new Hono();
 
@@ -45,42 +45,75 @@ const requestAs = (scopes: string[], path: string, init?: { body?: unknown; meth
   });
 };
 
-describe('POST /tasks/:id/run API-key scopes and validation', () => {
+describe('POST /tasks/:id/runs', () => {
   it('rejects a read-only key', async () => {
-    const res = await requestAs(['agent:read', 'model:invoke'], '/T-1/run', {
-      body: {},
-      method: 'POST',
-    });
+    const res = await requestAs(['agent:read'], '/task-1/runs', { body: {}, method: 'POST' });
 
     expect(res.status).toBe(403);
   });
 
-  it('rejects a task-write key that may not invoke models', async () => {
-    const res = await requestAs(['agent:write'], '/T-1/run', { body: {}, method: 'POST' });
+  it('starts a run for a key holding agent:write', async () => {
+    const res = await requestAs(['agent:write'], '/task-1/runs', {
+      body: { prompt: 'focus on Osaka' },
+      method: 'POST',
+    });
+
+    expect(res.status).toBe(202);
+  });
+
+  it('rejects fields the run does not take', async () => {
+    const res = await requestAs(['agent:write'], '/task-1/runs', {
+      body: { deviceId: 'dev-1' },
+      method: 'POST',
+    });
+
+    expect(res.status).toBe(400);
+  });
+});
+
+describe('GET /tasks/:id/runs', () => {
+  it('rejects a key that holds no agent scope', async () => {
+    const res = await requestAs(['chat:read'], '/task-1/runs');
 
     expect(res.status).toBe(403);
   });
 
-  it('starts the run for a key holding agent:write and model:invoke', async () => {
-    const res = await requestAs(['agent:write', 'model:invoke'], '/T-1/run', {
-      body: { prompt: 'look again' },
-      method: 'POST',
+  it('lists runs for a key holding agent:read', async () => {
+    const res = await requestAs(['agent:read'], '/task-1/runs?limit=5');
+
+    expect(res.status).toBe(200);
+  });
+
+  it('rejects a page size over 100', async () => {
+    const res = await requestAs(['agent:read'], '/task-1/runs?limit=500');
+
+    expect(res.status).toBe(400);
+  });
+});
+
+describe('PATCH /tasks/:id heartbeatInterval', () => {
+  it('accepts an interval of at least ten minutes', async () => {
+    const res = await requestAs(['agent:write'], '/task-1', {
+      body: { heartbeatInterval: 3600 },
+      method: 'PATCH',
     });
 
     expect(res.status).toBe(200);
-    expect(await res.json()).toMatchObject({ data: { body: { prompt: 'look again' }, id: 'T-1' } });
   });
 
-  it('accepts a request without a body', async () => {
-    const res = await requestAs(['agent:write', 'model:invoke'], '/T-1/run', { method: 'POST' });
+  it('accepts 0 to turn the heartbeat off', async () => {
+    const res = await requestAs(['agent:write'], '/task-1', {
+      body: { heartbeatInterval: 0 },
+      method: 'PATCH',
+    });
 
     expect(res.status).toBe(200);
   });
 
-  it('rejects an empty prompt', async () => {
-    const res = await requestAs(['agent:write', 'model:invoke'], '/T-1/run', {
-      body: { prompt: '' },
-      method: 'POST',
+  it('rejects an interval under ten minutes', async () => {
+    const res = await requestAs(['agent:write'], '/task-1', {
+      body: { heartbeatInterval: 60 },
+      method: 'PATCH',
     });
 
     expect(res.status).toBe(400);

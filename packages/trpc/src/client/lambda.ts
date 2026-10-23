@@ -3,6 +3,7 @@ import { type TRPCClientError, type TRPCLink } from '@trpc/client';
 import {
   createTRPCClient,
   httpBatchLink,
+  httpBatchStreamLink,
   httpLink,
   httpSubscriptionLink,
   splitLink,
@@ -284,7 +285,12 @@ const buildBatchedHttpLinks = (options: typeof linkOptions) =>
 const buildHttpLinks = (options: typeof linkOptions) =>
   splitLink({
     condition: (op) => !!getLlmRelayHeaders(op),
-    false: buildBatchedHttpLinks(options),
+    false: splitLink({
+      // Source snapshots can exceed the serverless buffered-response limit.
+      condition: (op) => op.path === 'canvas.getProject',
+      false: buildBatchedHttpLinks(options),
+      true: httpBatchStreamLink({ ...options, maxItems: 1 }),
+    }),
     true: httpLink({
       ...options,
       headers: async ({ op }) => ({
