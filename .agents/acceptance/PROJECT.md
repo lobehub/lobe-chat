@@ -53,6 +53,10 @@ stale standalone install: a recently added workspace package fails to resolve �
   - With repo-root `.env` present: use the existing local config — `bun run dev`
     (full-stack, needed for Web smoke) or `AGENT_RUNTIME_MODE=queue pnpm run dev:next`
     (backend only). Do NOT call any `init-dev-env.sh` subcommand when `.env` exists.
+    If that `.env` config does not boot (expired credentials, schema behind
+    the checkout, `setup-auth.sh` refusing to seed), do not repair it in place —
+    open a clean `git worktree` with no root `.env` and use the bootstrap below
+    ([dev-server.md](./references/dev-server.md#root-env-exists-but-does-not-boot)).
   - Without `.env`: use the skill-owned bootstrap `.agents/acceptance/scripts/init-dev-env.sh`
     (Postgres, Redis, migrations, auth/key-vault/S3 test env, seed user, then the
     repo's own dev server — not `e2e/scripts/setup.ts`). It hard-blocks when
