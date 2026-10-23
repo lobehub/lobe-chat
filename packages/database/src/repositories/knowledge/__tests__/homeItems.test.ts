@@ -49,9 +49,9 @@ beforeEach(async () => {
       workspaceId,
     },
     {
-      fileType: 'image/png',
+      fileType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       id: 'home-file-mate',
-      name: 'mate.png',
+      name: 'mate.docx',
       size: 1,
       updatedAt: minutesAgo(4),
       url: 'u2',
@@ -68,6 +68,21 @@ beforeEach(async () => {
       userId: mate,
       workspaceId,
     },
+    // Newest rows, yet not documents: media and raw data never reach the list.
+    ...[
+      ['home-file-image', 'image/png'],
+      ['home-file-video', 'video/mp4'],
+      ['home-file-zip', 'application/zip'],
+    ].map(([id, fileType]) => ({
+      fileType,
+      id,
+      name: id,
+      size: 1,
+      updatedAt: new Date(),
+      url: id,
+      userId: me,
+      workspaceId,
+    })),
   ]);
   await serverDB.insert(knowledgeBaseFiles).values([
     { fileId: 'home-file-mine', knowledgeBaseId: 'home-kb', userId: me, workspaceId },
@@ -128,6 +143,14 @@ describe('KnowledgeRepo.queryHomeItems', () => {
       'home-page-kb',
       'home-page-mate',
     ]);
+  });
+
+  it('keeps only document files, not images, videos or raw data', async () => {
+    const result = await ids({});
+    expect(result).not.toContain('home-file-image');
+    expect(result).not.toContain('home-file-video');
+    expect(result).not.toContain('home-file-zip');
+    expect(result).toEqual(expect.arrayContaining(['home-file-mine', 'home-file-mate']));
   });
 
   it("narrows to the caller's own rows", async () => {
