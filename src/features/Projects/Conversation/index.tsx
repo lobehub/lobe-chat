@@ -1,9 +1,9 @@
 'use client';
 
 import { Center, Flexbox, Spin, Text } from '@lobehub/ui';
-import { memo, useCallback, useEffect, useLayoutEffect, useRef } from 'react';
+import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Navigate, useParams } from 'react-router';
+import { Navigate, useParams, useSearchParams } from 'react-router';
 
 import AsyncError from '@/components/AsyncError';
 import TopicActions from '@/features/AgentSidebar/Topic/List/Item/Actions';
@@ -26,6 +26,7 @@ import {
 
 import { getProjectConversationPath } from '../Layout/navigation';
 import { freshProjectTopicAgentId } from './freshProjectTopicAgentId';
+import { useProjectDraftStaging } from './useProjectDraftStaging';
 import { useRevalidateWhileUnlisted } from './useRevalidateWhileUnlisted';
 
 const ProjectConversation = memo(() => {
@@ -42,20 +43,26 @@ const ProjectConversation = memo(() => {
   const storedTopic = useChatStore((s) =>
     topicId ? topicSelectors.getTopicById(topicId)(s) : undefined,
   );
-  // A sidebar "+" stages a directory of this project instead of creating a
-  // row (see `startProjectTopicDraft`): the blank conversation belongs to the
-  // staged agent until its first message creates the topic.
-  const pendingDirectory = useChatStore((s) => s.pendingNewTopicDirectory);
+  // A sidebar "+" opens a blank draft instead of creating a row (see
+  // `startProjectTopicDraft`). The draft rides in this pane's route, so split
+  // panes keep their own; the first message creates the topic.
+  const [searchParams] = useSearchParams();
+  const draftAgentParam = topicId ? null : searchParams.get('agent');
+  const draftDirectoryParam = topicId ? null : searchParams.get('dir');
   const directoriesRequest = useProjectDirectoryStore((s) => s.useFetchDirectories)(
     detail?.project.id,
   );
   const directories = useProjectDirectories(detail?.project.id);
-  const draftAgentId =
-    !topicId &&
-    pendingDirectory &&
-    directories.some((d) => d.id === pendingDirectory.projectWorkingDirectoryId)
-      ? pendingDirectory.agentId
-      : undefined;
+  const directoryIds = useMemo(() => new Set(directories.map((d) => d.id)), [directories]);
+  const draft = useMemo(
+    () =>
+      draftAgentParam && draftDirectoryParam && directoryIds.has(draftDirectoryParam)
+        ? { agentId: draftAgentParam, projectWorkingDirectoryId: draftDirectoryParam }
+        : undefined,
+    [draftAgentParam, draftDirectoryParam, directoryIds],
+  );
+  const draftAgentId = draft?.agentId;
+  const restageDraft = useProjectDraftStaging(draft, directoryIds);
   const chatAgentId = useChatStore((s) => s.activeAgentId);
   // Keep the conversation on its agent instead of flashing "not found" while
   // the project list catches up with a topic the first send just created.
@@ -113,9 +120,9 @@ const ProjectConversation = memo(() => {
       <AsyncError error={topicsRequest.error} variant="page" onRetry={topicsRequest.revalidate} />
     );
   if (!topicId && !draftAgentId) {
-    // A "+" may have staged a draft whose directory list is still loading;
-    // wait for it rather than sending the draft away.
-    if (pendingDirectory && !directoriesRequest.hasData)
+    // A draft's directory list may still be loading; wait for it rather than
+    // sending the draft away.
+    if (draftAgentParam && !directoriesRequest.hasData)
       return (
         <Center height="100%" width="100%">
           <Spin size="small" />
@@ -176,7 +183,14 @@ const ProjectConversation = memo(() => {
       }
     >
       <ChatHydration getConversationPath={getConversationPath} getTopicPath={getTopicPath} />
-      <ChatConversation />
+      <Flexbox
+        flex={1}
+        style={{ minHeight: 0, minWidth: 0 }}
+        onFocusCapture={restageDraft}
+        onPointerDownCapture={restageDraft}
+      >
+        <ChatConversation />
+      </Flexbox>
     </ConversationWorkspace>
   );
 });

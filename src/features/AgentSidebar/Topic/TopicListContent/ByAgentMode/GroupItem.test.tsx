@@ -295,6 +295,21 @@ describe('TopicByAgentGroupItem', () => {
     );
   });
 
+  it('opens the modal instead of a draft for an agent fixed to a non-device target', () => {
+    subGroupModes[GROUP_ID] = 'byDevice';
+    directories[0] = { ...directories[0], ...runnable('ins-mac') };
+    directories[1] = { ...directories[1], ...runnable('ins-linux') };
+    agencyConfigById.agt_acc_merge_alpha = { executionTargetSelectionPolicy: 'fixed' };
+    renderGroup();
+
+    expect(screen.queryAllByRole('button', { name: 'directories.start' })).toHaveLength(0);
+
+    fireEvent.click(screen.getByRole('button', { name: 'sidebar.newConversation' }));
+
+    expect(startProjectTopicDraft).not.toHaveBeenCalled();
+    expect(openProjectTopicModal).toHaveBeenCalledTimes(1);
+  });
+
   it('keeps the modal for a project with no runnable directory, so one can be added', () => {
     renderGroup();
 

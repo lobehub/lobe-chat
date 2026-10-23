@@ -17,7 +17,7 @@ interface DeviceDirectoryLike {
 export const findDeviceTopicDirectory = <T extends DeviceDirectoryLike>(
   directories: T[],
   deviceId?: string,
-  fixedDeviceId?: string,
+  fixedDeviceId?: string | null,
 ): T | undefined =>
   deviceId
     ? directories.find((d) => d.deviceId === deviceId && canStageDraftOn(d, fixedDeviceId))

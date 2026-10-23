@@ -1,6 +1,6 @@
 import { useChatStore } from '@/store/chat';
 
-import { getProjectConversationPath } from '../Layout/navigation';
+import { getProjectDraftPath } from '../Layout/navigation';
 
 interface RunnableDirectoryLike {
   environmentId?: string | null;
@@ -19,13 +19,16 @@ export const isRunnableProjectDirectory = (directory: RunnableDirectoryLike) =>
 
 /**
  * A runnable directory the draft's agent may also run in: an agent fixed to
- * one device is refused anywhere else, so its draft must stay on that device.
+ * one device is refused anywhere else, so its draft must stay on that device —
+ * and one fixed to a non-device target (e.g. a sandbox) can't use any.
  */
 export const canStageDraftOn = (
   directory: RunnableDirectoryLike & { deviceId?: string | null },
-  fixedDeviceId?: string,
+  /** Undefined: not fixed. Null: fixed to a target that is not a device. */
+  fixedDeviceId?: string | null,
 ) =>
-  isRunnableProjectDirectory(directory) && (!fixedDeviceId || directory.deviceId === fixedDeviceId);
+  isRunnableProjectDirectory(directory) &&
+  (fixedDeviceId === undefined || (!!fixedDeviceId && directory.deviceId === fixedDeviceId));
 
 /**
  * Open a blank project conversation on one directory, the same habit as an
@@ -52,5 +55,5 @@ export const startProjectTopicDraft = ({
     skipRefreshMessage: true,
   });
   chat.setPendingNewTopicDirectory({ agentId, projectWorkingDirectoryId: directoryId });
-  navigate(getProjectConversationPath(projectId));
+  navigate(getProjectDraftPath(projectId, agentId, directoryId));
 };

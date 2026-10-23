@@ -39,6 +39,19 @@ describe('canStageDraftOn', () => {
     expect(canStageDraftOn(directory, 'dev-b')).toBe(false);
     expect(canStageDraftOn({ ...directory, permission: 'read' }, 'dev-a')).toBe(false);
   });
+
+  /** @example Review: an agent fixed to a sandbox was treated as unrestricted, so its draft's first send was refused. */
+  it('stages nothing for an agent fixed to a target that is not a device', () => {
+    const directory = {
+      deviceId: 'dev-a',
+      environmentId: 'env',
+      instanceId: 'ins',
+      permission: 'readWrite',
+    };
+
+    expect(canStageDraftOn(directory, null)).toBe(false);
+    expect(canStageDraftOn({ ...directory, deviceId: null }, null)).toBe(false);
+  });
 });
 
 describe('startProjectTopicDraft', () => {
@@ -64,6 +77,7 @@ describe('startProjectTopicDraft', () => {
       agentId: 'agt_1',
       projectWorkingDirectoryId: 'pwd_1',
     });
-    expect(navigate).toHaveBeenCalledWith('/project/prj_1/conversation');
+    // The draft rides in the route so it stays with the pane that opened it.
+    expect(navigate).toHaveBeenCalledWith('/project/prj_1/conversation?agent=agt_1&dir=pwd_1');
   });
 });
