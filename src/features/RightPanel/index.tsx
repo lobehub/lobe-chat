@@ -1,10 +1,13 @@
-import { DraggablePanel, type DraggablePanelProps } from '@lobehub/ui';
+import { DraggablePanel, type DraggablePanelProps, Drawer } from '@lobehub/ui';
 import { cssVar } from '@lobehub/ui';
 import { memo, Suspense, useState } from 'react';
 
 import SurfaceSkeleton from '@/components/Skeleton/Surface';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
+import { isMobileSurface } from '@/utils/mobileSurface';
+
+import { useMobilePanelExpand } from './useMobilePanelExpand';
 
 export interface Size {
   height?: string | number;
@@ -54,6 +57,24 @@ const RightPanel = memo<RightPanelProps>(
 
     const [internalWidth, setInternalWidth] = useState<string | number>(defaultWidth);
     const width = widthProp ?? internalWidth;
+    const mobile = isMobileSurface();
+
+    useMobilePanelExpand(mobile, !!expand, handleExpandChange);
+
+    if (mobile)
+      return (
+        <Drawer
+          open={expand}
+          placement={'right'}
+          styles={{ bodyContent: { padding: 0 } }}
+          width={'100%'}
+          onClose={() => handleExpandChange(false)}
+        >
+          <Suspense fallback={<SurfaceSkeleton header={false} variant={'list'} />}>
+            {children}
+          </Suspense>
+        </Drawer>
+      );
 
     return (
       <DraggablePanel
