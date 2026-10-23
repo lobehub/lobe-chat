@@ -101,6 +101,8 @@ interface ProjectDirectoryStore extends ProjectDirectoryStoreState {
   ) => Promise<ServiceData<'createProjectTopic'>>;
   /** Move a directory conversation to its project's directory on another device. */
   moveTopic: (...args: ServiceParams<'moveTopic'>) => Promise<ServiceData<'moveTopic'>>;
+  /** Refetch a project's conversations after a change made elsewhere, e.g. a new main agent. */
+  refreshProjectTopics: (projectId: string) => Promise<void>;
   /** Create or rename an environment. */
   saveEnvironment: (
     ...args: ServiceParams<'saveEnvironment'>
@@ -220,6 +222,9 @@ export const useProjectDirectoryStore: UseBoundStoreWithEqualityFn<
         environmentTopics.revalidate(),
       ]);
       return result.data;
+    },
+    refreshProjectTopics: async (projectId) => {
+      await projectTopics.revalidate(projectId);
     },
     saveEnvironment: async (input) => {
       const result = await projectWorkingDirectoryService.saveEnvironment(input);

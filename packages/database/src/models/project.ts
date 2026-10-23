@@ -1,11 +1,20 @@
 import { BUILTIN_AGENT_SLUGS, createProjectCoordinatorAgentConfig } from '@lobechat/builtin-agents';
 import { INBOX_SESSION_ID } from '@lobechat/const';
 import type { ProjectStatus, ProjectVisibility } from '@lobechat/types';
-import { and, asc, desc, eq, inArray, isNull, max, or, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, inArray, isNull, max, notExists, or, sql } from 'drizzle-orm';
+import { alias } from 'drizzle-orm/pg-core';
 
+import { acceptanceComments } from '../schemas/acceptanceComment';
 import { agents } from '../schemas/agent';
+import { agentDocuments } from '../schemas/agentDocuments';
+import { agentOperations } from '../schemas/agentOperations';
+import { chatGroupsAgents } from '../schemas/chatGroup';
+import { dashboards } from '../schemas/dashboard';
 import { environments } from '../schemas/environment';
 import { knowledgeBases } from '../schemas/file';
+import { goals } from '../schemas/goal';
+import { goalNodeDecisions, goalNodes } from '../schemas/goalGraph';
+import { messages } from '../schemas/message';
 import {
   projectAgents,
   projectCompletionReviews,
@@ -14,9 +23,11 @@ import {
 } from '../schemas/project';
 import { projectEnvironments } from '../schemas/projectEnvironment';
 import { projectWorks } from '../schemas/projectWork';
-import { tasks } from '../schemas/task';
-import { topics } from '../schemas/topic';
-import { works } from '../schemas/work';
+import { agentsToSessions } from '../schemas/relations';
+import { briefs, taskActivities, taskComments, tasks } from '../schemas/task';
+import { threads, topics } from '../schemas/topic';
+import { widgets, widgetVersions } from '../schemas/widget';
+import { works, workVersions } from '../schemas/work';
 import type { LobeChatDatabase } from '../type';
 import { joinTopicAgentsToProjects } from '../utils/projectTopicAgents';
 import { buildWorkspacePayload, buildWorkspaceWhere } from '../utils/workspace';
@@ -210,6 +221,11 @@ export class ProjectModel {
    * (user agents, LobeAI) stay with their sessions intact.
    */
   private async deleteDedicatedCoordinator(db: LobeChatDatabase, agentId: string) {
+    if (!(await this.isDedicatedCoordinator(db, agentId))) return;
+    await new AgentModel(db, this.userId, this.workspaceId).delete(agentId);
+  }
+
+  private async isDedicatedCoordinator(db: LobeChatDatabase, agentId: string) {
     const [agent] = await db
       .select({ slug: agents.slug, virtual: agents.virtual })
       .from(agents)
@@ -220,16 +236,29 @@ export class ProjectModel {
         ),
       )
       .limit(1);
-    if (!agent?.virtual || (agent.slug && BUILTIN_SLUGS.has(agent.slug))) return;
+    if (!agent?.virtual || (agent.slug && BUILTIN_SLUGS.has(agent.slug))) return false;
 
     const [stillUsed] = await db
       .select({ id: projects.id })
       .from(projects)
       .where(eq(projects.coordinatorAgentId, agentId))
       .limit(1);
-    if (stillUsed) return;
+    if (stillUsed) return false;
 
-    await new AgentModel(db, this.userId, this.workspaceId).delete(agentId);
+    // A group's own members are virtual and slugless as well; they belong to the group.
+    // A session link would take the agent's conversations with it on delete.
+    const [linked] = await db
+      .select({ agentId: chatGroupsAgents.agentId })
+      .from(chatGroupsAgents)
+      .where(eq(chatGroupsAgents.agentId, agentId))
+      .union(
+        db
+          .select({ agentId: agentsToSessions.agentId })
+          .from(agentsToSessions)
+          .where(eq(agentsToSessions.agentId, agentId)),
+      )
+      .limit(1);
+    return !linked;
   }
 
   /**
@@ -477,6 +506,154 @@ export class ProjectModel {
       .where(and(eq(projectAgents.projectId, projectId), eq(projectAgents.agentId, agentId)))
       .returning({ id: projectAgents.id });
     return deleted.length > 0;
+  }
+
+  /**
+   * Hand the project to another agent. The new main agent joins as a member;
+   * a dedicated coordinator passes its conversations, tasks, works and goals to
+   * it and is then deleted, while a reusable predecessor stays a plain member.
+   */
+  async replaceCoordinator(projectId: string, agentId: string) {
+    return this.db.transaction(async (tx) => {
+      const [project] = await tx
+        .select()
+        .from(projects)
+        .where(and(eq(projects.id, projectId), this.membersManageable()))
+        .limit(1)
+        .for('update');
+      if (!project) return null;
+      const previousId = project.coordinatorAgentId;
+      if (previousId === agentId) return project;
+
+      const [agent] = await tx
+        .select({ id: agents.id, visibility: agents.visibility })
+        .from(agents)
+        .where(
+          and(
+            eq(agents.id, agentId),
+            buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, agents),
+          ),
+        )
+        .limit(1);
+      if (!agent) throw new Error('Agent not found');
+      this.assertSharedResource(
+        project,
+        agent.visibility,
+        'A shared project only takes shared agents',
+      );
+
+      const [updated] = await tx
+        .update(projects)
+        .set({ coordinatorAgentId: agentId, updatedAt: new Date() })
+        .where(eq(projects.id, projectId))
+        .returning();
+      await tx
+        .insert(projectAgents)
+        .values({
+          addedByUserId: this.userId,
+          agentId,
+          projectId,
+          workspaceId: this.workspaceId ?? null,
+        })
+        .onConflictDoUpdate({
+          set: { enabled: true, updatedAt: new Date() },
+          target: [projectAgents.projectId, projectAgents.agentId],
+        });
+
+      if (previousId) {
+        const db = tx as LobeChatDatabase;
+        if (await this.isDedicatedCoordinator(db, previousId)) {
+          await this.transferCoordinatorHistory(db, previousId, agentId);
+          await new AgentModel(db, this.userId, this.workspaceId).delete(previousId);
+        } else {
+          // The project role belonged to the main agent; as a member it reads like any other.
+          await tx
+            .update(projectAgents)
+            .set({ role: null, updatedAt: new Date() })
+            .where(
+              and(
+                eq(projectAgents.projectId, projectId),
+                eq(projectAgents.agentId, previousId),
+                eq(projectAgents.role, 'coordinator'),
+              ),
+            );
+        }
+      }
+      return updated;
+    });
+  }
+
+  /**
+   * Everything a deleted agent would take with it (`ON DELETE CASCADE`) or leave
+   * unassigned (`SET NULL`) that belongs to the project's record of work.
+   */
+  private async transferCoordinatorHistory(db: LobeChatDatabase, fromId: string, toId: string) {
+    await db.update(topics).set({ agentId: toId }).where(eq(topics.agentId, fromId));
+    await db.update(threads).set({ agentId: toId }).where(eq(threads.agentId, fromId));
+    await db.update(messages).set({ agentId: toId }).where(eq(messages.agentId, fromId));
+    await db.update(tasks).set({ assigneeAgentId: toId }).where(eq(tasks.assigneeAgentId, fromId));
+    await db
+      .update(tasks)
+      .set({ createdByAgentId: toId })
+      .where(eq(tasks.createdByAgentId, fromId));
+    await db.update(works).set({ originAgentId: toId }).where(eq(works.originAgentId, fromId));
+    await db.update(goals).set({ agentId: toId }).where(eq(goals.agentId, fromId));
+    await db
+      .update(taskComments)
+      .set({ authorAgentId: toId })
+      .where(eq(taskComments.authorAgentId, fromId));
+    await db
+      .update(taskActivities)
+      .set({ actorAgentId: toId })
+      .where(eq(taskActivities.actorAgentId, fromId));
+    await db.update(briefs).set({ agentId: toId }).where(eq(briefs.agentId, fromId));
+    await db.update(widgets).set({ agentId: toId }).where(eq(widgets.agentId, fromId));
+    await db
+      .update(widgetVersions)
+      .set({ sourceAgentId: toId })
+      .where(eq(widgetVersions.sourceAgentId, fromId));
+    await db.update(dashboards).set({ agentId: toId }).where(eq(dashboards.agentId, fromId));
+    await db.update(workVersions).set({ agentId: toId }).where(eq(workVersions.agentId, fromId));
+    await db
+      .update(goalNodes)
+      .set({ createdByAgentId: toId })
+      .where(eq(goalNodes.createdByAgentId, fromId));
+    await db
+      .update(goalNodeDecisions)
+      .set({ resolvedByAgentId: toId })
+      .where(eq(goalNodeDecisions.resolvedByAgentId, fromId));
+    await db
+      .update(acceptanceComments)
+      .set({ authorAgentId: toId })
+      .where(eq(acceptanceComments.authorAgentId, fromId));
+    await db
+      .update(agentOperations)
+      .set({ agentId: toId })
+      .where(eq(agentOperations.agentId, fromId));
+
+    // The documents its works point at. A document the new agent already holds
+    // keeps that binding; the duplicate goes with the coordinator.
+    const held = alias(agentDocuments, 'held');
+    await db
+      .update(agentDocuments)
+      .set({ agentId: toId, updatedAt: new Date() })
+      .where(
+        and(
+          eq(agentDocuments.agentId, fromId),
+          notExists(
+            db
+              .select({ id: held.id })
+              .from(held)
+              .where(
+                and(
+                  eq(held.agentId, toId),
+                  eq(held.documentId, agentDocuments.documentId),
+                  eq(held.userId, agentDocuments.userId),
+                ),
+              ),
+          ),
+        ),
+      );
   }
 
   async listKnowledgeBases(projectId: string) {

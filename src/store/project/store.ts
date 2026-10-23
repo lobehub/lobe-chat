@@ -19,6 +19,7 @@ import {
 } from '@/services/project';
 import { createDevtools } from '@/store/middleware/createDevtools';
 import { expose } from '@/store/middleware/expose';
+import { useProjectDirectoryStore } from '@/store/projectWorkingDirectory';
 
 import {
   PROJECT_LIST_KEY,
@@ -54,6 +55,8 @@ interface ProjectStore extends ProjectStoreState {
   refreshProjectList: () => Promise<void>;
   removeProjectAgent: (projectId: string, agentId: string) => Promise<void>;
   removeProjectKnowledgeBase: (projectId: string, knowledgeBaseId: string) => Promise<void>;
+  /** Make another agent the main agent; a dedicated coordinator hands over its history and goes. */
+  replaceProjectCoordinator: (projectId: string, agentId: string) => Promise<void>;
   updateProject: (
     id: string,
     input: Parameters<typeof projectService.update>[1],
@@ -189,6 +192,14 @@ export const useProjectStore = createWithEqualityFn<ProjectStore>()(
         await mutateAndRefresh(projectId, () =>
           projectService.removeKnowledgeBase(projectId, knowledgeBaseId),
         );
+      },
+      replaceProjectCoordinator: async (projectId, agentId) => {
+        await mutateAndRefresh(projectId, () =>
+          projectService.replaceCoordinator(projectId, agentId),
+        );
+        // The handed-over conversations now group under the new main agent.
+        void useProjectDirectoryStore.getState().refreshProjectTopics(projectId);
+        void refreshList();
       },
       updateProjectAgent: async (projectId, agentId, patch) => {
         patchDetail(projectId, (value) => ({

@@ -314,6 +314,24 @@ export const projectRouter = router({
       }
     }),
 
+  replaceCoordinator: projectWriteProcedure
+    .input(idInput.extend({ agentId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await assertResourceUsable(ctx, 'agent', input.agentId);
+        return {
+          data: await withMainAgent(
+            ctx.projectModel,
+            requireResult(await ctx.projectModel.replaceCoordinator(input.id, input.agentId)),
+          ),
+          message: 'Project main agent replaced',
+          success: true,
+        };
+      } catch (error) {
+        mapProjectError(error, 'replaceCoordinator');
+      }
+    }),
+
   removeKnowledgeBase: projectWriteProcedure
     .input(idInput.extend({ knowledgeBaseId: z.string() }))
     .mutation(async ({ ctx, input }) => {

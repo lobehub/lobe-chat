@@ -14,16 +14,28 @@ import {
   toast,
   Tooltip,
 } from '@lobehub/ui';
-import { MoreHorizontalIcon, PencilLineIcon, Trash2Icon, UserPlusIcon } from 'lucide-react';
+import {
+  ArrowLeftRightIcon,
+  MoreHorizontalIcon,
+  PencilLineIcon,
+  Trash2Icon,
+  UserPlusIcon,
+} from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Avatar from '@/components/Avatar';
 import { DEFAULT_AVATAR } from '@/const/meta';
 import AddAgentMemberModal from '@/features/AddAgentMemberModal';
+import AssigneeAgentSelector from '@/features/AgentTasks/features/AssigneeAgentSelector';
+import { useAgentStore } from '@/store/agent';
+import { builtinAgentSelectors } from '@/store/agent/selectors';
+import { useHomeStore } from '@/store/home';
+import { homeAgentListSelectors } from '@/store/home/selectors';
 import type { ProjectDetail } from '@/store/project';
 import { useProjectStore } from '@/store/project';
 
+import { directoryAgentName } from '../WorkingDirectories/useDirectoryAgent';
 import { openEditMemberModal } from './EditMemberModal';
 
 type ProjectMember = NonNullable<ProjectDetail['agents']>[number];
@@ -37,6 +49,7 @@ export function ProjectMemberSettings({ detail }: { detail: ProjectDetail }) {
   const addProjectAgents = useProjectStore((s) => s.addProjectAgents);
   const updateProjectAgent = useProjectStore((s) => s.updateProjectAgent);
   const removeProjectAgent = useProjectStore((s) => s.removeProjectAgent);
+  const replaceProjectCoordinator = useProjectStore((s) => s.replaceProjectCoordinator);
   const projectId = detail.project.id;
   const canManage = detail.permissions?.canManageMembers ?? false;
   const members = detail.agents ?? [];
@@ -81,6 +94,39 @@ export function ProjectMemberSettings({ detail }: { detail: ProjectDetail }) {
         name: agentDisplayName(member.agent, t('defaultAgent', { ns: 'common' })),
       }),
     });
+
+  const replaceCoordinator = (coordinator: ProjectMember, agentId: string) => {
+    const defaultName = t('defaultAgent', { ns: 'common' });
+    const previous = agentDisplayName(coordinator.agent, defaultName);
+    const agent =
+      members.find((member) => member.agent.id === agentId)?.agent ??
+      homeAgentListSelectors.getAgentById(agentId)(useHomeStore.getState());
+    // LobeAI is offered by the picker but not listed on the home sidebar.
+    const isInbox = agentId === builtinAgentSelectors.inboxAgentId(useAgentStore.getState());
+    const name =
+      directoryAgentName(agent, isInbox, t('inbox.title', { ns: 'chat' })) ?? defaultName;
+    const values = { name, previous };
+    // A coordinator provisioned for the project is virtual without a slug; builtins
+    // such as LobeAI are virtual too but carry one, and the server keeps them.
+    const dedicated = Boolean(coordinator.agent.virtual && !coordinator.agent.slug);
+    confirmModal({
+      content: dedicated
+        ? t('members.replaceCoordinatorDescription', values)
+        : t('members.replaceCoordinatorKeepDescription', values),
+      okButtonProps: { danger: dedicated },
+      okText: t('members.replaceCoordinatorOk'),
+      onOk: async () => {
+        try {
+          await replaceProjectCoordinator(projectId, agentId);
+          toast.success(t('members.replaceCoordinatorSuccess', values));
+        } catch (error) {
+          console.error('Failed to replace project main agent', error);
+          toast.error(t('members.replaceCoordinatorFailed'));
+        }
+      },
+      title: t('members.replaceCoordinatorTitle', values),
+    });
+  };
 
   const inviteButton = (
     <Button
@@ -146,6 +192,18 @@ export function ProjectMemberSettings({ detail }: { detail: ProjectDetail }) {
                     : member.binding.responsibility || t('members.noResponsibility')}
                 </Text>
               </Flexbox>
+              {isCoordinator && canManage && (
+                <AssigneeAgentSelector
+                  allowUnassigned={false}
+                  currentAgentId={member.agent.id}
+                  taskVisibility={isShared ? 'public' : null}
+                  onChange={(agentId) => agentId && replaceCoordinator(member, agentId)}
+                >
+                  <Button icon={ArrowLeftRightIcon} size="small">
+                    {t('members.replaceCoordinator')}
+                  </Button>
+                </AssigneeAgentSelector>
+              )}
               {!isCoordinator && canManage && (
                 <>
                   <Switch
