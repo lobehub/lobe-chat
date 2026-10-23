@@ -194,16 +194,36 @@ describe('MessageModel.listMessagePluginsByTopic', () => {
   it('excludes rows from other topics, other users and visitor topics', async () => {
     await seedToolMessage({ id: 'plug-in-scope', topicId: 'plugin-topic' });
     await seedToolMessage({ id: 'plug-other-topic', topicId: 'plugin-topic-2' });
+    // Inside the requested topic, so the topic pin cannot reject them: only the
+    // ownership guards can. One row breaks each guard on its own.
     await seedToolMessage({
-      id: 'plug-other-user',
+      id: 'plug-topic-other-user',
       ownerId: otherUserId,
-      topicId: 'plugin-other-topic',
+      pluginOwnerId: otherUserId,
+      topicId: 'plugin-topic',
+    });
+    await seedToolMessage({
+      id: 'plug-topic-other-message',
+      ownerId: otherUserId,
+      pluginOwnerId: userId,
+      topicId: 'plugin-topic',
+    });
+    await seedToolMessage({
+      id: 'plug-topic-other-plugin',
+      pluginOwnerId: otherUserId,
+      topicId: 'plugin-topic',
     });
     await seedToolMessage({ id: 'plug-visitor', topicId: 'plugin-visitor-topic' });
 
     const rows = await messageModel.listMessagePluginsByTopic('plugin-topic');
 
     expect(rows.map((row) => row.id)).toEqual(['plug-in-scope']);
+
+    // The visitor topic has to be queried on its own, so the topic pin cannot
+    // stand in for the visitor guard.
+    await expect(messageModel.listMessagePluginsByTopic('plugin-visitor-topic')).resolves.toEqual(
+      [],
+    );
   });
 
   it('returns an empty list for an unknown topic', async () => {
