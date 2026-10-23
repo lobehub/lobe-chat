@@ -736,7 +736,7 @@ describe('desktop router shared definition', () => {
   });
 
   it('keeps business resource and task routes in the shared definition', async () => {
-    const [sharedSource, , , , , resourceSource] = await readRouterSources();
+    const [sharedSource, , , , , , resourceSource] = await readRouterSources();
 
     expect(sharedSource).toContain('resourceRoute,');
     expect(resourceSource).toContain('...BusinessResourceRoutes');
