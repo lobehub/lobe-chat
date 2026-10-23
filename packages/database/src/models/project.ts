@@ -27,8 +27,11 @@ import { EnvironmentModel } from './environment';
 
 export interface CreateProjectInput {
   avatar?: string;
+  /** Lead the project with an existing agent instead of provisioning a dedicated one. */
+  coordinatorAgentId?: string;
   description?: string;
-  identifier: string;
+  /** Task prefix for this project; omit to keep the scope's default prefix. */
+  identifier?: string | null;
   name: string;
   slug?: string;
   visibility?: ProjectVisibility;
@@ -141,27 +144,32 @@ export class ProjectModel {
   }
 
   async create(input: CreateProjectInput) {
-    const identifier = input.identifier.trim().toUpperCase();
-    if (identifier.length < 3 || identifier.length > 6) {
+    const identifier = input.identifier?.trim().toUpperCase() || null;
+    if (identifier && (identifier.length < 3 || identifier.length > 6)) {
       throw new Error('Project identifier must be between 3 and 6 characters');
     }
 
     return this.db.transaction(async (tx) => {
-      const coordinatorConfig = createProjectCoordinatorAgentConfig({
-        avatar: input.avatar,
-        description: input.description,
-        identifier,
-        name: input.name,
-      });
-      const coordinator = await new AgentModel(
-        tx as LobeChatDatabase,
-        this.userId,
-        this.workspaceId,
-      ).create({
-        ...coordinatorConfig,
-        visibility: input.visibility,
-        virtual: true,
-      });
+      const coordinator = input.coordinatorAgentId
+        ? await this.findAccessibleAgent(tx as LobeChatDatabase, input.coordinatorAgentId)
+        : await new AgentModel(tx as LobeChatDatabase, this.userId, this.workspaceId).create({
+            ...createProjectCoordinatorAgentConfig({
+              avatar: input.avatar,
+              description: input.description,
+              identifier,
+              name: input.name,
+            }),
+            visibility: input.visibility,
+            virtual: true,
+          });
+      if (!coordinator) throw new Error('Agent not found');
+      if (input.coordinatorAgentId) {
+        this.assertSharedResource(
+          { visibility: input.visibility ?? 'private', workspaceId: this.workspaceId ?? null },
+          (coordinator as { visibility: string }).visibility,
+          'A shared project only takes shared agents',
+        );
+      }
 
       const [project] = await tx
         .insert(projects)
@@ -526,22 +534,27 @@ export class ProjectModel {
     await joinTopicAgentsToProjects(this.db, { projectId });
   }
 
+  private async findAccessibleAgent(db: LobeChatDatabase, agentId: string) {
+    const [agent] = await db
+      .select({ id: agents.id, visibility: agents.visibility })
+      .from(agents)
+      .where(
+        and(
+          eq(agents.id, agentId),
+          buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, agents),
+        ),
+      )
+      .limit(1);
+    return agent ?? null;
+  }
+
   async addAgent(projectId: string, input: ProjectAgentInput) {
     const project = await this.findMembersManageableById(projectId);
     if (!project) return null;
     if (project.coordinatorAgentId === input.agentId) {
       throw new Error('The project coordinator is managed by the project');
     }
-    const [agent] = await this.db
-      .select({ id: agents.id, visibility: agents.visibility })
-      .from(agents)
-      .where(
-        and(
-          eq(agents.id, input.agentId),
-          buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, agents),
-        ),
-      )
-      .limit(1);
+    const agent = await this.findAccessibleAgent(this.db, input.agentId);
     if (!agent) throw new Error('Agent not found');
     this.assertSharedResource(
       project,
