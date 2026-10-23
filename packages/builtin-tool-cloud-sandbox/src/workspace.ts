@@ -143,10 +143,17 @@ const MAX_SANDBOX_CWD_LENGTH = 1024;
  * the session would disagree with itself about where it is. The test is exactly
  * what would be silently rewritten.
  */
-export const isSafeSandboxCwd = (value: string): boolean => {
-  if (!value || value.length > MAX_SANDBOX_CWD_LENGTH) return false;
-  if (value !== value.trim()) return false;
-  if (value.startsWith('/') || value.startsWith('~')) return false;
+export type SandboxCwdValidationError =
+  'required' | 'tooLong' | 'whitespace' | 'relative' | 'reserved' | 'segments';
+
+/** A reason the picker can explain, using the same rules as the server. */
+export const getSandboxCwdValidationError = (
+  value: string,
+): SandboxCwdValidationError | undefined => {
+  if (!value.trim()) return 'required';
+  if (value.length > MAX_SANDBOX_CWD_LENGTH) return 'tooLong';
+  if (value !== value.trim()) return 'whitespace';
+  if (value.startsWith('/') || value.startsWith('~')) return 'relative';
   // The platform keeps its own state inside the workspace (environment
   // snapshots live under `.sandbox/`). Listing APIs hide it, but hiding is not
   // the same as refusing: a working directory pointed here would put an agent
@@ -154,13 +161,19 @@ export const isSafeSandboxCwd = (value: string): boolean => {
   // take every environment this user has with it. Only the top level is
   // reserved — a `.sandbox` the user made deeper in their own tree is theirs.
   if (value === RESERVED_WORKSPACE_DIR || value.startsWith(`${RESERVED_WORKSPACE_DIR}/`)) {
-    return false;
+    return 'reserved';
   }
 
   // Rejects `..` traversal, `.` no-ops, and the empty segments produced by a
   // leading, trailing or doubled slash — none of which come from the picker.
-  return value.split('/').every((segment) => segment !== '' && segment !== '.' && segment !== '..');
+  if (value.split('/').some((segment) => segment === '' || segment === '.' || segment === '..'))
+    return 'segments';
+
+  return undefined;
 };
+
+export const isSafeSandboxCwd = (value: string): boolean =>
+  getSandboxCwdValidationError(value) === undefined;
 
 /**
  * Identifiers the execution plane accepts for a named environment: a leading

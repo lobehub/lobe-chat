@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { formatSandboxStoragePromptVariables } from './workspace';
+import {
+  formatSandboxStoragePromptVariables,
+  getSandboxCwdValidationError,
+  isSafeSandboxCwd,
+} from './workspace';
 
 describe('formatSandboxStoragePromptVariables', () => {
   it('leaves the ephemeral wording exactly as a run without persistence has always had it', () => {
@@ -68,4 +72,35 @@ describe('the placement text the skills runtime also renders', () => {
     expect(prompt).toContain('Files created here are temporary and session-specific');
     expect(prompt).not.toContain('{{');
   });
+});
+
+describe('working directory validation feedback', () => {
+  it.each([
+    ['', 'required'],
+    ['   ', 'required'],
+    [' folder', 'whitespace'],
+    ['folder ', 'whitespace'],
+    ['/', 'relative'],
+    ['/tmp/folder', 'relative'],
+    ['~/folder', 'relative'],
+    ['../escape', 'segments'],
+    ['folder/../escape', 'segments'],
+    ['./folder', 'segments'],
+    ['folder//child', 'segments'],
+    ['folder/', 'segments'],
+    ['.sandbox', 'reserved'],
+    ['.sandbox/child', 'reserved'],
+    ['a'.repeat(1025), 'tooLong'],
+  ])('explains why %j cannot be submitted', (value, reason) => {
+    expect(getSandboxCwdValidationError(value)).toBe(reason);
+    expect(isSafeSandboxCwd(value)).toBe(false);
+  });
+
+  it.each(['folder', '目录/子目录-🧪', 'my notes', 'folder/.sandbox', 'a'.repeat(1024)])(
+    'clears the error for a valid path %j',
+    (value) => {
+      expect(getSandboxCwdValidationError(value)).toBeUndefined();
+      expect(isSafeSandboxCwd(value)).toBe(true);
+    },
+  );
 });
