@@ -11,7 +11,7 @@ import type { ChannelSendInput } from './send';
 import { sendMessage } from './send';
 import type { ChannelStopScope } from './stop';
 import { stopScope } from './stop';
-import { bumpRevision, lockChannel } from './transaction';
+import { lockChannel } from './transaction';
 import type { ChannelAccess, ChannelWriteOptions } from './types';
 
 export type { ChannelClaim, ChannelClaimOptions } from './claim';
@@ -33,8 +33,7 @@ const hasRole = (role: ChannelMemberRole | null, minRole: ChannelMemberRole) =>
  *
  * A caller reaches a channel only through its own active human member row, in the current
  * scope (personal, or the given workspace). Every write runs inside `write`, which holds the
- * `channels` row lock so mutations of one channel serialize, and bumps `channels.revision`
- * once in the same transaction.
+ * `channels` row lock so mutations of one channel serialize in a transaction.
  */
 export class ChannelModel {
   private readonly workspaceId: string | null;
@@ -106,7 +105,7 @@ export class ChannelModel {
 
   /**
    * Runs `fn` while holding the channel row lock, after checking that the caller is an
-   * active member with at least `minRole` (default `member`), then bumps the revision.
+   * active member with at least `minRole` (default `member`).
    */
   write = async <T>(
     channelId: string,
@@ -132,10 +131,7 @@ export class ChannelModel {
       if (access.channel.archived && !options.allowArchived)
         throw new ChannelError('CONFLICT', 'Channel is archived');
 
-      const result = await fn(tx, access);
-      await bumpRevision(tx, channelId);
-
-      return result;
+      return fn(tx, access);
     });
 
   /** Posts a message as the caller. See {@link sendMessage} for routing. */

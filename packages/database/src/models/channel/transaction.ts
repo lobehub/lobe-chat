@@ -1,5 +1,5 @@
 import type { ChannelAuditDetails } from '@lobechat/types';
-import { eq, sql } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 
 import type { ChannelItem } from '../../schemas';
 import { channelAudit, channels } from '../../schemas';
@@ -21,15 +21,7 @@ export const lockChannel = async (tx: Transaction, channelId: string): Promise<C
   return channel;
 };
 
-/** One bump per committed write; watchers compare it instead of reloading the channel. */
-export const bumpRevision = async (tx: Transaction, channelId: string) => {
-  await tx
-    .update(channels)
-    .set({ revision: sql`${channels.revision} + 1` })
-    .where(eq(channels.id, channelId));
-};
-
-/** Lock, run `fn`, bump the revision, all in one transaction. For system callers. */
+/** Lock and run `fn` in one transaction. For system callers. */
 export const withChannelLock = async <T>(
   db: LobeChatDatabase,
   channelId: string,
@@ -37,10 +29,7 @@ export const withChannelLock = async <T>(
 ): Promise<T> =>
   db.transaction(async (tx) => {
     const channel = await lockChannel(tx, channelId);
-    const result = await fn(tx, channel);
-    await bumpRevision(tx, channelId);
-
-    return result;
+    return fn(tx, channel);
   });
 
 export const audit = async (

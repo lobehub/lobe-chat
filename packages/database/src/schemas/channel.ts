@@ -74,11 +74,6 @@ export const channels = pgTable(
     title: text('title').notNull(),
     /** Last allocated message sequence; incremented under the row lock when a message lands. */
     sequence: integer('sequence').notNull().default(0),
-    /**
-     * Change counter for watchers. Bumped once per committed channel write, in the same
-     * transaction that holds the row lock; watchers compare it instead of reloading.
-     */
-    revision: integer('revision').notNull().default(0),
     archived: boolean('archived').notNull().default(false),
 
     /**

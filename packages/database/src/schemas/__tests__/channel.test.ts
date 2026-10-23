@@ -54,14 +54,6 @@ const createChannel = async (title = 'Channel') => {
   return { agent, channel, owner };
 };
 
-const revisionOf = async (channelId: string) => {
-  const [row] = await serverDB
-    .select({ revision: channels.revision })
-    .from(channels)
-    .where(eq(channels.id, channelId));
-  return row.revision;
-};
-
 const createMessage = async (channelId: string, authorMemberId: string, sequence: number) => {
   const [canonical] = await serverDB
     .insert(messages)
@@ -420,20 +412,6 @@ describe('channel schema', () => {
       expect(
         await serverDB.select().from(channelMessages).where(eq(channelMessages.id, message.id)),
       ).toHaveLength(1);
-    });
-
-    it('leaves the revision to the channel write path', async () => {
-      // Child writes must not lock the channel row behind the caller's back: a device
-      // receipt that locked a run first and the channel second would deadlock against
-      // a writer holding the channel lock.
-      const fixture = await createChannel();
-      const [run] = await createRun(fixture, 1);
-      await serverDB
-        .update(channelRuns)
-        .set({ acceptance: 'accepted', status: 'running' })
-        .where(eq(channelRuns.id, run.id));
-
-      expect(await revisionOf(fixture.channel.id)).toBe(0);
     });
 
     it('deletes a channel with all of its rows', async () => {

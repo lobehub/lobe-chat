@@ -149,7 +149,6 @@ CREATE TABLE IF NOT EXISTS "channels" (
 	"project_id" text,
 	"title" text NOT NULL,
 	"sequence" integer DEFAULT 0 NOT NULL,
-	"revision" integer DEFAULT 0 NOT NULL,
 	"archived" boolean DEFAULT false NOT NULL,
 	"visibility" text DEFAULT 'private' NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,

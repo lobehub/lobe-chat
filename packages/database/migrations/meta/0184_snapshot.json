@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "4e852e1c-9f26-431b-90ab-2a138a18ebd9",
+  "id": "28d2a8a3-f729-4848-a37e-b19368b072d3",
   "policies": {},
   "prevId": "441054df-5d72-4ff2-b7fc-742c8cfb5db5",
   "roles": {},
@@ -11866,13 +11866,6 @@
         },
         "sequence": {
           "name": "sequence",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
-        },
-        "revision": {
-          "name": "revision",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,

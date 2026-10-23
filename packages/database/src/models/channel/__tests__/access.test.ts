@@ -20,14 +20,6 @@ const workspaceId = 'channel-model-workspace';
 const addPerson = async (channelId: string, userId: string, role: 'admin' | 'member') =>
   serverDB.insert(channelMembers).values({ actorType: 'user', channelId, role, userId });
 
-const revisionOf = async (channelId: string) => {
-  const [row] = await serverDB
-    .select({ revision: channels.revision })
-    .from(channels)
-    .where(eq(channels.id, channelId));
-  return row?.revision;
-};
-
 /** Resolves once some session in this database is waiting on a row lock. */
 const waitForLockWaiter = async () => {
   for (let attempt = 0; attempt < 100; attempt++) {
@@ -155,22 +147,20 @@ describe('ChannelModel', () => {
       expect(renamed.title).toBe('Renamed');
     });
 
-    it('bumps the revision once per committed write', async () => {
+    it('rolls back mutations when the write callback fails', async () => {
       const model = new ChannelModel(serverDB, ownerId);
       const { channel } = await model.create({ title: 'Personal' });
 
-      await model.write(channel.id, async (tx) => {
-        await tx.update(channels).set({ title: 'One' }).where(eq(channels.id, channel.id));
-        await tx.update(channels).set({ title: 'Two' }).where(eq(channels.id, channel.id));
-      });
-      expect(await revisionOf(channel.id)).toBe(1);
-
       await expect(
-        model.write(channel.id, async () => {
+        model.write(channel.id, async (tx) => {
+          await tx
+            .update(channels)
+            .set({ title: 'Uncommitted' })
+            .where(eq(channels.id, channel.id));
           throw new Error('rolled back');
         }),
       ).rejects.toThrow('rolled back');
-      expect(await revisionOf(channel.id)).toBe(1);
+      expect((await model.findAccess(channel.id))?.channel.title).toBe('Personal');
     });
 
     it('rejects outsiders, insufficient roles and archived channels', async () => {

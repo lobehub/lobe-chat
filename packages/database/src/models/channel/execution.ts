@@ -88,8 +88,8 @@ export const releaseOutcome = (
 
 /**
  * Channel writes made by the system rather than by a person: the dispatcher, native
- * completion callbacks, device receipts and reconcile. Every method locks the channel row,
- * then bumps the revision in the same transaction. Callers must authenticate the source
+ * completion callbacks, device receipts and reconcile. Mutations lock the channel row
+ * within a transaction, except lease-only heartbeats. Callers must authenticate the source
  * (run-scoped token, service credentials) before calling.
  */
 export class ChannelExecutionModel {
@@ -363,8 +363,8 @@ export class ChannelExecutionModel {
 
   /**
    * Extends the lease of a live run. Touches only the run row and takes no channel lock, so
-   * it cannot deadlock with channel writes, and does not bump the revision: nobody watches
-   * heartbeats. Returns false once the run lost its lease, fence or writer.
+   * it cannot deadlock with channel writes. Returns false once the run lost its lease,
+   * fence or writer.
    */
   heartbeat = async (
     runId: string,

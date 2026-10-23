@@ -4,7 +4,7 @@ import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../../core/getTestDB';
-import { channels, channelThreads, messages, topics } from '../../../schemas';
+import { channelThreads, messages, topics } from '../../../schemas';
 import type { LobeChatDatabase } from '../../../type';
 import { createChannelFixture, jobsOf } from './testUtils';
 
@@ -13,11 +13,6 @@ const fixture = createChannelFixture(db, 'channel-send');
 
 beforeEach(fixture.setup);
 afterEach(fixture.cleanup);
-
-const revisionOf = async (channelId: string) => {
-  const [row] = await db.select().from(channels).where(eq(channels.id, channelId));
-  return row.revision;
-};
 
 describe('ChannelModel.send', () => {
   it('stores public content once in canonical messages under a channel-owned topic', async () => {
@@ -47,7 +42,6 @@ describe('ChannelModel.send', () => {
     const { asMember, channel, member } = await fixture.createTeamChannel();
     const coder = await fixture.addAgent(channel.id, 'Coder');
     await fixture.addAgent(channel.id, 'Reviewer');
-    const before = await revisionOf(channel.id);
 
     const message = await asMember.send(channel.id, {
       content: 'Fix the bug',
@@ -71,7 +65,6 @@ describe('ChannelModel.send', () => {
         status: 'queued',
       }),
     ]);
-    expect(await revisionOf(channel.id)).toBe(before + 1);
   });
 
   it('wakes no Agent when only people are mentioned', async () => {

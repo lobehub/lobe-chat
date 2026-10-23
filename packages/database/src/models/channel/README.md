@@ -32,6 +32,11 @@ Runtime/display configuration remains a snapshot; Agent access must be authorize
 
 ## Access and integration contract
 
+- Channel transactions serialize writes with row locks, not a global revision counter.
+  Realtime invalidation and missed-event recovery belong to the future subscription layer;
+  canonical runtime updates and foreign-key cleanup do not all pass through Channel writes.
+  Message sequence, environment revisions, session generations and execution fences remain
+  independent correctness constraints, not versions of a whole-channel snapshot.
 - `ChannelModel` checks Channel membership/role and workspace scope for public reads and writes.
   The eventual router must also authenticate active workspace membership.
 - Ordinary topic/message/operation constructors, search projection, sharing and memory extraction
