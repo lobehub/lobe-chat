@@ -42,6 +42,7 @@ import { chatConfigByIdSelectors } from '@/store/agent/selectors';
 import {
   consumePendingSandboxSelection,
   getPendingSandboxSelection,
+  toSandboxTopicMetadata,
 } from '@/store/chat/pendingSandboxSelection';
 import { consumePendingTopicRepos, getPendingTopicRepos } from '@/store/chat/pendingTopicRepos';
 import { topicSelectors } from '@/store/chat/selectors';
@@ -1028,12 +1029,7 @@ export class GatewayActionImpl {
       isCreateNewTopic && executionContext.agentId
         ? getPendingSandboxSelection(executionContext.agentId)
         : undefined;
-    const sandboxTopicMetadata = pendingSandboxSelection
-      ? {
-          sandboxInstanceId: pendingSandboxSelection.instanceId,
-          sandboxMode: pendingSandboxSelection.mode,
-        }
-      : undefined;
+    const sandboxTopicMetadata = toSandboxTopicMetadata(pendingSandboxSelection);
     const cwdTopicMetadata =
       pendingRepos.length > 0
         ? {
