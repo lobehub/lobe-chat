@@ -178,6 +178,50 @@ describe('llmCalls metric', () => {
     expect(result.newState.llmCalls).toBe(1);
   });
 
+  it('does not count a call_llm that failed before the transport ran', async () => {
+    // Missing model/provider, an absent parent message, or a rejected context
+    // all throw before `runAttempt`, so no provider call happened. The fallback
+    // must not invent one just because the instruction was queued.
+    const runtime = new AgentRuntime(createAgent());
+    // @ts-expect-error - accessing a private property for testing
+    runtime.executors.call_llm = vi
+      .fn()
+      .mockRejectedValue(new Error('call_llm produced no non-system messages'));
+
+    const state = AgentRuntime.createInitialState({ operationId: 'test-op' });
+    const result = await runtime.step(state, createContext());
+
+    expect(result.newState.status).toBe('error');
+    expect(result.newState.llmCalls).toBe(0);
+    expect(result.newState.usage?.llm.apiCalls ?? 0).toBe(0);
+  });
+
+  it('counts only the call_llm instructions whose executor ran', async () => {
+    // The first call reached the transport and left `usage` untouched, so the
+    // fallback counts it; the second failed preflight and never reached the
+    // provider, so it must not be counted on top.
+    const agent = {
+      ...createAgent(),
+      runner: async () =>
+        [
+          { payload: { messages: [] }, type: 'call_llm' },
+          { payload: { messages: [] }, type: 'call_llm' },
+        ] as any,
+    } as unknown as Agent;
+    const runtime = new AgentRuntime(agent);
+    // @ts-expect-error - accessing a private property for testing
+    runtime.executors.call_llm = vi
+      .fn()
+      .mockImplementationOnce(async (_instruction, state) => ({ events: [], newState: state }))
+      .mockRejectedValueOnce(new Error('Model and provider are required for call_llm'));
+
+    const state = AgentRuntime.createInitialState({ operationId: 'test-op' });
+    const result = await runtime.step(state, createContext());
+
+    expect(result.newState.status).toBe('error');
+    expect(result.newState.llmCalls).toBe(1);
+  });
+
   it('reads the explicit llmCalls field before falling back to usage', () => {
     const state = { llmCalls: 5, usage: createUsage(2) } as AgentState;
     expect(getLlmCallCount(state)).toBe(5);

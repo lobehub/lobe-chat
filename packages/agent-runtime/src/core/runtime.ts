@@ -236,11 +236,11 @@ export class AgentRuntime {
 
       // Counted rather than flagged: a runner may queue several `call_llm`
       // instructions in one step (the fallback path when the selected executor
-      // does not mutate `usage`), and each of them reached the provider.
+      // does not mutate `usage`). Only the instructions whose executor actually
+      // ran are counted — see the increment inside the loop below.
       executedLlmInstructions = 0;
 
       for (const [instructionIndex, instruction] of normalizedInstructions.entries()) {
-        if (instruction.type === 'call_llm') executedLlmInstructions += 1;
         if (instruction.type === 'finish') hasFinishInstruction = true;
 
         let result;
@@ -268,6 +268,14 @@ export class AgentRuntime {
           // Pass runtimeContext to executor so it can access stepContext
           result = await executor(instruction, currentState, instructionContext);
         }
+
+        // Count a `call_llm` only once its executor returned. A preflight
+        // failure — missing model/provider, absent parent message, or a rejected
+        // context — throws before the transport is invoked, so no provider call
+        // happened. Counting it up-front would let the fallback in the success
+        // and error paths report a model call that never ran, and inflate the
+        // `maxSteps` budget with it.
+        if (instruction.type === 'call_llm') executedLlmInstructions += 1;
 
         // Accumulate events
         allEvents.push(...result.events);
