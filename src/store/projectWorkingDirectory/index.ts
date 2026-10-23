@@ -224,7 +224,13 @@ export const useProjectDirectoryStore: UseBoundStoreWithEqualityFn<
       return result.data;
     },
     refreshProjectTopics: async (projectId) => {
-      await projectTopics.revalidate(projectId);
+      // Directory and environment rows carry the same topics with their agent
+      // denormalized, so every projection that lists them is stale too.
+      await Promise.all([
+        projectTopics.revalidate(projectId),
+        directoryTopics.revalidate(),
+        environmentTopics.revalidate(),
+      ]);
     },
     saveEnvironment: async (input) => {
       const result = await projectWorkingDirectoryService.saveEnvironment(input);

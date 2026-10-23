@@ -188,6 +188,19 @@ describe('ProjectCoordinatorRepository.replaceCoordinator', () => {
     ]);
   });
 
+  it('gives a project that fell back to LobeAI a main agent of its own', async () => {
+    const project = await createProject({ name: 'Orphaned' });
+    await new AgentModel(serverDB, userId).delete(project.coordinatorAgentId);
+    const lead = await new AgentModel(serverDB, userId).create({ title: 'Lead' });
+
+    const updated = await repo.replaceCoordinator(project.id, lead.id);
+
+    expect(updated?.coordinatorAgentId).toBe(lead.id);
+    expect(await model.listAgents(project.id)).toEqual([
+      expect.objectContaining({ agent: expect.objectContaining({ id: lead.id }) }),
+    ]);
+  });
+
   it('refuses to replace the main agent outside the member-management scope', async () => {
     const project = await createProject({ name: 'Guarded' });
     const agent = await new AgentModel(serverDB, otherUserId).create({ title: 'Outsider' });

@@ -95,9 +95,10 @@ export function ProjectMemberSettings({ detail }: { detail: ProjectDetail }) {
       }),
     });
 
-  const replaceCoordinator = (coordinator: ProjectMember, agentId: string) => {
+  /** `coordinator` is absent when the project fell back to LobeAI, which has no member row. */
+  const replaceCoordinator = (coordinator: ProjectMember | undefined, agentId: string) => {
     const defaultName = t('defaultAgent', { ns: 'common' });
-    const previous = agentDisplayName(coordinator.agent, defaultName);
+    const previous = coordinator && agentDisplayName(coordinator.agent, defaultName);
     const agent =
       members.find((member) => member.agent.id === agentId)?.agent ??
       homeAgentListSelectors.getAgentById(agentId)(useHomeStore.getState());
@@ -108,11 +109,13 @@ export function ProjectMemberSettings({ detail }: { detail: ProjectDetail }) {
     const values = { name, previous };
     // A coordinator provisioned for the project is virtual without a slug; builtins
     // such as LobeAI are virtual too but carry one, and the server keeps them.
-    const dedicated = Boolean(coordinator.agent.virtual && !coordinator.agent.slug);
+    const dedicated = Boolean(coordinator?.agent.virtual && !coordinator.agent.slug);
     confirmModal({
-      content: dedicated
-        ? t('members.replaceCoordinatorDescription', values)
-        : t('members.replaceCoordinatorKeepDescription', values),
+      content: !coordinator
+        ? undefined
+        : dedicated
+          ? t('members.replaceCoordinatorDescription', values)
+          : t('members.replaceCoordinatorKeepDescription', values),
       okButtonProps: { danger: dedicated },
       okText: t('members.replaceCoordinatorOk'),
       onOk: async () => {
@@ -127,6 +130,22 @@ export function ProjectMemberSettings({ detail }: { detail: ProjectDetail }) {
       title: t('members.replaceCoordinatorTitle', values),
     });
   };
+
+  const coordinatorMember = members.find(
+    (member) => member.agent.id === detail.project.coordinatorAgentId,
+  );
+  const replaceButton = (coordinator?: ProjectMember) => (
+    <AssigneeAgentSelector
+      allowUnassigned={false}
+      currentAgentId={detail.project.coordinatorAgentId}
+      taskVisibility={isShared ? 'public' : null}
+      onChange={(agentId) => agentId && replaceCoordinator(coordinator, agentId)}
+    >
+      <Button icon={ArrowLeftRightIcon} size={coordinator ? 'small' : undefined}>
+        {t('members.replaceCoordinator')}
+      </Button>
+    </AssigneeAgentSelector>
+  );
 
   const inviteButton = (
     <Button
@@ -149,7 +168,10 @@ export function ProjectMemberSettings({ detail }: { detail: ProjectDetail }) {
           <Text type="secondary">{t('members.description')}</Text>
         </Flexbox>
         {canManage ? (
-          inviteButton
+          <Flexbox horizontal gap={8}>
+            {!coordinatorMember && replaceButton()}
+            {inviteButton}
+          </Flexbox>
         ) : (
           <Tooltip title={t('members.manageForbidden')}>
             <span>{inviteButton}</span>
@@ -192,18 +214,7 @@ export function ProjectMemberSettings({ detail }: { detail: ProjectDetail }) {
                     : member.binding.responsibility || t('members.noResponsibility')}
                 </Text>
               </Flexbox>
-              {isCoordinator && canManage && (
-                <AssigneeAgentSelector
-                  allowUnassigned={false}
-                  currentAgentId={member.agent.id}
-                  taskVisibility={isShared ? 'public' : null}
-                  onChange={(agentId) => agentId && replaceCoordinator(member, agentId)}
-                >
-                  <Button icon={ArrowLeftRightIcon} size="small">
-                    {t('members.replaceCoordinator')}
-                  </Button>
-                </AssigneeAgentSelector>
-              )}
+              {isCoordinator && canManage && replaceButton(member)}
               {!isCoordinator && canManage && (
                 <>
                   <Switch
