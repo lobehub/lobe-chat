@@ -630,8 +630,8 @@ dev.mjs 每次启动都会拉起 renderer Vite dev server，而后者启动即�
 改 `node_modules` 里的依赖硬救，或者干脆退回「真组件 + mock 数据截图」交差——最后一种不算验收证据。
 
 **Rule:** 根 `.env` 起不来就离开它：`git worktree add /tmp/<slug> <ref>` 开一棵没有根 `.env` 的树，
-再把这条路径走完整——按 L-S23 复制一份可用的 `node_modules`（含各 package 自己的），按 L-S20 从
+再把这条路径走完整——worktree 用 `git worktree add --detach` 开（正在检出的分支不能重复 checkout），按 L-S23 复制一份可用的 `node_modules`（含各 package 自己的），按 L-S20 从
 `docker ps` 取容器真实端口，按 L-S9 在容器里建 per-run 库并导出 `DATABASE_URL`，然后
 `init-dev-env.sh setup-db` → `migrate` → `seed-user` → `dev`（脚本一律用绝对路径，L-S21；端口从
-日志取，L-S24）。worktree 路径写进 report，teardown 时删掉这个库。不要在被改坏的根 `.env` 上继续
+日志取，L-S24）。worktree 路径写进 report，teardown 时 `clean` 停服、删掉这个库、`git worktree remove` 移除这棵树。不要在被改坏的根 `.env` 上继续
 调试，也不要用 mock 截图替代起不来的 dev server。

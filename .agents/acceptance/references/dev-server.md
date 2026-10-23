@@ -90,7 +90,8 @@ other's state, and invoke everything by absolute path:
 ```bash
 WT=/tmp/lh-acceptance-<slug>
 SRC=<working checkout>
-git worktree add "$WT" <ref>
+# --detach so a ref already checked out elsewhere (i.e. the branch under test) is legal.
+git worktree add --detach "$WT" <ref-or-sha>
 
 # 1. Install (L-S23): copy $SRC's install rather than resolving a lockfile-less repo.
 #    -c is APFS clonefile (macOS); drop it on Linux.
@@ -119,12 +120,22 @@ export DATABASE_URL="postgresql://postgres:postgres@localhost:$DB_PORT/lh_accept
 ```
 
 `setup-db` still migrates the default `postgres` database on the way; step 4's
-`migrate` is what the run actually uses. Drop `lh_acceptance_<slug>` at teardown
-and leave the shared database holding the other session's rows.
+`migrate` is what the run actually uses.
 
-The containers cost nothing the second time (`setup-db` is a no-op when they are
-up), so the price of this path is a checkout, not a second environment. Record
-the worktree path in the report. Never substitute mock data for a dev server that
+Teardown reverses all of it — the worktree is throwaway, and on Linux the copy is
+a real ~6.8 GB, not a clonefile:
+
+```bash
+"$WT/.agents/acceptance/scripts/init-dev-env.sh" clean   # stop only this run's server
+docker exec lobehub-agent-testing-postgres psql -U postgres -c "DROP DATABASE IF EXISTS lh_acceptance_<slug>"
+git worktree remove --force "$WT"
+```
+
+Leave the shared `postgres` database holding the other session's rows.
+
+The containers are the part that costs nothing the second time (`setup-db` is a
+no-op when they are up); the price of this path is one checkout plus a
+dependency copy. Record the worktree path in the report. Never substitute mock data for a dev server that
 failed to boot — a mocked screenshot is not evidence.
 
 ## When a server restart is needed
