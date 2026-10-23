@@ -12,9 +12,41 @@ import type { AgentInboxSourceType, AgentMailAddress, AgentMailAttachment } from
  * change with no migration.
  */
 
-/** The sorts of identity an agent can own. */
+/** The sorts of identity an agent can own today — what a caller may create. */
 export const AGENT_ACCOUNT_KINDS = ['mail', 'wallet', 'service'] as const;
 export type AgentAccountKind = (typeof AGENT_ACCOUNT_KINDS)[number];
+
+/**
+ * Every kind a persisted row — and therefore a read response — can still carry.
+ *
+ * `kind` is a plain text column, so a kind the product retired outlives the
+ * code that minted it: the agent-owned `phone` (now a messenger channel) keeps
+ * its rows. An unfiltered read deliberately leaves those rows visible so their
+ * owner can still revoke them, which means every read shape has to admit a
+ * value that the validators and the live-runtime filter never accept.
+ */
+export const AGENT_ACCOUNT_PERSISTED_KINDS = [...AGENT_ACCOUNT_KINDS, 'phone'] as const;
+export type AgentAccountPersistedKind = (typeof AGENT_ACCOUNT_PERSISTED_KINDS)[number];
+
+/**
+ * Whether a persisted kind is one the product still opens.
+ *
+ * Reads that must only see live identities use this as a type guard, so the
+ * runtime context cannot claim an account kind it has no provider for.
+ */
+export const isAgentAccountKind = (kind: AgentAccountPersistedKind): kind is AgentAccountKind =>
+  (AGENT_ACCOUNT_KINDS as readonly string[]).includes(kind);
+
+/**
+ * Narrow an account-shaped value to one whose kind is still open.
+ *
+ * Object-level, not kind-level, so it can be handed straight to
+ * `Array.prototype.filter` — a predicate on `.kind` alone leaves the element
+ * type untouched.
+ */
+export const isLiveAgentAccount = <T extends { kind: AgentAccountPersistedKind }>(
+  account: T,
+): account is T & { kind: AgentAccountKind } => isAgentAccountKind(account.kind);
 
 /** Lifecycle of one account. */
 export const AGENT_ACCOUNT_STATUSES = ['provisioning', 'active', 'suspended', 'revoked'] as const;
@@ -232,7 +264,11 @@ export interface AgentAccountRef {
   id: string;
   /** The handle that routes to this account: address, login. */
   identifier: string;
-  kind: AgentAccountKind;
+  /**
+   * The kind the row was written with. Widened past {@link AgentAccountKind}
+   * because a legacy row is still readable — and must stay releasable.
+   */
+  kind: AgentAccountPersistedKind;
   /** Provider-side non-secret handles (inboxId, chatId, …). */
   metadata: Record<string, unknown>;
   provider: string;

@@ -2,6 +2,7 @@ import type {
   AgentAccountCapabilities,
   AgentAccountCredentialHint,
   AgentAccountKind,
+  AgentAccountPersistedKind,
   AgentAccountStatus,
 } from '@lobechat/types';
 import { AGENT_ACCOUNT_KINDS } from '@lobechat/types';
@@ -31,8 +32,14 @@ export interface AgentAccountGateKeeper {
  * accidentally serialize the ciphertext, and `hasCredential` answers the only
  * question a read needs to ask about it.
  */
-export type AgentAccountView = Omit<AgentAccountItem, 'credentials'> & {
+export type AgentAccountView = Omit<AgentAccountItem, 'credentials' | 'kind'> & {
   hasCredential: boolean;
+  /**
+   * Widened past {@link AgentAccountKind} on purpose: an unfiltered read still
+   * returns rows whose kind the product retired, so a view must not claim a
+   * value the row does not carry. `liveOnly` reads narrow it back.
+   */
+  kind: AgentAccountPersistedKind;
 };
 
 /**

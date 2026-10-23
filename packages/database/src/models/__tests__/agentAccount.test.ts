@@ -395,6 +395,9 @@ describe('AgentAccountModel scope and writes', () => {
     // but its provider (linq) is no longer registered.
     const legacy = await model.create({
       ...mailAccount('+15550002222'),
+      // The cast is the write-side half of the same split: the column stores
+      // every persisted kind, while the writable type only admits the kinds the
+      // product still opens. This row predates the retirement.
       kind: 'phone' as any,
       provider: 'linq',
       status: 'active',
@@ -405,6 +408,9 @@ describe('AgentAccountModel scope and writes', () => {
 
     const all = await model.query({ agentId });
     expect(all.map((account) => account.id)).toContain(legacy.id);
+    // The read has to report the kind the row actually carries: the Identity
+    // list keys its icon off it and the OpenAPI response admits it.
+    expect(all.find((account) => account.id === legacy.id)?.kind).toBe('phone');
     await model.revoke(legacy.id);
     expect((await model.findById(legacy.id))?.status).toBe('revoked');
   });
