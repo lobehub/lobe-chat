@@ -35,7 +35,8 @@ Cloud Providers such as OpenAI or DeepSeek are called from the server, as before
 
 - **Docker Compose, 2.2.18 to 2.2.x**: your `docker-compose.yml` already has the `gateway` service. If `.env` already holds the gateway settings and `docker logs lobehub` prints no `ACTION REQUIRED` warning, you only need to [update the gateway image](#docker-compose). Otherwise follow all of [Docker Compose](#docker-compose).
 - **Docker Compose, 2.2.17 or earlier**: follow [Docker Compose](#docker-compose).
-- **Single Docker container, Vercel, or another platform**: follow [Other Deployments](#other-deployments).
+- **Single Docker container or another long-running server**: follow [Other Deployments](#other-deployments).
+- **Vercel or another serverless platform**: follow [Other Deployments](#other-deployments), including [Turn on queue mode](#turn-on-queue-mode-serverless-only).
 
 ## Docker Compose
 
@@ -101,11 +102,30 @@ Run the gateway as a long-running service the browser can reach, such as a Docke
   AGENT_GATEWAY_URL=https://gateway.example.com
   # Same value as SERVICE_TOKEN on the gateway
   AGENT_GATEWAY_SERVICE_TOKEN=<service token>
-  # Required for local models on the user's device
+  # Required for local models on the user's device, and for queue mode
   REDIS_URL=redis://your-redis-host:6379
   ```
 
   Gateway Mode stays off unless all three of `ENABLE_AGENT_GATEWAY`, `AGENT_GATEWAY_URL`, and `AGENT_GATEWAY_SERVICE_TOKEN` are set. If LobeHub reaches the gateway at a different address than the browser does, also set `AGENT_GATEWAY_INTERNAL_URL`. See [Environment Variables](/docs/self-hosting/environment-variables/basic) and [Redis](/docs/self-hosting/advanced/redis).
+
+  ### Turn on queue mode (serverless only)
+
+  Skip this step on a long-running server such as Docker. On Vercel and other serverless platforms it is required.
+
+  By default LobeHub runs each Agent step inside the server process. A serverless function stops once it returns its response, so the Agent stops partway through. Queue mode schedules every step as its own request through [Upstash QStash](https://upstash.com/docs/qstash), which calls back `/api/agent/run` on your deployment.
+
+  Create a QStash project in the [Upstash Console](https://console.upstash.com/qstash), then add:
+
+  ```env
+  AGENT_RUNTIME_MODE=queue
+  QSTASH_TOKEN=<QStash token>
+  QSTASH_CURRENT_SIGNING_KEY=<current signing key>
+  QSTASH_NEXT_SIGNING_KEY=<next signing key>
+  ```
+
+  - `REDIS_URL` from the previous step is required: queue mode keeps each run's state in Redis between steps.
+  - `APP_URL` must be your public HTTPS address, such as `https://lobehub.example.com`. QStash sends each step there, so it cannot be `localhost` or a private network address.
+  - Set both signing keys. Without them, `/api/agent/run` accepts unsigned requests, so anyone who can reach your deployment can drive Agent runs.
 </Steps>
 
 ## Verify the Upgrade
@@ -137,6 +157,10 @@ One of `ENABLE_AGENT_GATEWAY`, `AGENT_GATEWAY_URL`, or `AGENT_GATEWAY_SERVICE_TO
 #### The message is sent, but no reply appears
 
 The browser cannot open its WebSocket connection to `AGENT_GATEWAY_URL`, or the gateway rejects the session. Check that the address is reachable from the browser, that your reverse proxy allows WebSocket upgrades, and that `JWKS_PUBLIC_KEY` on the gateway was derived from the `JWKS_KEY` LobeHub uses now.
+
+#### On Vercel, Agents stop before they finish
+
+Queue mode is off. Set `AGENT_RUNTIME_MODE=queue` and the QStash variables in [Turn on queue mode](#turn-on-queue-mode-serverless-only), then redeploy.
 
 #### Agent runs stop when the gateway restarts
 

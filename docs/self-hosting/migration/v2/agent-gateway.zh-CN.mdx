@@ -32,7 +32,8 @@ OpenAI、DeepSeek 等云端服务商和以前一样由服务端请求，行为�
 
 - **Docker Compose，2.2.18 到 2.2.x**：你的 `docker-compose.yml` 已经包含 `gateway` 服务。如果 `.env` 里已有网关配置，且 `docker logs lobehub` 没有打印 `ACTION REQUIRED` 告警，只需[更新网关镜像](#docker-compose)；否则按 [Docker Compose](#docker-compose) 完整操作。
 - **Docker Compose，2.2.17 及更早**：按 [Docker Compose](#docker-compose) 操作。
-- **单个 Docker 容器、Vercel 或其他平台**：按 [其他部署方式](#其他部署方式) 操作。
+- **单个 Docker 容器或其他常驻运行的服务器**：按 [其他部署方式](#其他部署方式) 操作。
+- **Vercel 或其他 Serverless 平台**：按 [其他部署方式](#其他部署方式) 操作，并完成其中的 [开启队列模式](#开启队列模式仅-serverless)。
 
 ## Docker Compose
 
@@ -98,11 +99,30 @@ OpenAI、DeepSeek 等云端服务商和以前一样由服务端请求，行为�
   AGENT_GATEWAY_URL=https://gateway.example.com
   # 与网关的 SERVICE_TOKEN 相同
   AGENT_GATEWAY_SERVICE_TOKEN=<服务令牌>
-  # 使用用户设备上的本地模型时必需
+  # 使用用户设备上的本地模型和队列模式时必需
   REDIS_URL=redis://your-redis-host:6379
   ```
 
   `ENABLE_AGENT_GATEWAY`、`AGENT_GATEWAY_URL`、`AGENT_GATEWAY_SERVICE_TOKEN` 三项都设置后，Gateway 模式才会开启。如果 LobeHub 访问网关的地址和浏览器不同，再设置 `AGENT_GATEWAY_INTERNAL_URL`。详见 [环境变量](/zh/docs/self-hosting/environment-variables/basic) 和 [Redis](/zh/docs/self-hosting/advanced/redis)。
+
+  ### 开启队列模式（仅 Serverless）
+
+  Docker 等常驻运行的服务器跳过这一步；Vercel 和其他 Serverless 平台必须配置。
+
+  默认情况下，LobeHub 在服务端进程内逐步运行智能体。Serverless 函数返回响应后就会停止，智能体会在中途停下。队列模式通过 [Upstash QStash](https://upstash.com/docs/qstash) 把每一步作为单独的请求调度，由 QStash 回调你部署上的 `/api/agent/run`。
+
+  在 [Upstash 控制台](https://console.upstash.com/qstash) 创建 QStash 项目，然后添加：
+
+  ```env
+  AGENT_RUNTIME_MODE=queue
+  QSTASH_TOKEN=<QStash 令牌>
+  QSTASH_CURRENT_SIGNING_KEY=<当前签名密钥>
+  QSTASH_NEXT_SIGNING_KEY=<下一个签名密钥>
+  ```
+
+  - 上一步的 `REDIS_URL` 是必需的：队列模式在两步之间把运行状态保存在 Redis 中。
+  - `APP_URL` 必须是公网可访问的 HTTPS 地址，例如 `https://lobehub.example.com`。QStash 会把每一步发到这个地址，所以不能是 `localhost` 或内网地址。
+  - 两个签名密钥都要设置。缺少它们时，`/api/agent/run` 会接受未签名的请求，任何能访问你部署的人都能驱动智能体运行。
 </Steps>
 
 ## 验证升级结果
@@ -134,6 +154,10 @@ LobeHub 缺少 `ENABLE_AGENT_GATEWAY`、`AGENT_GATEWAY_URL` 或 `AGENT_GATEWAY_S
 #### 消息发出去了，但没有回复
 
 浏览器无法与 `AGENT_GATEWAY_URL` 建立 WebSocket 连接，或者网关拒绝了会话。请确认浏览器能访问这个地址、反向代理允许 WebSocket 升级，并且网关上的 `JWKS_PUBLIC_KEY` 是由 LobeHub 当前使用的 `JWKS_KEY` 推导出来的。
+
+#### 在 Vercel 上，智能体运行到一半就停了
+
+没有开启队列模式。按 [开启队列模式](#开启队列模式仅-serverless) 设置 `AGENT_RUNTIME_MODE=queue` 和 QStash 相关变量，然后重新部署。
 
 #### 网关重启后，正在进行的运行中断了
 
