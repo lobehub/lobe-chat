@@ -12,7 +12,7 @@ const subGroupModes: Record<string, string> = {};
 let registeredMeta: { avatar?: string; name?: string; title?: string } = {};
 const agencyConfigById: Record<
   string,
-  { boundDeviceId?: string; executionTargetSelectionPolicy?: string }
+  { boundDeviceId?: string; executionTarget?: string; executionTargetSelectionPolicy?: string }
 > = {};
 
 vi.mock('@/store/agent', () => ({
@@ -46,11 +46,13 @@ const directories: {
   id: string;
   instanceId?: string;
   permission?: string;
+  runnable?: boolean;
 }[] = [];
 const runnable = (instanceId: string) => ({
   environmentId: 'env-1',
   instanceId,
   permission: 'readWrite',
+  runnable: true,
 });
 
 vi.mock('@/store/projectWorkingDirectory', () => ({
@@ -317,6 +319,150 @@ describe('TopicByAgentGroupItem', () => {
 
     expect(startProjectTopicDraft).not.toHaveBeenCalled();
     expect(openProjectTopicModal).toHaveBeenCalledTimes(1);
+  });
+
+  /** @example User report: the project sidebar hid devices that had no topics yet. */
+  it('lists every startable device and offers a new topic inside an empty device section', () => {
+    // ROOT CAUSE: device sections were built from topics only, so a bound
+    // device without topics never showed up and could not start one in place.
+    subGroupModes[GROUP_ID] = 'byDevice';
+    directories.splice(
+      0,
+      directories.length,
+      { deviceId: 'device-1', id: 'binding-mac', ...runnable('ins-mac') },
+      { deviceId: 'device-2', id: 'binding-linux-new', ...runnable('ins-linux') },
+    );
+    renderGroup();
+    // Topics now only run on the MacBook; the Linux box has none.
+    expect(screen.getByRole('button', { name: 'Studio Linux' })).toBeTruthy();
+
+    fireEvent.click(screen.getByText('actions.addNewTopic'));
+
+    expect(startProjectTopicDraft).toHaveBeenCalledWith(
+      expect.objectContaining({ directoryId: 'binding-linux-new' }),
+    );
+  });
+
+  /** @example Review: an agent fixed to one device cannot start on another. */
+  it('offers no empty device section on a device the fixed agent cannot run on', () => {
+    subGroupModes[GROUP_ID] = 'byDevice';
+    agencyConfigById.agt_acc_merge_alpha = {
+      boundDeviceId: 'device-1',
+      executionTargetSelectionPolicy: 'fixed',
+    };
+    directories.splice(
+      0,
+      directories.length,
+      // Otherwise fully startable: only the agent's fixed device rules device-2 out.
+      {
+        deviceId: 'device-1',
+        environmentId: 'env-1',
+        id: 'binding-mac',
+        instanceId: 'ins-mac',
+        permission: 'readWrite',
+        runnable: true,
+      },
+      {
+        deviceId: 'device-2',
+        environmentId: 'env-1',
+        id: 'binding-linux-new',
+        instanceId: 'ins-linux',
+        permission: 'readWrite',
+        runnable: true,
+      },
+    );
+    renderGroup();
+
+    expect(screen.queryByRole('button', { name: 'Studio Linux' })).toBeNull();
+    expect(screen.queryByText('actions.addNewTopic')).toBeNull();
+  });
+
+  /** @example Review: a fixed non-device target (sandbox) binds no device to start on. */
+  it('offers no device start for an agent fixed to a sandbox target', () => {
+    subGroupModes[GROUP_ID] = 'byDevice';
+    agencyConfigById.agt_acc_merge_alpha = {
+      executionTarget: 'sandbox',
+      executionTargetSelectionPolicy: 'fixed',
+    };
+    directories.splice(
+      0,
+      directories.length,
+      {
+        deviceId: 'device-1',
+        environmentId: 'env-1',
+        id: 'binding-mac',
+        instanceId: 'ins-mac',
+        permission: 'readWrite',
+        runnable: true,
+      },
+      {
+        deviceId: 'device-2',
+        environmentId: 'env-1',
+        id: 'binding-linux-new',
+        instanceId: 'ins-linux',
+        permission: 'readWrite',
+        runnable: true,
+      },
+    );
+    renderGroup();
+
+    expect(screen.queryByRole('button', { name: 'Studio Linux' })).toBeNull();
+    expect(screen.queryByText('actions.addNewTopic')).toBeNull();
+    expect(screen.queryAllByRole('button', { name: 'directories.start' })).toHaveLength(0);
+  });
+
+  /** @example Acceptance: a fixed agent not opened in this session still got a start on another device. */
+  it('reads the fixed device from the project topic rows when the agent is not loaded', () => {
+    // ROOT CAUSE: the agent store only holds agents the client has opened, so
+    // a sidebar group for any other agent saw no fixed target at all.
+    subGroupModes[GROUP_ID] = 'byDevice';
+    directories.splice(
+      0,
+      directories.length,
+      {
+        deviceId: 'device-1',
+        environmentId: 'env-1',
+        id: 'binding-mac',
+        instanceId: 'ins-mac',
+        permission: 'readWrite',
+        runnable: true,
+      },
+      {
+        deviceId: 'device-2',
+        environmentId: 'env-1',
+        id: 'binding-linux-new',
+        instanceId: 'ins-linux',
+        permission: 'readWrite',
+        runnable: true,
+      },
+    );
+    render(
+      <TopicListScopeContext value={{ projectId: 'project-1' }}>
+        <AccordionRoot defaultValue={[GROUP_ID]}>
+          <GroupItem
+            expanded
+            group={{
+              children: [
+                {
+                  agentBoundDeviceId: 'device-1',
+                  agentExecutionTargetSelectionPolicy: 'fixed',
+                  agentId: 'agt_acc_merge_alpha',
+                  createdAt: 1,
+                  id: 't1',
+                  title: 'Loose topic',
+                  updatedAt: 1,
+                },
+              ] as any,
+              id: GROUP_ID,
+              title: '验收合并-Alpha',
+            }}
+          />
+        </AccordionRoot>
+      </TopicListScopeContext>,
+    );
+
+    expect(screen.getByRole('button', { name: 'MacBook' })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'Studio Linux' })).toBeNull();
   });
 
   const renderInProject = (agentId: string) =>
