@@ -6,27 +6,21 @@ import { describe, expect, it, vi } from 'vitest';
 
 import SwitcherRow from './SwitcherRow';
 
-// `@lobehub/ui` Avatar seeds its generated fallback (an SVG labelled with the
-// resolved title) from `title`; without it a project that has no avatar
-// rendered as an empty tile.
 describe('SwitcherRow', () => {
-  it('renders a title-seeded fallback when the item has no avatar', () => {
+  it('renders the given avatar image', () => {
     const { container } = render(
-      <SwitcherRow item={{ id: 'cloud', title: 'LobeHub Cloud' }} onSelect={vi.fn()} />,
+      <SwitcherRow
+        item={{ avatar: 'https://example.com/a.png', id: 'foundry', title: 'Foundry' }}
+        onSelect={vi.fn()}
+      />,
     );
 
-    expect(container.querySelector('svg[aria-label="LobeHub Cloud"]')).not.toBeNull();
+    expect(container.querySelector('img')?.getAttribute('src')).toBe('https://example.com/a.png');
   });
 
-  it('renders a title-seeded fallback for CJK titles without an avatar', () => {
-    const { container } = render(
-      <SwitcherRow item={{ id: 'ningli', title: '宁麓置地' }} onSelect={vi.fn()} />,
-    );
-
-    expect(container.querySelector('svg[aria-label="宁麓置地"]')).not.toBeNull();
-  });
-
-  it('falls back to the title-seeded avatar when the image fails to load', () => {
+  // The title is what the Avatar labels and seeds its fallback from; without it a
+  // failed image used to leave an empty tile.
+  it('keeps a titled fallback when the avatar image fails to load', () => {
     const { container } = render(
       <SwitcherRow
         item={{ avatar: 'https://example.com/missing.png', id: 'foundry', title: 'Foundry' }}

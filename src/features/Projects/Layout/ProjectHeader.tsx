@@ -18,6 +18,9 @@ import { useLoadedProjectList, useProjectStore } from '@/store/project';
 
 import { resolveProjectListState } from '../projectListState';
 
+// A project without an image shows the folder glyph, in the list and the trigger alike.
+const DEFAULT_PROJECT_AVATAR = '📁';
+
 interface ProjectHeaderProps {
   project?: ProjectDetail['project'];
 }
@@ -34,7 +37,7 @@ const ProjectHeader = memo<ProjectHeaderProps>(({ project }) => {
   const items = useMemo<SwitcherItem[]>(
     () =>
       (projects ?? []).map((item) => ({
-        avatar: item.avatar || undefined,
+        avatar: item.avatar || DEFAULT_PROJECT_AVATAR,
         id: item.slug ?? item.id,
         private: item.visibility === 'private',
         title: item.name,
@@ -66,7 +69,7 @@ const ProjectHeader = memo<ProjectHeaderProps>(({ project }) => {
           }
         >
           <SidebarHeaderSelectTrigger
-            avatar={project?.avatar || undefined}
+            avatar={project?.avatar || DEFAULT_PROJECT_AVATAR}
             name={project?.name || t('sidebar.title')}
             title={project?.name || t('sidebar.title')}
           />
