@@ -12,7 +12,7 @@ import {
   resolveHeteroRunContext,
   runHeterogeneousFromExistingMessage,
   settleGenerationEntry,
-} from './action';
+} from './heteroRun';
 
 /**
  * Resume a heterogeneous (CC / Codex) run whose LAST step died on a status
