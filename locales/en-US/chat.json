@@ -3206,7 +3206,6 @@
   "workingPanel.files.validation.whitespace": "Names can't start or end with a space",
   "workingPanel.files.views.changes": "Git Changes",
   "workingPanel.files.views.project": "Project",
-  "workingPanel.files.views.title": "File View",
   "workingPanel.goal.collapse": "Show less",
   "workingPanel.goal.decision": "{{count}} decisions pending",
   "workingPanel.goal.more": "{{count}} more",
