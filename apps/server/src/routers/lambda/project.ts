@@ -184,6 +184,9 @@ export const projectRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       try {
+        if (input.coordinatorAgentId) {
+          await assertResourceUsable(ctx, 'agent', input.coordinatorAgentId);
+        }
         return {
           data: await withMainAgent(ctx.projectModel, await ctx.projectModel.create(input)),
           message: 'Project created',

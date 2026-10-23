@@ -73,7 +73,8 @@ const CreateProjectContent = memo<CreateProjectOptions>(({ onCreated }) => {
   const [remembered] = useState(() => readRememberedMainAgent(getActiveWorkspaceId()));
   const defaultMainAgentId = useHomeStore((s) =>
     resolveDefaultMainAgent({
-      agentExists: (id) => !!homeAgentListSelectors.getAgentById(id)(s),
+      // New projects are shared, so a private agent is not a valid default.
+      agentExists: (id) => homeAgentListSelectors.sharedAgents(s).some((agent) => agent.id === id),
       inboxAgentId,
       listLoaded: homeAgentListSelectors.isAgentListInit(s),
       remembered,

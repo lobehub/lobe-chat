@@ -58,6 +58,7 @@ const MainAgentField = memo<MainAgentFieldProps>(({ agentId, disabled, onChange 
       allowUnassigned={false}
       currentAgentId={agentId}
       disabled={disabled}
+      taskVisibility="public"
       onChange={(id) => id && onChange(id)}
     >
       <div {...stylex.props(styles.trigger)}>
