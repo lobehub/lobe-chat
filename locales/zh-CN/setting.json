@@ -3067,7 +3067,7 @@
   "workspace.general.transferTargetLabel": "迁移到",
   "workspace.general.updateFailed": "更新工作区失败",
   "workspace.general.updateSuccess": "工作区已更新",
-  "workspace.general.url.confirm.content": "现有链接到 \"/{{old}}\" 将立即停止工作。任何共享此工作区链接的人都需要一个新的链接。此更改无法撤销。",
+  "workspace.general.url.confirm.content": "原链接「/{{old}}」将立即失效。此前分享过此工作区链接的用户需要重新分享新链接。此更改无法撤销。",
   "workspace.general.url.confirm.ok": "是的，修改 URL",
   "workspace.general.url.confirm.title": "将工作区 URL 修改为 \"{{next}}\"？",
   "workspace.general.url.description": "这是您的工作区 URL 命名空间。成员可以使用它访问共享资源。",
