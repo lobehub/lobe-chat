@@ -1,8 +1,9 @@
+import { INBOX_SESSION_ID } from '@lobechat/const';
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
-import { agents, projectAgents, topics, users, workspaces } from '../../schemas';
+import { agents, projectAgents, projects, topics, users, workspaces } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
 import { AgentModel } from '../agent';
 import type { CreateProjectInput } from '../project';
@@ -85,6 +86,24 @@ describe('project members from project topics', () => {
     expect(
       await serverDB.select().from(projectAgents).where(eq(projectAgents.projectId, project.id)),
     ).toHaveLength(before.length);
+  });
+
+  /** @example Review: a project whose main agent was cleared is led by LobeAI. */
+  it('never adds LobeAI as a member when it leads a project with a cleared main agent', async () => {
+    const project = await createProject(model, { name: 'Cleared' });
+    await serverDB
+      .update(projects)
+      .set({ coordinatorAgentId: null })
+      .where(eq(projects.id, project.id));
+    const inbox = (await new AgentModel(serverDB, userId).getBuiltinAgent(INBOX_SESSION_ID))!;
+    const agent = await new AgentModel(serverDB, userId).create({ title: 'Codex' });
+
+    await topicModel.create({ agentId: inbox.id, projectId: project.id, title: 'Ask LobeAI' });
+    await topicModel.create({ agentId: agent.id, projectId: project.id, title: 'Build' });
+
+    const members = await memberIds(model, project.id);
+    expect(members).not.toContain(inbox.id);
+    expect(members).toContain(agent.id);
   });
 
   it('keeps private agents out of a shared workspace project', async () => {

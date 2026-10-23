@@ -1,3 +1,4 @@
+import { INBOX_SESSION_ID } from '@lobechat/const';
 import { and, eq, inArray, isNotNull, isNull, ne, or, sql } from 'drizzle-orm';
 
 import { agents } from '../schemas/agent';
@@ -13,7 +14,9 @@ export type ProjectTopicAgentsFilter = { projectId: string } | { topicIds: strin
  * their role, responsibility and enabled state.
  *
  * The coordinator is managed by the project, and a shared workspace project only
- * takes shared agents, so neither ever joins this way.
+ * takes shared agents, so neither ever joins this way. A project whose main
+ * agent was cleared is led by LobeAI (see `resolveCoordinatorAgents`), so LobeAI
+ * counts as its coordinator here.
  *
  * Best effort: membership is a side effect of the topic write, so a failure is
  * logged instead of failing it. The work runs in its own savepoint, so a failed
@@ -43,7 +46,16 @@ export const joinTopicAgentsToProjects = async (
               : eq(topics.projectId, filter.projectId),
             isNotNull(topics.agentId),
             isNull(topics.deletedAt),
-            or(isNull(projects.coordinatorAgentId), ne(agents.id, projects.coordinatorAgentId)),
+            or(
+              and(
+                isNotNull(projects.coordinatorAgentId),
+                ne(agents.id, projects.coordinatorAgentId),
+              ),
+              and(
+                isNull(projects.coordinatorAgentId),
+                sql`${agents.slug} is distinct from ${INBOX_SESSION_ID}`,
+              ),
+            ),
             sql`${agents.workspaceId} is not distinct from ${projects.workspaceId}`,
             or(
               isNull(projects.workspaceId),
