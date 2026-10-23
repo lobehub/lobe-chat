@@ -1,13 +1,20 @@
 import type {
   ChannelAuditDetails,
+  ChannelExecutionConfig,
+  ChannelInputManifest,
+  ChannelJobBlockCode,
+  ChannelJobStatus,
   ChannelMemberActorType,
   ChannelMemberConfig,
   ChannelMemberGrantRevokeReason,
   ChannelMemberGrantStatus,
   ChannelMemberRole,
+  ChannelMessageRoutingSource,
+  ChannelMessageRoutingStatus,
   ChannelVisibility,
 } from '@lobechat/types';
 import { sql } from 'drizzle-orm';
+import type { AnyPgColumn, PgTableExtraConfigValue } from 'drizzle-orm/pg-core';
 import {
   boolean,
   check,
@@ -26,7 +33,10 @@ import {
 import { idGenerator } from '../utils/idGenerator';
 import { createdAt, timestamptz, updatedAt } from './_helpers';
 import { agents } from './agent';
+import { agentOperations } from './agentOperations';
+import { files } from './file';
 import { projects } from './project';
+import { topics } from './topic';
 import { users } from './user';
 import { workspaces } from './workspace';
 
@@ -226,8 +236,244 @@ export const channelAudit = pgTable(
   ],
 );
 
+export const channelThreads = pgTable(
+  'channel_threads',
+  {
+    id: text('id')
+      .primaryKey()
+      .$defaultFn(() => idGenerator('channelThreads'))
+      .notNull(),
+    channelId: text('channel_id')
+      .references(() => channels.id, { onDelete: 'cascade' })
+      .notNull(),
+    rootMessageId: uuid('root_message_id').notNull(),
+    rootSequence: integer('root_sequence').notNull(),
+    /** Member ids (people and Agents) following this Thread. */
+    followerMemberIds: jsonb('follower_member_ids').$type<string[]>().notNull().default([]),
+    createdAt: createdAt(),
+  },
+  // Threads and messages reference each other; the annotation breaks the type cycle.
+  (t): PgTableExtraConfigValue[] => [
+    unique('channel_threads_scope_unique').on(t.channelId, t.id),
+    uniqueIndex('channel_threads_root_unique').on(t.channelId, t.rootMessageId),
+    foreignKey({
+      columns: [t.channelId, t.rootMessageId],
+      foreignColumns: [channelMessages.channelId, channelMessages.id],
+      name: 'channel_threads_root_fk',
+    }),
+  ],
+);
+
+/** Public Channel timeline, independent of Agent conversation messages. */
+export const channelMessages = pgTable(
+  'channel_messages',
+  {
+    id: uuid('id').defaultRandom().primaryKey().notNull(),
+    channelId: text('channel_id')
+      .references(() => channels.id, { onDelete: 'cascade' })
+      .notNull(),
+    threadId: text('thread_id'),
+    sequence: integer('sequence').notNull(),
+    content: text('content').notNull(),
+    authorMemberId: uuid('author_member_id').notNull(),
+    /** Mentioned member ids. Mentioned Agents run; mentioned people are only notified. */
+    mentions: jsonb('mentions').$type<string[]>().notNull().default([]),
+    /** Client retry key for a human message; run identity for a published reply. */
+    requestKey: text('request_key').notNull(),
+    replyToId: uuid('reply_to_id'),
+
+    routingStatus: text('routing_status').$type<ChannelMessageRoutingStatus>().notNull(),
+    /** Where the recipients came from. NULL until routing settles, and on replies. */
+    routingSource: text('routing_source').$type<ChannelMessageRoutingSource>(),
+    /** Human-readable explanation of why these recipients (or none) were chosen. */
+    routingReason: text('routing_reason'),
+    /**
+     * Incremented each time routing starts. A `decide()` result is written back only when its
+     * attempt still matches, so a late answer cannot overwrite a retry.
+     */
+    routingAttempt: integer('routing_attempt').notNull().default(0),
+    /** Agent member ids that actually received a job for this message. */
+    recipientMemberIds: jsonb('recipient_member_ids').$type<string[]>().notNull().default([]),
+
+    createdAt: createdAt(),
+  },
+  // Threads and messages reference each other; the annotation breaks the type cycle.
+  (t): PgTableExtraConfigValue[] => [
+    unique('channel_messages_scope_unique').on(t.channelId, t.id),
+    uniqueIndex('channel_messages_sequence_unique').on(t.channelId, t.sequence),
+    uniqueIndex('channel_messages_request_key_unique').on(t.channelId, t.requestKey),
+    index('channel_messages_thread_sequence_idx').on(t.channelId, t.threadId, t.sequence),
+    /** Latest request per branch, without scanning Agent replies. */
+    index('channel_messages_request_sequence_idx')
+      .on(t.channelId, t.threadId, t.sequence)
+      .where(sql`${t.routingStatus} <> 'reply'`),
+    index('channel_messages_routing_pending_idx')
+      .on(t.channelId, t.id)
+      .where(sql`${t.routingStatus} = 'pending'`),
+    foreignKey({
+      columns: [t.channelId, t.threadId],
+      foreignColumns: [channelThreads.channelId, channelThreads.id],
+      name: 'channel_messages_thread_fk',
+    }),
+    foreignKey({
+      columns: [t.channelId, t.authorMemberId],
+      foreignColumns: [channelMembers.channelId, channelMembers.id],
+      name: 'channel_messages_author_fk',
+    }),
+  ],
+);
+
+/** Public attachment links are independent of internal conversation messages. */
+export const channelMessageFiles = pgTable(
+  'channel_message_files',
+  {
+    id: uuid('id').defaultRandom().primaryKey().notNull(),
+    messageId: uuid('message_id')
+      .references(() => channelMessages.id, { onDelete: 'cascade' })
+      .notNull(),
+    fileId: text('file_id')
+      .references(() => files.id, { onDelete: 'cascade' })
+      .notNull(),
+    sortOrder: integer('sort_order').notNull(),
+  },
+  (t) => [
+    unique('channel_message_files_message_file_unique').on(t.messageId, t.fileId),
+    index('channel_message_files_file_idx').on(t.fileId),
+  ],
+);
+
+/**
+ * One delivery of one message to one Agent member; each member drains its jobs FIFO.
+ *
+ * Claiming a job reserves one canonical `agent_operations` row in a normal Agent
+ * topic (continued when safe); execution status, errors, usage and traces live on the
+ * operation. The job keeps only what the operation cannot: the frozen input, the execution
+ * lease, the writer lock and publication of the final reply.
+ */
+export const channelJobs = pgTable(
+  'channel_jobs',
+  {
+    id: uuid('id').defaultRandom().primaryKey().notNull(),
+    channelId: text('channel_id')
+      .references(() => channels.id, { onDelete: 'cascade' })
+      .notNull(),
+    memberId: uuid('member_id').notNull(),
+    messageId: uuid('message_id').notNull(),
+    threadId: text('thread_id'),
+    /** Member who triggered the request; its user is the execution identity. */
+    requesterMemberId: uuid('requester_member_id').notNull(),
+    /** Separates redeliveries of the same message to the same member, e.g. after a retry. */
+    deliveryKey: text('delivery_key').notNull().default('initial'),
+    /**
+     * Channel outcome of this delivery. It may settle while the writer is still held, e.g. a
+     * stop cancels the job before the process exits; the locks follow `writerHeld`.
+     */
+    status: text('status').$type<ChannelJobStatus>().notNull().default('queued'),
+    blockedReason: text('blocked_reason'),
+    /** Machine-readable cause for `blockedReason`; clients must not parse the text. */
+    blockedCode: text('blocked_code').$type<ChannelJobBlockCode>(),
+
+    // Execution, set when the job is claimed
+    /** Actual claim time under the Channel lock; delayed routing can invert request order. */
+    claimedAt: timestamptz('claimed_at'),
+    /** Source-side link to the ordinary Agent conversation. */
+    topicId: text('topic_id').references(() => topics.id, { onDelete: 'set null' }),
+    /** Canonical execution reserved at claim time; NULL while the job waits. */
+    operationId: text('operation_id')
+      .unique()
+      .references((): AnyPgColumn => agentOperations.id, { onDelete: 'set null' }),
+    /** Where the run's input ends, frozen at claim; later messages belong to the next job. */
+    manifest: jsonb('manifest').$type<ChannelInputManifest>(),
+    /** Effective Agent settings and Channel environment frozen at claim time. */
+    executionConfig: jsonb('execution_config').$type<ChannelExecutionConfig>(),
+    /** Device of a device-hosted run; with `workingDirectory` it forms the directory lock. */
+    deviceId: varchar('device_id', { length: 64 }),
+    /** Canonical working directory acknowledged by the device. */
+    workingDirectory: text('working_directory'),
+    /** When the runtime confirmed it took the input. An unknown delivery never gets one. */
+    acceptedAt: timestamptz('accepted_at'),
+    /** Process (or queue worker) currently driving the run. */
+    leaseOwner: text('lease_owner'),
+    leaseExpiresAt: timestamptz('lease_expires_at'),
+    /**
+     * Set when the job is claimed. Cleared only by physical stop confirmation (process tree
+     * ended, or the native operation finished) or a trusted failure before dispatch, when
+     * nothing ran. Leases, idleness, interrupts and operation completion do not clear it.
+     */
+    writerHeld: boolean('writer_held').notNull().default(false),
+    /**
+     * Set when termination could not be confirmed in time (INC-049). Publication is revoked so
+     * the member may run again, though not in the same device directory until the stop is
+     * confirmed: isolation frees the member lock but never `writerHeld`.
+     */
+    isolatedAt: timestamptz('isolated_at'),
+    /** Final answer saved by the run; immutable once set. */
+    draft: text('draft'),
+    /** A revoked job never publishes. Set by stops, failures and isolation. */
+    publicationRevoked: boolean('publication_revoked').notNull().default(false),
+    publishedMessageId: uuid('published_message_id'),
+
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [
+    unique('channel_jobs_scope_unique').on(t.channelId, t.id),
+    uniqueIndex('channel_jobs_delivery_unique').on(t.messageId, t.memberId, t.deliveryKey),
+    index('channel_jobs_channel_status_idx').on(t.channelId, t.status),
+    index('channel_jobs_continuation_idx').on(
+      t.memberId,
+      t.requesterMemberId,
+      t.threadId,
+      t.claimedAt,
+    ),
+    index('channel_jobs_topic_idx').on(t.topicId, t.publishedMessageId),
+    index('channel_jobs_member_queue_idx').on(t.memberId, t.status, t.createdAt),
+    index('channel_jobs_lease_expires_idx')
+      .on(t.leaseExpiresAt)
+      .where(sql`${t.writerHeld} AND ${t.isolatedAt} IS NULL`),
+    /** At most one writer per member. */
+    uniqueIndex('channel_jobs_active_member_unique')
+      .on(t.memberId)
+      .where(sql`${t.writerHeld} AND ${t.isolatedAt} IS NULL`),
+    /**
+     * At most one writer per device directory, across all channels. Unlike the member lock,
+     * isolation does not release it: only physical stop confirmation proves the old process
+     * has left the directory.
+     */
+    uniqueIndex('channel_jobs_active_directory_unique')
+      .on(t.deviceId, t.workingDirectory)
+      .where(
+        sql`${t.deviceId} IS NOT NULL AND ${t.workingDirectory} IS NOT NULL AND ${t.writerHeld}`,
+      ),
+    foreignKey({
+      columns: [t.channelId, t.memberId],
+      foreignColumns: [channelMembers.channelId, channelMembers.id],
+      name: 'channel_jobs_member_fk',
+    }),
+    foreignKey({
+      columns: [t.channelId, t.requesterMemberId],
+      foreignColumns: [channelMembers.channelId, channelMembers.id],
+      name: 'channel_jobs_requester_fk',
+    }),
+    foreignKey({
+      columns: [t.channelId, t.messageId],
+      foreignColumns: [channelMessages.channelId, channelMessages.id],
+      name: 'channel_jobs_message_fk',
+    }),
+    foreignKey({
+      columns: [t.channelId, t.threadId],
+      foreignColumns: [channelThreads.channelId, channelThreads.id],
+      name: 'channel_jobs_thread_fk',
+    }),
+  ],
+);
+
 export type ChannelItem = typeof channels.$inferSelect;
 export type NewChannel = typeof channels.$inferInsert;
 export type ChannelMemberItem = typeof channelMembers.$inferSelect;
 export type NewChannelMember = typeof channelMembers.$inferInsert;
 export type ChannelMemberGrantItem = typeof channelMemberGrants.$inferSelect;
+export type ChannelThreadItem = typeof channelThreads.$inferSelect;
+export type ChannelMessageItem = typeof channelMessages.$inferSelect;
+export type NewChannelMessage = typeof channelMessages.$inferInsert;
+export type ChannelJobItem = typeof channelJobs.$inferSelect;

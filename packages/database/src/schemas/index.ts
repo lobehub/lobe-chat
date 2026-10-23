@@ -20,8 +20,6 @@ export * from './apiKey';
 export * from './asyncTask';
 export * from './betterAuth';
 export * from './channel';
-export * from './channelJob';
-export * from './channelMessage';
 export * from './chatGroup';
 export * from './connector';
 export * from './dashboard';
