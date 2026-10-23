@@ -304,23 +304,6 @@ export const agentConfigKeys = {
   search: def('agent:search', (keyword?: string) => ['agent:search', keyword]),
 };
 
-// ---- aiModel ------------------------------------------------------------
-// The provider model list and the provider list live in `@lobechat/replica`
-// resources now (see `src/store/aiInfra/slices/*/projection.ts`); only the
-// paged disabled-models fetch and the per-model reasoning config are SWR keys.
-export const aiModelKeys = {
-  disabledModelsPage: def('aiModel:disabledModelsPage', (providerId: string, offset: number) => [
-    'aiModel:disabledModelsPage',
-    providerId,
-    offset,
-  ]),
-  reasoningConfig: def('aiModel:reasoningConfig', (provider: string, model: string) => [
-    'aiModel:reasoningConfig',
-    provider,
-    model,
-  ]),
-};
-
 // ---- image generation ---------------------------------------------------
 // The topic list and the per-topic batches live in `@lobechat/replica`
 // resources now (see `src/store/image/slices/*/projection.ts`); only the
@@ -955,7 +938,6 @@ export const swrKeys = {
   agentDocument: agentDocumentSWRKeys,
   agentHome: agentHomeKeys,
   agentSignal: agentSignalKeys,
-  aiModel: aiModelKeys,
   auth: authKeys,
   brief: briefKeys,
   changelog: changelogKeys,
