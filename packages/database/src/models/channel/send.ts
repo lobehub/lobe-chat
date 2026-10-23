@@ -6,6 +6,7 @@ import type { ChannelMessageItem } from '../../schemas';
 import { channelMessages, channelThreads, files } from '../../schemas';
 import { messages } from '../../schemas/message';
 import type { Transaction } from '../../type';
+import { isUuid } from '../../utils/uuid';
 import { buildWorkspaceWhere } from '../../utils/workspace';
 import { attachFiles, fileIdsByMessage } from './attachments';
 import { activeMembers, appendMessage, candidateAgents, deliver, findThread } from './delivery';
@@ -38,7 +39,11 @@ export const validateSendInput = (input: ChannelSendInput) => {
   )
     throw new ChannelError('BAD_REQUEST', 'A message requires bounded content and a retry key');
 
-  return { fileIds, mentions: [...new Set(input.mentions ?? [])] };
+  const mentions = input.mentions ?? [];
+  if (mentions.some((id) => !isUuid(id)))
+    throw new ChannelError('BAD_REQUEST', 'Mentions must be valid member UUIDs');
+
+  return { fileIds, mentions: [...new Set(mentions.map((id) => id.toLowerCase()))] };
 };
 
 /**

@@ -147,21 +147,36 @@ describe('ChannelModel.send', () => {
 
     await asMember.send(channel.id, {
       content: 'Join us',
-      mentions: [reviewer.id],
+      mentions: [reviewer.id.toUpperCase(), reviewer.id],
       requestKey: 'join',
       routing: 'jev',
       threadId: thread.id,
     });
     const [joined] = await db.select().from(channelThreads).where(eq(channelThreads.id, thread.id));
     expect(joined.followerMemberIds).toEqual([coder.id, reviewer.id]);
+
+    const next = await asMember.send(channel.id, {
+      content: 'Everyone here',
+      requestKey: 'after-join',
+      routing: 'fallback',
+      threadId: thread.id,
+    });
+    expect(next.recipientMemberIds.sort()).toEqual([coder.id, reviewer.id].sort());
   });
 
   it('returns the original message on retry and rejects a reused retry key', async () => {
     const { asMember, asOwner, channel } = await fixture.createTeamChannel();
-    const input = { content: 'Once', requestKey: 'req-1', routing: 'jev' as const };
+    const coder = await fixture.addAgent(channel.id, 'Coder');
+    const input = {
+      content: 'Once',
+      mentions: [coder.id.toUpperCase(), coder.id],
+      requestKey: 'req-1',
+      routing: 'jev' as const,
+    };
 
     const first = await asMember.send(channel.id, input);
-    const retried = await asMember.send(channel.id, input);
+    expect(first.mentions).toEqual([coder.id]);
+    const retried = await asMember.send(channel.id, { ...input, mentions: [coder.id] });
     expect(retried.id).toBe(first.id);
 
     await expect(
@@ -183,13 +198,11 @@ describe('ChannelModel.send', () => {
         content: 'x'.repeat(CHANNEL_LIMITS.contentLength + 1),
       }),
     ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
-    await expect(
-      asMember.send(channel.id, {
-        ...base,
-        content: 'Hi',
-        mentions: ['00000000-0000-4000-8000-000000000001'],
-      }),
-    ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
+    for (const mention of ['not-a-uuid', '00000000-0000-4000-8000-000000000001']) {
+      await expect(
+        asMember.send(channel.id, { ...base, content: 'Hi', mentions: [mention] }),
+      ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
+    }
     await expect(
       asMember.send(channel.id, { ...base, content: 'Hi', fileIds: ['file_missing'] }),
     ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
