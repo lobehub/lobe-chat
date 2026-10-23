@@ -76,6 +76,27 @@ describe('llmCalls metric', () => {
     expect(result.newState.llmCalls).toBe(3);
   });
 
+  it('adds retried attempts on top of a resumed baseline', async () => {
+    const runtime = new AgentRuntime(createAgent());
+    // @ts-expect-error - accessing a private property for testing
+    runtime.executors.call_llm = vi.fn().mockImplementation(async (_instruction, state) => ({
+      events: [],
+      newState: { ...state, usage: createUsage(2) },
+    }));
+
+    const state = {
+      ...AgentRuntime.createInitialState({ operationId: 'test-op' }),
+      llmCalls: 5,
+      usage: createUsage(0),
+    };
+
+    const result = await runtime.step(state, createContext());
+
+    // 5 calls from the resumed trajectory + 2 provider attempts in this step,
+    // not max(2, 6).
+    expect(result.newState.llmCalls).toBe(7);
+  });
+
   it('reads the explicit llmCalls field before falling back to usage', () => {
     const state = { llmCalls: 5, usage: createUsage(2) } as AgentState;
     expect(getLlmCallCount(state)).toBe(5);

@@ -85,6 +85,13 @@ export class AgentRuntime {
     state: AgentState,
     context?: AgentRuntimeContext,
   ): Promise<{ events: AgentEvent[]; newState: AgentState; nextContext?: AgentRuntimeContext }> {
+    // LLM-call accounting is additive. `usage.llm.apiCalls` only counts the
+    // current operation and `llmCalls` carries the seeded baseline of a resumed
+    // one, so remember where this step started and add the attempts it actually
+    // made instead of taking a max that drops retries.
+    const llmCallsBeforeStep = Math.max(state.llmCalls ?? 0, state.usage?.llm?.apiCalls ?? 0);
+    const apiCallsBeforeStep = state.usage?.llm?.apiCalls ?? 0;
+
     try {
       // Increment step count and check limits
       const newState = structuredClone(state);
@@ -220,9 +227,11 @@ export class AgentRuntime {
       const allEvents: AgentEvent[] = [];
       let finalNextContext: AgentRuntimeContext | undefined = undefined;
       let hasFinishInstruction = false;
+
       let executedLlmInstruction = false;
 
       for (const [instructionIndex, instruction] of normalizedInstructions.entries()) {
+        if (instruction.type === 'call_llm') executedLlmInstruction = true;
         if (instruction.type === 'finish') hasFinishInstruction = true;
 
         let result;
@@ -257,7 +266,6 @@ export class AgentRuntime {
         // Update state
         currentState = result.newState;
 
-        if (instruction.type === 'call_llm') executedLlmInstruction = true;
 
         // A call_llm consumes any resume-seeded assistant placeholder exactly
         // once — it has now either reused that message id or created its own —
@@ -289,10 +297,14 @@ export class AgentRuntime {
       // Ensure stepCount and lastModified are preserved
       currentState.stepCount = newState.stepCount;
       currentState.lastModified = newState.lastModified;
-      currentState.llmCalls = Math.max(
-        currentState.usage?.llm?.apiCalls ?? 0,
-        (state.llmCalls ?? 0) + (executedLlmInstruction ? 1 : 0),
+      // Prefer the attempts the provider actually reported; fall back to one
+      // call per executed LLM instruction when usage is unavailable.
+      const apiCallsDelta = Math.max(
+        (currentState.usage?.llm?.apiCalls ?? 0) - apiCallsBeforeStep,
+        0,
       );
+      currentState.llmCalls =
+        llmCallsBeforeStep + (apiCallsDelta || (executedLlmInstruction ? 1 : 0));
 
       // A 'finish' instruction is not a real execution step, undo the +1 from the top of step()
       if (hasFinishInstruction) {
@@ -318,10 +330,9 @@ export class AgentRuntime {
       if (llmAttempts > 0) {
         errorState.usage = UsageCounter.accumulateAttempts(errorState.usage, llmAttempts);
       }
-      errorState.llmCalls = Math.max(
-        errorState.llmCalls ?? 0,
-        errorState.usage?.llm?.apiCalls ?? 0,
-      );
+      errorState.llmCalls =
+        llmCallsBeforeStep +
+        Math.max((errorState.usage?.llm?.apiCalls ?? 0) - apiCallsBeforeStep, 0);
       errorState.lastModified = new Date().toISOString();
       return this.createErrorResult(errorState, error);
     }
