@@ -21,8 +21,10 @@ Public history belongs to the Channel, not its creator. Author membership keeps 
 an account is removed. Existing non-Channel topic/message rows still require a user owner. Private
 context belongs to the actual requesting user, not the Channel creator or agent owner. Every claim
 creates a fresh private topic and hands the runtime a full snapshot of the branch up to the
-request, so there is no session to resume across runs and no cursor to keep in sync. A retry is a
-new job (new `delivery_key`), never a second execution of the same job.
+request, so there is no session to resume across runs and no cursor to keep in sync. The job
+freezes where that snapshot ends (`manifest.cutoffSequence`), not a copy of its messages, so a job
+does not grow with its branch. A retry is a new job (new `delivery_key`), never a second execution
+of the same job.
 
 Channels use `user_id` alongside `workspace_id`; authorization still uses membership.
 The optional `project_id` references `projects.id` and is cleared on project deletion,
@@ -52,6 +54,10 @@ Runtime/display configuration remains a snapshot; Agent access must be authorize
 - Trusted execution adapters use the topic/message/operation model's explicit `channelId` option
   **after authorization**. This is an internal scope selector, not a membership authorization API.
   It also binds runtime reads/writes to the requesting user; it cannot read the public timeline.
+- Read the run's input with `ChannelExecutionRepository.input(channelId, jobId)`. It needs no
+  channel lock: Channel writes change only the routing fields of a sent message, so nothing at or
+  before the cutoff changes. Keep it that way; editing a sent message would change the input of
+  runs that already claimed it.
 - Pass the claim's `topic.id` and `job.operationId` into the existing runtime. Call `recordStart`
   on the reserved idle operation before acknowledging dispatch. A repeated start cannot reset a
   terminal operation. Native checkpoints and heterogeneous ingestion must use this same scope.

@@ -166,7 +166,7 @@ describe('claim guards', () => {
       cutoffSequence: unmentioned.sequence,
       requestMessageId: unmentioned.id,
     });
-    expect(claimed.manifest!.messages).toEqual([
+    expect(await execution.input(channel.id, job.id)).toEqual([
       expect.objectContaining({ content: 'Who can help?', id: unmentioned.id }),
     ]);
   });

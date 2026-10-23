@@ -110,11 +110,13 @@ export interface ChannelContextMessage {
   threadId: string | null;
 }
 
+/**
+ * A run's input, frozen at claim time as a cutoff rather than a copy of the messages: the run
+ * receives every message visible to its branch up to `cutoffSequence`, read on demand.
+ */
 export interface ChannelInputManifest {
   /** Immutable at claim time; later public messages belong to the next run. */
   cutoffSequence: number;
-  /** Every message visible to this branch up to the cutoff; each run starts a new private topic. */
-  messages: ChannelContextMessage[];
   /** The member that triggered this run; its user is the execution identity. */
   requesterMemberId: string;
   requestMessageId: string;

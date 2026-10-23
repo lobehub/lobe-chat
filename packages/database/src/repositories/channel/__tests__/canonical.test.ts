@@ -114,11 +114,9 @@ describe('canonical channel persistence', () => {
 
     const second = await team.claim();
     expect(second.topic.id).not.toBe(first.topic.id);
-    expect(second.job.manifest!.messages.map((message) => message.content)).toEqual([
-      'Request 1',
-      'Final answer',
-      'Request 2',
-    ]);
+    expect(
+      (await execution.input(team.channel.id, second.job.id)).map((message) => message.content),
+    ).toEqual(['Request 1', 'Final answer', 'Request 2']);
 
     await execution.accepted(team.channel.id, first.job.id, {});
     await execution.fail(team.channel.id, first.job.id, { message: 'Late failure' });

@@ -1,7 +1,8 @@
+import type { SQLWrapper } from 'drizzle-orm';
 import { asc, inArray } from 'drizzle-orm';
 
 import { messagesFiles } from '../../schemas';
-import type { Transaction } from '../../type';
+import type { LobeChatDatabase, Transaction } from '../../type';
 
 /**
  * Records a new message's attachments in the order the sender gave them. Performs no access
@@ -28,11 +29,15 @@ export const attachFiles = async (
 
 /**
  * Attachment ids per message, in attachment order. A file deleted since the message was sent
- * is no longer listed: the cascade removed its row.
+ * is no longer listed: the cascade removed its row. Pass a subquery rather than an id list when
+ * the message set is unbounded, such as a whole branch.
  */
-export const fileIdsByMessage = async (tx: Transaction, messageIds: string[]) => {
+export const fileIdsByMessage = async (
+  tx: LobeChatDatabase | Transaction,
+  messageIds: string[] | SQLWrapper,
+) => {
   const result = new Map<string, string[]>();
-  if (!messageIds.length) return result;
+  if (Array.isArray(messageIds) && !messageIds.length) return result;
 
   const rows = await tx
     .select({ fileId: messagesFiles.fileId, messageId: messagesFiles.messageId })

@@ -73,7 +73,6 @@ const createMessage = async (channelId: string, authorMemberId: string, sequence
 
 const manifest = (requesterMemberId: string, memberId: string): ChannelInputManifest => ({
   cutoffSequence: 1,
-  messages: [],
   requestMessageId: 'unused',
   requesterMemberId,
   self: { memberId, name: 'Codex' },

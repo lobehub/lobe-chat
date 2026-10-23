@@ -1,4 +1,8 @@
-import type { AgentOperationStatus, ChannelJobStatus } from '@lobechat/types';
+import type {
+  AgentOperationStatus,
+  ChannelContextMessage,
+  ChannelJobStatus,
+} from '@lobechat/types';
 import { and, eq, gt, isNotNull, sql } from 'drizzle-orm';
 
 import type { ChannelJobItem } from '../../schemas';
@@ -8,6 +12,7 @@ import type { ChannelClaim, ChannelClaimOptions } from './claim';
 import { claimJob } from './claim';
 import { appendMessage } from './delivery';
 import { ChannelError } from './error';
+import { readManifestMessages } from './manifest';
 import type { ChannelRoutingDecision } from './routing';
 import { resolveRouting } from './routing';
 import type { ChannelStopScope } from './stop';
@@ -103,6 +108,26 @@ export class ChannelExecutionRepository {
     options: ChannelClaimOptions,
   ): Promise<ChannelClaim | null> =>
     withChannelLock(this.db, channelId, (tx, channel) => claimJob(tx, channel, jobId, options));
+
+  /**
+   * What a claimed job's run receives: its branch up to the request, oldest first. Reads
+   * without the channel lock, since nothing at or before the cutoff changes after the claim.
+   */
+  input = async (channelId: string, jobId: string): Promise<ChannelContextMessage[]> => {
+    const [job] = await this.db
+      .select({ manifest: channelJobs.manifest })
+      .from(channelJobs)
+      .where(
+        and(
+          eq(channelJobs.channelId, channelId),
+          eq(channelJobs.id, jobId),
+          isNotNull(channelJobs.manifest),
+        ),
+      );
+    if (!job?.manifest) throw new ChannelError('NOT_FOUND', 'Claimed job not found');
+
+    return readManifestMessages(this.db, channelId, job.manifest);
+  };
 
   /** The runtime took the input; only now may the job publish. */
   accepted = async (

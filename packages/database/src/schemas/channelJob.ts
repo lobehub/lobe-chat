@@ -64,7 +64,7 @@ export const channelJobs = pgTable(
     operationId: text('operation_id')
       .unique()
       .references((): AnyPgColumn => agentOperations.id, { onDelete: 'set null' }),
-    /** Input frozen at claim time; later public messages belong to the next job. */
+    /** Where the run's input ends, frozen at claim; later messages belong to the next job. */
     manifest: jsonb('manifest').$type<ChannelInputManifest>(),
     /** Member config frozen at claim time. */
     executionConfig: jsonb('execution_config').$type<ChannelMemberConfig>(),

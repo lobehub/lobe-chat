@@ -76,9 +76,9 @@ describe('channel message attachments', () => {
     await db.delete(files).where(eq(files.id, deleted));
     const [job] = await jobsOf(db, message.id);
 
-    const claim = await execution.claim(channel.id, job.id, lease);
+    await execution.claim(channel.id, job.id, lease);
 
-    expect(claim?.job.manifest!.messages).toEqual([
+    expect(await execution.input(channel.id, job.id)).toEqual([
       expect.objectContaining({ fileIds: [kept], id: message.id }),
     ]);
   });

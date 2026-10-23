@@ -8,14 +8,23 @@ import {
   channelJobs,
   channelMessages,
   channels,
+  channelThreads,
   messages,
   topics,
 } from '../../../schemas';
 import type { LobeChatDatabase } from '../../../type';
+import type { ChannelSendInput } from '..';
 import { ChannelExecutionRepository } from '..';
 import { claimJob } from '../claim';
 import { lockChannel } from '../transaction';
-import { createChannelFixture, deviceConfig, jobsOf, lease, operationById } from './testUtils';
+import {
+  createChannelFixture,
+  deviceConfig,
+  jobsOf,
+  lease,
+  nativeConfig,
+  operationById,
+} from './testUtils';
 
 const db: LobeChatDatabase = await getTestDB();
 const fixture = createChannelFixture(db, 'channel-execution');
@@ -76,13 +85,15 @@ describe('ChannelExecutionRepository', () => {
     });
     expect(claim?.job.manifest).toEqual({
       cutoffSequence: 1,
-      messages: [expect.objectContaining({ author: { id: member.id, name: 'mia', type: 'user' } })],
       requestMessageId: message.id,
       requesterMemberId: member.id,
       self: { memberId: agent.id, name: 'Coder' },
       threadId: null,
       threadRootSequence: null,
     });
+    expect(await execution.input(channel.id, job.id)).toEqual([
+      expect.objectContaining({ author: { id: member.id, name: 'mia', type: 'user' } }),
+    ]);
 
     await execution.accepted(channel.id, job.id, {
       nativeSessionId: 'session-1',
@@ -148,8 +159,58 @@ describe('ChannelExecutionRepository', () => {
 
     expect(second.topic.id).not.toBe(first.topic.id);
     expect(second.topic.metadata?.heteroSessionId).toBeUndefined();
-    expect(second.job.manifest!.messages.map((m) => m.sequence)).toEqual([1, 2, 3]);
+    expect((await execution.input(channel.id, nextJob.id)).map((m) => m.sequence)).toEqual([
+      1, 2, 3,
+    ]);
     expect((await operationById(db, second.job.operationId)).topicId).toBe(second.topic.id);
+  });
+
+  it('freezes a branch cutoff instead of message content and reads it after later sends', async () => {
+    const { asMember, channel, member } = await fixture.createTeamChannel();
+    const mainAgent = await fixture.addAgent(channel.id, 'Main', nativeConfig);
+    const threadAgent = await fixture.addAgent(channel.id, 'Thread', nativeConfig);
+    const send = (requestKey: string, input: Partial<ChannelSendInput> = {}) =>
+      asMember.send(channel.id, { content: requestKey, requestKey, routing: 'jev', ...input });
+    const root = await send('root');
+    const [thread] = await db
+      .insert(channelThreads)
+      .values({ channelId: channel.id, rootMessageId: root.id, rootSequence: root.sequence })
+      .returning();
+    await send('main-after-root');
+    const mainRequest = await send('main-request', { mentions: [mainAgent.id] });
+    const threadRequest = await send('thread-request', {
+      mentions: [threadAgent.id],
+      threadId: thread.id,
+    });
+    const [mainJob] = await jobsOf(db, mainRequest.id);
+    const [threadJob] = await jobsOf(db, threadRequest.id);
+    await expect(execution.input(channel.id, mainJob.id)).rejects.toMatchObject({
+      code: 'NOT_FOUND',
+    });
+
+    const mainClaim = (await execution.claim(channel.id, mainJob.id, lease))!;
+    const threadClaim = (await execution.claim(channel.id, threadJob.id, lease))!;
+    await send('main-after-claim');
+    await send('thread-after-claim', { threadId: thread.id });
+
+    // The job stores where its input ends, so its size does not grow with the branch.
+    expect(mainClaim.job.manifest).toEqual({
+      cutoffSequence: mainRequest.sequence,
+      requestMessageId: mainRequest.id,
+      requesterMemberId: member.id,
+      self: { memberId: mainAgent.id, name: 'Main' },
+      threadId: null,
+      threadRootSequence: null,
+    });
+    expect(threadClaim.job.manifest).toMatchObject({
+      cutoffSequence: threadRequest.sequence,
+      threadId: thread.id,
+      threadRootSequence: root.sequence,
+    });
+    const contents = async (jobId: string) =>
+      (await execution.input(channel.id, jobId)).map((message) => message.content);
+    expect(await contents(mainJob.id)).toEqual(['root', 'main-after-root', 'main-request']);
+    expect(await contents(threadJob.id)).toEqual(['root', 'thread-request']);
   });
 
   it('answers in message order and holds one writer per member', async () => {

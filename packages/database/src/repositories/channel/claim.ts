@@ -255,7 +255,7 @@ export const claimJob = async (
   }
 
   const thread = await findThread(tx, channel.id, job.threadId);
-  const manifest = await buildManifest(tx, { job, member, request, thread });
+  const manifest = buildManifest({ job, member, request, thread });
 
   const now = new Date();
   let claimed: Omit<ChannelClaim, 'member'>;

@@ -1,6 +1,6 @@
-import type { ChannelInputManifest } from '@lobechat/types';
+import type { ChannelContextMessage, ChannelInputManifest } from '@lobechat/types';
 import { CHANNEL_DELETED_USER_NAME } from '@lobechat/types';
-import { and, asc, eq, getTableColumns, isNull, lte, or, sql as canonicalSql } from 'drizzle-orm';
+import { and, asc, eq, isNull, lte, or, sql as canonicalSql } from 'drizzle-orm';
 
 import type {
   ChannelJobItem,
@@ -10,12 +10,12 @@ import type {
 } from '../../schemas';
 import { channelMembers, channelMessages, users } from '../../schemas';
 import { messages } from '../../schemas/message';
-import type { Transaction } from '../../type';
+import type { LobeChatDatabase, Transaction } from '../../type';
 import { fileIdsByMessage } from './attachments';
 
 /** Display names for every member, including people who left or deleted their account. */
-const rosterNames = async (tx: Transaction, channelId: string) => {
-  const rows = await tx
+const rosterNames = async (db: LobeChatDatabase | Transaction, channelId: string) => {
+  const rows = await db
     .select({
       actorType: channelMembers.actorType,
       fullName: users.fullName,
@@ -45,68 +45,89 @@ const rosterNames = async (tx: Transaction, channelId: string) => {
  * Input for one run, frozen at claim time. Every run starts a new private topic, so it gets
  * the full snapshot of its branch up to the request: a Thread sees its own messages plus the
  * main channel up to its root. Later messages belong to the next run.
+ *
+ * The manifest stores where that snapshot ends, not its messages, so a job does not grow with
+ * its branch; {@link readManifestMessages} reads them.
  */
-export const buildManifest = async (
-  tx: Transaction,
-  params: {
-    job: ChannelJobItem;
-    member: ChannelMemberItem;
-    request: ChannelMessageItem;
-    thread: ChannelThreadItem | null;
-  },
-): Promise<ChannelInputManifest> => {
+export const buildManifest = (params: {
+  job: ChannelJobItem;
+  member: ChannelMemberItem;
+  request: ChannelMessageItem;
+  thread: ChannelThreadItem | null;
+}): ChannelInputManifest => {
   const { job, member, request, thread } = params;
-  // Jobs inherit the request's branch, so the request itself always sorts last.
-  const cutoffSequence = request.sequence;
-
-  const branch = thread
-    ? or(
-        eq(channelMessages.threadId, thread.id),
-        and(isNull(channelMessages.threadId), lte(channelMessages.sequence, thread.rootSequence)),
-      )
-    : isNull(channelMessages.threadId);
-  const visible = await tx
-    .select({
-      ...getTableColumns(channelMessages),
-      content: canonicalSql<string>`coalesce(${messages.content}, '')`,
-    })
-    .from(channelMessages)
-    .innerJoin(messages, eq(messages.id, channelMessages.id))
-    .where(
-      and(
-        eq(channelMessages.channelId, job.channelId),
-        lte(channelMessages.sequence, cutoffSequence),
-        branch,
-      ),
-    )
-    .orderBy(asc(channelMessages.sequence));
-  const names = await rosterNames(tx, job.channelId);
-  const attachments = await fileIdsByMessage(
-    tx,
-    visible.map((message) => message.id),
-  );
 
   return {
-    cutoffSequence,
-    messages: visible.map((message) => {
-      const author = names.get(message.authorMemberId);
-      return {
-        author: {
-          id: message.authorMemberId,
-          name: author?.name ?? CHANNEL_DELETED_USER_NAME,
-          type: author?.type ?? 'user',
-        },
-        content: message.content,
-        ...(attachments.has(message.id) && { fileIds: attachments.get(message.id) }),
-        id: message.id,
-        sequence: message.sequence,
-        threadId: message.threadId,
-      };
-    }),
+    // Jobs inherit the request's branch, so the request itself always sorts last.
+    cutoffSequence: request.sequence,
     requestMessageId: request.id,
     requesterMemberId: job.requesterMemberId,
     self: { memberId: member.id, name: member.name ?? 'Agent' },
     threadId: job.threadId,
     threadRootSequence: thread?.rootSequence ?? null,
   };
+};
+
+/** The branch messages a manifest covers; see {@link buildManifest}. */
+const manifestScope = (channelId: string, manifest: ChannelInputManifest) => {
+  const { threadId, threadRootSequence } = manifest;
+  const mainPrefix =
+    threadRootSequence === null
+      ? undefined
+      : and(isNull(channelMessages.threadId), lte(channelMessages.sequence, threadRootSequence));
+
+  return and(
+    eq(channelMessages.channelId, channelId),
+    lte(channelMessages.sequence, manifest.cutoffSequence),
+    threadId
+      ? or(eq(channelMessages.threadId, threadId), mainPrefix)
+      : isNull(channelMessages.threadId),
+  );
+};
+
+/**
+ * The messages a manifest froze, oldest first. Needs no channel lock: Channel writes change
+ * only the routing fields of a sent message, and sequences only grow, so nothing at or before
+ * the cutoff changes. Author names and attachments are read at call time: a deleted account
+ * reads as deleted and a deleted file is no longer listed.
+ */
+export const readManifestMessages = async (
+  db: LobeChatDatabase | Transaction,
+  channelId: string,
+  manifest: ChannelInputManifest,
+): Promise<ChannelContextMessage[]> => {
+  const scope = manifestScope(channelId, manifest);
+  const visible = await db
+    .select({
+      authorMemberId: channelMessages.authorMemberId,
+      content: canonicalSql<string>`coalesce(${messages.content}, '')`,
+      id: channelMessages.id,
+      sequence: channelMessages.sequence,
+      threadId: channelMessages.threadId,
+    })
+    .from(channelMessages)
+    .innerJoin(messages, eq(messages.id, channelMessages.id))
+    .where(scope)
+    .orderBy(asc(channelMessages.sequence));
+  const names = await rosterNames(db, channelId);
+  const attachments = await fileIdsByMessage(
+    db,
+    db.select({ id: channelMessages.id }).from(channelMessages).where(scope),
+  );
+
+  return visible.map((message) => {
+    const author = names.get(message.authorMemberId);
+    return {
+      author: {
+        id: message.authorMemberId,
+        name: author?.name ?? CHANNEL_DELETED_USER_NAME,
+        type: author?.type ?? 'user',
+      },
+      content: message.content,
+      ...(attachments.has(message.id) && { fileIds: attachments.get(message.id) }),
+      id: message.id,
+      sequence: message.sequence,
+      threadId: message.threadId,
+    };
+  });
 };
