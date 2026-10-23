@@ -535,6 +535,26 @@ describe('ErrorMessageExtra', () => {
     });
   });
 
+  it('lets context compaction retry the group parent when the error is a nested block', () => {
+    render(
+      <ErrorMessageExtra
+        error={{ message: 'response.RequestBodyTooLarge' }}
+        retryScopeId="group-parent"
+        data={{
+          error: { type: AgentRuntimeErrorType.RequestBodyTooLarge } as any,
+          id: 'group-child-block',
+        }}
+        onRegenerate={vi.fn()}
+      />,
+    );
+
+    expect(dynamicComponentPropsMock).toHaveBeenCalledWith({
+      id: 'group-child-block',
+      parentId: 'group-parent',
+      reason: 'requestBodyTooLarge',
+    });
+  });
+
   it('renders the auth guide when the refreshed error is missing type but still carries session code', () => {
     render(
       <ErrorMessageExtra

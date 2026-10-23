@@ -28,16 +28,21 @@ const COPY = {
 
 interface ExceededContextWindowErrorProps {
   id: string;
+  /** Parent user message of an assistant group, whose `id` is a nested content block. */
+  parentId?: string;
   reason?: keyof typeof COPY;
 }
 
 const ExceededContextWindowError = memo<ExceededContextWindowErrorProps>(
-  ({ id, reason = 'exceededContext' }) => {
+  ({ id, parentId: groupParentId, reason = 'exceededContext' }) => {
     const { t } = useTranslation('error');
     const { allowed: canCreate } = usePermission('create_content');
 
     const context = useConversationStore((s) => s.context);
-    const { disabled, loading, parentId, retryParentMessage } = useRetryParentMessage(id);
+    const { disabled, loading, parentId, retryParentMessage } = useRetryParentMessage(
+      id,
+      groupParentId,
+    );
 
     const handleCompact = useCallback(async () => {
       if (!canCreate || !context.topicId) return;
