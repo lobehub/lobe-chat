@@ -58,7 +58,8 @@ export const channels = pgTable(
       .$defaultFn(() => idGenerator('channels'))
       .notNull(),
     /**
-     * Creator and personal-channel device/cleanup boundary. Channel access and role
+     * Creator and personal-channel device/cleanup boundary; the human participant of a direct
+     * conversation. Channel access and role
      * permissions are checked through membership.
      * NULL once that account is deleted: a workspace channel outlives its creator, while
      * personal channels are deleted explicitly with the account (`UserModel.deleteUser`).
@@ -68,6 +69,9 @@ export const channels = pgTable(
     workspaceId: text('workspace_id').references(() => workspaces.id, { onDelete: 'cascade' }),
     /** Optional project association; deleting the project preserves the channel. */
     projectId: text('project_id').references(() => projects.id, { onDelete: 'set null' }),
+
+    /** Bound Agent for a direct conversation; NULL for a group. Deleted with the Agent. */
+    agentId: text('agent_id').references(() => agents.id, { onDelete: 'cascade' }),
 
     title: text('title').notNull(),
     /** Last allocated message sequence; incremented under the row lock when a message lands. */
@@ -84,6 +88,13 @@ export const channels = pgTable(
   },
   (t) => [
     index('channels_user_id_idx').on(t.userId),
+    index('channels_agent_id_idx')
+      .on(t.agentId)
+      .where(sql`${t.agentId} IS NOT NULL`),
+    check(
+      'channels_direct_visibility_check',
+      sql`${t.agentId} IS NULL OR ${t.visibility} = 'private'`,
+    ),
     index('channels_project_id_idx')
       .on(t.projectId)
       .where(sql`${t.projectId} IS NOT NULL`),
@@ -92,7 +103,7 @@ export const channels = pgTable(
 );
 
 /**
- * People and Agents in a channel. Mentions, message authors, Thread followers and read
+ * People and Agents in a channel. Mentions, job participants, Thread followers and read
  * positions all reference this one member identity.
  */
 export const channelMembers = pgTable(
@@ -106,8 +117,7 @@ export const channelMembers = pgTable(
 
     // Human members
     /**
-     * NULL once the account is deleted: the member row stays because messages still
-     * reference it, and the person shows as a deleted user.
+     * NULL once the account is deleted: retain the member for job and Thread references.
      */
     userId: text('user_id').references(() => users.id, { onDelete: 'set null' }),
     role: text('role').$type<ChannelMemberRole>(),
@@ -117,7 +127,7 @@ export const channelMembers = pgTable(
     // Agent members
     /** NULL after Agent deletion; keep membership and authored history. */
     agentId: text('agent_id').references(() => agents.id, { onDelete: 'set null' }),
-    /** Channel identity label, retained for authored history; not an Agent configuration copy. */
+    /** Channel routing/execution label; not an Agent configuration copy. */
     name: text('name'),
     description: text('description').notNull().default(''),
     /** Channel-specific device/directory environment only. */
@@ -128,7 +138,7 @@ export const channelMembers = pgTable(
     /** Messages at or before this sequence must not run late in the new environment. */
     environmentCutoff: integer('environment_cutoff').notNull().default(0),
 
-    /** False once the member leaves; the row stays because messages still reference it. */
+    /** False once the member leaves; retain job and Thread references. */
     active: boolean('active').notNull().default(true),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
@@ -275,7 +285,10 @@ export const channelMessages = pgTable(
     threadId: text('thread_id'),
     sequence: integer('sequence').notNull(),
     content: text('content').notNull(),
-    authorMemberId: uuid('author_member_id').notNull(),
+    /** Actual human sender, not the owner/requester of an Agent reply. */
+    userId: text('user_id').references(() => users.id, { onDelete: 'set null' }),
+    /** Actual Agent sender. Author deletion retains group history and clears its reference. */
+    agentId: text('agent_id').references(() => agents.id, { onDelete: 'set null' }),
     /** Mentioned member ids. Mentioned Agents run; mentioned people are only notified. */
     mentions: jsonb('mentions').$type<string[]>().notNull().default([]),
     /** Client retry key for a human message; run identity for a published reply. */
@@ -315,11 +328,16 @@ export const channelMessages = pgTable(
       foreignColumns: [channelThreads.channelId, channelThreads.id],
       name: 'channel_messages_thread_fk',
     }),
-    foreignKey({
-      columns: [t.channelId, t.authorMemberId],
-      foreignColumns: [channelMembers.channelId, channelMembers.id],
-      name: 'channel_messages_author_fk',
-    }),
+    // Both may be NULL after author deletion. Writers require one live sender on creation.
+    check('channel_messages_sender_check', sql`${t.userId} IS NULL OR ${t.agentId} IS NULL`),
+    check(
+      'channel_messages_user_sender_check',
+      sql`${t.routingStatus} <> 'reply' OR ${t.userId} IS NULL`,
+    ),
+    check(
+      'channel_messages_agent_sender_check',
+      sql`${t.routingStatus} = 'reply' OR ${t.agentId} IS NULL`,
+    ),
   ],
 );
 

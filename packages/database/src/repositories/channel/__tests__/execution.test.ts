@@ -88,12 +88,12 @@ describe('ChannelExecutionRepository', () => {
       cutoffSequence: 1,
       requestMessageId: message.id,
       requesterMemberId: member.id,
-      self: { memberId: agent.id, name: 'Coder' },
+      self: { agentId: agent.agentId, memberId: agent.id, name: 'Coder' },
       threadId: null,
       threadRootSequence: null,
     });
     expect(await execution.input(channel.id, job.id)).toEqual([
-      expect.objectContaining({ author: { id: member.id, name: 'mia', type: 'user' } }),
+      expect.objectContaining({ author: { id: fixture.memberId, name: 'mia', type: 'user' } }),
     ]);
 
     await execution.accepted(channel.id, job.id, {
@@ -118,7 +118,8 @@ describe('ChannelExecutionRepository', () => {
     expect(await execution.publish(channel.id, job.id)).toBe(replyId);
     const [reply] = await db.select().from(channelMessages).where(eq(channelMessages.id, replyId));
     expect(reply).toMatchObject({
-      authorMemberId: agent.id,
+      agentId: agent.agentId,
+      userId: null,
       replyToId: message.id,
       routingStatus: 'reply',
       sequence: 2,
@@ -198,7 +199,7 @@ describe('ChannelExecutionRepository', () => {
       cutoffSequence: mainRequest.sequence,
       requestMessageId: mainRequest.id,
       requesterMemberId: member.id,
-      self: { memberId: mainAgent.id, name: 'Main' },
+      self: { agentId: mainAgent.agentId, memberId: mainAgent.id, name: 'Main' },
       threadId: null,
       threadRootSequence: null,
     });

@@ -10,6 +10,8 @@ public messages, deliveries, topics and operations.
 | Responsibility                                 | Storage                                                                               |
 | ---------------------------------------------- | ------------------------------------------------------------------------------------- |
 | Membership, roles, routing, branches, ordering | Channel tables                                                                        |
+| Conversation kind                              | `channels.agentId`: bound Agent for a direct conversation; NULL for a group           |
+| Message sender                                 | `channel_messages.userId` or `agentId`; never the requesting user on an Agent reply   |
 | Public content and replies                     | `channel_messages.content`; independent IDs                                           |
 | Public attachments                             | `channel_message_files`, with sender-checked file references and order                |
 | Internal conversation                          | Ordinary `topics` and `messages`, with the actual Agent and requester                 |
@@ -21,16 +23,32 @@ There is no `channel_id` on ordinary messages, topics or operations, no public C
 no separate Channel session/run/runtime-message store. `trigger='channel'` records the origin of
 an ordinary conversation/execution. The job points to it from the source side.
 
-Public history belongs to the Channel and survives deletion of an author or Agent. Member, grant, message and job IDs
-are database-generated UUIDs; message references use UUID columns as well. Agent members reference `agents.id`; deletion clears that reference and blocks new
-claims, retaining authored history. Optional `channels.project_id` is cleared on project deletion.
+A direct conversation binds `channels.userId` (its human participant) and `channels.agentId`.
+`ChannelRepository.create({ agentId, title })` checks Agent access, creates both members atomically,
+and requires private visibility. Only that human participant can access it, even if another
+membership is accidentally granted. It accepts no additional Agent members and routes unmentioned
+messages directly to the bound Agent. Group channels leave `agentId` NULL, including groups with
+only one Agent. Deleting a bound Agent cascades its direct conversations and their public history.
+
+Group history survives deletion of an author or Agent. Message sender references use `SET NULL`;
+new writes require exactly one actual sender. Human requests have `userId`, Agent replies have
+`agentId`; the database forbids mixing these roles. Both references can be NULL only in retained
+history through repository writes. The existing `routingStatus='reply'` identifies Agent replies
+after deletion; other statuses are human requests. Context authors expose the actual user/Agent ID
+(or NULL after deletion) and resolve names from those entities, with deleted-author fallbacks.
+Member IDs still identify mentions, Thread followers, requester permissions and execution environments.
+The claimed manifest freezes the replying Agent ID so rebinding a member cannot change authorship.
+
+Member, grant, message and job IDs are database-generated UUIDs; message references use UUID
+columns as well. Agent members reference `agents.id`; deletion clears that reference and blocks
+new claims, retaining group history. Optional `channels.project_id` is cleared on project deletion.
 Project association does not grant Channel access. Personal channels are removed with their owner;
-workspace channels retain their public history if the creator leaves or deletes their account.
+workspace groups retain their public history if the creator leaves or deletes their account.
 
 `ChannelRepository.addAgent` requires an admin and a usable Agent in the current scope. The
 nullable reference exists for deletion history, not for creating an unbound Agent member. The
 member's `config` contains only the Channel device, device owner and working directory. Its name
-and description are Channel identity/routing labels, retained for public history.
+and description are Channel routing/execution labels; message author names come from the actual sender.
 
 Every claim rechecks the actual requester's Agent access and reads the Agent's current settings.
 Configuration uses the same merge function as AgentService: system defaults, server defaults,
@@ -99,6 +117,9 @@ Author names and attachment availability are resolved at read time.
   Operation completion is not proof that a device process ended. Only `releaseWriter` after
   confirmed termination, or a trusted `notSubmitted` failure, releases the writer. Isolation frees
   the member but keeps the device/directory lock. Never retry an unknown delivery.
+- Before hard-deleting a Channel or its bound Agent, future deletion endpoints must stop active
+  writers and confirm physical termination. The storage cascade removes jobs and directory locks;
+  it does not stop external processes. This unactivated foundation does not provide that orchestration.
 - Deleting a Channel deletes its jobs/public history, not ordinary conversations or execution
   records. Deleting a topic/operation clears the corresponding job reference; it does not delete
   the Channel timeline or release an unconfirmed writer.

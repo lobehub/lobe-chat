@@ -2,7 +2,7 @@ import type { ChannelMessageRoutingStatus } from '@lobechat/types';
 import { and, eq, sql } from 'drizzle-orm';
 
 import type { ChannelMessageItem } from '../../schemas';
-import { channelMessages } from '../../schemas';
+import { channelMembers, channelMessages } from '../../schemas';
 import type { Transaction } from '../../type';
 import { candidateAgents, deliver, findThread } from './delivery';
 import { ChannelError } from './error';
@@ -44,7 +44,20 @@ export const resolveRouting = async (
           decision.memberIds.includes(agent.id),
         )
       : [];
-  const delivered = await deliver(tx, message, chosen, message.authorMemberId);
+  const [requester] = message.userId
+    ? await tx
+        .select({ id: channelMembers.id })
+        .from(channelMembers)
+        .where(
+          and(
+            eq(channelMembers.channelId, channelId),
+            eq(channelMembers.userId, message.userId),
+            eq(channelMembers.actorType, 'user'),
+            eq(channelMembers.active, true),
+          ),
+        )
+    : [];
+  const delivered = requester ? await deliver(tx, message, chosen, requester.id) : [];
   const status =
     decision.status === 'assigned' && !delivered.length ? 'unassigned' : decision.status;
 
@@ -55,7 +68,9 @@ export const resolveRouting = async (
       routingReason:
         delivered.length || decision.status !== 'assigned'
           ? decision.reason
-          : 'Chosen Agents are no longer available',
+          : requester
+            ? 'Chosen Agents are no longer available'
+            : 'The message sender is no longer available',
       routingSource: 'jev',
       routingStatus: status,
     })

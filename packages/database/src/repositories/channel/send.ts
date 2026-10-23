@@ -73,7 +73,8 @@ export const sendMessage = async (
   if (existing) {
     const existingFileIds = (await fileIdsByMessage(tx, [existing.id])).get(existing.id) ?? [];
     if (
-      existing.authorMemberId !== member.id ||
+      existing.userId !== member.userId ||
+      existing.agentId !== null ||
       existing.content !== input.content ||
       existing.threadId !== threadId ||
       !sameList(existingFileIds, fileIds) ||
@@ -113,26 +114,31 @@ export const sendMessage = async (
       .where(eq(channelThreads.id, thread.id));
   }
 
-  const candidates = mentions.length ? [] : await candidateAgents(tx, channel.id, thread);
+  const candidates = mentions.length
+    ? []
+    : await candidateAgents(tx, channel.id, channel.agentId ? null : thread);
+  const direct = !!channel.agentId && candidates.length > 0;
   const routed = mentions.length
     ? ({ reason: 'Mentioned', source: 'explicit', status: 'directed' } as const)
     : !candidates.length
       ? ({ reason: 'No Agent can answer here', source: null, status: 'skipped' } as const)
-      : input.routing === 'jev'
-        ? ({ reason: null, source: null, status: 'pending' } as const)
-        : ({
-            reason: 'No decision model configured',
-            source: 'fallback',
-            status: 'assigned',
-          } as const);
+      : direct
+        ? ({ reason: 'Direct conversation', source: 'explicit', status: 'directed' } as const)
+        : input.routing === 'jev'
+          ? ({ reason: null, source: null, status: 'pending' } as const)
+          : ({
+              reason: 'No decision model configured',
+              source: 'fallback',
+              status: 'assigned',
+            } as const);
   const recipients = mentions.length
     ? mentionedAgents
-    : routed.status === 'assigned'
+    : direct || routed.status === 'assigned'
       ? candidates
       : [];
 
   const message = await appendMessage(tx, {
-    authorMemberId: member.id,
+    userId: member.userId,
     channelId: channel.id,
     content: input.content,
     mentions,

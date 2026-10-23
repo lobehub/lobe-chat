@@ -42,7 +42,8 @@ describe('ChannelRepository.send', () => {
     });
 
     expect(message).toMatchObject({
-      authorMemberId: member.id,
+      agentId: null,
+      userId: fixture.memberId,
       recipientMemberIds: [coder.id],
       routingSource: 'explicit',
       routingStatus: 'directed',

@@ -6,7 +6,7 @@ import type {
 import { and, eq, gt, isNotNull, sql } from 'drizzle-orm';
 
 import type { ChannelJobItem } from '../../schemas';
-import { agentOperations, channelJobs, channelMembers, topics } from '../../schemas';
+import { agentOperations, agents, channelJobs, channelMembers, topics } from '../../schemas';
 import type { LobeChatDatabase, Transaction } from '../../type';
 import type { ChannelClaim, ChannelClaimOptions } from './claim';
 import { claimJob } from './claim';
@@ -203,8 +203,16 @@ export class ChannelExecutionRepository {
         .where(and(eq(channelMembers.id, job.memberId), eq(channelMembers.active, true)));
       if (!member) throw new ChannelError('CONFLICT', 'The member left the channel');
 
+      // The member may have been rebound since claim; attribute the reply to its frozen Agent.
+      const [sender] = await tx
+        .select({ id: agents.id })
+        .from(agents)
+        .where(eq(agents.id, job.manifest!.self.agentId))
+        .for('share');
+      if (!sender) throw new ChannelError('CONFLICT', 'The replying Agent was deleted');
+
       const reply = await appendMessage(tx, {
-        authorMemberId: job.memberId,
+        agentId: sender.id,
         channelId,
         content: job.draft,
         replyToId: job.messageId,

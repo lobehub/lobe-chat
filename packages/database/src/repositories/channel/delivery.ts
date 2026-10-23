@@ -118,6 +118,12 @@ export const appendMessage = async (
   tx: Transaction,
   values: Omit<NewChannelMessage, 'sequence' | 'id'> & { id?: string },
 ): Promise<ChannelMessageItem> => {
+  const isReply = values.routingStatus === 'reply';
+  if (isReply ? !values.agentId || values.userId != null : !values.userId || values.agentId != null)
+    throw new ChannelError(
+      'BAD_REQUEST',
+      'A message requires exactly one sender of the correct type',
+    );
   const [{ sequence }] = await tx
     .update(channels)
     .set({ sequence: sql`${channels.sequence} + 1` })
