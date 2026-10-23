@@ -40,7 +40,7 @@ import { sortProjects } from './sortProjects';
 
 const styles = stylex.create({
   overlay: {
-    background: cssVar.colorBgElevated,
+    backgroundColor: cssVar.colorBgElevated,
     borderRadius: cssVar.borderRadius,
     boxShadow: cssVar.boxShadowSecondary,
     cursor: 'grabbing',
@@ -172,7 +172,12 @@ const SortableProjectList = memo<{ projects: ProjectListItem[] }>(({ projects })
         <DragOverlay dropAnimation={dropAnimation}>
           {activeProject ? (
             <div {...stylex.props(styles.overlay)}>
-              <NavItem icon={projectIcon(activeProject)} title={activeProject.name} />
+              <NavItem
+                icon={projectIcon(activeProject)}
+                // The card itself is the surface: no hover tint on top of the white.
+                style={{ backgroundColor: 'transparent' }}
+                title={activeProject.name}
+              />
             </div>
           ) : null}
         </DragOverlay>,
