@@ -177,6 +177,7 @@ describe('AgentOperationModel recovery lookups', () => {
   describe('async tool resume claim', () => {
     it('resumes a parked async wait exactly once, within the owner', async () => {
       await park('op-async', 'waiting_for_async_tool');
+      await park('op-async-foreign', 'waiting_for_async_tool');
       await park('op-human', 'waiting_for_human');
 
       const first = await model().tryResumeFromAsyncTool('op-async');
@@ -186,7 +187,10 @@ describe('AgentOperationModel recovery lookups', () => {
       expect(await model().tryResumeFromAsyncTool('op-async')).toBe(false);
       // A person's wait is not an async tool wait.
       expect(await model().tryResumeFromAsyncTool('op-human')).toBe(false);
-      expect(await model(otherUserId).tryResumeFromAsyncTool('op-human')).toBe(false);
+      // Owner isolation: another owner must not claim a genuinely resumable wait,
+      // and the row has to stay parked for its real owner afterwards.
+      expect(await model(otherUserId).tryResumeFromAsyncTool('op-async-foreign')).toBe(false);
+      expect((await model().findById('op-async-foreign'))?.status).toBe('waiting_for_async_tool');
       expect(await model().tryResumeFromAsyncTool('op-never-started')).toBe(false);
     });
   });
