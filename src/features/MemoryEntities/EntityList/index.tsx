@@ -118,9 +118,7 @@ const EntityList = memo(() => {
               description={`没有找到和「${keyword.trim()}」有关的情境`}
               icon={SearchXIcon}
               action={
-                <Button size={'small'} onClick={() => setKeyword('')}>
-                  清除搜索
-                </Button>
+                <Button onClick={() => setKeyword('')}>清除搜索</Button>
               }
             />
           </div>
