@@ -1,5 +1,6 @@
 'use client';
 
+import { agentDisplayName } from '@lobechat/types';
 import {
   AccordionHeader,
   AccordionItem,
@@ -85,9 +86,8 @@ const GroupItem = memo<GroupItemComponentProps>(({ group }) => {
     row?.agentAvatar || registeredMeta?.avatar || (isOwnBucket ? activeMeta.avatar : undefined);
   const name =
     title ??
-    registeredMeta?.title ??
-    registeredMeta?.name ??
-    (isOwnBucket ? (activeMeta.title ?? activeMeta.name) : undefined) ??
+    agentDisplayName(registeredMeta) ??
+    (isOwnBucket ? agentDisplayName(activeMeta) : undefined) ??
     t('groupTitle.byAgent.unknown');
 
   const isCoordinator = !!agentId && agentId === scope?.coordinatorAgentId;
