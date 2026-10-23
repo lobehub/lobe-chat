@@ -332,7 +332,11 @@ describe('continueHeteroAfterError', () => {
     expect(mockExecuteHeterogeneousAgent).not.toHaveBeenCalled();
     expect(mockExecuteGatewayAgent).toHaveBeenCalledTimes(1);
     expect(mockExecuteGatewayAgent).toHaveBeenCalledWith(
-      expect.objectContaining({ message: HETERO_CONTINUE_PROMPT, parentMessageId: 'step-1' }),
+      expect.objectContaining({
+        message: HETERO_CONTINUE_PROMPT,
+        parentMessageId: 'step-1',
+        parentOperationId: 'op-id',
+      }),
     );
   });
 

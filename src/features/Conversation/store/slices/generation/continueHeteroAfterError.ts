@@ -104,7 +104,10 @@ export const continueHeteroAfterError = async (
     // being replaced.
     if (runtimeType === 'gateway') {
       // `parentMessageId` makes the server resume the existing chain and the
-      // device's CLI session instead of starting a fresh user turn.
+      // device's CLI session instead of starting a fresh user turn. Forwarding
+      // the wrapper op lets the gateway settle it at the phase-1 handoff and
+      // wire its abort signal — otherwise a socket that drops before
+      // `onComplete` leaves the turn stuck in `regenerate` and blocks retry.
       await chatStore.executeGatewayAgent({
         context,
         message: HETERO_CONTINUE_PROMPT,
@@ -113,6 +116,7 @@ export const continueHeteroAfterError = async (
             hooks.onRegenerateComplete?.(groupMessageId),
           ),
         parentMessageId: continueParentId,
+        parentOperationId: operationId,
       });
       return;
     }
