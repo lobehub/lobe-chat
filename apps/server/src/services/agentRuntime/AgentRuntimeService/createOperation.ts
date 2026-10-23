@@ -1,5 +1,5 @@
 import type { AgentState } from '@lobechat/agent-runtime';
-import { extractActivatedToolIdsFromMessages } from '@lobechat/agent-runtime';
+import { extractActivatedToolIdsFromMessages, UsageCounter } from '@lobechat/agent-runtime';
 import debug from 'debug';
 
 import {
@@ -295,6 +295,14 @@ export async function createOperation(
       status: 'idle',
       stepCount: initialStepCount,
       llmCalls: initialLlmCalls,
+      // Compat mirror for a rolling deploy: a worker still running the
+      // pre-`llmCalls` build reports only `usage.llm.apiCalls`, so a resumed
+      // run that seeds its prior total here alone would lose every call made
+      // before the resume the moment one of those workers finalizes it. Seeding
+      // both keeps `getLlmCallCount`'s max() additive on either build.
+      ...(initialLlmCalls > 0 && {
+        usage: UsageCounter.accumulateAttempts(undefined, initialLlmCalls),
+      }),
       // How the run executes — frozen from here on.
       plan: {
         eval: evalRuntime,

@@ -228,10 +228,13 @@ export class AgentRuntime {
       let finalNextContext: AgentRuntimeContext | undefined = undefined;
       let hasFinishInstruction = false;
 
-      let executedLlmInstruction = false;
+      // Counted rather than flagged: a runner may queue several `call_llm`
+      // instructions in one step (the fallback path when the selected executor
+      // does not mutate `usage`), and each of them reached the provider.
+      let executedLlmInstructions = 0;
 
       for (const [instructionIndex, instruction] of normalizedInstructions.entries()) {
-        if (instruction.type === 'call_llm') executedLlmInstruction = true;
+        if (instruction.type === 'call_llm') executedLlmInstructions += 1;
         if (instruction.type === 'finish') hasFinishInstruction = true;
 
         let result;
@@ -303,8 +306,7 @@ export class AgentRuntime {
         (currentState.usage?.llm?.apiCalls ?? 0) - apiCallsBeforeStep,
         0,
       );
-      currentState.llmCalls =
-        llmCallsBeforeStep + (apiCallsDelta || (executedLlmInstruction ? 1 : 0));
+      currentState.llmCalls = llmCallsBeforeStep + (apiCallsDelta || executedLlmInstructions);
 
       // A 'finish' instruction is not a real execution step, undo the +1 from the top of step()
       if (hasFinishInstruction) {

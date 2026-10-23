@@ -97,6 +97,30 @@ describe('llmCalls metric', () => {
     expect(result.newState.llmCalls).toBe(7);
   });
 
+  it('counts every call_llm instruction in one step when the executor leaves usage untouched', async () => {
+    // A runner may queue several LLM calls in a single step; the executor here
+    // does not mutate `usage`, so the fallback has to count the instructions
+    // instead of treating the step as one call.
+    const agent = {
+      ...createAgent(),
+      runner: async () =>
+        [
+          { payload: { messages: [] }, type: 'call_llm' },
+          { payload: { messages: [] }, type: 'call_llm' },
+        ] as any,
+    } as unknown as Agent;
+    const runtime = new AgentRuntime(agent);
+    // @ts-expect-error - accessing a private property for testing
+    runtime.executors.call_llm = vi
+      .fn()
+      .mockImplementation(async (_instruction, state) => ({ events: [], newState: state }));
+
+    const state = AgentRuntime.createInitialState({ operationId: 'test-op' });
+    const result = await runtime.step(state, createContext());
+
+    expect(result.newState.llmCalls).toBe(2);
+  });
+
   it('reads the explicit llmCalls field before falling back to usage', () => {
     const state = { llmCalls: 5, usage: createUsage(2) } as AgentState;
     expect(getLlmCallCount(state)).toBe(5);
