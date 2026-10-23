@@ -2,8 +2,11 @@
 
 import {
   closestCenter,
+  defaultDropAnimationSideEffects,
   DndContext,
   type DragEndEvent,
+  DragOverlay,
+  type DragStartEvent,
   KeyboardSensor,
   MouseSensor,
   TouchSensor,
@@ -19,17 +22,34 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { toast } from '@lobehub/ui';
-import { memo, useMemo } from 'react';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
+import { memo, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 
+import NavItem from '@/features/NavPanel/components/NavItem';
 import { useCanManageProject } from '@/features/Projects/useCanManageProject';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import type { ProjectListItem } from '@/store/project';
 import { useProjectStore } from '@/store/project';
 
-import ProjectItem from './ProjectItem';
+import ProjectItem, { projectIcon } from './ProjectItem';
 import { sortProjects } from './sortProjects';
+
+const styles = stylex.create({
+  overlay: {
+    background: cssVar.colorBgElevated,
+    borderRadius: cssVar.borderRadius,
+    boxShadow: cssVar.boxShadowSecondary,
+    cursor: 'grabbing',
+  },
+});
+
+const dropAnimation = {
+  sideEffects: defaultDropAnimationSideEffects({ styles: { active: { opacity: '0.4' } } }),
+};
 
 // The row is a link: a click fires on pointerup after a drag, so swallow the
 // one click that follows a drop instead of navigating to the dragged project.
@@ -75,11 +95,12 @@ const SortableProjectItem = memo<{ project: ProjectListItem }>(({ project }) => 
     <div
       ref={setNodeRef}
       style={{
-        opacity: isDragging ? 0.6 : undefined,
-        position: 'relative',
+        // The floating copy follows the pointer; the row itself marks where it will land.
+        opacity: isDragging ? 0.4 : undefined,
         transform: CSS.Translate.toString(transform),
         transition,
-        zIndex: isDragging ? 1 : undefined,
+        // Holding the press before the drag starts would otherwise select the title.
+        userSelect: 'none',
       }}
       {...attributes}
       {...listeners}
@@ -100,6 +121,7 @@ const SortableProjectList = memo<{ projects: ProjectListItem[] }>(({ projects })
   // The manual order is shared by the workspace, so only editors may change it.
   const canManage = useCanManageProject();
 
+  const [activeId, setActiveId] = useState<string>();
   const sorted = useMemo(() => sortProjects(projects, sortBy), [projects, sortBy]);
   const ids = useMemo(() => sorted.map((p) => p.id), [sorted]);
 
@@ -113,7 +135,12 @@ const SortableProjectList = memo<{ projects: ProjectListItem[] }>(({ projects })
   if (sortBy !== 'manual' || !canManage)
     return sorted.map((project) => <ProjectItem key={project.id} project={project} />);
 
+  const activeProject = activeId ? sorted.find((p) => p.id === activeId) : undefined;
+
+  const handleDragStart = ({ active }: DragStartEvent) => setActiveId(String(active.id));
+
   const handleDragEnd = async ({ active, over }: DragEndEvent) => {
+    setActiveId(undefined);
     suppressNextClick();
     if (!over || active.id === over.id) return;
 
@@ -129,12 +156,28 @@ const SortableProjectList = memo<{ projects: ProjectListItem[] }>(({ projects })
   };
 
   return (
-    <DndContext collisionDetection={closestCenter} sensors={sensors} onDragEnd={handleDragEnd}>
+    <DndContext
+      collisionDetection={closestCenter}
+      sensors={sensors}
+      onDragCancel={() => setActiveId(undefined)}
+      onDragEnd={handleDragEnd}
+      onDragStart={handleDragStart}
+    >
       <SortableContext items={ids} strategy={verticalListSortingStrategy}>
         {sorted.map((project) => (
           <SortableProjectItem key={project.id} project={project} />
         ))}
       </SortableContext>
+      {createPortal(
+        <DragOverlay dropAnimation={dropAnimation}>
+          {activeProject ? (
+            <div {...stylex.props(styles.overlay)}>
+              <NavItem icon={projectIcon(activeProject)} title={activeProject.name} />
+            </div>
+          ) : null}
+        </DragOverlay>,
+        document.body,
+      )}
     </DndContext>
   );
 });
