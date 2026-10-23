@@ -505,6 +505,12 @@ interface LifecycleProps {
   goalId: string;
   graph: GoalGraphView;
   /**
+   * Click landing for a row's subject. A host that also renders the graph passes
+   * its own handler so a timeline click keeps the map's selection in sync —
+   * without it the timeline would open the node but leave the graph stale.
+   */
+  onSelect?: (nodeId: string) => void;
+  /**
    * Pins each day label under the host's top edge. Only right inside the metric
    * panel, whose padded scroller the offsets are computed against; a host that
    * scrolls the page turns it off.
@@ -512,13 +518,15 @@ interface LifecycleProps {
   stickyDays?: boolean;
 }
 
-const Lifecycle = memo<LifecycleProps>(({ goalId, graph, stickyDays = true }) => {
+const Lifecycle = memo<LifecycleProps>(({ goalId, graph, stickyDays = true, onSelect }) => {
   const { t } = useTranslation('chat');
   const dayLabel = useDayLabel();
   const snapshot = useGoalStore(goalSelectors.goalGraph(goalId));
   // Same landing as a click anywhere else on the goal: a Task opens its Task
-  // panel, other nodes their drill-down.
-  const onSelect = useGoalNodeSelect(goalId, graph);
+  // panel, other nodes their drill-down. A host that owns the graph's selection
+  // passes its own handler instead, so the click updates both surfaces.
+  const openNode = useGoalNodeSelect(goalId, graph);
+  const select = onSelect ?? openNode;
 
   const days = useMemo(() => {
     const workTypes = new Map(
@@ -547,7 +555,7 @@ const Lifecycle = memo<LifecycleProps>(({ goalId, graph, stickyDays = true }) =>
                 graph={graph}
                 group={group}
                 key={group.rows[0].event.id}
-                onSelect={onSelect}
+                onSelect={select}
               />
             ))}
           </Flexbox>

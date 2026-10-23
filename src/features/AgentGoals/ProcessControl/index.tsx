@@ -179,8 +179,12 @@ const ProcessControl = memo<ProcessControlProps>(
               },
               {
                 // The timeline carries who decided what (a person's gate answer
-                // reads as their own line), not just what the tasks did.
-                children: <Lifecycle goalId={goalId} graph={graph} stickyDays={false} />,
+                // reads as their own line), not just what the tasks did. It
+                // lands on the shared `select` so a timeline click also moves
+                // the map's highlight, as the list it replaced did.
+                children: (
+                  <Lifecycle goalId={goalId} graph={graph} stickyDays={false} onSelect={select} />
+                ),
                 key: 'activity',
                 title: (
                   <Text fontSize={14} weight={600}>
