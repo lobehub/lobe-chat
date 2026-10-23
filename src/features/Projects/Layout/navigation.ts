@@ -13,13 +13,6 @@ export const getProjectConversationPath = (projectId: string, topicId?: string) 
 export const getProjectDraftPath = (projectId: string, agentId: string, directoryId: string) =>
   `${getProjectConversationPath(projectId)}?${new URLSearchParams({ agent: agentId, dir: directoryId })}`;
 
-/** Open a project conversation and send `message` in it once it has loaded. */
-export const getProjectConversationStartPath = (
-  projectId: string,
-  topicId: string,
-  message: string,
-) => `${getProjectConversationPath(projectId, topicId)}?message=${encodeURIComponent(message)}`;
-
 export const getProjectLibraryPath = (projectId: string, libraryId: string) =>
   `/project/${projectId}/library/${libraryId}`;
 
