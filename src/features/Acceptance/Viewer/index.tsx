@@ -86,7 +86,7 @@ const AcceptancePage = ({
                 {!focused && <AcceptanceOverview onDraftToComposer={onDraftToComposer} />}
               </Flexbox>
               <AcceptanceLedgerRail />
-              <CollaboratorConversationRail />
+              {!embedded && <CollaboratorConversationRail />}
             </Flexbox>
             <div className={styles.flowPanel} ref={setFlowPanelHostContext} />
           </Flexbox>

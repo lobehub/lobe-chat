@@ -109,7 +109,7 @@ const CollaborationRequestBanner = () => {
           await requestAccess({
             clientId: nanoid(),
             content: reason || undefined,
-            contextRunId: data.rounds.at(-1)?.run.id,
+            contextRunId: (data.rounds ?? []).at(-1)?.run.id,
           });
           return true;
         } catch (cause) {

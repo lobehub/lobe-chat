@@ -43,18 +43,21 @@ const styles = stylex.create({
  * delivery, in the column the owner's round ledger occupies. The owner keeps
  * the ledger rail (with their own chat behind the topic chip); a collaborator
  * has no round history to browse, so their rail is the conversation alone.
+ *
+ * Only the standalone page mounts it: an embedded viewer already sits beside a
+ * conversation, and has no column of its own for a second one.
  */
 const CollaboratorConversationRail = () => {
   const { t } = useTranslation('verify');
   const { lg = true } = useResponsive();
   const isNarrowViewport = !lg;
   const params = useParams<{ checkId?: string }>();
-  const { acceptanceId, embedded } = useAcceptanceScope();
+  const { acceptanceId } = useAcceptanceScope();
   const { data } = useAcceptanceBundle(acceptanceId);
   const focused = Boolean(params.checkId);
   const { expand, onExpandChange } = useAcceptanceRailState({ focused, isNarrowViewport });
 
-  if (embedded || !data || data.isOwner || !data.canCollaborate || !data.collaboration) return null;
+  if (!data || data.isOwner || !data.canCollaborate || !data.collaboration) return null;
 
   const panel = <CollaboratorTopicPanel onCollapse={() => onExpandChange(false)} />;
 

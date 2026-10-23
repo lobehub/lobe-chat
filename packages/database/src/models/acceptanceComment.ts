@@ -88,13 +88,39 @@ export class AcceptanceCommentModel {
     params: CreateAcceptanceCommentParams,
   ): Promise<CreateAcceptanceCommentResult> => {
     return this.db.transaction(async (tx) => {
-      if (params.rateLimit)
+      const isAccessRequest = params.kind === 'access_request';
+      if (params.rateLimit || isAccessRequest)
         // One author on one acceptance is the contended pair, and the lock is
         // released when this transaction ends either way. Everybody else writes
         // in parallel exactly as before.
         await tx.execute(
           sql`select pg_advisory_xact_lock(hashtext(${params.acceptanceId}), hashtext(${params.authorUserId}))`,
         );
+
+      // One standing access request per person. Checked under the lock above,
+      // in the same transaction as the insert: checked before it, two tabs
+      // asking at once would each see none and both write a pending request —
+      // and a grant on the older one would not count, since only the newest
+      // request is ever read back as the grant.
+      if (isAccessRequest) {
+        const [standing] = await tx
+          .select()
+          .from(acceptanceComments)
+          .where(
+            and(
+              eq(acceptanceComments.acceptanceId, params.acceptanceId),
+              eq(acceptanceComments.authorUserId, params.authorUserId),
+              eq(acceptanceComments.kind, 'access_request'),
+              isNull(acceptanceComments.parentCommentId),
+              isNull(acceptanceComments.deletedAt),
+            ),
+          )
+          .orderBy(desc(acceptanceComments.createdAt), desc(acceptanceComments.id))
+          .limit(1);
+        const status = standing?.metadata?.accessRequest?.status;
+        if (standing && (status === 'pending' || status === 'granted'))
+          return { comment: standing, isDuplicate: true };
+      }
 
       let parentCommentId: string | undefined;
       if (params.parentCommentId) {

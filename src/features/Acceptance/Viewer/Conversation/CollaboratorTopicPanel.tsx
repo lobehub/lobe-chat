@@ -1,5 +1,6 @@
 'use client';
 
+import type { UIChatMessage } from '@lobechat/types';
 import { ActionIcon, Avatar, Button, Flexbox, Text, TextArea, toast } from '@lobehub/ui';
 import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
 import * as stylex from '@stylexjs/stylex';
@@ -21,6 +22,9 @@ import { useAgentStore } from '@/store/agent';
 
 import { useAcceptanceScope } from '../AcceptanceScope';
 import { useAcceptanceBundle } from '../useAcceptanceBundle';
+
+/** Stable, so a missing transcript does not hand the provider a new array each render. */
+const EMPTY_MESSAGES: UIChatMessage[] = [];
 
 /** While the agent is replying, how often the transcript is read again. */
 const RUNNING_POLL_INTERVAL = 2000;
@@ -102,6 +106,7 @@ const CollaboratorTopicPanel = ({ onCollapse }: { onCollapse: () => void }) => {
       revalidateOnFocus: true,
     },
   );
+  const messages = data?.messages ?? EMPTY_MESSAGES;
   // A transcript with no real coordinates of its own: it is held, never synced.
   // It is also someone else's conversation, read through a grant, so it renders
   // the way a shared topic does — no retry, no raw error details, and none of
@@ -118,7 +123,7 @@ const CollaboratorTopicPanel = ({ onCollapse }: { onCollapse: () => void }) => {
   // Follow the newest turn, like a chat does: what a collaborator comes back
   // for is the latest exchange, not the delivery's opening brief.
   const threadRef = useRef<HTMLDivElement>(null);
-  const messageCount = data?.messages.length ?? 0;
+  const messageCount = messages.length;
   useEffect(() => {
     const thread = threadRef.current;
     if (thread && messageCount > 0) thread.scrollTop = thread.scrollHeight;
@@ -202,10 +207,10 @@ const CollaboratorTopicPanel = ({ onCollapse }: { onCollapse: () => void }) => {
       <div ref={threadRef} {...stylex.props(styles.thread)}>
         {error && !data ? (
           <div {...stylex.props(styles.empty)}>{t('acceptance.collaboration.loadFailed')}</div>
-        ) : data && data.messages.length === 0 ? (
+        ) : data && messages.length === 0 ? (
           <div {...stylex.props(styles.empty)}>{t('acceptance.collaboration.empty')}</div>
         ) : data ? (
-          <ConversationProvider context={context} messages={data.messages}>
+          <ConversationProvider context={context} messages={messages}>
             <Transcript />
           </ConversationProvider>
         ) : null}

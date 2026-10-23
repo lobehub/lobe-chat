@@ -597,22 +597,15 @@ export const acceptanceCommentRouter = router({
         visibility: access.acceptance.visibility,
         workspaceId: access.acceptance.workspaceId,
       };
-      const standing = await ctx.acceptanceCommentModel.findLatestAccessRequest(
-        access.acceptance.id,
-        ctx.userId,
-      );
-      const standingStatus = standing?.metadata?.accessRequest?.status;
-      if (standing && (standingStatus === 'pending' || standingStatus === 'granted')) {
-        const [item] = await enrich(ctx.serverDB, [standing], enrichScope);
-        return { data: item, success: true };
-      }
-
       const accessRequest: AcceptanceAccessRequest = {
         permission: 'collaborate',
         status: 'pending',
       };
       try {
-        const { comment } = await ctx.acceptanceCommentModel.create({
+        // A pending or granted request already standing comes back as the
+        // duplicate — decided inside the write's own transaction, so two
+        // submissions at once still leave a single standing request.
+        const { comment, isDuplicate } = await ctx.acceptanceCommentModel.create({
           acceptanceId: access.acceptance.id,
           authorUserId: ctx.userId,
           clientId: input.clientId,
@@ -629,7 +622,7 @@ export const acceptanceCommentRouter = router({
           workspaceId: access.acceptance.workspaceId,
         });
         const [item] = await enrich(ctx.serverDB, [comment], enrichScope);
-        notifyAcceptance(access.acceptance.id, 'comments', ctx.userId);
+        if (!isDuplicate) notifyAcceptance(access.acceptance.id, 'comments', ctx.userId);
         return { data: item, success: true };
       } catch (error) {
         if (error instanceof Error && error.message === ACCEPTANCE_COMMENT_RATE_LIMITED)
