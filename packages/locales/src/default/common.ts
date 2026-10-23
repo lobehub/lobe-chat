@@ -173,7 +173,7 @@ export default {
 
   'cmdk.painting': 'Image',
 
-  'cmdk.resource': 'Resources',
+  'cmdk.resource': 'Docs',
 
   'cmdk.search.agent': 'Agent',
 
@@ -605,7 +605,7 @@ export default {
   'tab.me': 'Me',
   'tab.memory': 'Memory',
   'tab.pages': 'Pages',
-  'tab.resource': 'Resources',
+  'tab.resource': 'Docs',
   'tab.search': 'Search',
   'tab.setting': 'Settings',
   'tab.tasks': 'Tasks',
