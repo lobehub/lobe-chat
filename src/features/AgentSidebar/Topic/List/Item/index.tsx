@@ -41,6 +41,7 @@ import { getProjectConversationPath } from '@/features/Projects/Layout/navigatio
 import TopicCreatorAvatar, { useTopicCreator } from '@/features/TopicCreatorAvatar';
 import { buildWorkspaceAwarePath } from '@/features/Workspace/workspaceAwarePath';
 import { getWorkingDirectoryName } from '@/helpers/workingDirectoryPath';
+import { useTopicOnlyMine } from '@/hooks/useTopicOnlyMine';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors, builtinAgentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
@@ -279,10 +280,12 @@ const TopicItemRow = memo<TopicItemRowProps>(
     const activeWorkspaceSlug = useActiveWorkspaceSlug();
     // Creator of the topic — resolves only inside an active workspace; drives
     // the identity-first icon layout below.
-    const author = useTopicCreator(
-      isSharedAgent && !metadata?.bot ? userId : undefined,
-      metadata?.botCreator,
-    );
+    // "Only my topics" makes every row the viewer's own, so the creator avatar
+    // carries no information — drop it and fall back to the personal-mode row.
+    // Bot topics still resolve their initiator via `botCreator`.
+    const onlyMine = useTopicOnlyMine();
+    const creatorUserId = isSharedAgent && !metadata?.bot && !onlyMine ? userId : undefined;
+    const author = useTopicCreator(creatorUserId, metadata?.botCreator);
 
     const loadingRingColor = isDarkMode
       ? cssVar.colorWarningBorder
@@ -574,7 +577,7 @@ const TopicItemRow = memo<TopicItemRowProps>(
         <TopicCreatorAvatar
           botCreator={metadata?.botCreator}
           corner={ownIconNode}
-          userId={userId}
+          userId={creatorUserId}
         />
       ) : (
         (ownIconNode ?? idleIconPlaceholder)
