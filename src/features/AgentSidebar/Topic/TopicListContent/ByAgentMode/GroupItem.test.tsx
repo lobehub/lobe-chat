@@ -12,7 +12,7 @@ const subGroupModes: Record<string, string> = {};
 let registeredMeta: { avatar?: string; name?: string; title?: string } = {};
 const agencyConfigById: Record<
   string,
-  { boundDeviceId?: string; executionTargetSelectionPolicy?: string }
+  { boundDeviceId?: string; executionTarget?: string; executionTargetSelectionPolicy?: string }
 > = {};
 
 vi.mock('@/store/agent', () => ({
@@ -375,6 +375,40 @@ describe('TopicByAgentGroupItem', () => {
 
     expect(screen.queryByRole('button', { name: 'Studio Linux' })).toBeNull();
     expect(screen.queryByText('actions.addNewTopic')).toBeNull();
+  });
+
+  /** @example Review: a fixed non-device target (sandbox) binds no device to start on. */
+  it('offers no device start for an agent fixed to a sandbox target', () => {
+    subGroupModes[GROUP_ID] = 'byDevice';
+    agencyConfigById.agt_acc_merge_alpha = {
+      executionTarget: 'sandbox',
+      executionTargetSelectionPolicy: 'fixed',
+    };
+    directories.splice(
+      0,
+      directories.length,
+      {
+        deviceId: 'device-1',
+        environmentId: 'env-1',
+        id: 'binding-mac',
+        instanceId: 'ins-mac',
+        permission: 'readWrite',
+        runnable: true,
+      },
+      {
+        deviceId: 'device-2',
+        environmentId: 'env-1',
+        id: 'binding-linux-new',
+        instanceId: 'ins-linux',
+        permission: 'readWrite',
+        runnable: true,
+      },
+    );
+    renderGroup();
+
+    expect(screen.queryByRole('button', { name: 'Studio Linux' })).toBeNull();
+    expect(screen.queryByText('actions.addNewTopic')).toBeNull();
+    expect(screen.queryAllByRole('button', { name: 'directories.start' })).toHaveLength(0);
   });
 
   const renderInProject = (agentId: string) =>

@@ -53,10 +53,14 @@ const STATUS_ICON: Record<string, ExecutionStatusVisual> = {
 /**
  * A device section only offers a start where the run can actually begin: the
  * server refuses a directory without an enabled environment binding, a
- * read-only one, and — for an agent fixed to one device — any other device.
+ * read-only one, and — for an agent with a fixed execution target — any device
+ * but its bound one. A fixed non-device target (sandbox, local) binds no
+ * device, so it starts on none.
  */
-const isStartableDirectory = (directory: ProjectDirectory, fixedDeviceId?: string) =>
-  !!directory.runnable && (!fixedDeviceId || directory.deviceId === fixedDeviceId);
+const isStartableDirectory = (
+  directory: ProjectDirectory,
+  fixed: { boundDeviceId?: string } | undefined,
+) => !!directory.runnable && (!fixed || directory.deviceId === fixed.boundDeviceId);
 
 const renderTopic = (topic: ChatTopic, suppressAgentAvatar?: boolean) => (
   <TopicItem
@@ -187,13 +191,14 @@ const ProjectTopicList = memo<ProjectTopicListProps>((props) => {
   const agencyConfig = useAgentStore((s) =>
     startAgentId ? agentByIdSelectors.getAgencyConfigById(startAgentId)(s) : undefined,
   );
-  const fixedDeviceId =
-    agencyConfig?.executionTargetSelectionPolicy === 'fixed'
-      ? agencyConfig.boundDeviceId
-      : undefined;
+  const isFixed = agencyConfig?.executionTargetSelectionPolicy === 'fixed';
+  const boundDeviceId = agencyConfig?.boundDeviceId;
   const startDirectories = useMemo(
-    () => props.startDirectories?.filter((item) => isStartableDirectory(item, fixedDeviceId)),
-    [props.startDirectories, fixedDeviceId],
+    () =>
+      props.startDirectories?.filter((item) =>
+        isStartableDirectory(item, isFixed ? { boundDeviceId } : undefined),
+      ),
+    [props.startDirectories, isFixed, boundDeviceId],
   );
 
   // A joined id string, not the Set itself: the selector must return something
