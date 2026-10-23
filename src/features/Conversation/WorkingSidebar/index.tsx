@@ -1,4 +1,3 @@
-import type { SFSymbol } from '@lobechat/electron-client-ipc';
 import { getWorkingDirEffectivePath } from '@lobechat/types';
 import { nanoid } from '@lobechat/utils';
 import { ActionIcon, type DropdownItem, DropdownMenu, Flexbox, Icon, Skeleton } from '@lobehub/ui';
@@ -15,12 +14,9 @@ import {
   MessageCircleIcon,
   PanelRightCloseIcon,
   PanelsTopLeftIcon,
-  PinIcon,
-  PinOffIcon,
   PlusIcon,
   Settings2Icon,
   SquareTerminalIcon,
-  XIcon,
 } from 'lucide-react';
 import { AnimatePresence } from 'motion/react';
 import * as m from 'motion/react-m';
@@ -57,7 +53,6 @@ import { useDeferredMount } from '@/hooks/useDeferredMount';
 import { useEffectiveAgencyConfig } from '@/hooks/useEffectiveAgencyConfig';
 import { useEffectiveWorkingDirectory } from '@/hooks/useEffectiveWorkingDirectory';
 import { useLocalStorageState } from '@/hooks/useLocalStorageState';
-import type { NativeContextMenuItem } from '@/libs/contextMenu/types';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors, chatConfigByIdSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
@@ -93,6 +88,7 @@ import { useLinkedPullRequest } from './PullRequest/useLinkedPullRequest';
 import ResourcesSection from './ResourcesSection';
 import Review from './Review';
 import { useSandboxFilesDirectory } from './useSandboxFilesDirectory';
+import { useTabContextMenuItems } from './useTabContextMenuItems';
 import WorkspaceTab from './WorkspaceTab';
 import WorksSection from './WorksSection';
 
@@ -717,57 +713,14 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
         ) ?? availableTabs.get(tab),
     )
     .filter((tab): tab is SidebarTabDescriptor => Boolean(tab));
-  const createTabContextMenuItems = useCallback(
-    (tab: string, index: number): NativeContextMenuItem[] => {
-      const pinned = pinnedTabsSet.has(tab);
-      const leftTabs = openedTabs.slice(0, index);
-      const rightTabs = openedTabs.slice(index + 1);
-      const otherTabs = openedTabs.filter((item) => item !== tab);
-      const hasClosable = (tabs: string[]) => tabs.some((item) => !pinnedTabsSet.has(item));
-
-      return [
-        ...(!isDynamicTab(tab)
-          ? [
-              {
-                icon: pinned ? PinOffIcon : PinIcon,
-                key: pinned ? 'unpin' : 'pin',
-                label: t(pinned ? 'workingPanel.tabs.unpin' : 'workingPanel.tabs.pin'),
-                onClick: () => (pinned ? unpinTab(tab) : pinTab(tab)),
-                sfSymbol: (pinned ? 'pin.slash' : 'pin') satisfies SFSymbol,
-              } as NativeContextMenuItem,
-              { type: 'divider' as const },
-            ]
-          : []),
-        {
-          disabled: pinned,
-          icon: XIcon,
-          key: 'close',
-          label: t('workingPanel.tabs.close'),
-          onClick: () => closeTab(tab),
-        },
-        {
-          disabled: !hasClosable(otherTabs),
-          key: 'closeOthers',
-          label: t('workingPanel.tabs.closeOthers'),
-          onClick: () => closeTabs(otherTabs, tab),
-        },
-        { type: 'divider' },
-        {
-          disabled: !hasClosable(leftTabs),
-          key: 'closeLeft',
-          label: t('workingPanel.tabs.closeLeft'),
-          onClick: () => closeTabs(leftTabs, tab),
-        },
-        {
-          disabled: !hasClosable(rightTabs),
-          key: 'closeRight',
-          label: t('workingPanel.tabs.closeRight'),
-          onClick: () => closeTabs(rightTabs, tab),
-        },
-      ];
-    },
-    [closeTab, closeTabs, openedTabs, pinTab, pinnedTabsSet, t, unpinTab],
-  );
+  const createTabContextMenuItems = useTabContextMenuItems({
+    closeTab,
+    closeTabs,
+    openedTabs,
+    pinTab,
+    pinnedTabsSet,
+    unpinTab,
+  });
   const tabsRef = useRef<HTMLDivElement>(null);
   const pendingTabFocusRef = useRef<string | undefined>(undefined);
   const pendingTabFocusTimeoutRef = useRef<number | undefined>(undefined);
