@@ -37,6 +37,8 @@ export interface OperationCompletionInput {
    * in-process path's user turn.
    */
   goal?: unknown;
+  /** User-facing LLM-call count for the run (derived from `usage` when omitted). */
+  llmCalls?: number | null;
   /** Executed model — the verify gate keys off `op.model`, so hetero backfills it. */
   model?: string | null;
   operationId: string;

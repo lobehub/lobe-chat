@@ -26,6 +26,7 @@ vi.mock('./Checks/AcceptanceCheckInventory', () => ({ default: () => null }));
 vi.mock('./Checks/AcceptanceCheckOwnerToolbar', () => ({ default: () => null }));
 vi.mock('./Comments/AcceptanceDiscussion', () => ({ default: () => null }));
 vi.mock('./Comments/ReviewerApprovalBar', () => ({ default: () => null }));
+vi.mock('./Comments/CollaborationRequestBanner', () => ({ default: () => null }));
 vi.mock('./Conversation/AcceptanceOriginTopic', () => ({ default: () => null }));
 vi.mock('./Evidence/AcceptanceResources', () => ({ default: () => null }));
 vi.mock('./Flow/AcceptanceFlow', () => ({ AcceptanceFlow: () => null }));

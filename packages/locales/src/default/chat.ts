@@ -1441,6 +1441,7 @@ export default {
   'opStatusTray.status.toolCalling': 'Calling tools',
   'opStatusTray.cost': 'cost',
   'opStatusTray.steps': 'steps',
+  'opStatusTray.llmCalls': 'LLM calls',
   'opStatusTray.tokens': 'tokens',
 
   // Connect Agent wizard (device-first): pick a machine, auto-scan the agents
@@ -1891,6 +1892,7 @@ export default {
   'task.intermediateSteps': '{{count}} intermediate steps',
   'task.metrics.duration': '(took {{duration}})',
   'task.metrics.stepsShort': 'steps',
+  'task.metrics.llmCallsShort': 'LLM calls',
   'task.metrics.toolCallsShort': 'skill uses',
   'task.status.cancelled': 'Task Cancelled',
   'task.status.failed': 'Task Failed',
@@ -3812,7 +3814,6 @@ export default {
     'Some expanded folders are too large to list fully — only the first entries are shown',
   'workingPanel.files.views.changes': 'Git Changes',
   'workingPanel.files.views.project': 'Project',
-  'workingPanel.files.views.title': 'File View',
   'workingPanel.pr.action.arming': 'Arming auto-merge…',
   'workingPanel.pr.action.autoMerge': 'Auto-merge when ready',
   'workingPanel.pr.action.bypassSuffix': 'bypass rules',

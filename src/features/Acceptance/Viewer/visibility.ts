@@ -34,6 +34,16 @@ export const isReadOnlyAcceptanceDecider = (
   canApprove: boolean,
 ) => Boolean(bundle) && !canReviewAcceptance(bundle) && canApprove;
 
+/**
+ * Whether the viewer may send the delivery back but not otherwise decide it:
+ * a decider granted them reject access. The server widens `canReject` by the
+ * same grant the reject mutation honours, and the repair it starts runs on the
+ * owner's agent.
+ */
+export const canRejectAcceptanceOnly = (
+  bundle?: { canReject?: boolean; canReview?: boolean } | null,
+) => Boolean(bundle?.canReject) && !bundle?.canReview;
+
 /** Evidence discussion follows comment access, independently of review decisions. */
 export const canCommentOnAcceptanceEvidence = (
   bundle: { isOwner: boolean } | null | undefined,
