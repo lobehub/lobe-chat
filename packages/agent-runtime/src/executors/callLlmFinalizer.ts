@@ -263,6 +263,11 @@ const buildFinalState = ({
 
     newState.usage = usage;
     if (cost) newState.cost = cost;
+  } else {
+    // A successful response may omit usage. The provider attempt still
+    // happened, so record it independently of token accumulation instead of
+    // dropping it from the LLM-call metric.
+    newState.usage = UsageCounter.accumulateAttempts(newState.usage, Math.max(attempts ?? 1, 1));
   }
 
   if (stepLabel || visibleOutputEndPublishedStepIndex !== undefined) {
