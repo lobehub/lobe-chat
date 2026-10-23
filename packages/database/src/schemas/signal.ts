@@ -69,6 +69,7 @@ export const signals = pgTable(
     index('signals_status_created_at_idx').on(t.status, t.createdAt),
     index('signals_account_created_at_idx').on(t.accountId, t.createdAt),
     index('signals_user_id_idx').on(t.userId),
+    index('signals_agent_id_idx').on(t.agentId),
   ],
 );
 

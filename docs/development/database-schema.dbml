@@ -283,6 +283,7 @@ table agent_documents {
     workspace_id [name: 'agent_documents_workspace_id_idx']
     user_id [name: 'agent_documents_user_id_idx']
     deleted_by_user_id [name: 'agent_documents_deleted_by_user_id_idx']
+    deleted_by_agent_id [name: 'agent_documents_deleted_by_agent_id_idx']
     agent_id [name: 'agent_documents_agent_id_idx']
     access_self [name: 'agent_documents_access_self_idx']
     access_shared [name: 'agent_documents_access_shared_idx']
@@ -2157,6 +2158,7 @@ table goal_node_decisions {
     node_id [name: 'goal_node_decisions_node_id_unique', unique]
     status [name: 'goal_node_decisions_status_idx']
     resolved_by_user_id [name: 'goal_node_decisions_resolved_by_user_id_idx']
+    resolved_by_agent_id [name: 'goal_node_decisions_resolved_by_agent_id_idx']
     (requested_user_id, status) [name: 'goal_node_decisions_requested_user_id_status_idx']
   }
 }
@@ -2194,6 +2196,7 @@ table goal_nodes {
   indexes {
     (goal_id, status) [name: 'goal_nodes_goal_id_status_idx']
     created_by_user_id [name: 'goal_nodes_created_by_user_id_idx']
+    created_by_agent_id [name: 'goal_nodes_created_by_agent_id_idx']
     (goal_id, kind) [name: 'goal_nodes_goal_id_kind_idx']
     (goal_id, id) [name: 'goal_nodes_goal_id_id_unique', unique]
     task_id [name: 'goal_nodes_task_id_unique', unique]
@@ -2399,6 +2402,8 @@ table message_plugins {
     (client_id, user_id) [name: 'message_plugins_client_id_user_id_unique', unique]
     user_id [name: 'message_plugins_user_id_idx']
     tool_call_id [name: 'message_plugins_tool_call_id_idx']
+    identifier [name: 'message_plugins_identifier_idx']
+    api_name [name: 'message_plugins_api_name_idx']
     workspace_id [name: 'message_plugins_workspace_id_idx']
   }
 }
@@ -2511,12 +2516,14 @@ table messages {
     (client_id, user_id) [name: 'message_client_id_user_unique', unique]
     topic_id [name: 'messages_topic_id_idx']
     (topic_id, updated_at) [name: 'messages_topic_id_updated_at_idx']
+    (topic_id, created_at, id) [name: 'messages_topic_id_created_at_id_idx']
     parent_id [name: 'messages_parent_id_idx']
     quota_id [name: 'messages_quota_id_idx']
     user_id [name: 'messages_user_id_idx']
     session_id [name: 'messages_session_id_idx']
     thread_id [name: 'messages_thread_id_idx']
     agent_id [name: 'messages_agent_id_idx']
+    target_id [name: 'messages_target_id_idx']
     group_id [name: 'messages_group_id_idx']
     message_group_id [name: 'messages_message_group_id_idx']
     () [name: 'messages_usage_cost_idx']
@@ -3640,6 +3647,7 @@ table signals {
     (status, created_at) [name: 'signals_status_created_at_idx']
     (account_id, created_at) [name: 'signals_account_created_at_idx']
     user_id [name: 'signals_user_id_idx']
+    agent_id [name: 'signals_agent_id_idx']
   }
 }
 
@@ -3710,6 +3718,7 @@ table task_activities {
   indexes {
     task_id [name: 'task_activities_task_id_idx']
     user_id [name: 'task_activities_user_id_idx']
+    actor_agent_id [name: 'task_activities_actor_agent_id_idx']
     workspace_id [name: 'task_activities_workspace_id_idx']
     (workspace_id, visibility, user_id) [name: 'task_activities_workspace_visibility_idx']
   }

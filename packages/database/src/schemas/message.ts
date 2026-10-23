@@ -159,6 +159,11 @@ export const messages = pgTable(
     uniqueIndex('message_client_id_user_unique').on(table.clientId, table.userId),
     index('messages_topic_id_idx').on(table.topicId),
     index('messages_topic_id_updated_at_idx').on(table.topicId, table.updatedAt),
+    // Keyset pagination of a topic's top-level messages (multi-model parallel
+    // replies, grouped by `message_group_id`, are loaded separately).
+    index('messages_topic_id_created_at_id_idx')
+      .on(table.topicId, table.createdAt, table.id)
+      .where(sql`${table.messageGroupId} IS NULL`),
     index('messages_parent_id_idx').on(table.parentId),
     index('messages_quota_id_idx').on(table.quotaId),
 
@@ -166,6 +171,11 @@ export const messages = pgTable(
     index('messages_session_id_idx').on(table.sessionId),
     index('messages_thread_id_idx').on(table.threadId),
     index('messages_agent_id_idx').on(table.agentId),
+    // `target_id` has no FK; handing an agent's history to another agent
+    // repoints it, which otherwise scans the whole table.
+    index('messages_target_id_idx')
+      .on(table.targetId)
+      .where(sql`${table.targetId} IS NOT NULL`),
     index('messages_group_id_idx').on(table.groupId),
     index('messages_message_group_id_idx').on(table.messageGroupId),
     // Expression indexes on the promoted `usage` jsonb, so cost / total-token
@@ -206,6 +216,8 @@ export const messagePlugins = pgTable(
     uniqueIndex('message_plugins_client_id_user_id_unique').on(t.clientId, t.userId),
     index('message_plugins_user_id_idx').on(t.userId),
     index('message_plugins_tool_call_id_idx').on(t.toolCallId),
+    index('message_plugins_identifier_idx').on(t.identifier),
+    index('message_plugins_api_name_idx').on(t.apiName),
     index('message_plugins_workspace_id_idx').on(t.workspaceId),
   ],
 );
