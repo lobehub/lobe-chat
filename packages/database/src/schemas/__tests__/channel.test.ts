@@ -1,6 +1,6 @@
 // @vitest-environment node
 import type { ChannelInputManifest, ChannelMemberConfig } from '@lobechat/types';
-import { eq, inArray } from 'drizzle-orm';
+import { eq, inArray, sql } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
@@ -151,6 +151,35 @@ describe('channel schema', () => {
     await expect(
       serverDB.insert(messages).values({ channelId: channel.id, role: 'user', userId: null }),
     ).resolves.toBeDefined();
+  });
+
+  it('adds the messages and topics channel constraints without validating existing rows', async () => {
+    // Validation would scan both tables while 0184 holds ACCESS EXCLUSIVE on them; rows that
+    // predate 0184 satisfy the constraints anyway (channel_id NULL, user_id NOT NULL).
+    const constraints = await serverDB.execute(sql`
+      SELECT conname, convalidated FROM pg_constraint
+      WHERE conname IN (
+        'messages_channel_id_channels_id_fk',
+        'messages_owner_check',
+        'topics_channel_id_channels_id_fk',
+        'topics_owner_check'
+      )
+      ORDER BY conname
+    `);
+    expect(constraints.rows).toEqual([
+      { conname: 'messages_channel_id_channels_id_fk', convalidated: false },
+      { conname: 'messages_owner_check', convalidated: false },
+      { conname: 'topics_channel_id_channels_id_fk', convalidated: false },
+      { conname: 'topics_owner_check', convalidated: false },
+    ]);
+
+    // Unvalidated constraints still apply to every new row.
+    await expect(
+      serverDB.insert(messages).values({ channelId: 'missing', role: 'user', userId: null }),
+    ).rejects.toThrow();
+    await expect(
+      serverDB.insert(topics).values({ channelId: 'missing', mode: 'channel', userId: null }),
+    ).rejects.toThrow();
   });
 
   describe('members', () => {

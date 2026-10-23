@@ -192,15 +192,61 @@ CREATE UNIQUE INDEX IF NOT EXISTS "channel_threads_root_unique" ON "channel_thre
 CREATE INDEX IF NOT EXISTS "channels_user_id_idx" ON "channels" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "channels_project_id_idx" ON "channels" USING btree ("project_id") WHERE "channels"."project_id" IS NOT NULL;--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "channels_workspace_visibility_idx" ON "channels" USING btree ("workspace_id","visibility");--> statement-breakpoint
-ALTER TABLE "messages" DROP CONSTRAINT IF EXISTS "messages_channel_id_channels_id_fk";--> statement-breakpoint
-ALTER TABLE "messages" ADD CONSTRAINT "messages_channel_id_channels_id_fk" FOREIGN KEY ("channel_id") REFERENCES "public"."channels"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "topics" DROP CONSTRAINT IF EXISTS "topics_channel_id_channels_id_fk";--> statement-breakpoint
-ALTER TABLE "topics" ADD CONSTRAINT "topics_channel_id_channels_id_fk" FOREIGN KEY ("channel_id") REFERENCES "public"."channels"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+-- messages / topics constraints.
+--
+-- The ALTER COLUMN / ADD COLUMN statements above already hold ACCESS EXCLUSIVE on these hot
+-- tables until the migration commits, so validating here would block every read and write for
+-- full-table scans. Rows that predate 0184 satisfy both constraints (channel_id NULL, user_id
+-- NOT NULL), and NOT VALID constraints still apply to every new row. To mark them validated,
+-- run VALIDATE CONSTRAINT online after deploy; it takes SHARE UPDATE EXCLUSIVE and does not
+-- block reads or writes. Do not add it to this migration.
+DO $$ BEGIN
+  ALTER TABLE "messages" ADD CONSTRAINT "messages_channel_id_channels_id_fk" FOREIGN KEY ("channel_id") REFERENCES "public"."channels"("id") ON DELETE cascade ON UPDATE no action NOT VALID;
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;--> statement-breakpoint
+DO $$ BEGIN
+  ALTER TABLE "topics" ADD CONSTRAINT "topics_channel_id_channels_id_fk" FOREIGN KEY ("channel_id") REFERENCES "public"."channels"("id") ON DELETE cascade ON UPDATE no action NOT VALID;
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;--> statement-breakpoint
+DO $$ BEGIN
+  ALTER TABLE "messages" ADD CONSTRAINT "messages_owner_check" CHECK ("messages"."user_id" IS NOT NULL OR "messages"."channel_id" IS NOT NULL) NOT VALID;
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;--> statement-breakpoint
+DO $$ BEGIN
+  ALTER TABLE "topics" ADD CONSTRAINT "topics_owner_check" CHECK ("topics"."user_id" IS NOT NULL OR "topics"."channel_id" IS NOT NULL) NOT VALID;
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;--> statement-breakpoint
+-- Hot-table channel indexes.
+--
+-- On cloud production, build these online before deploy, one statement at a time and outside
+-- a transaction. The columns must exist first; adding a nullable column only changes the catalog:
+--
+--   SET lock_timeout = '3s';
+--   ALTER TABLE "agent_operations" ADD COLUMN IF NOT EXISTS "channel_id" text;
+--   ALTER TABLE "messages" ADD COLUMN IF NOT EXISTS "channel_id" text;
+--   ALTER TABLE "topics" ADD COLUMN IF NOT EXISTS "channel_id" text;
+--   RESET lock_timeout;
+--
+--   CREATE INDEX CONCURRENTLY IF NOT EXISTS "agent_operations_channel_id_idx"
+--   ON "agent_operations" USING btree ("channel_id");
+--
+--   CREATE INDEX CONCURRENTLY IF NOT EXISTS "messages_channel_id_idx"
+--   ON "messages" USING btree ("channel_id");
+--
+--   CREATE INDEX CONCURRENTLY IF NOT EXISTS "topics_channel_id_idx"
+--   ON "topics" USING btree ("channel_id");
+--
+--   CREATE UNIQUE INDEX CONCURRENTLY IF NOT EXISTS "topics_public_channel_unique"
+--   ON "topics" USING btree ("channel_id") WHERE "topics"."mode" = 'channel';
+--
+-- A failed CONCURRENTLY build leaves an INVALID index under the same name, and IF NOT EXISTS
+-- below would silently keep it. Before deploy, confirm pg_index.indisvalid is true for all four;
+-- DROP INDEX CONCURRENTLY and rebuild any that is not.
+--
+-- The guarded statements below are then NO-OPs on databases that already have the indexes,
+-- while fresh / self-hosted databases still converge during normal migration replay. Keep them
+-- non-CONCURRENTLY so local PGlite / normal migration replay remains compatible.
 CREATE INDEX IF NOT EXISTS "agent_operations_channel_id_idx" ON "agent_operations" USING btree ("channel_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "messages_channel_id_idx" ON "messages" USING btree ("channel_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "topics_channel_id_idx" ON "topics" USING btree ("channel_id");--> statement-breakpoint
-CREATE UNIQUE INDEX IF NOT EXISTS "topics_public_channel_unique" ON "topics" USING btree ("channel_id") WHERE "topics"."mode" = 'channel';--> statement-breakpoint
-ALTER TABLE "messages" DROP CONSTRAINT IF EXISTS "messages_owner_check";--> statement-breakpoint
-ALTER TABLE "messages" ADD CONSTRAINT "messages_owner_check" CHECK ("messages"."user_id" IS NOT NULL OR "messages"."channel_id" IS NOT NULL);--> statement-breakpoint
-ALTER TABLE "topics" DROP CONSTRAINT IF EXISTS "topics_owner_check";--> statement-breakpoint
-ALTER TABLE "topics" ADD CONSTRAINT "topics_owner_check" CHECK ("topics"."user_id" IS NOT NULL OR "topics"."channel_id" IS NOT NULL);
+CREATE UNIQUE INDEX IF NOT EXISTS "topics_public_channel_unique" ON "topics" USING btree ("channel_id") WHERE "topics"."mode" = 'channel';

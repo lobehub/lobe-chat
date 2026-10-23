@@ -79,6 +79,10 @@ names. Before enabling a separately deployed CPC installation, inventory its sch
 journal, drain or fence in-flight executions, and test a data conversion plus cutover against a copy
 of that installation. Do not infer migration safety from a clean-database test.
 
+0184 adds the `messages` / `topics` constraints `NOT VALID`, so it does not scan those tables while
+holding their locks. Its four indexes on `messages`, `topics` and `agent_operations` still scan them;
+the SQL comments in `0184_channel_tables.sql` list the online pre-deploy steps for large databases.
+
 Focused coverage lives in `__tests__`, `../../models/__tests__/channelIsolation.test.ts`, schema tests and
 file-reference tests. Run the Channel suite with PostgreSQL (`vitest.config.server.mts`) as well as
 PGlite: the two concurrent-claim/sequence tests require real PostgreSQL row locking.
