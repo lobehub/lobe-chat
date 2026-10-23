@@ -35,6 +35,7 @@ import AgentSignalReceiptList from './components/AgentSignalReceiptList';
 import { RefreshError } from './components/RefreshError';
 import VirtualizedList from './components/VirtualizedList';
 import { useAgentSignalReceipts } from './hooks/useAgentSignalReceipts';
+import { useDeepLinkHistoryBackfill } from './hooks/useDeepLinkHistoryBackfill';
 import { useForwardPagingFallback } from './hooks/useForwardPagingFallback';
 import { useInitialRevalidation } from './hooks/useInitialRevalidation';
 import { useMessageRefreshError } from './hooks/useMessageRefreshError';
@@ -288,6 +289,15 @@ const ChatList = memo<ChatListProps>(
       [rowIds.length, rowById, defaultWorkflowExpandLevel, receiptsByAnchor],
     );
     const messagesInit = useConversationStore(dataSelectors.messagesInit);
+    const loadedMessageCount = useConversationStore((s) => s.dbMessages.length);
+    const loadEarlierMessages = useConversationStore((s) => s.loadEarlierMessages);
+    useDeepLinkHistoryBackfill({
+      deepLinkKey: messageDeepLink?.navigationKey,
+      loadedCount: loadedMessageCount,
+      loadEarlierMessages,
+      ready: messagesInit && paging === 'backward',
+      resolved: !!resolvedMessageDeepLink,
+    });
 
     // When topicId is null (new conversation), show welcome directly without waiting for fetch
     // because there's no server data to fetch - only local optimistic updates exist
