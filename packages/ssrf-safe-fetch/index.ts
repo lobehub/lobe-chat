@@ -21,6 +21,11 @@ export interface SSRFOptions {
    * up serverless function memory.
    */
   maxContentLength?: number;
+  /**
+   * Don't log a blocked request. For callers that expect the block and handle the thrown
+   * error themselves (e.g. a validation probe that falls back to another path).
+   */
+  silent?: boolean;
 }
 
 /**
@@ -114,7 +119,7 @@ export const ssrfSafeFetch = async (
     const isSSRFBlock = errorMessage.includes('is not allowed');
 
     if (isSSRFBlock) {
-      console.error('SSRF protection blocked request:', error);
+      if (!ssrfOptions?.silent) console.error('SSRF protection blocked request:', error);
       throw new Error(
         `SSRF blocked: ${errorMessage}. ` +
           'See: https://lobehub.com/docs/self-hosting/environment-variables/basic#ssrf-allow-private-ip-address',
