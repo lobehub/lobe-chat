@@ -72,6 +72,8 @@ export const kindOfType = (type?: string | null): ContextKind => {
 /** Backend `currentStatus` values; anything else is shown as written. */
 export const STATUS_VALUE_LABEL: Record<string, string> = {
   aborted: '已中止',
+  // Older rows (before the status enum) say `active`.
+  active: '进行中',
   cancelled: '已取消',
   completed: '已完成',
   on_hold: '搁置中',

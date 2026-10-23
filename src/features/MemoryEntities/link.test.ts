@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { kindOfType, statusOfValue } from './kinds';
+import { kindOfType, statusLabelOf, statusOfValue } from './kinds';
 import { hubNamesOf, linkByNames, mentionsOf } from './link';
 import { type MemoryActivity, type MemoryEntity } from './types';
 
@@ -47,6 +47,12 @@ describe('statusOfValue', () => {
     expect(statusOfValue('completed')).toBe('closed');
     expect(statusOfValue('cancelled')).toBe('closed');
     expect(statusOfValue(undefined)).toBe('active');
+  });
+
+  it('labels the legacy `active` value instead of showing it raw', () => {
+    expect(statusLabelOf('active')).toBe('进行中');
+    expect(statusLabelOf('on_hold')).toBe('搁置中');
+    expect(statusLabelOf('something-new')).toBe('something-new');
   });
 });
 
