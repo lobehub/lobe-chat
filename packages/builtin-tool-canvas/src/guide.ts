@@ -50,7 +50,7 @@ Controls (\`lobe-select\`, \`lobe-segmented\`, \`lobe-switch\`, \`lobe-input\`, 
 
 ## Editing
 
-- \`updateCanvas\` takes \`edits\` (each \`{ path, oldText, newText }\`; exact \`oldText\` → \`newText\`, \`oldText\` must appear once), \`writes\` (whole files, each with \`path\`) and \`deletes\` (paths). Prefer \`edits\` for small changes. Every item must name its \`path\` — omitting it is refused.
+- \`updateCanvas\` takes \`edits\` (exact \`oldText\` → \`newText\`, \`oldText\` must appear once), \`writes\` (whole files) and \`deletes\`. Prefer \`edits\` for small changes.
 - Every successful save is a new version; the user sees the previous one until the new one validates.
 - A rejected save lists each problem as \`file:line\`. Fix exactly those and save again.
 
