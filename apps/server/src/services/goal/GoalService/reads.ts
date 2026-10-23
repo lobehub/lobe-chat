@@ -24,7 +24,19 @@ export const graph = async (ctx: GoalServiceContext, goalId: string) => {
     ctx.resolveSpend(graph),
     new GoalReportStore(ctx.db, ctx.userId, ctx.workspaceId).state(graph),
   ]);
-  return { ...graph, acceptances, assignees, deliveredAt, report, runHeartbeats, spend };
+  // Numeric clauses read through the Goal's Widget subscriptions when bound, so
+  // the page shows the same verdict the coordinator acts on.
+  const metricCriteria = await ctx.evaluateMetricCriteria(graph);
+  return {
+    ...graph,
+    acceptances,
+    assignees,
+    deliveredAt,
+    metricCriteria,
+    report,
+    runHeartbeats,
+    spend,
+  };
 };
 
 /**

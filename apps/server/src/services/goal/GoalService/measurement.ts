@@ -18,6 +18,7 @@ import {
   needsMetricCriteria,
 } from '../decideNextMove';
 import { GoalManagerService } from '../manager';
+import { GoalSubscriptionService } from '../subscriptions';
 import { GoalSupervisorService } from '../supervisor';
 import { GoalWaitService } from '../wait';
 import type { GoalServiceContext } from './types';
@@ -360,10 +361,26 @@ export const evaluateMetricCriteria = async (
     }),
   );
 
+  // A clause bound to a Widget subscription reads that subscription's accepted
+  // observation (fresh, provenance-checked); an unbound clause keeps reading the
+  // series' latest point.
+  const subscriptions = await new GoalSubscriptionService(
+    ctx.db,
+    ctx.userId,
+    ctx.workspaceId,
+  ).criteria(
+    graph.goal.id,
+    declared.map((criterion) => criterion.key),
+  );
   const criteria = declared.map((criterion) => {
     const op = criterion.op ?? 'gte';
     const seriesId = seriesByKey.get(criterion.key)?.id;
-    const point = seriesId ? latestByMetricId.get(seriesId) : undefined;
+    const subscription = subscriptions.get(criterion.key);
+    const point = subscription?.bound
+      ? subscription.point
+      : seriesId
+        ? latestByMetricId.get(seriesId)
+        : undefined;
     const value = point?.value ?? null;
     return {
       key: criterion.key,

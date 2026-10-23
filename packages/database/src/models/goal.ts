@@ -16,6 +16,7 @@ import { alias } from 'drizzle-orm/pg-core';
 import type { GoalItem, NewGoal } from '../schemas/goal';
 import { goals } from '../schemas/goal';
 import { goalEdges, goalNodeDecisions, goalNodes } from '../schemas/goalGraph';
+import { goalSubscriptions } from '../schemas/goalSubscription';
 import { tasks, taskTopics } from '../schemas/task';
 import { topics } from '../schemas/topic';
 import type { LobeChatDatabase } from '../type';
@@ -352,30 +353,45 @@ export class GoalModel {
         'quotaRetryWakeAt', ${goals.config}->'quotaRetryWakeAt',
         'rolloutState', ${goals.config}->'rolloutState'
       ))`;
-    const [row] = await this.db
-      .update(goals)
-      .set({
-        ...value,
-        // The batch recipe (`rollout.spec`) is the coordinator's too: a pattern
-        // break rewrites it, and a stale snapshot must not put back the recipe
-        // that just failed. The person's own rollout settings still come from
-        // the edit; a policy the edit leaves out stays as it is.
-        ...(value.config !== undefined
-          ? {
-              config: sql`CASE WHEN NOT COALESCE(jsonb_exists(${goals.config}, 'rollout'), false) THEN ${merged}
+    return this.db.transaction(async (tx) => {
+      const [row] = await tx
+        .update(goals)
+        .set({
+          ...value,
+          // The batch recipe (`rollout.spec`) is the coordinator's too: a pattern
+          // break rewrites it, and a stale snapshot must not put back the recipe
+          // that just failed. The person's own rollout settings still come from
+          // the edit; a policy the edit leaves out stays as it is.
+          ...(value.config !== undefined
+            ? {
+                config: sql`CASE WHEN NOT COALESCE(jsonb_exists(${goals.config}, 'rollout'), false) THEN ${merged}
                 ELSE jsonb_set(
                   ${merged},
                   '{rollout}',
                   COALESCE(${merged}->'rollout', ${goals.config}->'rollout')
                     || jsonb_strip_nulls(jsonb_build_object('spec', ${goals.config}->'rollout'->'spec'))
                 ) END`,
-            }
-          : {}),
-        updatedAt: new Date(),
-      })
-      .where(and(eq(goals.id, id), this.ownership()))
-      .returning();
-    return row as GoalItem | undefined;
+              }
+            : {}),
+          updatedAt: new Date(),
+        })
+        .where(and(eq(goals.id, id), this.ownership()))
+        .returning();
+      // A Goal that stops consuming observations releases its Widget bindings in
+      // the same write, so a late collection run cannot wake a closed Goal.
+      if (row && ['paused', 'canceled', 'achieved', 'failed'].includes(row.status)) {
+        await tx
+          .update(goalSubscriptions)
+          .set({
+            enabled: false,
+            bindingRevision: sql`${goalSubscriptions.bindingRevision} + 1`,
+            cursor: sql`${goalSubscriptions.cursor} - 'pendingWake'`,
+            updatedAt: new Date(),
+          })
+          .where(and(eq(goalSubscriptions.goalId, row.id), eq(goalSubscriptions.enabled, true)));
+      }
+      return row as GoalItem | undefined;
+    });
   };
 
   /** Call inside a transaction when a coordinator needs to serialize a write. */

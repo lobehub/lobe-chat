@@ -6,11 +6,13 @@ import { WidgetModel } from '@/database/models/widget';
 import type { WidgetRow, WidgetRunRow, WidgetVersionRow } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
 
+import { GoalSubscriptionService } from '../goal/subscriptions';
 import { executeWidgetRun, type ExecuteWidgetRunDeps } from './executeRun';
 import { clampSandboxTimeout, WIDGET_SANDBOX_REQUEST_OVERHEAD_MS } from './sandbox/types';
 import { nextScheduleOccurrence } from './schedule';
 
 const log = debug('lobe-server:widget:scheduler');
+let subscriptionAfter: string | undefined;
 
 const DEFAULT_TICK_LIMIT = 50;
 const DEFAULT_INLINE_CONCURRENCY = 4;
@@ -234,6 +236,7 @@ export const runWidgetSchedulerTick = async (
     return { claimed: 0, dispatched: 0, due: due.length, resumed: 0, results: [] };
   }
 
+  subscriptionAfter = await GoalSubscriptionService.reconcile(db, subscriptionAfter);
   const stale = await findStaleRuns(db, now, { limit });
   let dispatched = 0;
   let resumed = 0;

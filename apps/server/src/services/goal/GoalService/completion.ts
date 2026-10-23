@@ -41,6 +41,16 @@ export const settleTerminalAcceptance = async (
   const goalId = graph.goal.id;
 
   if (move.outcome === 'achieved') {
+    // Re-read the numeric clauses right before the terminal transition: bindings,
+    // provenance and freshness can change between the verdict and here, and the
+    // earlier verdict is not a lease.
+    const numeric = await ctx.evaluateMetricCriteria(await ctx.requireGraph(goalId));
+    if (!numeric.allMet)
+      return {
+        goalId,
+        message: 'Measured acceptance changed before the Goal could be achieved; re-evaluating',
+        outcome: 'no_progress',
+      };
     // The map must agree with the verdict: only task nodes get resolved as
     // Tasks complete, so without this the seeded problem nodes would read
     // "active / unanswered" forever on an achieved goal.
