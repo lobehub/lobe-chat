@@ -12,6 +12,7 @@ import {
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { getActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import { GITHUB_RETURN_TO } from '@/features/Integrations/Github/installHref';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useProjectStore } from '@/store/project';
@@ -21,6 +22,9 @@ import {
   getProjectFieldSuggestions,
   isProjectIdentifierValid,
 } from '../createProjectForm';
+import MainAgentField from '../MainAgentField';
+import { writeRememberedMainAgent } from '../mainAgentStorage';
+import { useDefaultMainAgent } from '../useDefaultMainAgent';
 import { parseGithubRepository } from './githubRepository';
 import RepositoryList from './RepositoryList';
 
@@ -36,8 +40,9 @@ interface FormState {
   /** The field another project already holds, as the last create reported it. */
   duplicate?: 'identifier' | 'name';
   identifier: string;
-  identifierEdited: boolean;
   loading: boolean;
+  /** Explicit pick in this dialog; otherwise the remembered agent or LobeAI. */
+  mainAgentId?: string;
   name: string;
   nameEdited: boolean;
   url: string;
@@ -45,9 +50,9 @@ interface FormState {
 
 /**
  * New project from a GitHub repository: pick one the connected GitHub App can
- * read, or paste a URL, and the project is named after it and created with the
- * repository attached as its environment — no fields to fill unless the
- * defaults are wrong.
+ * read, or paste a URL, and the project is named after it, led by the default
+ * main agent, and created with the repository attached as its environment —
+ * no fields to fill unless the defaults are wrong.
  */
 const CreateFromGithubContent = () => {
   const { t } = useTranslation(['project', 'common']);
@@ -56,7 +61,6 @@ const CreateFromGithubContent = () => {
   const createProject = useProjectStore((s) => s.createProject);
   const [form, setForm] = useState<FormState>({
     identifier: '',
-    identifierEdited: false,
     loading: false,
     name: '',
     nameEdited: false,
@@ -65,9 +69,11 @@ const CreateFromGithubContent = () => {
 
   const repository = parseGithubRepository(form.url);
   const urlInvalid = Boolean(form.url.trim()) && !repository;
-  const identifierValid = isProjectIdentifierValid(form.identifier);
+  const defaultMainAgentId = useDefaultMainAgent();
+  const mainAgentId = form.mainAgentId ?? defaultMainAgentId;
   const identifierInvalid =
-    (Boolean(form.name.trim()) && !identifierValid) || form.duplicate === 'identifier';
+    (Boolean(form.identifier.trim()) && !isProjectIdentifierValid(form.identifier)) ||
+    form.duplicate === 'identifier';
   const createInput = repository
     ? getCreateProjectInput({
         identifier: form.identifier,
@@ -81,16 +87,7 @@ const CreateFromGithubContent = () => {
     const parsed = parseGithubRepository(url);
     setForm((current) => {
       const name = current.nameEdited ? current.name : (parsed?.name ?? '');
-      return {
-        ...current,
-        defaultBranch,
-        duplicate: undefined,
-        identifier: current.identifierEdited
-          ? current.identifier
-          : getProjectFieldSuggestions(name).identifier,
-        name,
-        url,
-      };
+      return { ...current, defaultBranch, duplicate: undefined, name, url };
     });
   };
 
@@ -99,15 +96,7 @@ const CreateFromGithubContent = () => {
   };
 
   const updateName = (name: string) => {
-    setForm((current) => ({
-      ...current,
-      duplicate: undefined,
-      identifier: current.identifierEdited
-        ? current.identifier
-        : getProjectFieldSuggestions(name).identifier,
-      name,
-      nameEdited: true,
-    }));
+    setForm((current) => ({ ...current, duplicate: undefined, name, nameEdited: true }));
   };
 
   const connectGithub = () => {
@@ -121,12 +110,14 @@ const CreateFromGithubContent = () => {
     try {
       const project = await createProject({
         ...createInput,
+        coordinatorAgentId: mainAgentId,
         repository: {
           defaultBranch: form.defaultBranch,
           name: repository.fullName,
           url: repository.url,
         },
       });
+      if (mainAgentId) writeRememberedMainAgent(mainAgentId, getActiveWorkspaceId());
       close();
       navigate(`/project/${project.slug ?? project.id}`);
     } catch (error) {
@@ -190,7 +181,7 @@ const CreateFromGithubContent = () => {
                 onPressEnter={handleCreate}
               />
             </Flexbox>
-            <Flexbox gap={6} style={{ width: 120 }}>
+            <Flexbox gap={6} style={{ width: 160 }}>
               <Text fontSize={13} weight={500}>
                 {t('create.identifierLabel')}
               </Text>
@@ -206,7 +197,6 @@ const CreateFromGithubContent = () => {
                     ...current,
                     duplicate: undefined,
                     identifier: event.target.value.toUpperCase(),
-                    identifierEdited: true,
                   }))
                 }
               />
@@ -223,6 +213,18 @@ const CreateFromGithubContent = () => {
                   ? t('create.identifierInvalid')
                   : t('createFromGithub.environmentHint')}
           </Text>
+        )}
+        {repository && (
+          <Flexbox gap={6}>
+            <Text fontSize={13} weight={500}>
+              {t('create.mainAgentLabel')}
+            </Text>
+            <MainAgentField
+              agentId={mainAgentId}
+              disabled={form.loading}
+              onChange={(id) => setForm((current) => ({ ...current, mainAgentId: id }))}
+            />
+          </Flexbox>
         )}
       </Flexbox>
       <ModalFooter>
