@@ -145,13 +145,33 @@ describe('ProjectModel', () => {
     const project = await createProject(model, { name: 'Apollo', slug: 'apollo' });
     await createProject(otherModel, { name: 'Other Apollo', slug: 'other-apollo' });
 
-    expect(await model.findByIdOrSlug('apollo')).toEqual(
+    expect(await model.findByReference('apollo')).toEqual(
       expect.objectContaining({ id: project.id }),
     );
-    expect(await model.findByIdOrSlug(project.id)).toEqual(
+    expect(await model.findByReference(project.id)).toEqual(
       expect.objectContaining({ slug: 'apollo' }),
     );
-    expect(await model.findByIdOrSlug('other-apollo')).toBeNull();
+    expect(await model.findByReference('other-apollo')).toBeNull();
+  });
+
+  it('resolves a project by its identifier, case-insensitively, within the current scope', async () => {
+    const project = await model.create({ identifier: 'APLO', name: 'Apollo' });
+    await otherModel.create({ identifier: 'OTHR', name: 'Other' });
+
+    expect(await model.findByReference('APLO')).toEqual(
+      expect.objectContaining({ id: project.id }),
+    );
+    expect(await model.findByReference('aplo')).toEqual(
+      expect.objectContaining({ id: project.id }),
+    );
+    expect(await model.findByReference('OTHR')).toBeNull();
+  });
+
+  it('prefers an exact id or slug over another project whose identifier matches', async () => {
+    const bySlug = await createProject(model, { name: 'By slug', slug: 'crux' });
+    await model.create({ identifier: 'CRUX', name: 'By identifier' });
+
+    expect(await model.findByReference('crux')).toEqual(expect.objectContaining({ id: bySlug.id }));
   });
 
   it('finds a bounded set of readable projects', async () => {
