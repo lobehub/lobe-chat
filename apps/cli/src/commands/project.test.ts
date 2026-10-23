@@ -51,6 +51,17 @@ describe('project command', () => {
     vi.restoreAllMocks();
   });
 
+  it('links the project page in view --json output', async () => {
+    mockClient.project.detail.query.mockResolvedValue({
+      data: { project: { id: 'prj_1', name: 'Apollo' } },
+    });
+    await createProgram().parseAsync(['node', 'test', 'project', 'view', 'prj_1', '--json']);
+    expect(JSON.parse(vi.mocked(console.log).mock.calls.at(-1)![0])).toMatchObject({
+      project: { id: 'prj_1' },
+      url: 'https://app.example.com/project/prj_1',
+    });
+  });
+
   it('creates a project', async () => {
     mockClient.project.create.mutate.mockResolvedValue({ data: { id: 'prj_1' } });
     await createProgram().parseAsync([

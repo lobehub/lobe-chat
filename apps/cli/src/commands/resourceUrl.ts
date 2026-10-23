@@ -148,6 +148,7 @@ export const withUrl = <T extends object>(
   pathname: string | undefined,
 ): T => {
   const url = toUrl(pathname);
-  if (!url) return item;
+  // A not-found read can come back as `null`; pass it through untouched.
+  if (!url || !item || typeof item !== 'object') return item;
   return 'url' in item ? { ...item, appUrl: url } : { ...item, url };
 };

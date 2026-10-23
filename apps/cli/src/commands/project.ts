@@ -51,7 +51,7 @@ export function registerProjectCommand(program: Command) {
       const { data } = await client.project.detail.query({ id });
       if (options.json !== undefined)
         return outputJson(
-          withUrl(data, await resolveUrlBuilder(client), resourcePath.project(data.id)),
+          withUrl(data, await resolveUrlBuilder(client), resourcePath.project(data.project.id)),
           options.json,
         );
       console.log(`\n${pc.bold(data.project.name)} ${pc.dim(data.project.id)}`);

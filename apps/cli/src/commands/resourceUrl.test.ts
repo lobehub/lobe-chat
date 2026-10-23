@@ -62,6 +62,12 @@ describe('withUrl', () => {
     });
   });
 
+  it('passes a not-found null read through', async () => {
+    const toUrl = await resolveUrlBuilder(clientWith(async () => ({ slug: 'acme' })));
+
+    expect(withUrl(null as unknown as object, toUrl, resourcePath.group('grp_1'))).toBeNull();
+  });
+
   it('leaves items untouched when the workspace lookup fails', async () => {
     const toUrl = await resolveUrlBuilder(clientWith(() => Promise.reject(new Error('denied'))));
 
