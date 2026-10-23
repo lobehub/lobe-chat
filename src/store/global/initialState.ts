@@ -6,6 +6,7 @@ import { type TopicGroupMode } from '@/types/topic';
 import { AsyncLocalStorage } from '@/utils/localStorage';
 
 export enum SidebarTabKey {
+  Channels = 'channels',
   Chat = 'chat',
   Community = 'community',
   Dashboard = 'dashboard',

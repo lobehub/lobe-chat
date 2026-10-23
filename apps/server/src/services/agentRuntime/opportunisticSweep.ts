@@ -120,7 +120,12 @@ export const scheduleOpportunisticStaleSweep = (): void => {
         console.error(`[opportunistic-sweep] ${phase} failed: %O`, error);
       },
       sweep: async () => {
-        const result = await new StaleOperationReaper(await getServerDB()).sweep();
+        const db = await getServerDB();
+        const { recoverChannels } = await import('@/server/services/channel/recover');
+        const [result] = await Promise.all([
+          new StaleOperationReaper(db).sweep(),
+          recoverChannels(db),
+        ]);
         log('sweep: %O', result);
       },
     }),

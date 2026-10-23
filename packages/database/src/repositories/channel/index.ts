@@ -15,6 +15,7 @@ import type { ChannelStopScope } from './stop';
 import { stopScope } from './stop';
 import { lockChannel } from './transaction';
 import type { ChannelAccess, ChannelWriteOptions } from './types';
+import { createChannelThread, readChannelView } from './view';
 
 export type { ChannelAddAgentInput } from './agent';
 export type { ChannelClaim, ChannelClaimOptions } from './claim';
@@ -50,11 +51,16 @@ export class ChannelRepository {
   }
 
   /** Creates the channel with the caller as its owner member. */
-  create = async (params: { agentId?: string; title: string; visibility?: ChannelVisibility }) =>
+  create = async (params: {
+    agentId?: string;
+    agents?: ChannelAddAgentInput[];
+    title: string;
+    visibility?: ChannelVisibility;
+  }) =>
     this.db.transaction(async (tx) => {
       if (
         params.agentId !== undefined &&
-        (!params.agentId.trim() || params.visibility === 'public')
+        (!params.agentId.trim() || params.visibility === 'public' || !!params.agents?.length)
       )
         throw new ChannelError(
           'BAD_REQUEST',
@@ -85,6 +91,8 @@ export class ChannelRepository {
 
       if (params.agentId)
         await addAgentMember(tx, channel, this.userId, { agentId: params.agentId });
+      for (const agent of params.agents ?? [])
+        await addAgentMember(tx, channel, this.userId, agent);
 
       return { channel, member } satisfies ChannelAccess;
     });
@@ -94,6 +102,36 @@ export class ChannelRepository {
     this.write(channelId, (tx, { channel }) => addAgentMember(tx, channel, this.userId, input), {
       minRole: 'admin',
     });
+
+  detail = async (channelId: string, options?: Parameters<typeof readChannelView>[2]) =>
+    this.write(
+      channelId,
+      async (tx, access) => ({
+        channel: access.channel,
+        ...(await readChannelView(tx, channelId, options)),
+      }),
+      { allowArchived: true },
+    );
+
+  createThread = async (channelId: string, input: Parameters<typeof createChannelThread>[2]) =>
+    this.write(channelId, (tx) => createChannelThread(tx, channelId, input));
+
+  markRead = async (channelId: string, sequence: number) =>
+    this.write(
+      channelId,
+      async (tx, { channel, member }) => {
+        const lastReadSequence = Math.max(
+          member.lastReadSequence ?? 0,
+          Math.min(sequence, channel.sequence),
+        );
+        await tx
+          .update(channelMembers)
+          .set({ lastReadSequence })
+          .where(eq(channelMembers.id, member.id));
+        return lastReadSequence;
+      },
+      { allowArchived: true },
+    );
 
   /** Active channels the caller belongs to in the current scope, newest first. */
   list = async (): Promise<ChannelItem[]> => {

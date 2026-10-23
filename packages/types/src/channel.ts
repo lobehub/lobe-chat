@@ -137,3 +137,79 @@ export interface ChannelInputManifest {
 
 /** Flat audit payload: routing decisions, claims, stops, isolation reasons. */
 export type ChannelAuditDetails = Record<string, boolean | number | string | string[] | null>;
+
+/** Public client projection. No execution configuration, private topic or draft fields. */
+export interface ChannelListItem {
+  archived: boolean;
+  createdAt: Date;
+  id: string;
+  sequence: number;
+  title: string;
+  workspaceId: string | null;
+}
+
+export interface ChannelPublicMember {
+  active: boolean;
+  actorType: ChannelMemberActorType;
+  agentId: string | null;
+  avatar: string | null;
+  description: string | null;
+  executionPaused: boolean;
+  id: string;
+  name: string | null;
+  role: ChannelMemberRole | null;
+  userAvatar: string | null;
+  userId: string | null;
+  userName: string | null;
+  username: string | null;
+}
+
+export interface ChannelPublicMessage {
+  agentId: string | null;
+  author: {
+    avatar: string | null;
+    id: string | null;
+    name: string | null;
+    type: ChannelMemberActorType;
+  };
+  content: string;
+  createdAt: Date;
+  fileIds: string[];
+  id: string;
+  mentions: string[];
+  recipientMemberIds: string[];
+  replyToId: string | null;
+  routingStatus: ChannelMessageRoutingStatus;
+  sequence: number;
+  threadId: string | null;
+  userId: string | null;
+}
+
+export interface ChannelPublicJob {
+  blockedCode: ChannelJobBlockCode | null;
+  id: string;
+  memberId: string;
+  messageId: string;
+  publicationRevoked: boolean;
+  status: ChannelJobStatus;
+  threadId: string | null;
+  writerHeld: boolean;
+}
+
+export interface ChannelPublicThread {
+  followerMemberIds: string[];
+  id: string;
+  rootMessageId: string;
+  rootSequence: number;
+}
+
+export interface ChannelDetail {
+  attachments: Array<{ fileType: string; id: string; name: string; size: number; url: string }>;
+  channel: ChannelListItem;
+  hasMore: boolean;
+  jobs: ChannelPublicJob[];
+  members: ChannelPublicMember[];
+  messages: ChannelPublicMessage[];
+  rootMessage: ChannelPublicMessage | null;
+  threads: ChannelPublicThread[];
+}

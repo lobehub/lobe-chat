@@ -438,6 +438,18 @@ describe('AgentRuntimeService', () => {
       ).rejects.toThrow('Failed to durably persist afterToolCall');
     });
 
+    it('does not execute a Channel reservation that could not be durably started', async () => {
+      vi.spyOn(AgentOperationModel.prototype, 'recordStart').mockRejectedValue(
+        new Error('Reservation already retired'),
+      );
+      await expect(
+        service.createOperation({
+          ...mockParams,
+          appContext: { ...mockParams.appContext, trigger: 'channel' },
+        }),
+      ).rejects.toThrow('Failed to durably start the reserved Channel operation');
+    });
+
     // Codex P1 on #20093: the member bridge lived only in the 2h runtime
     // snapshot, so a late approval continued the supervisor instead.
     it("keeps a durable copy of a group member's completion bridge on the row", async () => {

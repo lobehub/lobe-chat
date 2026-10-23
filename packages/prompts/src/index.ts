@@ -1,5 +1,6 @@
 export * from './agents';
 export * from './chains';
+export { buildChannelPrompt, CHANNEL_INSTRUCTIONS, CHANNEL_PROMPT_VERSION } from './chains/channel';
 export * from './chains/goalExplore';
 export * from './chains/goalSupervisor';
 export * from './contexts';

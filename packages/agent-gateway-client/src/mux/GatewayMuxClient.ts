@@ -641,6 +641,11 @@ export class GatewayMuxClient {
         break;
       }
 
+      case 'channel_changed': {
+        this.listeners.emit('channel_changed', message);
+        break;
+      }
+
       case 'op_lifecycle': {
         this.listeners.emit('lifecycle', message);
         break;

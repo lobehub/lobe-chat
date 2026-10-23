@@ -1,4 +1,4 @@
-import { HomeIcon, SearchIcon } from 'lucide-react';
+import { Hash, HomeIcon, SearchIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -61,6 +61,12 @@ export const useNavLayout = (): NavLayout => {
           key: SidebarTabKey.Home,
           title: t('tab.home'),
           url: '/',
+        },
+        {
+          icon: Hash,
+          key: SidebarTabKey.Channels,
+          title: t('tab.channels'),
+          url: '/channels',
         },
         {
           icon: getRouteById('tasks')!.icon,

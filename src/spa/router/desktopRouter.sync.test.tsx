@@ -83,6 +83,7 @@ async function readRouterSources() {
       'taskWorkspaceRoutes.tsx',
       'workspaceSettingsRoutes.tsx',
       'resourceRoutes.tsx',
+      'collaborationRoutes.tsx',
     ].map((filename) => readFile(path.join(process.cwd(), 'src/spa/router', filename), 'utf8')),
   );
 }
