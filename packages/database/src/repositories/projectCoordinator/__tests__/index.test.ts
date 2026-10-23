@@ -177,6 +177,31 @@ describe('ProjectCoordinatorRepository.replaceCoordinator', () => {
     expect(await serverDB.select().from(agents).where(eq(agents.id, member.id))).toHaveLength(1);
   });
 
+  it('keeps a coordinator that another project counts as a member when it is replaced', async () => {
+    const project = await createProject({ name: 'Origin' });
+    const other = await createProject({ name: 'Borrower' });
+    const coordinatorId = project.coordinatorAgentId;
+    await model.addAgent(other.id, { agentId: coordinatorId, role: 'Advisor' });
+    const topic = await new TopicModel(serverDB, userId).create({
+      agentId: coordinatorId,
+      projectId: other.id,
+      title: 'Borrowed work',
+    });
+    const lead = await new AgentModel(serverDB, userId).create({ title: 'Lead' });
+
+    await repo.replaceCoordinator(project.id, lead.id);
+
+    expect(await serverDB.select().from(agents).where(eq(agents.id, coordinatorId))).toHaveLength(
+      1,
+    );
+    expect(await serverDB.select().from(topics).where(eq(topics.id, topic.id))).toEqual([
+      expect.objectContaining({ agentId: coordinatorId }),
+    ]);
+    expect(await model.listAgents(other.id)).toContainEqual(
+      expect.objectContaining({ agent: expect.objectContaining({ id: coordinatorId }) }),
+    );
+  });
+
   it('keeps a reusable main agent as a member when it is replaced', async () => {
     const project = await createProject({ name: 'Rotation' });
     const agentModel = new AgentModel(serverDB, userId);

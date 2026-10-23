@@ -218,7 +218,7 @@ export class ProjectModel {
 
   /**
    * A coordinator provisioned for one project: a virtual, non-builtin agent no
-   * project still leads and no group or session holds.
+   * other project leads or counts as a member, and no group or session holds.
    */
   async isDedicatedCoordinator(
     agentId: string,
@@ -227,7 +227,7 @@ export class ProjectModel {
       exceptProjectId,
     }: {
       db?: LobeChatDatabase;
-      /** Ask before handing this project over: its own lead does not count as "still used". */
+      /** Ask before handing this project over: its own lead and membership do not count as "still used". */
       exceptProjectId?: string;
     } = {},
   ) {
@@ -256,7 +256,8 @@ export class ProjectModel {
     if (stillUsed) return false;
 
     // A group's own members are virtual and slugless as well; they belong to the group.
-    // A session link would take the agent's conversations with it on delete.
+    // A session link would take the agent's conversations with it on delete, and a
+    // member of another project would drop out of it.
     const [linked] = await db
       .select({ agentId: chatGroupsAgents.agentId })
       .from(chatGroupsAgents)
@@ -266,6 +267,17 @@ export class ProjectModel {
           .select({ agentId: agentsToSessions.agentId })
           .from(agentsToSessions)
           .where(eq(agentsToSessions.agentId, agentId)),
+      )
+      .union(
+        db
+          .select({ agentId: projectAgents.agentId })
+          .from(projectAgents)
+          .where(
+            and(
+              eq(projectAgents.agentId, agentId),
+              exceptProjectId ? ne(projectAgents.projectId, exceptProjectId) : undefined,
+            ),
+          ),
       )
       .limit(1);
     return !linked;

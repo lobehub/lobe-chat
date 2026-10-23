@@ -51,7 +51,10 @@ export class ProjectCoordinatorRepository {
       if (!assigned) return null;
 
       const { previousId, project } = assigned;
-      if (previousId && (await projectModel.isDedicatedCoordinator(previousId))) {
+      if (
+        previousId &&
+        (await projectModel.isDedicatedCoordinator(previousId, { exceptProjectId: projectId }))
+      ) {
         await this.transferHistory(tx, previousId, agentId);
         await new AgentModel(tx, this.userId, this.workspaceId).delete(previousId);
       }

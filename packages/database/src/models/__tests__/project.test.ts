@@ -126,6 +126,14 @@ describe('ProjectModel', () => {
       }),
     ).toBe(true);
     expect(await model.isDedicatedCoordinator(project.coordinatorAgentId)).toBe(false);
+    // A member of another project is still in use there.
+    const other = await createProject(model, { name: 'Borrower' });
+    await model.addAgent(other.id, { agentId: project.coordinatorAgentId });
+    expect(
+      await model.isDedicatedCoordinator(project.coordinatorAgentId, {
+        exceptProjectId: project.id,
+      }),
+    ).toBe(false);
     expect(await model.isDedicatedCoordinator(inbox.id, { exceptProjectId: project.id })).toBe(
       false,
     );
