@@ -449,7 +449,6 @@ export const taskActivities = pgTable(
   (t) => [
     index('task_activities_task_id_idx').on(t.taskId),
     index('task_activities_user_id_idx').on(t.userId),
-    index('task_activities_actor_agent_id_idx').on(t.actorAgentId),
     index('task_activities_workspace_id_idx').on(t.workspaceId),
     index('task_activities_workspace_visibility_idx').on(t.workspaceId, t.visibility, t.userId),
   ],

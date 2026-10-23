@@ -171,11 +171,6 @@ export const messages = pgTable(
     index('messages_session_id_idx').on(table.sessionId),
     index('messages_thread_id_idx').on(table.threadId),
     index('messages_agent_id_idx').on(table.agentId),
-    // `target_id` has no FK; handing an agent's history to another agent
-    // repoints it, which otherwise scans the whole table.
-    index('messages_target_id_idx')
-      .on(table.targetId)
-      .where(sql`${table.targetId} IS NOT NULL`),
     index('messages_group_id_idx').on(table.groupId),
     index('messages_message_group_id_idx').on(table.messageGroupId),
     // Expression indexes on the promoted `usage` jsonb, so cost / total-token

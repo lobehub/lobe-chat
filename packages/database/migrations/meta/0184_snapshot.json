@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "3d81af06-1a49-4d83-a59c-bc33e515913c",
+  "id": "92326ebd-3a8c-4d36-9105-583a9fcd464c",
   "policies": {},
   "prevId": "441054df-5d72-4ff2-b7fc-742c8cfb5db5",
   "roles": {},
@@ -2442,21 +2442,6 @@
           "columns": [
             {
               "expression": "deleted_by_user_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "agent_documents_deleted_by_agent_id_idx": {
-          "name": "agent_documents_deleted_by_agent_id_idx",
-          "columns": [
-            {
-              "expression": "deleted_by_agent_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -18437,21 +18422,6 @@
           "method": "btree",
           "with": {}
         },
-        "goal_node_decisions_resolved_by_agent_id_idx": {
-          "name": "goal_node_decisions_resolved_by_agent_id_idx",
-          "columns": [
-            {
-              "expression": "resolved_by_agent_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
         "goal_node_decisions_requested_user_id_status_idx": {
           "name": "goal_node_decisions_requested_user_id_status_idx",
           "columns": [
@@ -18753,21 +18723,6 @@
           "columns": [
             {
               "expression": "created_by_user_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "goal_nodes_created_by_agent_id_idx": {
-          "name": "goal_nodes_created_by_agent_id_idx",
-          "columns": [
-            {
-              "expression": "created_by_agent_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -21653,22 +21608,6 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "messages_target_id_idx": {
-          "name": "messages_target_id_idx",
-          "columns": [
-            {
-              "expression": "target_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "where": "\"messages\".\"target_id\" IS NOT NULL",
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -30843,21 +30782,6 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
-        },
-        "signals_agent_id_idx": {
-          "name": "signals_agent_id_idx",
-          "columns": [
-            {
-              "expression": "agent_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
         }
       },
       "foreignKeys": {
@@ -31402,21 +31326,6 @@
           "columns": [
             {
               "expression": "user_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "task_activities_actor_agent_id_idx": {
-          "name": "task_activities_actor_agent_id_idx",
-          "columns": [
-            {
-              "expression": "actor_agent_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"

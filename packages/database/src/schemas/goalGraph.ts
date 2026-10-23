@@ -70,7 +70,6 @@ export const goalNodes = pgTable(
   (t) => [
     index('goal_nodes_goal_id_status_idx').on(t.goalId, t.status),
     index('goal_nodes_created_by_user_id_idx').on(t.createdByUserId),
-    index('goal_nodes_created_by_agent_id_idx').on(t.createdByAgentId),
     index('goal_nodes_goal_id_kind_idx').on(t.goalId, t.kind),
     unique('goal_nodes_goal_id_id_unique').on(t.goalId, t.id),
     /**
@@ -178,7 +177,6 @@ export const goalNodeDecisions = pgTable(
     uniqueIndex('goal_node_decisions_node_id_unique').on(t.nodeId),
     index('goal_node_decisions_status_idx').on(t.status),
     index('goal_node_decisions_resolved_by_user_id_idx').on(t.resolvedByUserId),
-    index('goal_node_decisions_resolved_by_agent_id_idx').on(t.resolvedByAgentId),
     index('goal_node_decisions_requested_user_id_status_idx').on(t.requestedUserId, t.status),
   ],
 );
