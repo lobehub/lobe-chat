@@ -46,7 +46,7 @@ const SwitcherRow = memo<SwitcherRowProps>(({ active, item, onSelect, privateLab
       avatar={item.avatar}
       background={item.background}
       shape={'square'}
-      size={28}
+      size={24}
       title={item.title}
     />
     <Text
