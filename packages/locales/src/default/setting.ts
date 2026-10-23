@@ -1545,6 +1545,7 @@ export default {
   'serviceModel.group.voice': 'Voice',
   'serviceModel.off': 'Off',
   'serviceModel.systemRecommended': 'System recommended',
+  'serviceModel.title': 'Service Model',
   'serviceModel.tier.embedding.desc': 'Memory retrieval',
   'serviceModel.tier.embedding.title': 'Embedding Model',
   'serviceModel.tier.flash.desc':
