@@ -200,7 +200,7 @@ describe('agent command', () => {
       const program = createProgram();
       await program.parseAsync(['node', 'test', 'agent', 'list', '--json']);
 
-      expect(consoleSpy).toHaveBeenCalledWith(JSON.stringify(agents, null, 2));
+      expect(consoleSpy.mock.calls[0][0]).toContain('"url": "https://app.lobehub.com/agent/a1"');
     });
   });
 
@@ -657,9 +657,8 @@ describe('agent command', () => {
         '--json',
       ]);
 
-      expect(consoleSpy).toHaveBeenCalledWith(
-        JSON.stringify({ id: 'a1', title: 'Updated' }, null, 2),
-      );
+      expect(JSON.parse(consoleSpy.mock.calls[0][0])).toMatchObject({ id: 'a1', title: 'Updated' });
+      expect(consoleSpy.mock.calls[0][0]).toContain('"url": "https://app.lobehub.com/agent/a1"');
     });
   });
 
