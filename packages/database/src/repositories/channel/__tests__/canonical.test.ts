@@ -13,7 +13,7 @@ import {
   users,
   workspaces,
 } from '../../../schemas';
-import { ChannelExecutionModel } from '..';
+import { ChannelExecutionRepository } from '..';
 import {
   createChannelFixture,
   deviceConfig,
@@ -26,7 +26,7 @@ import {
 
 const db = await getTestDB();
 const fixture = createChannelFixture(db, 'channel-canonical');
-const execution = new ChannelExecutionModel(db);
+const execution = new ChannelExecutionRepository(db);
 beforeEach(fixture.setup);
 afterEach(fixture.cleanup);
 

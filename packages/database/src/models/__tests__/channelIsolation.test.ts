@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
-import { ChannelExecutionModel } from '../../repositories/channel';
+import { ChannelExecutionRepository } from '../../repositories/channel';
 import {
   createChannelFixture,
   jobsOf,
@@ -39,7 +39,7 @@ const setup = async () => {
     routing: 'fallback',
   });
   const [job] = await jobsOf(db, publicMessage.id);
-  const claim = (await new ChannelExecutionModel(db).claim(team.channel.id, job.id, lease))!;
+  const claim = (await new ChannelExecutionRepository(db).claim(team.channel.id, job.id, lease))!;
   await db
     .update(topics)
     .set({ title: 'boundarytoken private' })

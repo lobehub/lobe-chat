@@ -14,7 +14,7 @@ const fixture = createChannelFixture(db, 'channel-send');
 beforeEach(fixture.setup);
 afterEach(fixture.cleanup);
 
-describe('ChannelModel.send', () => {
+describe('ChannelRepository.send', () => {
   it('stores public content once in canonical messages under a channel-owned topic', async () => {
     const { asMember, channel } = await fixture.createTeamChannel();
     const input = { content: 'Canonical', requestKey: 'canonical', routing: 'fallback' as const };

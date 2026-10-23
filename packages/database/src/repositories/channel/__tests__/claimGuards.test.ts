@@ -6,12 +6,12 @@ import { getTestDB } from '../../../core/getTestDB';
 import { UserModel } from '../../../models/user';
 import { channelJobs, channelMemberGrants, channelMembers, devices } from '../../../schemas';
 import type { LobeChatDatabase } from '../../../type';
-import { ChannelExecutionModel, ChannelModel } from '..';
+import { ChannelExecutionRepository, ChannelRepository } from '..';
 import { createChannelFixture, deviceConfig, jobsOf, lease } from './testUtils';
 
 const db: LobeChatDatabase = await getTestDB();
 const fixture = createChannelFixture(db, 'channel-claim-guards');
-const execution = new ChannelExecutionModel(db);
+const execution = new ChannelExecutionRepository(db);
 
 beforeEach(fixture.setup);
 afterEach(fixture.cleanup);
@@ -22,7 +22,12 @@ const jobById = async (jobId: string) => {
 };
 
 /** Posts as `model`, mentioning `agentId`, and returns the queued job. */
-const request = async (model: ChannelModel, channelId: string, agentId: string, key: string) => {
+const request = async (
+  model: ChannelRepository,
+  channelId: string,
+  agentId: string,
+  key: string,
+) => {
   const message = await model.send(channelId, {
     content: key,
     mentions: [agentId],
@@ -88,7 +93,7 @@ describe('claim guards', () => {
   });
 
   it('runs a personal channel only on its owner device', async () => {
-    const model = new ChannelModel(db, fixture.ownerId);
+    const model = new ChannelRepository(db, fixture.ownerId);
     const { channel } = await model.create({ title: 'Personal' });
     const foreign = await fixture.addAgent(
       channel.id,

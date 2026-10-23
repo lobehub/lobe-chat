@@ -12,14 +12,14 @@ import {
   topics,
 } from '../../../schemas';
 import type { LobeChatDatabase } from '../../../type';
-import { ChannelExecutionModel } from '..';
+import { ChannelExecutionRepository } from '..';
 import { claimJob } from '../claim';
 import { lockChannel } from '../transaction';
 import { createChannelFixture, deviceConfig, jobsOf, lease, operationById } from './testUtils';
 
 const db: LobeChatDatabase = await getTestDB();
 const fixture = createChannelFixture(db, 'channel-execution');
-const execution = new ChannelExecutionModel(db);
+const execution = new ChannelExecutionRepository(db);
 // Racing transactions need separate connections; PGlite runs them one after another.
 const isServerDB = process.env.TEST_SERVER_DB === '1';
 
@@ -61,7 +61,7 @@ const jobById = async (jobId: string) => {
 
 const operationOf = async (jobId: string) => operationById(db, (await jobById(jobId)).operationId);
 
-describe('ChannelExecutionModel', () => {
+describe('ChannelExecutionRepository', () => {
   it('claims, accepts, publishes and releases a job', async () => {
     const { agent, channel, job, member, message } = await mentionAgent();
 

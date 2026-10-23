@@ -5,12 +5,12 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { getTestDB } from '../../../core/getTestDB';
 import { files, messagesFiles } from '../../../schemas';
 import type { LobeChatDatabase } from '../../../type';
-import { ChannelExecutionModel } from '..';
+import { ChannelExecutionRepository } from '..';
 import { createChannelFixture, jobsOf, lease } from './testUtils';
 
 const db: LobeChatDatabase = await getTestDB();
 const fixture = createChannelFixture(db, 'channel-attachments');
-const execution = new ChannelExecutionModel(db);
+const execution = new ChannelExecutionRepository(db);
 
 beforeEach(fixture.setup);
 afterEach(fixture.cleanup);

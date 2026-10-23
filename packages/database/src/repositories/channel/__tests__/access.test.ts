@@ -6,7 +6,7 @@ import { getTestDB } from '../../../core/getTestDB';
 import { UserModel } from '../../../models/user';
 import { channelMembers, channels, users, workspaces } from '../../../schemas';
 import type { LobeChatDatabase } from '../../../type';
-import { ChannelError, ChannelModel } from '..';
+import { ChannelError, ChannelRepository } from '..';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 // Two concurrent transactions need separate connections; PGlite runs them one after another.
@@ -45,10 +45,10 @@ afterEach(async () => {
   await serverDB.delete(users).where(inArray(users.id, [ownerId, memberId, outsiderId]));
 });
 
-describe('ChannelModel', () => {
+describe('ChannelRepository', () => {
   describe('create', () => {
     it('creates a personal channel with the caller as owner member', async () => {
-      const { channel, member } = await new ChannelModel(serverDB, ownerId).create({
+      const { channel, member } = await new ChannelRepository(serverDB, ownerId).create({
         title: 'Personal',
       });
 
@@ -71,11 +71,11 @@ describe('ChannelModel', () => {
     });
 
     it('creates a workspace channel and treats a blank workspace as personal', async () => {
-      const { channel } = await new ChannelModel(serverDB, ownerId, workspaceId).create({
+      const { channel } = await new ChannelRepository(serverDB, ownerId, workspaceId).create({
         title: 'Team',
         visibility: 'public',
       });
-      const { channel: personal } = await new ChannelModel(serverDB, ownerId, ' ').create({
+      const { channel: personal } = await new ChannelRepository(serverDB, ownerId, ' ').create({
         title: 'Blank scope',
       });
 
@@ -86,22 +86,22 @@ describe('ChannelModel', () => {
 
   describe('membership-based access', () => {
     it('lets every active member read the channel, not just its creator', async () => {
-      const { channel } = await new ChannelModel(serverDB, ownerId, workspaceId).create({
+      const { channel } = await new ChannelRepository(serverDB, ownerId, workspaceId).create({
         title: 'Team',
       });
       await addPerson(channel.id, memberId, 'member');
 
-      const asMember = new ChannelModel(serverDB, memberId, workspaceId);
+      const asMember = new ChannelRepository(serverDB, memberId, workspaceId);
       expect((await asMember.findAccess(channel.id))?.member.role).toBe('member');
       expect((await asMember.list()).map((item) => item.id)).toEqual([channel.id]);
 
-      const asOutsider = new ChannelModel(serverDB, outsiderId, workspaceId);
+      const asOutsider = new ChannelRepository(serverDB, outsiderId, workspaceId);
       expect(await asOutsider.findAccess(channel.id)).toBeUndefined();
       expect(await asOutsider.list()).toEqual([]);
     });
 
     it('hides channels from members who left and from other scopes', async () => {
-      const { channel } = await new ChannelModel(serverDB, ownerId, workspaceId).create({
+      const { channel } = await new ChannelRepository(serverDB, ownerId, workspaceId).create({
         title: 'Team',
       });
       await addPerson(channel.id, memberId, 'member');
@@ -110,15 +110,15 @@ describe('ChannelModel', () => {
         .set({ active: false })
         .where(eq(channelMembers.userId, memberId));
 
-      expect(await new ChannelModel(serverDB, memberId, workspaceId).findAccess(channel.id)).toBe(
-        undefined,
-      );
-      expect(await new ChannelModel(serverDB, ownerId).findAccess(channel.id)).toBeUndefined();
-      expect(await new ChannelModel(serverDB, ownerId).list()).toEqual([]);
+      expect(
+        await new ChannelRepository(serverDB, memberId, workspaceId).findAccess(channel.id),
+      ).toBe(undefined);
+      expect(await new ChannelRepository(serverDB, ownerId).findAccess(channel.id)).toBeUndefined();
+      expect(await new ChannelRepository(serverDB, ownerId).list()).toEqual([]);
     });
 
     it('omits archived channels from the list', async () => {
-      const model = new ChannelModel(serverDB, ownerId);
+      const model = new ChannelRepository(serverDB, ownerId);
       const { channel } = await model.create({ title: 'Archived' });
       await serverDB.update(channels).set({ archived: true }).where(eq(channels.id, channel.id));
 
@@ -128,12 +128,12 @@ describe('ChannelModel', () => {
 
   describe('write', () => {
     it('runs the mutation under the channel lock for a member with enough role', async () => {
-      const { channel } = await new ChannelModel(serverDB, ownerId, workspaceId).create({
+      const { channel } = await new ChannelRepository(serverDB, ownerId, workspaceId).create({
         title: 'Team',
       });
       await addPerson(channel.id, memberId, 'admin');
 
-      const title = await new ChannelModel(serverDB, memberId, workspaceId).write(
+      const title = await new ChannelRepository(serverDB, memberId, workspaceId).write(
         channel.id,
         async (tx, access) => {
           await tx.update(channels).set({ title: 'Renamed' }).where(eq(channels.id, channel.id));
@@ -148,7 +148,7 @@ describe('ChannelModel', () => {
     });
 
     it('rolls back mutations when the write callback fails', async () => {
-      const model = new ChannelModel(serverDB, ownerId);
+      const model = new ChannelRepository(serverDB, ownerId);
       const { channel } = await model.create({ title: 'Personal' });
 
       await expect(
@@ -164,23 +164,23 @@ describe('ChannelModel', () => {
     });
 
     it('rejects outsiders, insufficient roles and archived channels', async () => {
-      const { channel } = await new ChannelModel(serverDB, ownerId, workspaceId).create({
+      const { channel } = await new ChannelRepository(serverDB, ownerId, workspaceId).create({
         title: 'Team',
       });
       await addPerson(channel.id, memberId, 'member');
       const noop = async () => undefined;
 
       await expect(
-        new ChannelModel(serverDB, outsiderId, workspaceId).write(channel.id, noop),
+        new ChannelRepository(serverDB, outsiderId, workspaceId).write(channel.id, noop),
       ).rejects.toMatchObject({ code: 'NOT_FOUND' });
       await expect(
-        new ChannelModel(serverDB, memberId, workspaceId).write(channel.id, noop, {
+        new ChannelRepository(serverDB, memberId, workspaceId).write(channel.id, noop, {
           minRole: 'admin',
         }),
       ).rejects.toBeInstanceOf(ChannelError);
 
       await serverDB.update(channels).set({ archived: true }).where(eq(channels.id, channel.id));
-      const asOwner = new ChannelModel(serverDB, ownerId, workspaceId);
+      const asOwner = new ChannelRepository(serverDB, ownerId, workspaceId);
       await expect(asOwner.write(channel.id, noop)).rejects.toMatchObject({ code: 'CONFLICT' });
       await expect(
         asOwner.write(channel.id, async () => 'restored', { allowArchived: true }),
@@ -190,7 +190,7 @@ describe('ChannelModel', () => {
     it.skipIf(!isServerDB)(
       'checks membership as committed by the previous lock holder',
       async () => {
-        const { channel } = await new ChannelModel(serverDB, ownerId, workspaceId).create({
+        const { channel } = await new ChannelRepository(serverDB, ownerId, workspaceId).create({
           title: 'Team',
         });
         await addPerson(channel.id, memberId, 'admin');
@@ -199,7 +199,7 @@ describe('ChannelModel', () => {
         const memberRemoved = new Promise<void>((resolve) => (removed = resolve));
         let release!: () => void;
         const released = new Promise<void>((resolve) => (release = resolve));
-        const removal = new ChannelModel(serverDB, ownerId, workspaceId).write(
+        const removal = new ChannelRepository(serverDB, ownerId, workspaceId).write(
           channel.id,
           async (tx) => {
             await tx
@@ -212,7 +212,7 @@ describe('ChannelModel', () => {
         );
 
         await memberRemoved;
-        const staleWrite = new ChannelModel(serverDB, memberId, workspaceId).write(
+        const staleWrite = new ChannelRepository(serverDB, memberId, workspaceId).write(
           channel.id,
           async () => 'wrote',
           { minRole: 'admin' },
@@ -233,12 +233,14 @@ describe('ChannelModel', () => {
 
   describe('account deletion', () => {
     it('deletes personal channels and keeps workspace channels without a creator', async () => {
-      const { channel: personal } = await new ChannelModel(serverDB, memberId).create({
+      const { channel: personal } = await new ChannelRepository(serverDB, memberId).create({
         title: 'Personal',
       });
-      const { channel: team } = await new ChannelModel(serverDB, memberId, workspaceId).create({
-        title: 'Team',
-      });
+      const { channel: team } = await new ChannelRepository(serverDB, memberId, workspaceId).create(
+        {
+          title: 'Team',
+        },
+      );
       await addPerson(team.id, ownerId, 'member');
 
       await UserModel.deleteUser(serverDB, memberId);
@@ -249,7 +251,8 @@ describe('ChannelModel', () => {
         .where(inArray(channels.id, [personal.id, team.id]));
       expect(remaining).toEqual([expect.objectContaining({ userId: null, id: team.id })]);
       expect(
-        (await new ChannelModel(serverDB, ownerId, workspaceId).findAccess(team.id))?.channel.id,
+        (await new ChannelRepository(serverDB, ownerId, workspaceId).findAccess(team.id))?.channel
+          .id,
       ).toBe(team.id);
     });
   });

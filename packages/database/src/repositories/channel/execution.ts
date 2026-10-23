@@ -82,7 +82,7 @@ export const releaseOutcome = (
  * within a transaction, except lease-only heartbeats. Callers must authenticate the source
  * (job-scoped token, service credentials) before calling.
  */
-export class ChannelExecutionModel {
+export class ChannelExecutionRepository {
   constructor(private readonly db: LobeChatDatabase) {}
 
   /** Writes back a Jev decision for `attempt`; false when the result is stale. */

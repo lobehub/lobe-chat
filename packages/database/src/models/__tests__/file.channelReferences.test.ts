@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
-import { ChannelModel } from '../../repositories/channel';
+import { ChannelRepository } from '../../repositories/channel';
 import { channels, files, messages, messagesFiles, sessions, topics, users } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
 import { FileModel } from '../file';
@@ -34,7 +34,7 @@ const createFile = async (name: string) => {
 
 /** Attaches the file to a message in the user's personal channel. */
 const attachInChannel = async (fileId: string) => {
-  const model = new ChannelModel(serverDB, userId);
+  const model = new ChannelRepository(serverDB, userId);
   const { channel } = await model.create({ title: 'Channel' });
   await model.send(channel.id, {
     content: 'See attached',

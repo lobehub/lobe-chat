@@ -3,7 +3,11 @@ import { asc, inArray } from 'drizzle-orm';
 import { messagesFiles } from '../../schemas';
 import type { Transaction } from '../../type';
 
-/** Records a new message's attachments in the order the sender gave them. */
+/**
+ * Records a new message's attachments in the order the sender gave them. Performs no access
+ * check: the caller must already have authorized every file for the sender
+ * (`sendMessage` in `send.ts` does, under the channel lock).
+ */
 export const attachFiles = async (
   tx: Transaction,
   params: { fileIds: string[]; messageId: string; workspaceId: string | null },

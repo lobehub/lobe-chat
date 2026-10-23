@@ -11,7 +11,7 @@ import {
   workspaces,
 } from '../../../schemas';
 import type { LobeChatDatabase } from '../../../type';
-import { ChannelModel } from '..';
+import { ChannelRepository } from '..';
 
 export const nativeConfig: ChannelMemberConfig = {
   model: 'gpt-5',
@@ -89,12 +89,12 @@ export const createChannelFixture = (db: LobeChatDatabase, prefix: string) => {
 
   /** A workspace channel owned by `ownerId`, with `memberId` as a plain member. */
   const createTeamChannel = async (title = 'Team') => {
-    const asOwner = new ChannelModel(db, ownerId, workspaceId);
+    const asOwner = new ChannelRepository(db, ownerId, workspaceId);
     const { channel, member: owner } = await asOwner.create({ title });
     const member = await addPerson(channel.id, memberId, 'member');
 
     return {
-      asMember: new ChannelModel(db, memberId, workspaceId),
+      asMember: new ChannelRepository(db, memberId, workspaceId),
       asOwner,
       channel,
       member,

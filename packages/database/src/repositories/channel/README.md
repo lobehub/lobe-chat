@@ -2,6 +2,8 @@
 
 Channel is a collaboration and coordination domain, not another chat/runtime store.
 This package provides the data contract only; it does not activate Channel routers or execution adapters.
+It lives in the repositories layer because every write locks the `channels` row and then writes
+Channel rows together with canonical `messages`, `topics` or `agent_operations` in one transaction.
 
 ## Canonical data
 
@@ -37,7 +39,7 @@ Runtime/display configuration remains a snapshot; Agent access must be authorize
   canonical runtime updates and foreign-key cleanup do not all pass through Channel writes.
   Message sequence and environment revisions remain independent correctness constraints, not
   versions of a whole-channel snapshot.
-- `ChannelModel` checks Channel membership/role and workspace scope for public reads and writes.
+- `ChannelRepository` checks Channel membership/role and workspace scope for public reads and writes.
   The eventual router must also authenticate active workspace membership.
 - Ordinary topic/message/operation constructors, search projection, sharing and memory extraction
   exclude Channel data, even for workspace owners. Workspace membership alone does not expose it.
@@ -72,6 +74,6 @@ names. Before enabling a separately deployed CPC installation, inventory its sch
 journal, drain or fence in-flight executions, and test a data conversion plus cutover against a copy
 of that installation. Do not infer migration safety from a clean-database test.
 
-Focused coverage lives in `__tests__`, `../__tests__/channelIsolation.test.ts`, schema tests and
+Focused coverage lives in `__tests__`, `../../models/__tests__/channelIsolation.test.ts`, schema tests and
 file-reference tests. Run the Channel suite with PostgreSQL (`vitest.config.server.mts`) as well as
 PGlite: the two concurrent-claim/sequence tests require real PostgreSQL row locking.

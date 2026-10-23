@@ -17,7 +17,7 @@ import type { ChannelAccess, ChannelWriteOptions } from './types';
 export type { ChannelClaim, ChannelClaimOptions } from './claim';
 export type { ChannelErrorCode } from './error';
 export { ChannelError } from './error';
-export { ChannelExecutionModel } from './execution';
+export { ChannelExecutionRepository } from './execution';
 export type { ChannelRoutingDecision } from './routing';
 export type { ChannelSendInput } from './send';
 export type { ChannelStopScope } from './stop';
@@ -35,7 +35,7 @@ const hasRole = (role: ChannelMemberRole | null, minRole: ChannelMemberRole) =>
  * scope (personal, or the given workspace). Every write runs inside `write`, which holds the
  * `channels` row lock so mutations of one channel serialize in a transaction.
  */
-export class ChannelModel {
+export class ChannelRepository {
   private readonly workspaceId: string | null;
 
   constructor(
