@@ -191,7 +191,11 @@ describe('ChannelModel.send', () => {
       }),
     ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
     await expect(
-      asMember.send(channel.id, { ...base, content: 'Hi', mentions: ['chn_member_missing'] }),
+      asMember.send(channel.id, {
+        ...base,
+        content: 'Hi',
+        mentions: ['00000000-0000-4000-8000-000000000001'],
+      }),
     ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
     await expect(
       asMember.send(channel.id, { ...base, content: 'Hi', fileIds: ['file_missing'] }),

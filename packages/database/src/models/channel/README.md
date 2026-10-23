@@ -22,6 +22,12 @@ mapping binds agent member + branch + generation to a topic, principal and envir
 A principal/environment change, missing topic, or quarantine starts a fresh generation. Only an
 accepted input advances the cursor; rejected or unknown submissions never silently consume it.
 
+Channels use `user_id` alongside `workspace_id`; authorization still uses membership.
+Member IDs and all relational member references are UUIDs. Agent membership references
+`agents.id` through nullable `agent_id`, not `config.agentId`; deleting an Agent clears the
+reference without deleting its member or public history. Human members cannot carry `agent_id`.
+Runtime/display configuration remains a snapshot; Agent access must be authorized by adapters.
+
 ## Access and integration contract
 
 - `ChannelModel` checks Channel membership/role and workspace scope for public reads and writes.

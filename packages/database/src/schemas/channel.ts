@@ -35,6 +35,7 @@ import {
 
 import { idGenerator } from '../utils/idGenerator';
 import { createdAt, timestamptz, updatedAt } from './_helpers';
+import { agents } from './agent';
 import { agentOperations } from './agentOperations';
 import { messages } from './message';
 import { topics } from './topic';
@@ -63,7 +64,7 @@ export const channels = pgTable(
      * NULL once that account is deleted: a workspace channel outlives its creator, while
      * personal channels are deleted explicitly with the account (`UserModel.deleteUser`).
      */
-    creatorId: text('creator_id').references(() => users.id, { onDelete: 'set null' }),
+    userId: text('user_id').references(() => users.id, { onDelete: 'set null' }),
     /** NULL for a personal channel. */
     workspaceId: text('workspace_id').references(() => workspaces.id, { onDelete: 'cascade' }),
 
@@ -86,7 +87,7 @@ export const channels = pgTable(
     updatedAt: updatedAt(),
   },
   (t) => [
-    index('channels_creator_id_idx').on(t.creatorId),
+    index('channels_user_id_idx').on(t.userId),
     index('channels_workspace_visibility_idx').on(t.workspaceId, t.visibility),
   ],
 );
@@ -98,10 +99,7 @@ export const channels = pgTable(
 export const channelMembers = pgTable(
   'channel_members',
   {
-    id: text('id')
-      .primaryKey()
-      .$defaultFn(() => idGenerator('channelMembers'))
-      .notNull(),
+    id: uuid('id').defaultRandom().primaryKey().notNull(),
     channelId: text('channel_id')
       .references(() => channels.id, { onDelete: 'cascade' })
       .notNull(),
@@ -118,6 +116,8 @@ export const channelMembers = pgTable(
     lastReadSequence: integer('last_read_sequence'),
 
     // Agent members
+    /** NULL after Agent deletion; keep membership and authored history. */
+    agentId: text('agent_id').references(() => agents.id, { onDelete: 'set null' }),
     /** Display name sent to Jev and shown in the roster. Humans resolve theirs from `users`. */
     name: text('name'),
     description: text('description').notNull().default(''),
@@ -139,9 +139,10 @@ export const channelMembers = pgTable(
       .on(t.channelId, t.userId)
       .where(sql`${t.userId} IS NOT NULL`),
     index('channel_members_user_id_idx').on(t.userId),
+    index('channel_members_agent_id_idx').on(t.agentId),
     check(
       'channel_members_actor_check',
-      sql`(${t.actorType} = 'user' AND ${t.role} IS NOT NULL AND ${t.config} IS NULL)
+      sql`(${t.actorType} = 'user' AND ${t.role} IS NOT NULL AND ${t.config} IS NULL AND ${t.agentId} IS NULL)
         OR (${t.actorType} = 'agent' AND ${t.userId} IS NULL AND ${t.role} IS NULL AND ${t.name} IS NOT NULL AND ${t.config} IS NOT NULL)`,
     ),
   ],
@@ -188,7 +189,7 @@ export const channelMessages = pgTable(
       .notNull(),
     threadId: text('thread_id'),
     sequence: integer('sequence').notNull(),
-    authorMemberId: text('author_member_id').notNull(),
+    authorMemberId: uuid('author_member_id').notNull(),
     /** Mentioned member ids. Mentioned Agents run; mentioned people are only notified. */
     mentions: jsonb('mentions').$type<string[]>().notNull().default([]),
     /** Client retry key for a human message; run identity for a published reply. */
@@ -247,11 +248,11 @@ export const channelJobs = pgTable(
     channelId: text('channel_id')
       .references(() => channels.id, { onDelete: 'cascade' })
       .notNull(),
-    memberId: text('member_id').notNull(),
+    memberId: uuid('member_id').notNull(),
     messageId: text('message_id').notNull(),
     threadId: text('thread_id'),
     /** Member who triggered the request; its user is the execution identity. */
-    requesterMemberId: text('requester_member_id').notNull(),
+    requesterMemberId: uuid('requester_member_id').notNull(),
     /** Separates redeliveries of the same message to the same member, e.g. after a retry. */
     deliveryKey: text('delivery_key').notNull().default('initial'),
     status: text('status').$type<ChannelJobStatus>().notNull().default('queued'),
@@ -300,7 +301,7 @@ export const channelSessions = pgTable(
     channelId: text('channel_id')
       .references(() => channels.id, { onDelete: 'cascade' })
       .notNull(),
-    memberId: text('member_id').notNull(),
+    memberId: uuid('member_id').notNull(),
     /** `main` or a channel Thread id; archived mappings keep their original topic. */
     scope: text('scope').notNull(),
     /** Incremented whenever the session is rotated, e.g. after an environment switch. */
@@ -349,9 +350,9 @@ export const channelRuns = pgTable(
       .unique()
       .references((): AnyPgColumn => agentOperations.id, { onDelete: 'cascade' }),
     jobId: text('job_id').notNull(),
-    memberId: text('member_id').notNull(),
+    memberId: uuid('member_id').notNull(),
     /** Copied from the job: the member whose user this run executes as. */
-    requesterMemberId: text('requester_member_id').notNull(),
+    requesterMemberId: uuid('requester_member_id').notNull(),
     sessionId: text('session_id')
       .references(() => channelSessions.id)
       .notNull(),
@@ -461,7 +462,7 @@ export const channelMemberGrants = pgTable(
     channelId: text('channel_id')
       .references(() => channels.id, { onDelete: 'cascade' })
       .notNull(),
-    memberId: text('member_id').notNull(),
+    memberId: uuid('member_id').notNull(),
     /** Device owner who approves, rejects or revokes. */
     deviceOwnerId: text('device_owner_id')
       .references(() => users.id, { onDelete: 'cascade' })
@@ -471,7 +472,7 @@ export const channelMemberGrants = pgTable(
     workingDirectory: text('working_directory').notNull(),
     environmentRevision: integer('environment_revision').notNull(),
     /** Person who pulled the member in or switched its environment. */
-    requestedByMemberId: text('requested_by_member_id').notNull(),
+    requestedByMemberId: uuid('requested_by_member_id').notNull(),
 
     status: text('status').$type<ChannelMemberGrantStatus>().notNull().default('pending'),
     decidedAt: timestamptz('decided_at'),

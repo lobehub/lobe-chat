@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { getTestDB } from '../../core/getTestDB';
 import {
   agentOperations,
+  agents,
   channelJobs,
   channelMemberGrants,
   channelMembers,
@@ -38,7 +39,7 @@ const agentConfig: ChannelMemberConfig = {
 const createChannel = async (title = 'Channel') => {
   const [channel] = await serverDB
     .insert(channels)
-    .values({ creatorId: ownerId, title, workspaceId })
+    .values({ userId: ownerId, title, workspaceId })
     .returning();
   const [owner] = await serverDB
     .insert(channelMembers)
@@ -175,6 +176,42 @@ describe('channel schema', () => {
   });
 
   describe('members', () => {
+    it('enforces Agent references and preserves authored history after Agent deletion', async () => {
+      const { agent, channel, owner } = await createChannel();
+      const [source] = await serverDB.insert(agents).values({ userId: ownerId }).returning();
+
+      await expect(
+        serverDB
+          .update(channelMembers)
+          .set({ agentId: 'agt_missing' })
+          .where(eq(channelMembers.id, agent.id)),
+      ).rejects.toThrow();
+      await expect(
+        serverDB
+          .update(channelMembers)
+          .set({ agentId: source.id })
+          .where(eq(channelMembers.id, owner.id)),
+      ).rejects.toThrow();
+      await serverDB
+        .update(channelMembers)
+        .set({ agentId: source.id })
+        .where(eq(channelMembers.id, agent.id));
+      const message = await createMessage(channel.id, agent.id, 1);
+
+      await serverDB.delete(agents).where(eq(agents.id, source.id));
+
+      const [keptMember] = await serverDB
+        .select()
+        .from(channelMembers)
+        .where(eq(channelMembers.id, agent.id));
+      const [keptMessage] = await serverDB
+        .select()
+        .from(channelMessages)
+        .where(eq(channelMessages.id, message.id));
+      expect(keptMember).toMatchObject({ agentId: null, config: agentConfig, name: 'Codex' });
+      expect(keptMessage.authorMemberId).toBe(agent.id);
+    });
+
     it('keeps people and Agents in one member table with their own fields', async () => {
       const { agent, owner } = await createChannel();
 

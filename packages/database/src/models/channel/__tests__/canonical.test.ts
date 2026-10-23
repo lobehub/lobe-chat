@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { getTestDB } from '../../../core/getTestDB';
 import {
   agentOperations,
+  agents,
   channelMembers,
   channelRuns,
   channelSessions,
@@ -50,6 +51,22 @@ const operationOf = async (id: string) =>
   (await db.select().from(agentOperations).where(eq(agentOperations.id, id)))[0];
 
 describe('canonical channel persistence', () => {
+  it('attributes operations to the member Agent reference', async () => {
+    const team = await setup();
+    const [source] = await db.insert(agents).values({ userId: fixture.ownerId }).returning();
+    await db
+      .update(channelMembers)
+      .set({ agentId: source.id })
+      .where(eq(channelMembers.id, team.agent.id));
+
+    const claim = await team.claim();
+
+    expect(await operationOf(claim.run.operationId)).toMatchObject({
+      agentId: source.id,
+      userId: fixture.memberId,
+    });
+  });
+
   it.each([nativeConfig, deviceConfig()])(
     'creates an operation with the actual requester for $runtime',
     async (config) => {

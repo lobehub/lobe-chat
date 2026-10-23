@@ -578,10 +578,8 @@ export class UserModel {
       await tx.delete(topics).where(eq(topics.senderId, id));
       await applyRemainingTimeout();
       // Personal channels belong to this user alone. Workspace channels outlive their
-      // creator: the user cascade only clears `creator_id` and the member's `user_id`.
-      await tx
-        .delete(channels)
-        .where(and(eq(channels.creatorId, id), isNull(channels.workspaceId)));
+      // creator: the user cascade only clears the channel's and member's `user_id`.
+      await tx.delete(channels).where(and(eq(channels.userId, id), isNull(channels.workspaceId)));
       await applyRemainingTimeout();
       const result = await tx.delete(users).where(eq(users.id, id));
       if (deadline !== undefined && Date.now() >= deadline)

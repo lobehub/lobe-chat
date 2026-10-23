@@ -10,10 +10,10 @@ CREATE TABLE IF NOT EXISTS "channel_audit" (
 CREATE TABLE IF NOT EXISTS "channel_jobs" (
 	"id" text PRIMARY KEY NOT NULL,
 	"channel_id" text NOT NULL,
-	"member_id" text NOT NULL,
+	"member_id" uuid NOT NULL,
 	"message_id" text NOT NULL,
 	"thread_id" text,
-	"requester_member_id" text NOT NULL,
+	"requester_member_id" uuid NOT NULL,
 	"delivery_key" text DEFAULT 'initial' NOT NULL,
 	"status" text DEFAULT 'queued' NOT NULL,
 	"blocked_reason" text,
@@ -26,12 +26,12 @@ CREATE TABLE IF NOT EXISTS "channel_jobs" (
 CREATE TABLE IF NOT EXISTS "channel_member_grants" (
 	"id" text PRIMARY KEY NOT NULL,
 	"channel_id" text NOT NULL,
-	"member_id" text NOT NULL,
+	"member_id" uuid NOT NULL,
 	"device_owner_id" text NOT NULL,
 	"device_id" varchar(64) NOT NULL,
 	"working_directory" text NOT NULL,
 	"environment_revision" integer NOT NULL,
-	"requested_by_member_id" text NOT NULL,
+	"requested_by_member_id" uuid NOT NULL,
 	"status" text DEFAULT 'pending' NOT NULL,
 	"decided_at" timestamp with time zone,
 	"revoked_at" timestamp with time zone,
@@ -41,12 +41,13 @@ CREATE TABLE IF NOT EXISTS "channel_member_grants" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "channel_members" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"channel_id" text NOT NULL,
 	"actor_type" text NOT NULL,
 	"user_id" text,
 	"role" text,
 	"last_read_sequence" integer,
+	"agent_id" text,
 	"name" text,
 	"description" text DEFAULT '' NOT NULL,
 	"config" jsonb,
@@ -57,7 +58,7 @@ CREATE TABLE IF NOT EXISTS "channel_members" (
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "channel_members_scope_unique" UNIQUE("channel_id","id"),
-	CONSTRAINT "channel_members_actor_check" CHECK (("channel_members"."actor_type" = 'user' AND "channel_members"."role" IS NOT NULL AND "channel_members"."config" IS NULL)
+	CONSTRAINT "channel_members_actor_check" CHECK (("channel_members"."actor_type" = 'user' AND "channel_members"."role" IS NOT NULL AND "channel_members"."config" IS NULL AND "channel_members"."agent_id" IS NULL)
         OR ("channel_members"."actor_type" = 'agent' AND "channel_members"."user_id" IS NULL AND "channel_members"."role" IS NULL AND "channel_members"."name" IS NOT NULL AND "channel_members"."config" IS NOT NULL))
 );
 --> statement-breakpoint
@@ -66,7 +67,7 @@ CREATE TABLE IF NOT EXISTS "channel_messages" (
 	"channel_id" text NOT NULL,
 	"thread_id" text,
 	"sequence" integer NOT NULL,
-	"author_member_id" text NOT NULL,
+	"author_member_id" uuid NOT NULL,
 	"mentions" jsonb DEFAULT '[]'::jsonb NOT NULL,
 	"request_key" text NOT NULL,
 	"reply_to_id" text,
@@ -84,8 +85,8 @@ CREATE TABLE IF NOT EXISTS "channel_runs" (
 	"channel_id" text NOT NULL,
 	"operation_id" text NOT NULL,
 	"job_id" text NOT NULL,
-	"member_id" text NOT NULL,
-	"requester_member_id" text NOT NULL,
+	"member_id" uuid NOT NULL,
+	"requester_member_id" uuid NOT NULL,
 	"session_id" text NOT NULL,
 	"status" text DEFAULT 'starting' NOT NULL,
 	"activity" text,
@@ -120,7 +121,7 @@ CREATE TABLE IF NOT EXISTS "channel_runs" (
 CREATE TABLE IF NOT EXISTS "channel_sessions" (
 	"id" text PRIMARY KEY NOT NULL,
 	"channel_id" text NOT NULL,
-	"member_id" text NOT NULL,
+	"member_id" uuid NOT NULL,
 	"scope" text NOT NULL,
 	"generation" integer DEFAULT 1 NOT NULL,
 	"topic_id" text,
@@ -143,7 +144,7 @@ CREATE TABLE IF NOT EXISTS "channel_threads" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "channels" (
 	"id" text PRIMARY KEY NOT NULL,
-	"creator_id" text,
+	"user_id" text,
 	"workspace_id" text,
 	"title" text NOT NULL,
 	"sequence" integer DEFAULT 0 NOT NULL,
@@ -185,6 +186,8 @@ ALTER TABLE "channel_members" DROP CONSTRAINT IF EXISTS "channel_members_channel
 ALTER TABLE "channel_members" ADD CONSTRAINT "channel_members_channel_id_channels_id_fk" FOREIGN KEY ("channel_id") REFERENCES "public"."channels"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "channel_members" DROP CONSTRAINT IF EXISTS "channel_members_user_id_users_id_fk";--> statement-breakpoint
 ALTER TABLE "channel_members" ADD CONSTRAINT "channel_members_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "channel_members" DROP CONSTRAINT IF EXISTS "channel_members_agent_id_agents_id_fk";--> statement-breakpoint
+ALTER TABLE "channel_members" ADD CONSTRAINT "channel_members_agent_id_agents_id_fk" FOREIGN KEY ("agent_id") REFERENCES "public"."agents"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "channel_messages" DROP CONSTRAINT IF EXISTS "channel_messages_id_messages_id_fk";--> statement-breakpoint
 ALTER TABLE "channel_messages" ADD CONSTRAINT "channel_messages_id_messages_id_fk" FOREIGN KEY ("id") REFERENCES "public"."messages"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "channel_messages" DROP CONSTRAINT IF EXISTS "channel_messages_channel_id_channels_id_fk";--> statement-breakpoint
@@ -215,8 +218,8 @@ ALTER TABLE "channel_threads" DROP CONSTRAINT IF EXISTS "channel_threads_channel
 ALTER TABLE "channel_threads" ADD CONSTRAINT "channel_threads_channel_id_channels_id_fk" FOREIGN KEY ("channel_id") REFERENCES "public"."channels"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "channel_threads" DROP CONSTRAINT IF EXISTS "channel_threads_root_fk";--> statement-breakpoint
 ALTER TABLE "channel_threads" ADD CONSTRAINT "channel_threads_root_fk" FOREIGN KEY ("channel_id","root_message_id") REFERENCES "public"."channel_messages"("channel_id","id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "channels" DROP CONSTRAINT IF EXISTS "channels_creator_id_users_id_fk";--> statement-breakpoint
-ALTER TABLE "channels" ADD CONSTRAINT "channels_creator_id_users_id_fk" FOREIGN KEY ("creator_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "channels" DROP CONSTRAINT IF EXISTS "channels_user_id_users_id_fk";--> statement-breakpoint
+ALTER TABLE "channels" ADD CONSTRAINT "channels_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "channels" DROP CONSTRAINT IF EXISTS "channels_workspace_id_workspaces_id_fk";--> statement-breakpoint
 ALTER TABLE "channels" ADD CONSTRAINT "channels_workspace_id_workspaces_id_fk" FOREIGN KEY ("workspace_id") REFERENCES "public"."workspaces"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "channel_audit_channel_event_idx" ON "channel_audit" USING btree ("channel_id","event","created_at");--> statement-breakpoint
@@ -228,6 +231,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS "channel_member_grants_member_revision_unique"
 CREATE INDEX IF NOT EXISTS "channel_member_grants_owner_status_idx" ON "channel_member_grants" USING btree ("device_owner_id","status");--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "channel_members_channel_user_unique" ON "channel_members" USING btree ("channel_id","user_id") WHERE "channel_members"."user_id" IS NOT NULL;--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "channel_members_user_id_idx" ON "channel_members" USING btree ("user_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "channel_members_agent_id_idx" ON "channel_members" USING btree ("agent_id");--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "channel_messages_sequence_unique" ON "channel_messages" USING btree ("channel_id","sequence");--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "channel_messages_request_key_unique" ON "channel_messages" USING btree ("channel_id","request_key");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "channel_messages_thread_sequence_idx" ON "channel_messages" USING btree ("channel_id","thread_id","sequence");--> statement-breakpoint
@@ -241,7 +245,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS "channel_runs_active_member_unique" ON "channe
 CREATE UNIQUE INDEX IF NOT EXISTS "channel_runs_active_directory_unique" ON "channel_runs" USING btree ("device_id","working_directory") WHERE "channel_runs"."device_id" IS NOT NULL AND "channel_runs"."working_directory" IS NOT NULL AND "channel_runs"."writer_released" = false;--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "channel_sessions_member_scope_unique" ON "channel_sessions" USING btree ("member_id","scope");--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "channel_threads_root_unique" ON "channel_threads" USING btree ("channel_id","root_message_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "channels_creator_id_idx" ON "channels" USING btree ("creator_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "channels_user_id_idx" ON "channels" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "channels_workspace_visibility_idx" ON "channels" USING btree ("workspace_id","visibility");--> statement-breakpoint
 ALTER TABLE "agent_operations" DROP CONSTRAINT IF EXISTS "agent_operations_channel_id_channels_id_fk";--> statement-breakpoint
 ALTER TABLE "agent_operations" ADD CONSTRAINT "agent_operations_channel_id_channels_id_fk" FOREIGN KEY ("channel_id") REFERENCES "public"."channels"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint

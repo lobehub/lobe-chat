@@ -37,7 +37,6 @@ export type ChannelMemberActorType = 'agent' | 'user';
 export type ChannelMemberRole = 'admin' | 'member' | 'owner';
 
 export interface ChannelMemberConfig {
-  agentId?: string;
   avatar?: string;
   backgroundColor?: string;
   deviceId?: string;

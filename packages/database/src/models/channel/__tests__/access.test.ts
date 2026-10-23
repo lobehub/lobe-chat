@@ -61,7 +61,7 @@ describe('ChannelModel', () => {
       });
 
       expect(channel).toMatchObject({
-        creatorId: ownerId,
+        userId: ownerId,
         visibility: 'private',
         workspaceId: null,
       });
@@ -73,7 +73,9 @@ describe('ChannelModel', () => {
         userId: ownerId,
       });
       expect(channel.id).toMatch(/^chn_/);
-      expect(member.id).toMatch(/^chn_member_/);
+      expect(member.id).toMatch(
+        /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,
+      );
     });
 
     it('creates a workspace channel and treats a blank workspace as personal', async () => {
@@ -255,7 +257,7 @@ describe('ChannelModel', () => {
         .select()
         .from(channels)
         .where(inArray(channels.id, [personal.id, team.id]));
-      expect(remaining).toEqual([expect.objectContaining({ creatorId: null, id: team.id })]);
+      expect(remaining).toEqual([expect.objectContaining({ userId: null, id: team.id })]);
       expect(
         (await new ChannelModel(serverDB, ownerId, workspaceId).findAccess(team.id))?.channel.id,
       ).toBe(team.id);

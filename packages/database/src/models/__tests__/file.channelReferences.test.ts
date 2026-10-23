@@ -18,7 +18,7 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-  await serverDB.delete(channels).where(eq(channels.creatorId, userId));
+  await serverDB.delete(channels).where(eq(channels.userId, userId));
   await serverDB.delete(users).where(eq(users.id, userId));
 });
 

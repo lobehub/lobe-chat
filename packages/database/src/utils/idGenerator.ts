@@ -16,7 +16,6 @@ const prefixes = {
   budget: 'bgt',
   channelJobs: 'chn_job',
   channelMemberGrants: 'chn_grant',
-  channelMembers: 'chn_member',
   channelRuns: 'chn_run',
   channelSessions: 'chn_session',
   channelThreads: 'chn_thread',

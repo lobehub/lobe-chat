@@ -115,7 +115,7 @@ const deviceBlock = async (
   if (!deviceId) return;
 
   if (!channel.workspaceId)
-    return deviceOwnerId && deviceOwnerId === channel.creatorId
+    return deviceOwnerId && deviceOwnerId === channel.userId
       ? undefined
       : { code: 'unavailable', reason: 'The device does not belong to this channel owner' };
 
@@ -349,12 +349,12 @@ export const claimJob = async (
   try {
     // A savepoint, so losing the directory race to another channel keeps this transaction.
     run = await tx.transaction(async (savepoint) => {
-      const configuredAgent = member.config?.agentId
+      const configuredAgent = member.agentId
         ? (
             await savepoint
               .select({ id: agents.id })
               .from(agents)
-              .where(eq(agents.id, member.config.agentId))
+              .where(eq(agents.id, member.agentId))
           )[0]
         : undefined;
       const operationId = `op_${createNanoId(16)()}`;

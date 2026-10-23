@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "6e4afa86-cd10-43e4-8e08-825e3989bd80",
+  "id": "abe0f912-607f-4139-9942-ddd04bbf7c17",
   "policies": {},
   "prevId": "441054df-5d72-4ff2-b7fc-742c8cfb5db5",
   "roles": {},
@@ -10350,7 +10350,7 @@
         },
         "member_id": {
           "name": "member_id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -10368,7 +10368,7 @@
         },
         "requester_member_id": {
           "name": "requester_member_id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -10567,7 +10567,7 @@
         },
         "member_id": {
           "name": "member_id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -10597,7 +10597,7 @@
         },
         "requested_by_member_id": {
           "name": "requested_by_member_id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -10735,9 +10735,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "channel_id": {
           "name": "channel_id",
@@ -10766,6 +10767,12 @@
         "last_read_sequence": {
           "name": "last_read_sequence",
           "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "agent_id": {
+          "name": "agent_id",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
@@ -10868,6 +10875,21 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "channel_members_agent_id_idx": {
+          "name": "channel_members_agent_id_idx",
+          "columns": [
+            {
+              "expression": "agent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -10888,6 +10910,15 @@
           "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
+        },
+        "channel_members_agent_id_agents_id_fk": {
+          "name": "channel_members_agent_id_agents_id_fk",
+          "tableFrom": "channel_members",
+          "tableTo": "agents",
+          "columnsFrom": ["agent_id"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -10902,7 +10933,7 @@
       "checkConstraints": {
         "channel_members_actor_check": {
           "name": "channel_members_actor_check",
-          "value": "(\"channel_members\".\"actor_type\" = 'user' AND \"channel_members\".\"role\" IS NOT NULL AND \"channel_members\".\"config\" IS NULL)\n        OR (\"channel_members\".\"actor_type\" = 'agent' AND \"channel_members\".\"user_id\" IS NULL AND \"channel_members\".\"role\" IS NULL AND \"channel_members\".\"name\" IS NOT NULL AND \"channel_members\".\"config\" IS NOT NULL)"
+          "value": "(\"channel_members\".\"actor_type\" = 'user' AND \"channel_members\".\"role\" IS NOT NULL AND \"channel_members\".\"config\" IS NULL AND \"channel_members\".\"agent_id\" IS NULL)\n        OR (\"channel_members\".\"actor_type\" = 'agent' AND \"channel_members\".\"user_id\" IS NULL AND \"channel_members\".\"role\" IS NULL AND \"channel_members\".\"name\" IS NOT NULL AND \"channel_members\".\"config\" IS NOT NULL)"
         }
       },
       "isRLSEnabled": false
@@ -10937,7 +10968,7 @@
         },
         "author_member_id": {
           "name": "author_member_id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -11201,13 +11232,13 @@
         },
         "member_id": {
           "name": "member_id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
         "requester_member_id": {
           "name": "requester_member_id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -11585,7 +11616,7 @@
         },
         "member_id": {
           "name": "member_id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -11809,8 +11840,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "creator_id": {
-          "name": "creator_id",
+        "user_id": {
+          "name": "user_id",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -11871,11 +11902,11 @@
         }
       },
       "indexes": {
-        "channels_creator_id_idx": {
-          "name": "channels_creator_id_idx",
+        "channels_user_id_idx": {
+          "name": "channels_user_id_idx",
           "columns": [
             {
-              "expression": "creator_id",
+              "expression": "user_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -11909,11 +11940,11 @@
         }
       },
       "foreignKeys": {
-        "channels_creator_id_users_id_fk": {
-          "name": "channels_creator_id_users_id_fk",
+        "channels_user_id_users_id_fk": {
+          "name": "channels_user_id_users_id_fk",
           "tableFrom": "channels",
           "tableTo": "users",
-          "columnsFrom": ["creator_id"],
+          "columnsFrom": ["user_id"],
           "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"

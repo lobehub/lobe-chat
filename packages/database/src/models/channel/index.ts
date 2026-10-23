@@ -53,7 +53,7 @@ export class ChannelModel {
       const [channel] = await tx
         .insert(channels)
         .values({
-          creatorId: this.userId,
+          userId: this.userId,
           title: params.title,
           visibility: params.visibility,
           workspaceId: this.workspaceId,
