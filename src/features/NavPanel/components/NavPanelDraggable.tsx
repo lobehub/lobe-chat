@@ -9,6 +9,7 @@ import { isDesktop } from '@/const/version';
 import { MAC_VIBRANCY_BACKGROUND } from '@/features/Electron/system/macWindowFullscreen';
 import Footer from '@/features/HomeSidebar/Footer';
 import { USER_DROPDOWN_ICON_ID } from '@/features/NavPanel/constants';
+import { NavPanelHomeActiveProvider } from '@/features/NavPanel/NavPanelHomeActiveContext';
 import { TOGGLE_BUTTON_ID } from '@/features/NavPanel/ToggleLeftPanelButton';
 import { useGlobalStore } from '@/store/global';
 import {
@@ -162,16 +163,21 @@ export const NavPanelDraggable = memo<NavPanelDraggableProps>(({ activeContent, 
       <div className={draggableStyles.inner}>
         {/* Home stays mounted while a route-owned panel is active so its list
             state survives the round trip. Activity keeps the fibers but not the
-            visibility, so the layer is force-hidden like HomeLayout does. */}
+            visibility, so the layer is force-hidden like HomeLayout does.
+            Effects are torn down inside the hidden subtree and portaled UI is
+            not clipped by `display: none`, so consumers get the layer's active
+            state via context to close floating UI before it is hidden. */}
         {homeContent && (
-          <Activity mode={isHomeActive ? 'visible' : 'hidden'} name="NavPanelHome">
-            <div
-              className={draggableStyles.layer}
-              style={isHomeActive ? undefined : hiddenLayerStyle}
-            >
-              {homeContent}
-            </div>
-          </Activity>
+          <NavPanelHomeActiveProvider value={isHomeActive}>
+            <Activity mode={isHomeActive ? 'visible' : 'hidden'} name="NavPanelHome">
+              <div
+                className={draggableStyles.layer}
+                style={isHomeActive ? undefined : hiddenLayerStyle}
+              >
+                {homeContent}
+              </div>
+            </Activity>
+          </NavPanelHomeActiveProvider>
         )}
         {!isHomeActive && (
           <div className={draggableStyles.layer} key={activeContent.key}>
