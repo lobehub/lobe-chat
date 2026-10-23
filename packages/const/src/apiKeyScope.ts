@@ -231,11 +231,17 @@ export const TRPC_NAMESPACE_API_KEY_RULES: Record<string, TrpcNamespaceScopeRule
   // whole-account backup dump (settings incl. market tokens, providers, agents)
   exporter: 'blocked',
   file: rw('file:read', 'file:write'),
+  // a share link publishes the file to anyone holding it; restricted API keys
+  // must not flip it (full-access keys still can)
+  fileShare: 'blocked',
   followUpAction: rw('chat:read', 'chat:write'),
   generation: { any: 'model:invoke' },
   generationBatch: { any: 'model:invoke' },
   generationTopic: { any: 'model:invoke' },
   goal: rw('agent:read', 'agent:write'),
+  // a share link publishes the goal's wrap-up to anyone holding it; restricted
+  // API keys must not flip it (full-access keys still can)
+  goalShare: 'blocked',
   group: rw('agent:read', 'agent:write'),
   healthcheck: 'open',
   home: rw('chat:read', 'chat:write'),
