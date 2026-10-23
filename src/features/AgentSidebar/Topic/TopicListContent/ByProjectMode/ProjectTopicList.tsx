@@ -25,6 +25,8 @@ import {
 } from '@/components/ExecutionStatus';
 import { projectDirectoryDeviceName } from '@/features/ChatInput/ControlBar/projectDeviceTargets';
 import EmptyNavItem from '@/features/NavPanel/components/EmptyNavItem';
+import { useAgentStore } from '@/store/agent';
+import { agentByIdSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { operationSelectors } from '@/store/chat/selectors';
 import { deviceSelectors, useDeviceStore } from '@/store/device';
@@ -50,10 +52,11 @@ const STATUS_ICON: Record<string, ExecutionStatusVisual> = {
 
 /**
  * A device section only offers a start where the run can actually begin: the
- * server refuses a directory without an environment, or a read-only one.
+ * server refuses a directory without an enabled environment binding, a
+ * read-only one, and — for an agent fixed to one device — any other device.
  */
-const isStartableDirectory = (directory: ProjectDirectory) =>
-  !!directory.instanceId && !!directory.environmentId && directory.permission === 'readWrite';
+const isStartableDirectory = (directory: ProjectDirectory, fixedDeviceId?: string) =>
+  !!directory.runnable && (!fixedDeviceId || directory.deviceId === fixedDeviceId);
 
 const renderTopic = (topic: ChatTopic, suppressAgentAvatar?: boolean) => (
   <TopicItem
@@ -156,6 +159,8 @@ interface ProjectTopicListProps {
   mode: ProjectTopicSubGroupMode;
   /** Opens the new-topic composer staged on one project directory. */
   onStartInDirectory?: (projectWorkingDirectoryId: string) => void;
+  /** The agent a device section's "+" starts with; fixed to one device, it starts only there. */
+  startAgentId?: string;
   /** The group's project directories a device section's "+" may start in. */
   startDirectories?: ProjectDirectory[];
   /** Set when the parent group header already names the owning agent. */
@@ -176,9 +181,19 @@ const ProjectTopicList = memo<ProjectTopicListProps>((props) => {
   useDeviceStore((s) => s.useFetchDevices)(mode === 'byDevice');
   const devices = useDeviceStore(deviceSelectors.deviceList);
   const directories = useProjectDirectories();
+  // The shared row, not a topic-pinned config: a fixed target is the author's
+  // setting, and it is what the server checks a start against.
+  const { startAgentId } = props;
+  const agencyConfig = useAgentStore((s) =>
+    startAgentId ? agentByIdSelectors.getAgencyConfigById(startAgentId)(s) : undefined,
+  );
+  const fixedDeviceId =
+    agencyConfig?.executionTargetSelectionPolicy === 'fixed'
+      ? agencyConfig.boundDeviceId
+      : undefined;
   const startDirectories = useMemo(
-    () => props.startDirectories?.filter(isStartableDirectory),
-    [props.startDirectories],
+    () => props.startDirectories?.filter((item) => isStartableDirectory(item, fixedDeviceId)),
+    [props.startDirectories, fixedDeviceId],
   );
 
   // A joined id string, not the Set itself: the selector must return something

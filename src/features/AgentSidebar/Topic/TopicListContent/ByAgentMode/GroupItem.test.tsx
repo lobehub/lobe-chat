@@ -46,11 +46,13 @@ const directories: {
   id: string;
   instanceId?: string;
   permission?: string;
+  runnable?: boolean;
 }[] = [];
 const runnable = (instanceId: string) => ({
   environmentId: 'env-1',
   instanceId,
   permission: 'readWrite',
+  runnable: true,
 });
 
 vi.mock('@/store/projectWorkingDirectory', () => ({
@@ -339,6 +341,40 @@ describe('TopicByAgentGroupItem', () => {
     expect(startProjectTopicDraft).toHaveBeenCalledWith(
       expect.objectContaining({ directoryId: 'binding-linux-new' }),
     );
+  });
+
+  /** @example Review: an agent fixed to one device cannot start on another. */
+  it('offers no empty device section on a device the fixed agent cannot run on', () => {
+    subGroupModes[GROUP_ID] = 'byDevice';
+    agencyConfigById.agt_acc_merge_alpha = {
+      boundDeviceId: 'device-1',
+      executionTargetSelectionPolicy: 'fixed',
+    };
+    directories.splice(
+      0,
+      directories.length,
+      // Otherwise fully startable: only the agent's fixed device rules device-2 out.
+      {
+        deviceId: 'device-1',
+        environmentId: 'env-1',
+        id: 'binding-mac',
+        instanceId: 'ins-mac',
+        permission: 'readWrite',
+        runnable: true,
+      },
+      {
+        deviceId: 'device-2',
+        environmentId: 'env-1',
+        id: 'binding-linux-new',
+        instanceId: 'ins-linux',
+        permission: 'readWrite',
+        runnable: true,
+      },
+    );
+    renderGroup();
+
+    expect(screen.queryByRole('button', { name: 'Studio Linux' })).toBeNull();
+    expect(screen.queryByText('actions.addNewTopic')).toBeNull();
   });
 
   const renderInProject = (agentId: string) =>
