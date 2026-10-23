@@ -7,11 +7,9 @@ import * as stylex from '@stylexjs/stylex';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useEffectiveAgencyConfig } from '@/hooks/useEffectiveAgencyConfig';
-import { useAgentStore } from '@/store/agent';
 import { isDevicePresenceUnknown, useDeviceList } from '@/store/device';
-import { useUserStore } from '@/store/user';
-import { authSelectors } from '@/store/user/selectors';
+
+import { useAgentDeviceBinding } from './useAgentDeviceBinding';
 
 const styles = stylex.create({
   dot: {
@@ -34,15 +32,14 @@ interface DevicePresenceDotProps {
 }
 
 /**
- * Presence of the machine an agent runs on. An agent that is bound to a device
- * (a heterogeneous CLI agent, or a regular agent pinned to a device) follows
- * that device. Anything else — no binding, cloud / sandbox targets, or a
- * binding absent from the caller-scoped device list (a shared/legacy binding
+ * Presence of the machine an agent runs on. An agent routed to a device
+ * follows that device. Anything else — no binding, cloud / sandbox targets, or
+ * a binding absent from the caller-scoped device list (a shared/legacy binding
  * can point at the author's personal device, so absence is not proof of
  * offline, same rule as `useRemoteAgentDeviceGuard`) — defaults to online.
  */
 export const resolveAgentPresence = (
-  boundDeviceId: string | undefined,
+  boundDeviceId: string | null | undefined,
   devices: DeviceListItem[],
 ): { device?: DeviceListItem; online: boolean } => {
   const device = boundDeviceId ? devices.find((d) => d.deviceId === boundDeviceId) : undefined;
@@ -52,29 +49,22 @@ export const resolveAgentPresence = (
 /**
  * Presence dot anchored to the bottom-right of the (relatively positioned)
  * avatar it sits in: green when the agent's machine is online, gray when it is
- * offline. Independent of the topic list — it only reads the agent's own
- * effective config and the device list.
+ * offline. Independent of the topic list — it only reads where the agent
+ * routes for the caller and the device list.
  */
 const DevicePresenceDot = memo<DevicePresenceDotProps>(({ agentId }) => {
   const { t } = useTranslation('setting');
-  // A by-agent bucket can name an agent the sidebar never opened, so its
-  // config is not in the store yet — hydrate it without touching the active
-  // agent, or the binding below reads as absent and every agent looks online.
-  const isLogin = useUserStore(authSelectors.isLogin);
-  const useHydrateAgentConfig = useAgentStore((s) => s.useHydrateAgentConfig);
-  const { isLoading } = useHydrateAgentConfig(isLogin, agentId);
-
-  // Agent-level view (`topicId: null`): the header speaks for the agent's
-  // default device, not whichever topic happens to be open.
-  const { agencyConfig } = useEffectiveAgencyConfig(agentId, { topicId: null });
+  // Where this agent routes for the caller, resolved server-side and fetched
+  // for every group in one batched read (see `useAgentDeviceBinding`).
+  const { data: boundDeviceId } = useAgentDeviceBinding(agentId);
   const { data: devices, isConfirmed } = useDeviceList();
 
   // Wait for every source: painting the "online" default first would flash
-  // green on an agent whose bound device is offline, and a reload paints the
+  // green on an agent whose device is offline, and a reload paints the
   // persisted device list first, whose `online: false` is a placeholder.
-  if (isLoading || !devices || !isConfirmed) return null;
+  if (boundDeviceId === undefined || !devices || !isConfirmed) return null;
 
-  const { device, online } = resolveAgentPresence(agencyConfig?.boundDeviceId, devices);
+  const { device, online } = resolveAgentPresence(boundDeviceId, devices);
   if (device && isDevicePresenceUnknown(device)) return null;
   const deviceName = device?.friendlyName || device?.hostname;
   const status = t(online ? 'devices.status.online' : 'devices.status.offline');
