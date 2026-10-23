@@ -108,7 +108,7 @@ describe('useProjectComposer', () => {
   it('sends the message and its attachments into the project conversation it creates', async () => {
     mocks.createProjectTopic.mockResolvedValue({ id: 'tpc_1' });
     mocks.fileList = [image];
-    const { result } = renderHook(() => useProjectComposer(project, 'chat'));
+    const { result } = renderHook(() => useProjectComposer(project, 'chat', 'coordinator'));
     const input = composer('  Plan the next milestone\nwith details  ');
 
     await act(async () => {
@@ -133,11 +133,41 @@ describe('useProjectComposer', () => {
     expect(mocks.createTask).not.toHaveBeenCalled();
   });
 
+  it('sends to the project agent the user picked instead of the main agent', async () => {
+    mocks.createProjectTopic.mockResolvedValue({ id: 'tpc_1' });
+    mocks.agentMap = { reviewer: {} };
+    const { result } = renderHook(() => useProjectComposer(project, 'chat', 'reviewer'));
+
+    await act(async () => {
+      await result.current.send(composer('Review the release notes'));
+    });
+
+    expect(mocks.createProjectTopic).toHaveBeenCalledWith(
+      expect.objectContaining({ agentId: 'reviewer', projectId: 'prj_1' }),
+    );
+    expect(mocks.sendMessage).toHaveBeenCalledWith(
+      expect.objectContaining({ context: { agentId: 'reviewer', topicId: 'tpc_1' } }),
+    );
+  });
+
+  it('assigns a task to the picked project agent', async () => {
+    mocks.createTask.mockResolvedValue({ id: 'task_1', name: 'Ship it' });
+    const { result } = renderHook(() => useProjectComposer(project, 'task', 'reviewer'));
+
+    await act(async () => {
+      await result.current.send(composer('Ship it'));
+    });
+
+    expect(mocks.createTask).toHaveBeenCalledWith(
+      expect.objectContaining({ assigneeAgentId: 'reviewer', projectId: 'prj_1' }),
+    );
+  });
+
   it('loads the main agent config before sending to it', async () => {
     mocks.agentMap = {};
     mocks.getAgentConfigById.mockResolvedValue({ model: 'm' });
     mocks.createProjectTopic.mockResolvedValue({ id: 'tpc_1' });
-    const { result } = renderHook(() => useProjectComposer(project, 'chat'));
+    const { result } = renderHook(() => useProjectComposer(project, 'chat', 'coordinator'));
 
     await act(async () => {
       await result.current.send(composer('Hello'));
@@ -150,7 +180,7 @@ describe('useProjectComposer', () => {
   it('records a project task with its attachments in task mode', async () => {
     mocks.createTask.mockResolvedValue({ id: 'task_1', name: 'Ship it' });
     mocks.fileList = [image];
-    const { result } = renderHook(() => useProjectComposer(project, 'task'));
+    const { result } = renderHook(() => useProjectComposer(project, 'task', 'coordinator'));
 
     await act(async () => {
       await result.current.send(composer('Ship it\nwith the changelog'));
@@ -172,7 +202,7 @@ describe('useProjectComposer', () => {
 
   it('ignores an empty composer and keeps a failed send in it', async () => {
     mocks.createProjectTopic.mockRejectedValue(new Error('denied'));
-    const { result } = renderHook(() => useProjectComposer(project, 'chat'));
+    const { result } = renderHook(() => useProjectComposer(project, 'chat', 'coordinator'));
 
     await act(async () => {
       await result.current.send(composer('   '));
@@ -192,7 +222,7 @@ describe('useProjectComposer', () => {
 
   it('refuses to send while an attachment is still uploading', async () => {
     mocks.fileList = [{ ...image, fileUrl: undefined, status: 'uploading' }];
-    const { result } = renderHook(() => useProjectComposer(project, 'chat'));
+    const { result } = renderHook(() => useProjectComposer(project, 'chat', 'coordinator'));
 
     await act(async () => {
       await expect(result.current.send(composer('Hello'))).rejects.toBeInstanceOf(

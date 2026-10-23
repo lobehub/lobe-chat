@@ -69,7 +69,7 @@ const ProjectWorkspace = memo(() => {
               </Text>
               <Text type={'secondary'}>{t('overview.description')}</Text>
             </Flexbox>
-            <ProjectComposer key={detail.project.id} project={detail.project} />
+            <ProjectComposer detail={detail} key={detail.project.id} />
           </Flexbox>
           <ProjectDashboard detail={detail} projectId={detail.project.id} />
         </Flexbox>

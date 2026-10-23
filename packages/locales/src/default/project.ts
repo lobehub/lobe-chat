@@ -197,6 +197,7 @@ export default {
   'list.viewAll': 'View all projects',
   'overview.noDescription': 'A dedicated workspace for this long-running goal.',
   'overview.activeTasks': 'In progress',
+  'overview.agentSelect': 'Choose an agent',
   'overview.contextTitle': 'Project context',
   'overview.description': 'Start with a question, or review the project’s progress and outputs.',
   'overview.goalCount': '{{completed}} of {{total}} goals completed',

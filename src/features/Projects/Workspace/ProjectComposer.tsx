@@ -18,6 +18,8 @@ import { useAgentStore } from '@/store/agent';
 import { agentByIdSelectors } from '@/store/agent/selectors';
 import type { ProjectDetail } from '@/store/project';
 
+import ProjectAgentSelect from './ProjectAgentSelect';
+import { projectComposerAgents } from './projectComposerAgents';
 import {
   AttachmentsNotReadyError,
   type ProjectComposerMode,
@@ -42,20 +44,26 @@ const inputContainerProps = {
 const actionBarStyle = { paddingBlockEnd: ACTION_BAR_INSET, paddingInline: ACTION_BAR_INSET };
 
 interface ProjectComposerProps {
-  project: ProjectDetail['project'];
+  detail: ProjectDetail;
 }
 
 /**
  * The project home composer is the regular chat input — line breaks, pasted
- * images and attachments behave as in any conversation — sending to the
- * project's main agent, or recording a task for it.
+ * images and attachments behave as in any conversation — sending to a
+ * project agent (the main agent unless another is picked), or recording a task
+ * for it.
  */
-const ProjectComposer = memo<ProjectComposerProps>(({ project }) => {
+const ProjectComposer = memo<ProjectComposerProps>(({ detail }) => {
+  const { project } = detail;
   const { t } = useTranslation('project');
   const { t: tHome } = useTranslation('home');
   const [mode, setMode] = useState<ProjectComposerMode>('chat');
-  const { send, sending } = useProjectComposer(project, mode);
-  const agentId = project.coordinatorAgentId;
+  const agents = useMemo(() => projectComposerAgents(detail), [detail]);
+  const [pickedAgentId, setPickedAgentId] = useState<string>();
+  // A pick that left the project (disabled or removed) falls back to the main agent.
+  const agentId =
+    agents.find((agent) => agent.id === pickedAgentId)?.id ?? project.coordinatorAgentId;
+  const { send, sending } = useProjectComposer(project, mode, agentId);
 
   useInitAgentConfig(agentId);
   const isAgentConfigLoading = useAgentStore((s) =>
@@ -116,6 +124,12 @@ const ProjectComposer = memo<ProjectComposerProps>(({ project }) => {
                   { label: t('overview.mode.task'), value: 'task' },
                 ]}
                 onChange={(value) => setMode(value as ProjectComposerMode)}
+              />
+              <ProjectAgentSelect
+                agents={agents}
+                disabled={sending}
+                value={agentId}
+                onChange={setPickedAgentId}
               />
               <FileUpload includeKnowledge={false} />
             </Flexbox>

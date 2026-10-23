@@ -15,9 +15,9 @@ import { useProjectDirectoryStore } from '@/store/projectWorkingDirectory';
 import { useTaskStore } from '@/store/task';
 
 /**
- * `chat` hands the message to the project's main agent in a new project
- * conversation. `task` records it as a task straight away, without a model
- * round trip.
+ * `chat` hands the message to the chosen project agent in a new project
+ * conversation. `task` records it as a task for that agent straight away,
+ * without a model round trip.
  */
 export type ProjectComposerMode = 'chat' | 'task';
 
@@ -47,6 +47,8 @@ export class AttachmentsNotReadyError extends Error {
 export const useProjectComposer = (
   project: ProjectDetail['project'],
   mode: ProjectComposerMode,
+  /** The project agent the message goes to; the main agent unless the user picked another. */
+  agentId: string,
 ) => {
   const navigate = useWorkspaceAwareNavigate();
   const createProjectTopic = useProjectDirectoryStore((s) => s.createProjectTopic);
@@ -63,7 +65,6 @@ export const useProjectComposer = (
     if (files.some((file) => file.status !== 'success' || !file.fileUrl))
       throw new AttachmentsNotReadyError();
 
-    const agentId = project.coordinatorAgentId;
     const editorData = getEditorData();
     const title = toConversationTitle(message || files[0].file.name);
 
