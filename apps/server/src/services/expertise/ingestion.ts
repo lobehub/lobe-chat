@@ -33,6 +33,7 @@ import { ExpertiseModel } from '@/database/models/expertise';
 import { FileModel } from '@/database/models/file';
 import { VerifyEvidenceModel } from '@/database/models/verifyEvidence';
 import type { LobeChatDatabase } from '@/database/type';
+import { notChannelData } from '@/database/utils/channelScope';
 import { notShareVisitorMessage, notShareVisitorTopic } from '@/database/utils/shareVisitor';
 import { notTrashed } from '@/database/utils/softDelete';
 import { buildWorkspaceWhere } from '@/database/utils/workspace';
@@ -336,6 +337,7 @@ export class ExpertiseIngestionService {
     // Share-visitor topics/messages are billed to the creator but are visitor traffic,
     // not the creator's own activity — they must never feed self-learning/expertise
     // ingestion. See `notShareVisitorMessage`/`notShareVisitorTopic` for the shared rule.
+    // Channel timelines and runs are excluded for the same reason (`notChannelData`).
     const byMessageAgent = this.db
       .select({ topicId: messages.topicId })
       .from(messages)
@@ -347,6 +349,7 @@ export class ExpertiseIngestionService {
           isNotNull(messages.topicId),
           notTrashed(messages.isDeleted),
           notShareVisitorMessage(),
+          notChannelData(messages),
         ),
       );
     const byTopicAgent = this.db
@@ -361,6 +364,7 @@ export class ExpertiseIngestionService {
           notTrashed(messages.isDeleted),
           notTrashed(topics.isDeleted),
           notShareVisitorTopic(),
+          notChannelData(topics),
         ),
       );
 

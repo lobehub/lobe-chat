@@ -6,6 +6,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { getTestDB } from '../../../core/getTestDB';
 import {
   agents,
+  channels,
   messagePlugins,
   messages,
   topics,
@@ -769,6 +770,88 @@ describe('AgentSignalNightlyReviewModel', () => {
           name: null,
           timezone: 'UTC',
           title: 'Share agent',
+          topicCount: 1,
+        },
+      ]);
+    });
+
+    it('excludes Channel run transcripts from the nightly digest', async () => {
+      // A Channel run's private topic and messages carry the requester's userId in
+      // personal scope, but they are Channel data, not the user's own conversations.
+      await serverDB.insert(users).values(withSelfLearning({ id: enabledUserId }));
+      await serverDB.insert(agents).values({
+        id: 'nightly-channel-agent',
+        title: 'Channel agent',
+        userId: enabledUserId,
+      });
+      const [channel] = await serverDB
+        .insert(channels)
+        .values({ title: 'Channel', userId: enabledUserId })
+        .returning();
+      await serverDB.insert(topics).values([
+        {
+          channelId: channel.id,
+          id: 'nightly-channel-run-topic',
+          mode: 'channel_runtime',
+          trigger: 'channel',
+          userId: enabledUserId,
+        },
+        {
+          agentId: 'nightly-channel-agent',
+          id: 'nightly-own-topic',
+          title: 'Own topic',
+          userId: enabledUserId,
+        },
+      ]);
+      await serverDB.insert(messages).values([
+        {
+          agentId: 'nightly-channel-agent',
+          channelId: channel.id,
+          content: 'channel run message',
+          createdAt: new Date('2026-05-03T11:00:00.000Z'),
+          id: 'nightly-channel-message',
+          role: 'assistant',
+          topicId: 'nightly-channel-run-topic',
+          userId: enabledUserId,
+        },
+        {
+          // An older writer that omitted channelId is still caught through its topic.
+          agentId: 'nightly-channel-agent',
+          content: 'channel run message without marker',
+          createdAt: new Date('2026-05-03T12:00:00.000Z'),
+          id: 'nightly-channel-unmarked-message',
+          role: 'assistant',
+          topicId: 'nightly-channel-run-topic',
+          userId: enabledUserId,
+        },
+        {
+          agentId: 'nightly-channel-agent',
+          content: 'own message',
+          createdAt: new Date('2026-05-03T13:00:00.000Z'),
+          id: 'nightly-own-message',
+          role: 'user',
+          topicId: 'nightly-own-topic',
+          userId: enabledUserId,
+        },
+      ]);
+
+      const model = new AgentSignalNightlyReviewModel(serverDB);
+
+      const result = await model.listActiveAgentTargets(enabledUserId, {
+        windowEnd: new Date('2026-05-03T23:59:59.999Z'),
+        windowStart: new Date('2026-05-03T00:00:00.000Z'),
+      });
+
+      expect(result).toEqual([
+        {
+          agentId: 'nightly-channel-agent',
+          failedToolCallCount: 0,
+          firstActivityAt: new Date('2026-05-03T13:00:00.000Z'),
+          lastActivityAt: new Date('2026-05-03T13:00:00.000Z'),
+          messageCount: 1,
+          name: null,
+          timezone: 'UTC',
+          title: 'Channel agent',
           topicCount: 1,
         },
       ]);

@@ -118,6 +118,20 @@ describe('TopicAutoSummaryService', () => {
     expect(mocks.updateSummaryIfCurrent).not.toHaveBeenCalled();
   });
 
+  it('skips a Channel topic without reading messages or invoking generation', async () => {
+    // A Channel run topic belongs to the requester, but its transcript is Channel data.
+    // The dispatch query never queues it; a replay or direct call must not summarize it.
+    const db = createDb([[{ channelId: 'channel-1', historySummary: null, senderId: null }]]);
+    const service = new TopicAutoSummaryService(db, 'user-1');
+
+    const result = await service.summarize('channel-run-topic', { force: true });
+
+    expect(result).toEqual({ reason: 'disabled', summarized: false });
+    expect(db.select).toHaveBeenCalledTimes(1);
+    expect(mocks.generateObject).not.toHaveBeenCalled();
+    expect(mocks.updateSummaryIfCurrent).not.toHaveBeenCalled();
+  });
+
   it('stops before reading messages or resolving a model when the topic was trashed', async () => {
     const db = createDb([[]]);
     const service = new TopicAutoSummaryService(db, 'user-1');

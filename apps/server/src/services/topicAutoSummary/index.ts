@@ -56,7 +56,11 @@ export class TopicAutoSummaryService {
       ? eq(topics.workspaceId, this.workspaceId)
       : eq(topics.userId, this.userId);
     const [topic] = await this.db
-      .select({ historySummary: topics.historySummary, senderId: topics.senderId })
+      .select({
+        channelId: topics.channelId,
+        historySummary: topics.historySummary,
+        senderId: topics.senderId,
+      })
       .from(topics)
       .where(and(eq(topics.id, topicId), topicOwnership, notTrashed(topics.isDeleted)))
       .limit(1);
@@ -76,6 +80,12 @@ export class TopicAutoSummaryService {
         'skipping share-visitor topic %s: visitor turns are outside the auto-summary scope',
         topicId,
       );
+      return { reason: 'disabled', summarized: false };
+    }
+    // Channel timelines and runs are Channel data; the dispatch query skips them,
+    // and this guard covers replays / direct callers in the same way.
+    if (topic.channelId) {
+      log('skipping channel topic %s: Channel data is outside the auto-summary scope', topicId);
       return { reason: 'disabled', summarized: false };
     }
     const recent = await this.db
