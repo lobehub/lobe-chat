@@ -1,3 +1,4 @@
+import type { ScmRepositoryListItem } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
@@ -10,7 +11,10 @@ import {
 import { scmEnv } from '@/envs/scm';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
-import { fetchGitHubInstallation } from '@/server/services/scm/github/app';
+import {
+  fetchGitHubInstallation,
+  listGitHubInstallationRepositoryDetails,
+} from '@/server/services/scm/github/app';
 import { SCM_MAX_WAKES } from '@/server/services/scm/limits';
 import { consumeScmInstallClaim } from '@/server/services/scm/oauth/stateStore';
 import { canWriteScmScope } from '@/server/services/scm/scope';
@@ -141,6 +145,56 @@ export const scmRouter = router({
   listInstallations: scmProcedure.query(async ({ ctx }) =>
     ScmInstallationModel.listByScope(ctx.serverDB, ctx.scope),
   ),
+
+  /**
+   * Repositories the scope's live GitHub installations can read, most recently
+   * pushed first — the list "new project from GitHub" picks from. Read through
+   * the installations rather than the user's own token, so it shows exactly
+   * what an environment built from the pick can clone. One installation
+   * failing (rate limit, revoked on GitHub before the webhook lands) leaves the
+   * others listed; only when every one fails is that an error.
+   */
+  listRepositories: scmProcedure.query(async ({ ctx }) => {
+    if (!scmEnv.ENABLED_GITHUB_APP) {
+      return { configured: false, installations: 0, repositories: [], truncated: false };
+    }
+
+    const installations = (await ScmInstallationModel.listByScope(ctx.serverDB, ctx.scope)).filter(
+      (item) => item.provider === 'github' && !item.suspendedAt,
+    );
+    const results = await Promise.allSettled(
+      installations.map((item) => listGitHubInstallationRepositoryDetails(item.installationId)),
+    );
+
+    const byName = new Map<string, ScmRepositoryListItem>();
+    const failures: unknown[] = [];
+    let truncated = false;
+    results.forEach((result, index) => {
+      if (result.status === 'rejected') {
+        failures.push(result.reason);
+        console.error(
+          '[scm:listRepositories] installation %s: %s',
+          installations[index].installationId,
+          (result.reason as Error)?.message,
+        );
+        return;
+      }
+      truncated ||= result.value.truncated;
+      for (const repo of result.value.repositories) byName.set(repo.fullName.toLowerCase(), repo);
+    });
+    if (installations.length > 0 && failures.length === installations.length) {
+      throw new TRPCError({
+        cause: failures[0],
+        code: 'BAD_GATEWAY',
+        message: 'Could not list repositories from GitHub',
+      });
+    }
+
+    const repositories = [...byName.values()].sort((a, b) =>
+      (b.pushedAt ?? '').localeCompare(a.pushedAt ?? ''),
+    );
+    return { configured: true, installations: installations.length, repositories, truncated };
+  }),
 });
 
 export type ScmRouter = typeof scmRouter;
