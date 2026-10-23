@@ -114,6 +114,34 @@ describe('ProjectModel', () => {
     expect(await model.delete(project.id)).toEqual(expect.objectContaining({ id: project.id }));
   });
 
+  it('tells whether replacing a main agent retires it', async () => {
+    const project = await createProject(model, { name: 'Disposition' });
+    const inbox = (await new AgentModel(serverDB, userId).getBuiltinAgent(INBOX_SESSION_ID))!;
+    const user = await new AgentModel(serverDB, userId).create({ title: 'Planner' });
+
+    // The project's own lead is ignored only when asked about handing it over.
+    expect(
+      await model.isDedicatedCoordinator(project.coordinatorAgentId, {
+        exceptProjectId: project.id,
+      }),
+    ).toBe(true);
+    expect(await model.isDedicatedCoordinator(project.coordinatorAgentId)).toBe(false);
+    // A member of another project is still in use there.
+    const other = await createProject(model, { name: 'Borrower' });
+    await model.addAgent(other.id, { agentId: project.coordinatorAgentId });
+    expect(
+      await model.isDedicatedCoordinator(project.coordinatorAgentId, {
+        exceptProjectId: project.id,
+      }),
+    ).toBe(false);
+    expect(await model.isDedicatedCoordinator(inbox.id, { exceptProjectId: project.id })).toBe(
+      false,
+    );
+    expect(await model.isDedicatedCoordinator(user.id, { exceptProjectId: project.id })).toBe(
+      false,
+    );
+  });
+
   it('creates, lists, updates, and deletes a project in the owner scope', async () => {
     const project = await createProject(model, { description: 'A large effort', name: 'Apollo' });
     expect(project.status).toBe('backlog');

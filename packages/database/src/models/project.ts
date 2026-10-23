@@ -1,9 +1,10 @@
 import { BUILTIN_AGENT_SLUGS, createProjectCoordinatorAgentConfig } from '@lobechat/builtin-agents';
 import { INBOX_SESSION_ID } from '@lobechat/const';
 import type { ProjectStatus, ProjectVisibility } from '@lobechat/types';
-import { and, asc, desc, eq, inArray, isNull, max, or, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, inArray, isNull, max, ne, or, sql } from 'drizzle-orm';
 
 import { agents } from '../schemas/agent';
+import { chatGroupsAgents } from '../schemas/chatGroup';
 import { environments } from '../schemas/environment';
 import { knowledgeBases } from '../schemas/file';
 import {
@@ -14,6 +15,7 @@ import {
 } from '../schemas/project';
 import { projectEnvironments } from '../schemas/projectEnvironment';
 import { projectWorks } from '../schemas/projectWork';
+import { agentsToSessions } from '../schemas/relations';
 import { tasks } from '../schemas/task';
 import { topics } from '../schemas/topic';
 import { works } from '../schemas/work';
@@ -210,6 +212,25 @@ export class ProjectModel {
    * (user agents, LobeAI) stay with their sessions intact.
    */
   private async deleteDedicatedCoordinator(db: LobeChatDatabase, agentId: string) {
+    if (!(await this.isDedicatedCoordinator(agentId, { db }))) return;
+    await new AgentModel(db, this.userId, this.workspaceId).delete(agentId);
+  }
+
+  /**
+   * A coordinator provisioned for one project: a virtual, non-builtin agent no
+   * other project leads or counts as a member, and no group or session holds.
+   */
+  async isDedicatedCoordinator(
+    agentId: string,
+    {
+      db = this.db,
+      exceptProjectId,
+    }: {
+      db?: LobeChatDatabase;
+      /** Ask before handing this project over: its own lead and membership do not count as "still used". */
+      exceptProjectId?: string;
+    } = {},
+  ) {
     const [agent] = await db
       .select({ slug: agents.slug, virtual: agents.virtual })
       .from(agents)
@@ -220,16 +241,46 @@ export class ProjectModel {
         ),
       )
       .limit(1);
-    if (!agent?.virtual || (agent.slug && BUILTIN_SLUGS.has(agent.slug))) return;
+    if (!agent?.virtual || (agent.slug && BUILTIN_SLUGS.has(agent.slug))) return false;
 
     const [stillUsed] = await db
       .select({ id: projects.id })
       .from(projects)
-      .where(eq(projects.coordinatorAgentId, agentId))
+      .where(
+        and(
+          eq(projects.coordinatorAgentId, agentId),
+          exceptProjectId ? ne(projects.id, exceptProjectId) : undefined,
+        ),
+      )
       .limit(1);
-    if (stillUsed) return;
+    if (stillUsed) return false;
 
-    await new AgentModel(db, this.userId, this.workspaceId).delete(agentId);
+    // A group's own members are virtual and slugless as well; they belong to the group.
+    // A session link would take the agent's conversations with it on delete, and a
+    // member of another project would drop out of it.
+    const [linked] = await db
+      .select({ agentId: chatGroupsAgents.agentId })
+      .from(chatGroupsAgents)
+      .where(eq(chatGroupsAgents.agentId, agentId))
+      .union(
+        db
+          .select({ agentId: agentsToSessions.agentId })
+          .from(agentsToSessions)
+          .where(eq(agentsToSessions.agentId, agentId)),
+      )
+      .union(
+        db
+          .select({ agentId: projectAgents.agentId })
+          .from(projectAgents)
+          .where(
+            and(
+              eq(projectAgents.agentId, agentId),
+              exceptProjectId ? ne(projectAgents.projectId, exceptProjectId) : undefined,
+            ),
+          ),
+      )
+      .limit(1);
+    return !linked;
   }
 
   /**
@@ -477,6 +528,74 @@ export class ProjectModel {
       .where(and(eq(projectAgents.projectId, projectId), eq(projectAgents.agentId, agentId)))
       .returning({ id: projectAgents.id });
     return deleted.length > 0;
+  }
+
+  /**
+   * Point the project at another main agent and seat it as an enabled member.
+   * Returns the predecessor so the caller can retire or keep it; handing over a
+   * coordinator's history spans other aggregates and lives in
+   * `ProjectCoordinatorRepository`. Call it inside that transaction.
+   */
+  async assignCoordinator(projectId: string, agentId: string) {
+    const [project] = await this.db
+      .select()
+      .from(projects)
+      .where(and(eq(projects.id, projectId), this.membersManageable()))
+      .limit(1)
+      .for('update');
+    if (!project) return null;
+    if (project.coordinatorAgentId === agentId) return { previousId: null, project };
+
+    const [agent] = await this.db
+      .select({ id: agents.id, visibility: agents.visibility })
+      .from(agents)
+      .where(
+        and(
+          eq(agents.id, agentId),
+          buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, agents),
+        ),
+      )
+      .limit(1);
+    if (!agent) throw new Error('Agent not found');
+    this.assertSharedResource(
+      project,
+      agent.visibility,
+      'A shared project only takes shared agents',
+    );
+
+    const [updated] = await this.db
+      .update(projects)
+      .set({ coordinatorAgentId: agentId, updatedAt: new Date() })
+      .where(eq(projects.id, projectId))
+      .returning();
+    await this.db
+      .insert(projectAgents)
+      .values({
+        addedByUserId: this.userId,
+        agentId,
+        projectId,
+        workspaceId: this.workspaceId ?? null,
+      })
+      .onConflictDoUpdate({
+        set: { enabled: true, updatedAt: new Date() },
+        target: [projectAgents.projectId, projectAgents.agentId],
+      });
+
+    const previousId = project.coordinatorAgentId;
+    if (previousId) {
+      // The project role belonged to the main agent; as a member it reads like any other.
+      await this.db
+        .update(projectAgents)
+        .set({ role: null, updatedAt: new Date() })
+        .where(
+          and(
+            eq(projectAgents.projectId, projectId),
+            eq(projectAgents.agentId, previousId),
+            eq(projectAgents.role, 'coordinator'),
+          ),
+        );
+    }
+    return { previousId, project: updated };
   }
 
   async listKnowledgeBases(projectId: string) {

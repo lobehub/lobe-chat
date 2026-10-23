@@ -75,6 +75,9 @@ class ProjectService {
   removeKnowledgeBase = async (id: string, knowledgeBaseId: string) =>
     lambdaClient.project.removeKnowledgeBase.mutate({ id, knowledgeBaseId });
 
+  replaceCoordinator = async (id: string, agentId: string) =>
+    lambdaClient.project.replaceCoordinator.mutate({ agentId, id });
+
   reopen = async (id: string) => lambdaClient.project.reopen.mutate({ id });
 
   requestCompletion = async (id: string) => lambdaClient.project.requestCompletion.mutate({ id });

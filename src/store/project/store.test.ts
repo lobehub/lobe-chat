@@ -26,7 +26,16 @@ import {
   useProjectStore,
 } from './store';
 
-const mocks = vi.hoisted(() => ({ activeWorkspaceId: null as string | null }));
+const mocks = vi.hoisted(() => ({
+  activeWorkspaceId: null as string | null,
+  refreshProjectTopics: vi.fn(),
+}));
+
+vi.mock('@/store/projectWorkingDirectory', () => ({
+  useProjectDirectoryStore: {
+    getState: () => ({ refreshProjectTopics: mocks.refreshProjectTopics }),
+  },
+}));
 
 vi.mock('@/business/client/hooks/useActiveWorkspaceId', () => ({
   getActiveWorkspaceId: () => mocks.activeWorkspaceId,
@@ -41,6 +50,7 @@ vi.mock('@/services/project', () => ({
     detail: vi.fn(),
     listAll: vi.fn(),
     removeAgent: vi.fn(),
+    replaceCoordinator: vi.fn(),
     update: vi.fn(),
     updateKnowledgeBase: vi.fn(),
   },
@@ -263,6 +273,25 @@ describe('project store replicas', () => {
       });
       expect(projectService.removeAgent).toHaveBeenCalledWith('p1', 'agent-1');
       expect(projectService.detail).toHaveBeenLastCalledWith('launch');
+    });
+
+    it('reloads the page, the list and the conversations once the main agent is replaced', async () => {
+      const original = seed();
+      await waitSeeded();
+      vi.mocked(projectService.replaceCoordinator).mockResolvedValue(ok(original) as any);
+      vi.mocked(projectService.detail).mockResolvedValue(
+        ok({ ...detailOf(original), project: { ...original, coordinatorAgentId: 'lead' } }) as any,
+      );
+      vi.mocked(projectService.listAll).mockClear();
+
+      await act(() => useProjectStore.getState().replaceProjectCoordinator('p1', 'lead'));
+
+      expect(projectService.replaceCoordinator).toHaveBeenCalledWith('p1', 'lead');
+      expect(useProjectStore.getState().projectDetailMap.launch.project.coordinatorAgentId).toBe(
+        'lead',
+      );
+      await waitFor(() => expect(projectService.listAll).toHaveBeenCalled());
+      expect(mocks.refreshProjectTopics).toHaveBeenCalledWith('p1');
     });
 
     it('restores a knowledge toggle from the server when the update fails', async () => {
