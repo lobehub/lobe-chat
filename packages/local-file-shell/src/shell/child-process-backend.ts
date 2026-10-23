@@ -60,6 +60,14 @@ export class ChildProcessBackend implements ShellBackend {
     if (!childProcess) throw new Error(`Shell ID ${shellId} not found`);
 
     if (childProcess.pid) {
+      if (process.platform !== 'win32') {
+        try {
+          process.kill(-childProcess.pid, KILL_SIGNAL);
+        } catch (error) {
+          if ((error as NodeJS.ErrnoException).code !== 'ESRCH') throw error;
+        }
+        return;
+      }
       treeKill(childProcess.pid, KILL_SIGNAL);
       return;
     }

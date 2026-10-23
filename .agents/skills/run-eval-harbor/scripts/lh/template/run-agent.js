@@ -5,6 +5,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { spawn } = require('node:child_process');
+const { setTimeout: delay } = require('node:timers/promises');
 
 const TERMINAL_STATUSES = new Set([
   'done',
@@ -64,6 +65,10 @@ function parseArgs(argv) {
   ]);
   for (let index = 0; index < argv.length; index += 1) {
     const flag = argv[index];
+    if (flag === '--stop') {
+      options.stop = true;
+      continue;
+    }
     if (!values.has(flag)) throw new RunnerError(`Unknown runner option: ${flag}`);
     const value = argv[++index];
     if (!value || value.startsWith('--')) throw new RunnerError(`Missing value for ${flag}`);
@@ -107,6 +112,7 @@ function parseArgs(argv) {
     }
   }
 
+  if (options.stop) return options;
   for (const [name, value] of [
     ['--cli', options.cli],
     ['--prompt', options.prompt],
@@ -175,6 +181,7 @@ class AgentRunner {
     this.taskUsageLog = path.join(options.logDir, 'task-usage.jsonl');
     this.statusErrorsLog = path.join(options.logDir, 'operation-status-errors.log');
     this.cleanupLog = path.join(options.logDir, 'device-cleanup.log');
+    this.pidPath = path.join(options.logDir, 'runner.pid');
     this.operationId = undefined;
     this.topicId = undefined;
     this.taskId = undefined;
@@ -184,7 +191,7 @@ class AgentRunner {
     this.interruptAttempted = false;
     this.interruptConfirmed = false;
     this.cleanupFailure = false;
-    this.activeChild = undefined;
+    this.cleaningUp = false;
     this.signalCode = undefined;
     this.resolveSignal = undefined;
     this.signalPromise = new Promise((resolve) => {
@@ -197,9 +204,8 @@ class AgentRunner {
   }
 
   requestSignal(code) {
-    if (this.signalCode) return;
+    if (this.signalCode || this.cleaningUp) return;
     this.signalCode = code;
-    if (this.activeChild) this.activeChild.kill('SIGTERM');
     this.resolveSignal(code);
   }
 
@@ -214,7 +220,7 @@ class AgentRunner {
   }
 
   checkSignal() {
-    if (this.signalCode)
+    if (this.signalCode && !this.cleaningUp)
       throw new RunnerError(`Received signal (exit ${this.signalCode})`, this.signalCode);
   }
 
@@ -224,19 +230,31 @@ class AgentRunner {
   }
 
   async wait(ms) {
-    await Promise.race([
-      new Promise((resolve) => setTimeout(resolve, ms)),
-      this.signalPromise.then((code) => {
-        throw new RunnerError(`Received signal (exit ${code})`, code);
-      }),
-    ]);
+    if (this.cleaningUp) return delay(ms);
+    let timer;
+    try {
+      await Promise.race([
+        new Promise((resolve) => {
+          timer = setTimeout(resolve, ms);
+        }),
+        this.signalPromise.then((code) => {
+          throw new RunnerError(`Received signal (exit ${code})`, code);
+        }),
+      ]);
+    } finally {
+      clearTimeout(timer);
+    }
     this.checkSignal();
   }
 
   exec(command, args) {
     return new Promise((resolve, reject) => {
-      const child = spawn(command, args, { env: process.env, stdio: ['ignore', 'pipe', 'pipe'] });
-      this.activeChild = child;
+      const child = spawn(command, args, {
+        env: process.env,
+        killSignal: 'SIGKILL',
+        stdio: ['ignore', 'pipe', 'pipe'],
+        timeout: 30_000,
+      });
       let stdout = '';
       let stderr = '';
       child.stdout.setEncoding('utf8');
@@ -248,11 +266,9 @@ class AgentRunner {
         stderr += chunk;
       });
       child.once('error', (error) => {
-        this.activeChild = undefined;
         reject(error);
       });
       child.once('close', (code, signal) => {
-        this.activeChild = undefined;
         resolve({ code: code ?? 1, signal, stdout, stderr });
       });
     });
@@ -261,7 +277,6 @@ class AgentRunner {
   async runCli(args) {
     this.checkSignal();
     const result = await this.exec(this.options.cli, args);
-    this.checkSignal();
     if (result.code !== 0) {
       throw new RunnerError(
         `CLI failed (${result.code}): ${result.stderr.trim() || result.stdout.trim() || args.join(' ')}`,
@@ -327,6 +342,8 @@ class AgentRunner {
   async run() {
     this.installSignalHandlers();
     try {
+      await fs.promises.mkdir(this.options.logDir, { recursive: true });
+      await fs.promises.writeFile(this.pidPath, JSON.stringify({ pid: process.pid }));
       if (!fs.existsSync(this.options.deviceReady)) {
         throw new RunnerError(`lh local device is not ready: ${this.options.deviceReady}`);
       }
@@ -387,8 +404,24 @@ class AgentRunner {
         await this.wait(this.options.pollMs);
       }
     } finally {
-      await this.cleanup();
-      this.removeSignalHandlers();
+      this.cleaningUp = true;
+      try {
+        await this.cleanup();
+      } finally {
+        await fs.promises.rm(this.pidPath, { force: true });
+        this.removeSignalHandlers();
+      }
+    }
+  }
+
+  async stop() {
+    const pid = readJson(this.pidPath)?.pid;
+    if (!pid) return;
+    process.kill(pid, 'SIGTERM');
+    const deadline = Date.now() + 170_000;
+    while (fs.existsSync(this.pidPath)) {
+      if (Date.now() >= deadline) throw new RunnerError('Timed out waiting for runner cleanup');
+      await delay(200);
     }
   }
 
@@ -404,7 +437,7 @@ class AgentRunner {
       if (result.kind === 'unavailable') appendLine(this.statusErrorsLog, result.error);
       return result;
     } catch (error) {
-      if (error instanceof RunnerError && this.signalCode) throw error;
+      if (error instanceof RunnerError && this.signalCode && !this.cleaningUp) throw error;
       appendLine(this.statusErrorsLog, error.message);
       return { kind: 'unavailable', error: error.message };
     }
@@ -464,7 +497,7 @@ class AgentRunner {
           await this.captureSnapshot();
           return true;
         }
-        await this.wait(Math.min(this.options.pollMs, deadline - Date.now()));
+        await this.wait(Math.min(1000, deadline - Date.now()));
       }
     } catch (error) {
       this.log(`Agent interrupt failed: ${error.message}`, true);
@@ -542,6 +575,7 @@ class AgentRunner {
 
     if (!this.deviceId) return;
     if (!this.operationTerminal && !this.interruptConfirmed) {
+      this.cleanupFailure = true;
       this.log(`Keeping device ${this.deviceId}: operation termination was not acknowledged`, true);
       return;
     }
@@ -569,6 +603,7 @@ class AgentRunner {
 async function main() {
   const runner = new AgentRunner(parseArgs(process.argv.slice(2)));
   try {
+    if (runner.options.stop) return await runner.stop();
     await runner.run();
     if (runner.cleanupFailure) process.exitCode = 1;
   } catch (error) {
