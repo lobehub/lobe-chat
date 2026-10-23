@@ -6,17 +6,18 @@ import { topicMapKey } from '@/store/chat/utils/topicMapKey';
 
 const AGENT_ID = 'agent-1';
 const TOPIC_ID = 'topic-1';
+const RUN_TOPIC_ID = 'topic-run';
 const BUCKET = topicMapKey({ agentId: AGENT_ID });
 
-const seedBucket = (status: 'unread' | 'active') =>
+const seedBucket = (status: 'unread' | 'active', id = TOPIC_ID) =>
   useChatStore.setState({
     topicDataMap: {
-      [BUCKET]: { hasMore: false, items: [{ id: TOPIC_ID, status, title: 't' } as any] } as any,
+      [BUCKET]: { hasMore: false, items: [{ id, status, title: 't' } as any] } as any,
     },
   });
 
-const bucketStatus = () =>
-  useChatStore.getState().topicDataMap[BUCKET]?.items?.find((t) => t.id === TOPIC_ID)?.status;
+const bucketStatus = (id = TOPIC_ID) =>
+  useChatStore.getState().topicDataMap[BUCKET]?.items?.find((t) => t.id === id)?.status;
 
 describe('markTopicRead', () => {
   beforeEach(() => {
@@ -77,5 +78,86 @@ describe('markTopicRead', () => {
 
     expect(topicService.updateTopic).not.toHaveBeenCalled();
     expect(bucketStatus()).toBe('unread');
+  });
+
+  /**
+   * @example The user sends a message while the clear is in flight: the clear's
+   * `active` answer is already stale and must not replace the run's status.
+   */
+  it('keeps a run that started while the clear was in flight', async () => {
+    // Pins outlive `setState` resets, so this topic is kept apart from the others.
+    let answer!: (value: any) => void;
+    vi.mocked(topicService.markTopicRead).mockReturnValue(
+      new Promise((resolve) => (answer = resolve)) as any,
+    );
+    seedBucket('unread', RUN_TOPIC_ID);
+
+    const clearing = useChatStore
+      .getState()
+      .markTopicRead({ agentId: AGENT_ID, topicId: RUN_TOPIC_ID });
+    useChatStore
+      .getState()
+      .internal_pinTopicStatus({ agentId: AGENT_ID, status: 'running', topicId: RUN_TOPIC_ID });
+    answer({ id: RUN_TOPIC_ID, status: 'active' });
+    await clearing;
+
+    expect(bucketStatus(RUN_TOPIC_ID)).toBe('running');
+  });
+
+  describe('when the clear fails', () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+      useChatStore.setState({ activeTopicId: TOPIC_ID });
+      vi.spyOn(console, 'error').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    /** @example The open conversation must not stay unread after a dropped request. */
+    it('retries a transient failure while the topic stays open', async () => {
+      vi.mocked(topicService.markTopicRead)
+        .mockRejectedValueOnce(new TypeError('Failed to fetch'))
+        .mockResolvedValueOnce({ id: TOPIC_ID, status: 'active' } as any);
+      seedBucket('unread');
+
+      const clearing = useChatStore
+        .getState()
+        .markTopicRead({ agentId: AGENT_ID, topicId: TOPIC_ID });
+      await vi.runAllTimersAsync();
+      await clearing;
+
+      expect(topicService.markTopicRead).toHaveBeenCalledTimes(2);
+      expect(bucketStatus()).toBe('active');
+    });
+
+    it('does not retry a client error', async () => {
+      vi.mocked(topicService.markTopicRead).mockRejectedValue({ data: { httpStatus: 403 } });
+      seedBucket('unread');
+
+      const clearing = useChatStore
+        .getState()
+        .markTopicRead({ agentId: AGENT_ID, topicId: TOPIC_ID });
+      await vi.runAllTimersAsync();
+      await clearing;
+
+      expect(topicService.markTopicRead).toHaveBeenCalledTimes(1);
+      expect(bucketStatus()).toBe('unread');
+    });
+
+    it('stops retrying once the user leaves the topic', async () => {
+      vi.mocked(topicService.markTopicRead).mockRejectedValue(new TypeError('Failed to fetch'));
+      seedBucket('unread');
+
+      const clearing = useChatStore
+        .getState()
+        .markTopicRead({ agentId: AGENT_ID, topicId: TOPIC_ID });
+      useChatStore.setState({ activeTopicId: 'another-topic' });
+      await vi.runAllTimersAsync();
+      await clearing;
+
+      expect(topicService.markTopicRead).toHaveBeenCalledTimes(1);
+    });
   });
 });

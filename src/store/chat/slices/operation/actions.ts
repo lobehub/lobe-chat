@@ -28,6 +28,14 @@ import {
 } from './types';
 
 const n = setNamespace('operation');
+const MARK_READ_RETRY_BASE_MS = 1000;
+
+/** A network failure (no HTTP status) or a 5xx may pass on retry; a 4xx will not. */
+const isRetryableWriteError = (error: unknown) => {
+  const status = (error as { data?: { httpStatus?: unknown } } | null)?.data?.httpStatus;
+  return typeof status !== 'number' || status >= 500;
+};
+
 const log = debug('lobe-store:operation');
 
 const isSameNullableContextValue = (left?: string | null, right?: string | null): boolean =>
@@ -811,8 +819,9 @@ export class OperationActionsImpl {
    * list topics outside `topicDataMap` (the project sidebar); without it the
    * status is read from the loaded topic buckets. That copy may be stale (a
    * persisted list, another tab), so the server write is conditional on the row
-   * still being unread, and only a write that landed is mirrored locally — a run
-   * started since keeps its `running` status.
+   * still being unread, and the local mirror never outranks a newer transition —
+   * a run started since keeps its `running` status. A transient failure is
+   * retried while the topic stays open, since the callers fire once per open.
    */
   markTopicRead = async ({
     agentId,
@@ -837,19 +846,32 @@ export class OperationActionsImpl {
         : status;
     if (knownStatus !== 'unread') return;
 
-    const cleared = await topicService.markTopicRead(topicId).catch((error) => {
-      console.error('[markTopicRead] persist failed:', error);
-      return null;
-    });
+    const cleared = await this.#clearUnread(topicId);
     if (!cleared) return;
 
-    this.#get().internal_pinTopicStatus?.({
-      agentId,
-      groupId: groupId ?? undefined,
-      status: 'active',
-      topicId,
-    });
+    this.#get().internal_settleTopicRead?.({ agentId, groupId: groupId ?? undefined, topicId });
     void getHomeStoreState().refreshAgentList?.();
+  };
+
+  /**
+   * The conditional server clear, retried with backoff while the topic stays
+   * open. A 4xx will not change on retry, so it ends the attempt.
+   */
+  #clearUnread = async (topicId: string) => {
+    for (let attempt = 0; ; attempt += 1) {
+      try {
+        return await topicService.markTopicRead(topicId);
+      } catch (error) {
+        if (!isRetryableWriteError(error)) {
+          console.error('[markTopicRead] persist failed:', error);
+          return null;
+        }
+        await new Promise((resolve) =>
+          setTimeout(resolve, Math.min(MARK_READ_RETRY_BASE_MS * 2 ** attempt, 30_000)),
+        );
+        if (this.#get().activeTopicId !== topicId) return null;
+      }
+    }
   };
   // ━━━ Message Queue Actions ━━━
 
