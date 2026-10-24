@@ -3,7 +3,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ChannelCoordinator } from './ChannelCoordinator';
 
-const { executions, executeToolCall } = vi.hoisted(() => ({
+const { executions, executeToolCall, interruptTask } = vi.hoisted(() => ({
+  interruptTask: vi.fn().mockResolvedValue({ success: true }),
   executions: {
     publish: vi.fn(),
     releaseWriter: vi.fn(),
@@ -18,7 +19,11 @@ vi.mock('@/database/repositories/channel', () => ({
     }
   },
 }));
-vi.mock('@/server/services/aiAgent', () => ({ AiAgentService: class {} }));
+vi.mock('@/server/services/aiAgent', () => ({
+  AiAgentService: class {
+    interruptTask = interruptTask;
+  },
+}));
 vi.mock('@/server/services/deviceGateway', () => ({ deviceGateway: { executeToolCall } }));
 vi.mock('@/server/globalConfig', () => ({ getServerDefaultAgentConfig: vi.fn() }));
 vi.mock('@/server/services/deviceGateway/scopedDevices', () => ({
@@ -32,7 +37,7 @@ vi.mock('./queue', () => ({ registerLocalChannelAdvance: vi.fn(), wakeChannel: v
 describe('Channel completion physical writer confirmation', () => {
   beforeEach(() => vi.clearAllMocks());
 
-  const coordinator = (publicationRevoked = false) => {
+  const coordinator = (publicationRevoked = false, runtime = 'codex') => {
     const job = {
       channelId: 'channel',
       draft: 'Final reply',
@@ -49,7 +54,7 @@ describe('Channel completion physical writer confirmation', () => {
         ...job,
         job,
         operation,
-        config: { runtime: 'codex', deviceId: 'device', deviceOwnerId: 'owner' },
+        config: { runtime, deviceId: 'device', deviceOwnerId: 'owner' },
       },
     ];
     const query = Object.assign(Promise.resolve(rows), {
@@ -78,6 +83,22 @@ describe('Channel completion physical writer confirmation', () => {
   it('releases a completed writer only after the device confirms termination', async () => {
     executeToolCall.mockResolvedValue({ success: true, state: { exited: true } });
     await coordinator().complete('channel', 'job', 'op');
+    expect(executeToolCall).toHaveBeenCalled();
+    expect(executions.releaseWriter).toHaveBeenCalledWith('channel', 'job');
+  });
+
+  it.each([false, true])(
+    'does not release a Native writer on runtime interruption alone (revoked: %s)',
+    async (revoked) => {
+      executeToolCall.mockResolvedValue({ success: true, state: { exited: false } });
+      await coordinator(revoked, 'native').complete('channel', 'job', 'op');
+      expect(executions.releaseWriter).not.toHaveBeenCalled();
+    },
+  );
+
+  it('releases a Native writer only after its device tools and processes have drained', async () => {
+    executeToolCall.mockResolvedValue({ success: true, state: { exited: true } });
+    await coordinator(true, 'native').complete('channel', 'job', 'op');
     expect(executeToolCall).toHaveBeenCalled();
     expect(executions.releaseWriter).toHaveBeenCalledWith('channel', 'job');
   });

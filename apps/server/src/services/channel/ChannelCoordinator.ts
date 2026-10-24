@@ -138,6 +138,19 @@ export class ChannelCoordinator {
           }),
     };
     try {
+      if (config.runtime === 'native' && config.deviceId) {
+        const scope = await deviceGateway.executeToolCall(
+          {
+            deviceId: config.deviceId,
+            operationId: job.operationId,
+            userId: config.deviceOwnerId ?? topic.userId,
+            workspaceId: workspaceId ?? undefined,
+          },
+          { apiName: 'beginNativeOperation', arguments: '{}', identifier: 'lobe-local-system' },
+        );
+        if (!scope.success || !isRecord(scope.state) || scope.state.registered !== true)
+          throw new Error('Device cannot track Native operation lifetime; update its client');
+      }
       const input = await this.executions.input(job.channelId, job.id);
       const attachments = await resolveChannelAttachments(
         this.db,
@@ -266,10 +279,25 @@ export class ChannelCoordinator {
           topicId: row.operation.topicId ?? undefined,
         });
         if (
-          result.success ||
-          ['done', 'error', 'interrupted', 'abandoned'].includes(row.operation.status)
+          !result.success &&
+          !['done', 'error', 'interrupted', 'abandoned'].includes(row.operation.status)
         )
-          await this.executions.releaseWriter(job.channelId, job.id);
+          continue;
+        if (row.config.deviceId) {
+          const stopped = await deviceGateway.executeToolCall(
+            {
+              deviceId: row.config.deviceId,
+              operationId: job.operationId,
+              userId: row.config.deviceOwnerId ?? row.operation.userId,
+              workspaceId: row.operation.workspaceId ?? undefined,
+            },
+            { apiName: 'cancelNativeOperation', arguments: '{}', identifier: 'lobe-local-system' },
+            10_000,
+          );
+          if (!stopped.success || !isRecord(stopped.state) || stopped.state.exited !== true)
+            continue;
+        }
+        await this.executions.releaseWriter(job.channelId, job.id);
       } else if (row.config?.deviceId) {
         // Use the frozen identity even if runtime cleanup already removed the topic marker.
         const result = await deviceGateway.executeToolCall(
