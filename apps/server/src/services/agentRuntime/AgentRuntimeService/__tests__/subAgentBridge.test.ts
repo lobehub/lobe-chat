@@ -719,6 +719,68 @@ describe('AgentRuntimeService', () => {
         expect(deliver).toHaveBeenCalled();
       });
 
+      it('gates the finished answer through afterToolCall before storing and delivering it', async () => {
+        // The answer never returns through ServerToolTransport: the delivery
+        // below publishes it into the parent conversation, so the controls have
+        // to be applied to the stored result — not only to the start receipt.
+        const privateContent = 'synthetic-private-background-answer';
+        const denialReason = 'The child result is restricted by policy.';
+        const stored: any = {
+          apiName: 'callSubAgent',
+          arguments: '{"instruction":"original"}',
+          id: 'tool-msg-1',
+          identifier: 'lobe-agent',
+          state: { background: true, status: 'pending' },
+          toolCallId: 'native-child',
+        };
+        (service as any).messageModel.findMessagePlugin = vi.fn(async () => stored);
+        (service as any).messageModel.findById = vi
+          .fn()
+          .mockResolvedValue({ id: 'tool-msg-1', parentId: 'assistant', topicId: 'topic-1' });
+        const fetchHook = vi
+          .spyOn(globalThis, 'fetch')
+          .mockImplementation(
+            async () => new Response(JSON.stringify({ decision: 'deny', reason: denialReason })),
+          );
+        mockCoordinator.loadAgentState.mockResolvedValue({
+          operationId: 'parent-op-1',
+          stepCount: 3,
+          host: {
+            hooks: [
+              {
+                id: 'after-control',
+                type: 'afterToolCall',
+                webhook: { url: 'https://hooks.example/control', responseHandling: 'toolCall' },
+              },
+            ],
+          },
+        });
+
+        try {
+          const won = await service.completeSubAgentBridge({
+            ...bridgeParams,
+            finalState: {
+              ...childState,
+              messages: [{ content: privateContent, role: 'assistant' }],
+            } as any,
+          });
+
+          expect(won).toBe(false);
+          expect(JSON.parse(String(fetchHook.mock.calls[0][1]?.body))).toMatchObject({
+            result: { content: expect.stringContaining(privateContent) },
+          });
+          // The denied answer must not reach the placeholder the delivery reads.
+          expect(JSON.stringify(updateToolMessage.mock.calls)).not.toContain(privateContent);
+          expect(updateToolMessage).toHaveBeenCalledWith('tool-msg-1', {
+            pluginError: 'hook_denied',
+            pluginState: expect.objectContaining({ result: denialReason, status: 'error' }),
+          });
+          expect(deliver).toHaveBeenCalledWith({ topicId: 'topic-1' });
+        } finally {
+          fetchHook.mockRestore();
+        }
+      });
+
       it('throws when the answer cannot be stored, so the callback is redelivered', async () => {
         updateToolMessage.mockResolvedValue({ success: false });
 

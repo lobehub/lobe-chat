@@ -180,11 +180,37 @@ export async function completeSubAgentBridge(
   // the start receipt the parent already read, so the answer is kept for a
   // delivery of its own instead of a backfill + resume.
   if (await isBackgroundSubAgentPlaceholder(deps, toolMessageId)) {
+    // The answer is published into the parent's conversation on a later turn,
+    // so the result controls must run here too: otherwise an `afterToolCall`
+    // policy sees the start receipt and never the finished output it could
+    // deny, and both the stored answer and the message the delivery writes
+    // would carry content the policy had replaced.
+    const controlled = await deps.controlCompletedToolResult({
+      operationId: parentOperationId,
+      preserveUsage: true,
+      result: {
+        content: resultContent,
+        error: failed ? formatErrorForMetadata(finalState?.error ?? params.errorMessage) : undefined,
+        state: {
+          model: finalState?.modelRuntimeConfig?.model,
+          status: failed ? 'error' : 'completed',
+          threadId,
+          totalCost: finalState?.cost?.total,
+          totalInputTokens: finalState?.usage?.llm?.tokens?.input,
+          totalOutputTokens: finalState?.usage?.llm?.tokens?.output,
+          totalToolCalls: finalState?.usage?.tools?.totalCalls,
+          totalTokens: finalState?.usage?.llm?.tokens?.total,
+        },
+        success: !failed,
+      },
+      toolMessageId,
+    });
+
     await recordBackgroundSubAgentResult(deps, {
-      error: failed ? formatErrorForMetadata(finalState?.error ?? params.errorMessage) : undefined,
+      error: controlled.result.error,
       finalState,
-      result: resultContent,
-      status: failed ? 'error' : 'completed',
+      result: controlled.result.content,
+      status: failed || controlled.blocked || controlled.cancelled ? 'error' : 'completed',
       threadId,
       toolMessageId,
     });
