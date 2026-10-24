@@ -7,6 +7,7 @@ import {
   Flexbox,
   Icon,
   Input,
+  Progress,
   Switch,
   Tag,
   Text,
@@ -16,39 +17,41 @@ import {
 import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
 import * as stylex from '@stylexjs/stylex';
 import dayjs from 'dayjs';
-import { CalendarDaysIcon, CheckIcon, MoreHorizontalIcon, PencilIcon, XIcon } from 'lucide-react';
-import { type ReactNode, useState } from 'react';
+import { CheckIcon, MoreHorizontalIcon, PanelRightOpenIcon, PencilIcon, XIcon } from 'lucide-react';
+import { type CSSProperties, type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { openQuotaCalendarModal } from '@/features/AgentQuotaCalendar';
-import { formatPercent, usageLevel } from '@/features/DeviceManager/DeviceHealth/format';
-import { usageTextColor } from '@/features/DeviceManager/DeviceHealth/shared';
-import { UsageBar } from '@/features/DeviceManager/DeviceHealth/UsageMeter';
+import {
+  formatPercent,
+  type UsageLevel,
+  usageLevel,
+} from '@/features/DeviceManager/DeviceHealth/format';
 import { type QuotaAccount, useAgentQuotaStore } from '@/store/agentQuota';
 
 import { type AccountStatus, deriveAccountView, type SubscriptionProvider } from './accountView';
 
 /** Column widths shared by {@link AccountRow} and {@link AccountListHeader}. */
 export const COLUMN_WIDTH = {
+  account: 220,
   actions: 28,
-  meter: 160,
+  meter: 120,
   rotation: 64,
-  status: 200,
+  status: 180,
 } as const;
 
 /**
- * Narrowest the list may get before it scrolls sideways instead: the fixed
- * columns, the 16px gaps between the six columns, the row padding, and room
- * for an account name. Below this the rotation switch and menu would clip.
+ * Narrowest the list may get before it scrolls sideways instead: every
+ * column at its minimum, the 16px gaps between the six columns and the row
+ * padding. Below this the rotation switch and menu would clip.
  */
 export const LIST_MIN_WIDTH =
   COLUMN_WIDTH.meter * 2 +
   COLUMN_WIDTH.status +
   COLUMN_WIDTH.rotation +
   COLUMN_WIDTH.actions +
+  COLUMN_WIDTH.account +
   16 * 5 +
-  12 * 2 +
-  200;
+  12 * 2;
 
 const styles = stylex.create({
   presence: (color: string) => ({
@@ -91,10 +94,16 @@ const STATUS_COLOR: Record<AccountStatus, string> = {
   noData: cssVar.colorTextQuaternary,
 };
 
-const accountDisplayName = (account: QuotaAccount) =>
+const LEVEL_COLOR: Record<UsageLevel, string> = {
+  critical: cssVar.colorError,
+  high: cssVar.colorWarning,
+  normal: cssVar.colorSuccess,
+};
+
+export const accountDisplayName = (account: QuotaAccount) =>
   account.label || account.email || account.externalAccountId || account.id;
 
-/** One window's usage: a segmented bar with its percentage, `—` before any reading. */
+/** One window's usage: a thin bar with its percentage, `—` before any reading. */
 const WindowMeter = ({ value }: { value?: number }) => {
   const level = usageLevel(value);
   return (
@@ -104,13 +113,17 @@ const WindowMeter = ({ value }: { value?: number }) => {
       gap={8}
       style={{ flex: 'none', width: COLUMN_WIDTH.meter }}
     >
-      <Flexbox flex={1} style={{ minWidth: 0 }}>
-        <UsageBar height={10} value={value} />
-      </Flexbox>
+      <Progress
+        percent={value ?? 0}
+        showInfo={false}
+        size={'small'}
+        strokeColor={level ? LEVEL_COLOR[level] : undefined}
+        style={{ flex: 1, marginBottom: 0, minWidth: 0 }}
+      />
       <Text
         fontSize={12}
-        style={{ color: usageTextColor(level), flex: 'none', textAlign: 'end', width: 36 }}
-        type={level ? undefined : 'secondary'}
+        style={{ flex: 'none', textAlign: 'end', whiteSpace: 'nowrap', width: 36 }}
+        type={'secondary'}
       >
         {formatPercent(value)}
       </Text>
@@ -121,24 +134,26 @@ const WindowMeter = ({ value }: { value?: number }) => {
 /** Column labels, aligned with {@link AccountRow} through {@link COLUMN_WIDTH}. */
 export const AccountListHeader = () => {
   const { t } = useTranslation('setting');
-  const label = (text: string, width?: number) => (
-    <Text
-      ellipsis
-      fontSize={12}
-      style={width ? { flex: 'none', width } : { flex: 1, minWidth: 0 }}
-      type={'secondary'}
-    >
+  // Account and status share the spare width (2:1); the rest keep fixed widths.
+  const label = (text: string, style: CSSProperties) => (
+    <Text ellipsis fontSize={12} style={style} type={'secondary'}>
       {text}
     </Text>
   );
 
   return (
     <Flexbox horizontal align={'center'} gap={16} paddingInline={12} style={{ paddingBlock: 4 }}>
-      {label(t('subscriptionAccounts.columns.account'))}
-      {label(t('subscriptionAccounts.meter.session'), COLUMN_WIDTH.meter)}
-      {label(t('subscriptionAccounts.meter.weekly'), COLUMN_WIDTH.meter)}
-      {label(t('subscriptionAccounts.columns.status'), COLUMN_WIDTH.status)}
-      {label(t('subscriptionAccounts.columns.rotation'), COLUMN_WIDTH.rotation)}
+      {label(t('subscriptionAccounts.columns.account'), {
+        flex: 2,
+        minWidth: COLUMN_WIDTH.account,
+      })}
+      {label(t('subscriptionAccounts.columns.status'), { flex: 1, minWidth: COLUMN_WIDTH.status })}
+      {label(t('subscriptionAccounts.meter.session'), { flex: 'none', width: COLUMN_WIDTH.meter })}
+      {label(t('subscriptionAccounts.meter.weekly'), { flex: 'none', width: COLUMN_WIDTH.meter })}
+      {label(t('subscriptionAccounts.columns.rotation'), {
+        flex: 'none',
+        width: COLUMN_WIDTH.rotation,
+      })}
       <span style={{ flex: 'none', width: COLUMN_WIDTH.actions }} />
     </Flexbox>
   );
@@ -146,9 +161,11 @@ export const AccountListHeader = () => {
 
 interface AccountRowProps {
   account: QuotaAccount & { provider: SubscriptionProvider };
+  /** Open this account's side panel. */
+  onOpen: () => void;
 }
 
-const AccountRow = ({ account }: AccountRowProps) => {
+const AccountRow = ({ account, onOpen }: AccountRowProps) => {
   const { t } = useTranslation('setting');
   const { t: tCommon } = useTranslation('common');
   const [useFetchQuotaReadings, renameQuotaAccount, setQuotaAccountEnabled] = useAgentQuotaStore(
@@ -181,12 +198,6 @@ const AccountRow = ({ account }: AccountRowProps) => {
     }
   };
 
-  const openCalendar = () =>
-    openQuotaCalendarModal({
-      externalAccountId: account.externalAccountId ?? undefined,
-      provider: account.provider,
-    });
-
   const startEdit = () => {
     setDraft(account.label ?? '');
     setEditing(true);
@@ -217,7 +228,7 @@ const AccountRow = ({ account }: AccountRowProps) => {
     }
   })();
 
-  // Controls inside the row keep their clicks from opening the calendar.
+  // Controls inside the row keep their clicks from opening the side panel.
   const stop = {
     onClick: (e: { stopPropagation: () => void }) => e.stopPropagation(),
     onKeyDown: (e: { stopPropagation: () => void }) => e.stopPropagation(),
@@ -228,11 +239,11 @@ const AccountRow = ({ account }: AccountRowProps) => {
       {...stylex.props(styles.row)}
       role={'button'}
       tabIndex={0}
-      onClick={editing ? undefined : openCalendar}
+      onClick={editing ? undefined : onOpen}
       onKeyDown={(e) => {
         if (e.key === 'Enter' && e.target === e.currentTarget) {
           e.preventDefault();
-          openCalendar();
+          onOpen();
         }
       }}
     >
@@ -241,7 +252,11 @@ const AccountRow = ({ account }: AccountRowProps) => {
         align={'center'}
         gap={12}
         // Out of rotation reads as dimmed, not hidden: the admin still sees what it holds.
-        style={{ flex: 1, minWidth: 0, opacity: view.status === 'disabled' ? 0.55 : undefined }}
+        style={{
+          flex: 2,
+          minWidth: COLUMN_WIDTH.account,
+          opacity: view.status === 'disabled' ? 0.55 : undefined,
+        }}
       >
         <span style={{ display: 'flex', flex: 'none' }}>{meta.icon(28)}</span>
         <Flexbox gap={2} style={{ minWidth: 0 }}>
@@ -291,20 +306,20 @@ const AccountRow = ({ account }: AccountRowProps) => {
         </Flexbox>
       </Flexbox>
 
-      <WindowMeter value={view.session?.usedPercent} />
-      <WindowMeter value={view.weekly?.usedPercent} />
-
       <Flexbox
         horizontal
         align={'center'}
         gap={8}
-        style={{ flex: 'none', width: COLUMN_WIDTH.status }}
+        style={{ flex: 1, minWidth: COLUMN_WIDTH.status }}
       >
         <span aria-hidden {...stylex.props(styles.presence(STATUS_COLOR[view.status]))} />
         <Text ellipsis fontSize={12} title={statusText} type={'secondary'}>
           {statusText}
         </Text>
       </Flexbox>
+
+      <WindowMeter value={view.session?.usedPercent} />
+      <WindowMeter value={view.weekly?.usedPercent} />
 
       <Flexbox horizontal style={{ flex: 'none', width: COLUMN_WIDTH.rotation }} {...stop}>
         <Tooltip title={t('subscriptionAccounts.rotationTooltip')}>
@@ -323,10 +338,10 @@ const AccountRow = ({ account }: AccountRowProps) => {
           placement={'bottomRight'}
           items={[
             {
-              icon: <Icon icon={CalendarDaysIcon} />,
-              key: 'usage',
-              label: t('subscriptionAccounts.actions.viewUsage'),
-              onClick: openCalendar,
+              icon: <Icon icon={PanelRightOpenIcon} />,
+              key: 'details',
+              label: t('subscriptionAccounts.actions.viewDetails'),
+              onClick: onOpen,
             },
             {
               icon: <Icon icon={PencilIcon} />,

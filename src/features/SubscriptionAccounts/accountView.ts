@@ -110,3 +110,15 @@ export const sortAccounts = <
       (PROVIDER_ORDER[a.provider] ?? 99) - (PROVIDER_ORDER[b.provider] ?? 99) ||
       (a.label || a.email || '').localeCompare(b.label || b.email || ''),
   );
+
+/** Whether an account matches the search box: name, email or plan, case-insensitive. */
+export const matchesKeyword = (
+  account: { email?: string | null; label?: string | null; planTier?: string | null },
+  keyword: string,
+): boolean => {
+  const needle = keyword.trim().toLowerCase();
+  if (!needle) return true;
+  return [account.label, account.email, account.planTier].some((field) =>
+    field?.toLowerCase().includes(needle),
+  );
+};

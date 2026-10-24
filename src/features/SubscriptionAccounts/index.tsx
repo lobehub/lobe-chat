@@ -1,6 +1,6 @@
 'use client';
 
-import { ActionIcon, Button, Empty, Flexbox, Segmented, Text } from '@lobehub/ui';
+import { ActionIcon, Button, Empty, Flexbox, SearchBar, Select, Text } from '@lobehub/ui';
 import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
 import { RefreshCwIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -10,9 +10,11 @@ import SkeletonBar from '@/components/Skeleton/Bar';
 import { cacheScope } from '@/libs/replica';
 import { agentQuotaSelectors, type QuotaAccount, useAgentQuotaStore } from '@/store/agentQuota';
 
+import AccountDetailDrawer from './AccountDetailDrawer';
 import AccountRow, { AccountListHeader, LIST_MIN_WIDTH, PROVIDER_NAME } from './AccountRow';
 import {
   isSubscriptionProvider,
+  matchesKeyword,
   sortAccounts,
   SUBSCRIPTION_PROVIDERS,
   type SubscriptionProvider,
@@ -38,6 +40,8 @@ const SubscriptionAccounts = () => {
   const confirmed = useAgentQuotaStore(agentQuotaSelectors.isAccountsConfirmed(scope));
   const loaded = useAgentQuotaStore(agentQuotaSelectors.accounts);
   const [provider, setProvider] = useState<SubscriptionProvider | typeof ALL>(ALL);
+  const [keyword, setKeyword] = useState('');
+  const [openId, setOpenId] = useState<string>();
 
   const accounts = sortAccounts(
     (loaded ?? []).filter((a): a is ProviderAccount => isSubscriptionProvider(a.provider)),
@@ -45,7 +49,10 @@ const SubscriptionAccounts = () => {
   const present = SUBSCRIPTION_PROVIDERS.filter((p) => accounts.some((a) => a.provider === p));
   // A provider filter that no longer has accounts falls back to everything.
   const active = provider !== ALL && present.includes(provider) ? provider : ALL;
-  const visible = active === ALL ? accounts : accounts.filter((a) => a.provider === active);
+  const visible = accounts.filter(
+    (a) => (active === ALL || a.provider === active) && matchesKeyword(a, keyword),
+  );
+  const openAccount = accounts.find((a) => a.id === openId);
   const inRotation = accounts.filter((a) => a.enabled !== false).length;
 
   // The meters read each account's own readings, which the list sync does not
@@ -90,8 +97,11 @@ const SubscriptionAccounts = () => {
       <Flexbox gap={2} style={{ minWidth: LIST_MIN_WIDTH }}>
         <AccountListHeader />
         {visible.map((account) => (
-          <AccountRow account={account} key={account.id} />
+          <AccountRow account={account} key={account.id} onOpen={() => setOpenId(account.id)} />
         ))}
+        {visible.length === 0 && (
+          <Empty description={t('subscriptionAccounts.filterEmpty')} style={{ paddingBlock: 40 }} />
+        )}
       </Flexbox>
     </div>
   );
@@ -99,34 +109,47 @@ const SubscriptionAccounts = () => {
   return (
     <Flexbox gap={16} width={'100%'}>
       <Flexbox horizontal align={'center'} gap={12} justify={'space-between'} wrap={'wrap'}>
-        <Flexbox horizontal align={'center'} gap={12}>
-          {present.length > 1 && (
-            <Segmented
-              value={active}
-              options={[
-                { label: `${t('subscriptionAccounts.filter.all')} ${accounts.length}`, value: ALL },
-                ...present.map((p) => ({
-                  label: `${PROVIDER_NAME[p]} ${accounts.filter((a) => a.provider === p).length}`,
-                  value: p,
-                })),
-              ]}
-              onChange={(value) => setProvider(value as SubscriptionProvider | typeof ALL)}
-            />
-          )}
-          {accounts.length > 0 && (
-            <Text fontSize={13} type={'secondary'}>
-              {t('subscriptionAccounts.summary', { count: accounts.length, inRotation })}
-            </Text>
-          )}
+        <Text fontSize={13} type={'secondary'}>
+          {accounts.length > 0 &&
+            t('subscriptionAccounts.summary', { count: accounts.length, inRotation })}
+        </Text>
+        {/* Filters sit on the right as a dropdown: the provider list grows with
+            every coding plan we support, which a segmented control cannot hold. */}
+        <Flexbox horizontal align={'center'} gap={8}>
+          <SearchBar
+            allowClear
+            placeholder={t('subscriptionAccounts.searchPlaceholder')}
+            style={{ width: 240 }}
+            value={keyword}
+            variant={'filled'}
+            onChange={(e) => setKeyword(e.target.value)}
+          />
+          <Select
+            style={{ minWidth: 168 }}
+            value={active}
+            variant={'filled'}
+            options={[
+              {
+                label: `${t('subscriptionAccounts.filter.all')} · ${accounts.length}`,
+                value: ALL,
+              },
+              ...present.map((p) => ({
+                label: `${PROVIDER_NAME[p]} · ${accounts.filter((a) => a.provider === p).length}`,
+                value: p,
+              })),
+            ]}
+            onChange={(value) => setProvider(value as SubscriptionProvider | typeof ALL)}
+          />
+          <ActionIcon
+            icon={RefreshCwIcon}
+            loading={isValidating || refreshing}
+            title={t('subscriptionAccounts.refresh')}
+            onClick={() => void refresh()}
+          />
         </Flexbox>
-        <ActionIcon
-          icon={RefreshCwIcon}
-          loading={isValidating || refreshing}
-          title={t('subscriptionAccounts.refresh')}
-          onClick={() => void refresh()}
-        />
       </Flexbox>
       {body}
+      <AccountDetailDrawer account={openAccount} onClose={() => setOpenId(undefined)} />
     </Flexbox>
   );
 };

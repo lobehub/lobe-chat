@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { deriveAccountView, sortAccounts } from './accountView';
+import { deriveAccountView, matchesKeyword, sortAccounts } from './accountView';
 
 const NOW = Date.UTC(2026, 9, 24, 12);
 const HOUR = 60 * 60 * 1000;
@@ -83,5 +83,20 @@ describe('sortAccounts', () => {
     ]);
 
     expect(sorted.map((a) => a.email)).toEqual(['a@x.com', 'c@x.com', 'b@x.com', 'z@x.com']);
+  });
+});
+
+describe('matchesKeyword', () => {
+  const account = { email: 'Dev@Example.com', label: 'Team Max', planTier: 'max' };
+
+  it('matches the label, email or plan regardless of case', () => {
+    expect(matchesKeyword(account, 'team')).toBe(true);
+    expect(matchesKeyword(account, 'dev@example')).toBe(true);
+    expect(matchesKeyword(account, 'MAX')).toBe(true);
+  });
+
+  it('keeps every account for a blank keyword and drops non-matches', () => {
+    expect(matchesKeyword(account, '  ')).toBe(true);
+    expect(matchesKeyword(account, 'codex')).toBe(false);
   });
 });

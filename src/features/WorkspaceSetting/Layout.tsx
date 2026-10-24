@@ -46,9 +46,13 @@ const COMPACT_HEADER_TABS = new Set<string>([
 
 /**
  * Tabs whose content spans the full pane instead of the centered 1024 column —
- * card grids that add columns as the pane widens (Devices).
+ * card grids that add columns as the pane widens (Devices), and the
+ * subscription account list, whose usage columns need the room.
  */
-const FULL_WIDTH_TABS = new Set<string>([WorkspaceSettingsTabs.Devices]);
+const FULL_WIDTH_TABS = new Set<string>([
+  WorkspaceSettingsTabs.Devices,
+  WorkspaceSettingsTabs.SubscriptionAccounts,
+]);
 
 const outletContainerStyle: CSSProperties = { overflow: 'hidden', position: 'relative' };
 
