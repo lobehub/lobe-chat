@@ -15,7 +15,7 @@ import { MemberStatus } from './MemberStatus';
 import { styles } from './styles';
 import { THREAD_FLOAT_BREAKPOINT, ThreadPanel } from './ThreadPanel';
 
-/** One Channel inside an Agent group: the main conversation, with a thread beside it. */
+/** One Channel: the main conversation, with a thread beside it. */
 export default function ChannelPage() {
   const { t } = useTranslation('channel');
   const { channelId } = useParams<{ channelId: string }>();

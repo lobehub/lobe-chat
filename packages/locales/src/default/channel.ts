@@ -14,10 +14,6 @@ export default {
   'unnamedAgent': 'Unnamed Agent',
   'person': 'Person',
   'cancel': 'Cancel',
-  'tabs.group': 'Group',
-  'tabs.channel': 'Channels',
-  'emptyTitle': 'A shared space for people and Agents',
-  'emptyDescription': 'Create a channel, bring in Agents, and work through a topic together.',
   'environmentHint':
     'Native Agents can reply without a device. Coding Agents need an online device and a working directory.',
   'directoryRequired': 'Choose a working directory for each device.',

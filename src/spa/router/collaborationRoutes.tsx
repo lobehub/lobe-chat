@@ -1,10 +1,10 @@
 import type { RouteObject } from 'react-router';
 
 import { agentsRouteMeta } from '@/features/AgentViewAll/routeMeta';
-import { channelRouteMeta, channelsRouteMeta } from '@/features/Channels/routeMeta';
+import { channelRouteMeta } from '@/features/Channels/routeMeta';
 import { dashboardRouteMeta, dashboardsRouteMeta } from '@/features/Dashboard/routeMeta';
 import { projectsRouteMeta } from '@/features/Projects/routeMeta';
-import { dynamicElement, dynamicLayout, ErrorBoundary } from '@/utils/router';
+import { dynamicElement, dynamicLayout, ErrorBoundary, redirectElement } from '@/utils/router';
 
 export const collaborationRoutes: RouteObject[] = [
   // Agents view-all route (flat list of workspace/private agents)
@@ -69,26 +69,23 @@ export const collaborationRoutes: RouteObject[] = [
     errorElement: <ErrorBoundary resetPath=".." />,
     path: 'dashboard',
   },
-];
 
-/** Channels sit under an Agent group's Channel tab; a thread opens beside its channel via `?thread=`. */
-export const groupChannelRoutes: RouteObject[] = [
+  // Channels are listed in the home sidebar; a thread opens beside its Channel via `?thread=`.
   {
-    element: dynamicElement(
-      () => import('@/routes/(main)/group/channel'),
-      'Desktop > Agent Group > Channels',
-      { preloadId: 'group' },
-    ),
-    handle: { meta: channelsRouteMeta },
-    path: 'channel',
-  },
-  {
-    element: dynamicElement(
-      () => import('@/routes/(main)/group/channel/[channelId]'),
-      'Desktop > Agent Group > Channel',
-      { preloadId: 'group' },
-    ),
-    handle: { meta: channelRouteMeta },
-    path: 'channel/:channelId',
+    children: [
+      // No collection page: old `/channels` links return home, where the list lives.
+      { element: redirectElement('..'), index: true },
+      {
+        element: dynamicElement(
+          () => import('@/routes/(main)/channels/[channelId]'),
+          'Desktop > Channel',
+          { preloadId: 'channels' },
+        ),
+        handle: { meta: channelRouteMeta },
+        path: ':channelId',
+      },
+    ],
+    errorElement: <ErrorBoundary resetPath=".." />,
+    path: 'channels',
   },
 ];
