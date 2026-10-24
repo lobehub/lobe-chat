@@ -5,9 +5,9 @@ import { getTestDB } from '@lobechat/database/test-utils';
 import { eq, sql } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { GoalModel } from '@/database/models/goal';
 import { MetricModel } from '@/database/models/metric';
 import { WidgetModel } from '@/database/models/widget';
+import { GoalRepository } from '@/database/repositories/goal';
 import {
   goals,
   goalSubscriptions,
@@ -187,7 +187,10 @@ describe('durable Widget to Goal subscriptions', () => {
       const healthy = await fixture();
       await db
         .update(goalSubscriptions)
-        .set({ goalId: invalid.goal.id, criterionKey: null })
+        .set({
+          goalId: invalid.goal.id,
+          binding: { ...healthy.sub.binding, criterionKey: undefined },
+        })
         .where(eq(goalSubscriptions.id, healthy.sub.id));
       const run = await reserve(healthy);
       await finish(healthy, run);
@@ -353,7 +356,7 @@ describe('durable Widget to Goal subscriptions', () => {
         confirmedContentHash: f.version.contentHash,
       });
       await service.update({ ...policy, id: otherBinding.id, bindingRevision: 1, enabled: true });
-      await new GoalModel(db, owner).updateStatus(f.goal.id, status);
+      await new GoalRepository(db, owner).updateStatus(f.goal.id, status);
       const stopped = (await service.list(f.goal.id))[0].subscription;
       expect(stopped.enabled).toBe(false);
       expect(stopped.cursor.pendingWake).toBeUndefined();

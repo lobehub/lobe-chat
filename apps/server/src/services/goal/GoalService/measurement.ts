@@ -8,8 +8,8 @@ import type {
 } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 
-import { GoalModel } from '@/database/models/goal';
 import { MetricModel } from '@/database/models/metric';
+import { GoalRepository } from '@/database/repositories/goal';
 
 import {
   compareMetric,
@@ -239,7 +239,7 @@ const updateMetricCriteria = async (
   // their list from the same snapshot would otherwise race, resurrecting a
   // removed clause or dropping a newly declared one.
   await ctx.db.transaction(async (tx) => {
-    const model = new GoalModel(tx, ctx.userId, ctx.workspaceId);
+    const model = new GoalRepository(tx, ctx.userId, ctx.workspaceId);
     const goal = await model.lockById(goalId);
     if (!goal) throw new TRPCError({ code: 'NOT_FOUND', message: 'Goal not found' });
     const next = edit(goal.config?.acceptance?.metrics ?? []);
