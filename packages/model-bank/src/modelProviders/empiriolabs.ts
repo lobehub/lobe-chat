@@ -7,7 +7,7 @@ const EmpirioLabs: ModelProviderCard = {
   chatModels: empiriolabsChatModelList,
   checkModel: 'gemma-4-26b-a4b',
   description:
-    'EmpirioLabs AI hosts open, proprietary, and custom models (Qwen, DeepSeek, GLM, Kimi, MiniMax, Gemma, and more) behind one OpenAI-compatible API with pay-as-you-go pricing.',
+    'EmpirioLabs AI is specialized AI model hosting for open, proprietary, and custom stacks.',
   id: 'empiriolabs',
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://empiriolabs.ai/models',

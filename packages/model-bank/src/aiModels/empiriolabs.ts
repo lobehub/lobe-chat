@@ -45,17 +45,18 @@ const empiriolabsChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      vision: true,
     },
     contextWindowTokens: 1_000_000,
     description:
-      'Lightweight MoE model with 284B total / 13B active parameters and native 1M context, tuned for low-latency, cost-effective high-concurrency use.',
-    displayName: 'DeepSeek V4 Flash',
-    id: 'deepseek-v4-flash',
+      "Lightweight flagship of DeepSeek's new architecture with native image understanding, hybrid thinking, 1M context, and up to 384K output tokens.",
+    displayName: 'DeepSeek V4.1 Flash',
+    id: 'deepseek-v4-1-flash',
     maxOutput: 393_216,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.14, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.28, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
