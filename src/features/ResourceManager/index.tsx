@@ -14,6 +14,7 @@ import dynamic from '@/libs/next/dynamic';
 import { invalidateDocumentMutation } from '@/services/document/invalidation';
 import { useFileStore } from '@/store/file';
 import { documentSelectors } from '@/store/file/slices/document/selectors';
+import { pageSelectors, usePageStore } from '@/store/page';
 
 import FileEditor from './components/Editor';
 import Explorer from './components/Explorer';
@@ -85,6 +86,12 @@ const ResourceManager = memo<ResourceManagerProps>(({ content, explorerHero }) =
     ]);
 
   const currentDocument = useFileStore(documentSelectors.getDocumentById(currentViewItemId));
+  // The sidebar row the page was opened from already knows its title and emoji;
+  // without it the header reads "Untitled" until the page fetch lands.
+  const [listedTitle, listedEmoji] = usePageStore((s) => {
+    const row = pageSelectors.getDocumentById(currentViewItemId)(s);
+    return [row?.title, row?.metadata?.emoji as string | undefined] as const;
+  });
   const useFetchDocumentDetail = useFileStore((s) => s.useFetchDocumentDetail);
   const { allowed: canUpload } = usePermission('create_content');
   const uploadTopLevel = useTopLevelFileUpload();
@@ -159,10 +166,10 @@ const ResourceManager = memo<ResourceManagerProps>(({ content, explorerHero }) =
           {mode === 'page' && (
             <Flexbox className={styles.pageEditorOverlay}>
               <PageEditor
-                emoji={currentDocument?.metadata?.emoji as string | undefined}
+                emoji={(currentDocument?.metadata?.emoji as string | undefined) ?? listedEmoji}
                 knowledgeBaseId={libraryId}
                 pageId={currentViewItemId}
-                title={currentDocument?.title}
+                title={currentDocument?.title ?? (listedTitle || undefined)}
                 onBack={handleBack}
                 onEmojiChange={handleMetadataSaved}
                 onTitleChange={handleMetadataSaved}

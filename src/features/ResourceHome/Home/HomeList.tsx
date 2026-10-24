@@ -4,7 +4,7 @@ import { Avatar, Empty, Flexbox, Icon } from '@lobehub/ui';
 import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
 import * as stylex from '@stylexjs/stylex';
 import dayjs from 'dayjs';
-import { FileTextIcon, FolderOpenIcon, HardDriveIcon, UsersIcon } from 'lucide-react';
+import { FileTextIcon, FolderOpenIcon, GlobeIcon, HardDriveIcon, UsersIcon } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -21,6 +21,7 @@ import { knowledgeBaseSelectors, useKnowledgeBaseStore } from '@/store/library';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/slices/auth/selectors';
 
+import { isArtifactPage } from '../Layout/Body/PageSection/group';
 import { docsFilePath, docsPagePath } from '../paths';
 
 /** Title, location, owner, created, updated — the time columns stay fixed-width. */
@@ -227,7 +228,7 @@ const HomeList = memo<HomeListProps>(({ onTabChange, tab }) => {
                   row.emoji ? (
                     <Avatar avatar={row.emoji} size={20} />
                   ) : (
-                    <Icon icon={FileTextIcon} size={18} />
+                    <Icon icon={isArtifactPage(row) ? GlobeIcon : FileTextIcon} size={18} />
                   )
                 ) : (
                   <FileIcon fileName={row.name} fileType={row.fileType} size={20} />

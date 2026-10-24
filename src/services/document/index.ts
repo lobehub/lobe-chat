@@ -169,6 +169,7 @@ export class DocumentService {
     current?: number;
     fileTypes?: string[];
     pageSize?: number;
+    sortBy?: 'createdAt' | 'title' | 'updatedAt';
     sourceTypes?: string[];
     standaloneOnly?: boolean;
   }): Promise<{ items: DocumentItem[]; total: number }> {

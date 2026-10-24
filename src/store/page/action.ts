@@ -15,6 +15,8 @@ import { currentPageSize, PagePrivateAction } from './privateAction';
 import {
   documentItemToLobeDocument,
   PAGE_LIST_KEY,
+  type PageSectionListParams,
+  type PageSectionParams,
   type PageSectionScope,
   TEMP_PAGE_ID_PREFIX,
 } from './projection';
@@ -69,8 +71,16 @@ export class PageActionImpl {
   };
 
   /** The Docs sidebar's My docs / Shared sections; rows via `pageSelectors.pageSection`. */
-  useFetchPageSection = (scope: PageSectionScope, limit: number): ReplicaSyncResult =>
-    this.#private.section.useSync({ limit, scope });
+  useFetchPageSection = (params: PageSectionParams): ReplicaSyncResult =>
+    this.#private.section.useSync(params);
+
+  /** A section's full list, paged; rows via `pageSelectors.pageSectionList`. */
+  useFetchPageSectionList = (params: PageSectionListParams | null): ReplicaSyncResult =>
+    this.#private.sectionList.useSync(params);
+
+  loadMorePageSectionList = async (params: PageSectionListParams): Promise<void> => {
+    await this.#private.sectionList.loadMore(params.scope, params);
+  };
 
   useFetchPageDetail = (pageId?: string | null): ReplicaSyncResult =>
     this.#private.detail.useSync(pageId || null);
@@ -119,6 +129,18 @@ export class PageActionImpl {
 
   closeAllPagesDrawer = (): void => {
     this.#set({ allPagesDrawerOpen: false }, false, n('closeAllPagesDrawer'));
+  };
+
+  openSectionFullList = (scope: PageSectionScope): void => {
+    this.#set(
+      { sectionFullListOpen: true, sectionFullListScope: scope },
+      false,
+      n('openSectionFullList'),
+    );
+  };
+
+  closeSectionFullList = (): void => {
+    this.#set({ sectionFullListOpen: false }, false, n('closeSectionFullList'));
   };
 
   openAllPagesDrawer = (): void => {

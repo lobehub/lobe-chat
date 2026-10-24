@@ -125,6 +125,7 @@ beforeEach(async () => {
       page({ id: 'home-page-mate', minutes: 6, userId: mate }),
       page({ id: 'home-page-mate-private', minutes: 0, userId: mate, visibility: 'private' }),
       page({ fileType: 'custom/folder', id: 'home-folder', minutes: 0, userId: me }),
+      page({ fileType: 'custom/html', id: 'home-artifact-mine', minutes: 3.5, userId: me }),
     ]);
 });
 
@@ -139,6 +140,7 @@ describe('KnowledgeRepo.queryHomeItems', () => {
       'home-file-mine',
       'home-file-restricted',
       'home-page-mine',
+      'home-artifact-mine',
       'home-file-mate',
       'home-page-kb',
       'home-page-mate',
@@ -157,6 +159,7 @@ describe('KnowledgeRepo.queryHomeItems', () => {
     expect(await ids({ creator: 'self' })).toEqual([
       'home-file-mine',
       'home-page-mine',
+      'home-artifact-mine',
       'home-page-kb',
     ]);
   });

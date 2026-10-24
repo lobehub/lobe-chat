@@ -286,6 +286,45 @@ export class EditorActionImpl {
 
     this.#loadDocumentIntoEditor(editor, doc);
     this.#editorDocumentIds.set(editor, documentId);
+    if (!doc.isDirty) this.#adoptLoadedBody(editor, documentId);
+  };
+
+  /**
+   * Make the body the editor just loaded the clean baseline. Loading is not
+   * byte-stable: markdown is parsed into a fresh tree with new node ids, and the
+   * editor's own markdown need not match the stored text. A page an agent or
+   * the CLI wrote has no editorData at all, so without this the load itself
+   * reads as an edit — opening the page marks it dirty, autosaves it and holds
+   * navigation behind a "Saving…" toast although the user changed nothing.
+   */
+  #adoptLoadedBody = (editor: IEditor, documentId: string): void => {
+    try {
+      const markdown = this.getPersistedMarkdown(
+        documentId,
+        (editor.getDocument('markdown') as unknown as string) || '',
+      );
+      const editorData = editor.getDocument('json');
+      if (!isValidEditorData(editorData)) return;
+
+      // The load's own change event already queued an autosave of this body.
+      this.#get().cancelDebouncedSave(documentId);
+      this.#get().internal_dispatchDocument(
+        {
+          id: documentId,
+          type: 'updateDocument',
+          value: {
+            content: markdown,
+            editorData,
+            isDirty: false,
+            lastSavedContent: markdown,
+            lastSavedEditorData: editorData,
+          },
+        },
+        n('adoptLoadedBody', { id: documentId }),
+      );
+    } catch (error) {
+      console.error('[DocumentStore] Failed to read the loaded body:', error);
+    }
   };
 
   #loadDocumentIntoEditor = (editor: IEditor, doc: EditorContentState): void => {
