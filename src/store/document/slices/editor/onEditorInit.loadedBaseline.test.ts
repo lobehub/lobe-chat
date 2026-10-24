@@ -135,4 +135,47 @@ describe('onEditorInit — the loaded body is the clean baseline', () => {
       expect.objectContaining({ content: '# Title\n\nNew line\n', id: 'doc-1' }),
     );
   });
+
+  it('keeps local edits when a newer remote row carries the same server body', async () => {
+    const { result } = renderHook(() => useDocumentStore());
+    const editor = createLoadingEditor(() => useDocumentStore.getState().handleContentChange());
+
+    act(() => {
+      result.current.initDocumentWithEditor({
+        content: '# Title',
+        documentId: 'doc-1',
+        editor: editor as any,
+        editorData: null,
+        sourceType: 'page',
+        updatedAt: new Date('2026-01-01T00:00:00.000Z'),
+      });
+      useDocumentStore.setState({ activeDocumentId: 'doc-1', editor: editor as any });
+    });
+
+    await act(async () => {
+      await result.current.onEditorInit(editor as any, 'doc-1');
+    });
+
+    editor.getDocument.mockImplementation((type: string) =>
+      type === 'markdown' ? '# Title\n\nLocal edit\n' : { root: { children: [], type: 'root' } },
+    );
+    act(() => {
+      useDocumentStore.getState().handleContentChange();
+    });
+
+    // Another session renamed the page: newer row, unchanged markdown-only body.
+    let outcome: string | undefined;
+    act(() => {
+      outcome = useDocumentStore.getState().reconcileRemote('doc-1', {
+        content: '# Title',
+        editorData: null,
+        updatedAt: new Date('2026-01-02T00:00:00.000Z'),
+      } as any);
+    });
+
+    expect(outcome).toBe('rebased');
+    const doc = useDocumentStore.getState().documents['doc-1'];
+    expect(doc.isDirty).toBe(true);
+    expect(doc.content).toBe('# Title\n\nLocal edit\n');
+  });
 });

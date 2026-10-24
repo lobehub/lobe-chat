@@ -111,7 +111,11 @@ export class EditorActionImpl {
 
       const markdownChanged = markdown !== doc.lastSavedContent;
       const editorDataChanged = !isEqual(editorData, doc.lastSavedEditorData);
-      const contentChanged = markdownChanged || editorDataChanged;
+      const isLoadedBody =
+        !!doc.loadedBody &&
+        markdown === doc.loadedBody.content &&
+        isEqual(editorData, doc.loadedBody.editorData);
+      const contentChanged = !isLoadedBody && (markdownChanged || editorDataChanged);
 
       internal_dispatchDocument(
         {
@@ -262,6 +266,8 @@ export class EditorActionImpl {
           lastSavedContent: content,
           lastSavedEditorData: editorData,
           lastUpdatedTime: updatedAt,
+          // The editor reloads the adopted body and records it again.
+          loadedBody: undefined,
           saveBlockedByLock: false,
           saveStatus: 'saved',
         },
@@ -290,12 +296,16 @@ export class EditorActionImpl {
   };
 
   /**
-   * Make the body the editor just loaded the clean baseline. Loading is not
+   * Record the body the editor just loaded as unedited. Loading is not
    * byte-stable: markdown is parsed into a fresh tree with new node ids, and the
    * editor's own markdown need not match the stored text. A page an agent or
    * the CLI wrote has no editorData at all, so without this the load itself
    * reads as an edit — opening the page marks it dirty, autosaves it and holds
    * navigation behind a "Saving…" toast although the user changed nothing.
+   *
+   * `lastSaved*` keeps the server's body: conflict reconciliation compares
+   * remote rows against it, and a normalized copy there would make a remote
+   * title-only change look like a body change and discard local edits.
    */
   #adoptLoadedBody = (editor: IEditor, documentId: string): void => {
     try {
@@ -316,11 +326,10 @@ export class EditorActionImpl {
             content: markdown,
             editorData,
             isDirty: false,
-            lastSavedContent: markdown,
-            lastSavedEditorData: editorData,
+            loadedBody: { content: markdown, editorData },
           },
         },
-        n('adoptLoadedBody', { id: documentId }),
+        'adoptLoadedBody',
       );
     } catch (error) {
       console.error('[DocumentStore] Failed to read the loaded body:', error);
@@ -504,6 +513,8 @@ export class EditorActionImpl {
                   !isEqual(current?.editorData, currentEditorData),
                 lastSavedContent: currentContent,
                 lastSavedEditorData: structuredClone(currentEditorData),
+                // The saved body is now the editor's own serialization.
+                loadedBody: undefined,
               }
             : {}),
           ...(savedAt ? { lastUpdatedTime: savedAt } : {}),
