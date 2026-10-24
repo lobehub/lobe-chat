@@ -10,6 +10,7 @@ import type {
 import { experimentOwner } from '@lobechat/utils/goalGraph';
 
 import { GoalGraphModel } from '@/database/models/goalGraph';
+import { GoalRepository } from '@/database/repositories/goal';
 
 import {
   GOAL_ACCEPTANCE_TASK_TITLE,
@@ -41,6 +42,16 @@ export const settleTerminalAcceptance = async (
   const goalId = graph.goal.id;
 
   if (move.outcome === 'achieved') {
+    // Re-read the numeric clauses right before the terminal transition: bindings,
+    // provenance and freshness can change between the verdict and here, and the
+    // earlier verdict is not a lease.
+    const measurementChanged: GoalTickResult = {
+      goalId,
+      message: 'Measured acceptance changed before the Goal could be achieved; re-evaluating',
+      outcome: 'no_progress',
+    };
+    const numeric = await ctx.evaluateMetricCriteria(await ctx.requireGraph(goalId));
+    if (!numeric.allMet) return measurementChanged;
     // The map must agree with the verdict: only task nodes get resolved as
     // Tasks complete, so without this the seeded problem nodes would read
     // "active / unanswered" forever on an achieved goal.
@@ -54,7 +65,24 @@ export const settleTerminalAcceptance = async (
     // the ask for good. Failing here leaves the goal open for the next tick,
     // and the write is idempotent per acceptance.
     await ctx.requestSignOff(graph);
-    await ctx.transitionStatus(graph.goal, 'achieved', 'Goal-level acceptance passed');
+    // The final verdict and the terminal write commit together: the evidence
+    // locks taken by the re-read are held until `achieved` lands, so a rebind,
+    // disable or newer below-target observation cannot slip in between.
+    const achieved = await ctx.db.transaction(async (tx) => {
+      const model = new GoalRepository(tx, ctx.userId, ctx.workspaceId);
+      const current = await model.lockById(goalId);
+      if (!current || current.status !== graph.goal.status) return false;
+      if (!(await ctx.evaluateMetricCriteria({ ...graph, goal: current }, tx)).allMet) return false;
+      await model.updateStatus(goalId, 'achieved');
+      await new GoalGraphModel(tx, ctx.userId, ctx.workspaceId, {
+        id: GOAL_COORDINATOR_ACTOR_ID,
+        type: 'system',
+      })
+        .recordGoalStatus(goalId, current.status, 'achieved', 'Goal-level acceptance passed')
+        .catch((error) => console.error('[GoalService] failed to record goal status:', error));
+      return true;
+    });
+    if (!achieved) return measurementChanged;
     effects.push({ type: 'goal_status', detail: 'achieved' });
     return { goalId, message: move.message, outcome: 'achieved' };
   }
