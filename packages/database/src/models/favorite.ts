@@ -1,9 +1,22 @@
-import type { AddFavoriteParams, FavoriteItem, FavoriteType } from '@lobechat/types';
+import {
+  type AddFavoriteParams,
+  FAVORITE_LIMIT,
+  type FavoriteItem,
+  type FavoriteType,
+} from '@lobechat/types';
 import { and, asc, eq, inArray, isNull, type SQL, sql } from 'drizzle-orm';
 
 import { userFavorites } from '../schemas';
 import type { LobeChatDatabase } from '../type';
 import { normalizeWorkspaceId } from '../utils/workspace';
+
+/** Adding another favorite would exceed {@link FAVORITE_LIMIT}. */
+export class FavoriteLimitError extends Error {
+  constructor() {
+    super(`A sidebar holds at most ${FAVORITE_LIMIT} favorites`);
+    this.name = 'FavoriteLimitError';
+  }
+}
 
 export interface UpdateFavoriteParams {
   icon?: string | null;
@@ -60,6 +73,16 @@ export class FavoriteModel {
    * keeps its position.
    */
   add = async (params: AddFavoriteParams): Promise<FavoriteItem> => {
+    const [{ count, existing }] = await this.db
+      .select({
+        count: sql<number>`count(*)::int`,
+        existing: sql<number>`count(*) FILTER (WHERE ${userFavorites.type} = ${params.type} AND ${userFavorites.targetId} = ${params.targetId})::int`,
+      })
+      .from(userFavorites)
+      .where(this.scope());
+    // Refreshing an existing favorite never grows the list.
+    if (existing === 0 && count >= FAVORITE_LIMIT) throw new FavoriteLimitError();
+
     const nextSortOrder = sql<number>`(
       SELECT COALESCE(MAX(${userFavorites.sortOrder}) + 1, 0)
       FROM ${userFavorites}

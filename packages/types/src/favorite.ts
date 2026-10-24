@@ -17,6 +17,12 @@ export const FAVORITE_TYPES = [
 
 export type FavoriteType = (typeof FAVORITE_TYPES)[number];
 
+/**
+ * Most favorites one sidebar holds. A reorder sends the whole list, so adding
+ * stops where a reorder payload is still accepted.
+ */
+export const FAVORITE_LIMIT = 1000;
+
 export interface FavoriteItem {
   /** Emoji or avatar URL captured when the item was favorited; null falls back to the type icon. */
   icon: string | null;

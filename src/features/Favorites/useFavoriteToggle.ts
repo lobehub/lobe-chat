@@ -1,6 +1,6 @@
 import type { AddFavoriteParams, FavoriteType } from '@lobechat/types';
 import { toast } from '@lobehub/ui';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useHomeStore } from '@/store/home';
@@ -10,6 +10,9 @@ import { useFetchFavorites } from './useFetchFavorites';
 
 /** Quiet period before a changed title or icon is written back to its favorite. */
 export const FAVORITE_SNAPSHOT_SYNC_DELAY = 800;
+
+/** Failed writes of one snapshot before the hook stops retrying it. */
+export const FAVORITE_SNAPSHOT_SYNC_ATTEMPTS = 3;
 
 export interface FavoriteTarget {
   /** Emoji or avatar URL of the target; omitted renders the type icon. */
@@ -36,6 +39,12 @@ export const useFavoriteToggle = (target: FavoriteTarget | undefined) => {
     type && targetId ? favoriteSelectors.getFavorite(type, targetId)(s)?.id : undefined,
   );
   const isFavorite = !!favoriteId;
+  // The stored copy, so a write rolled back after a failure runs the sync again.
+  const storedSnapshot = useHomeStore((s) => {
+    const item = type && targetId ? favoriteSelectors.getFavorite(type, targetId)(s) : undefined;
+    return item ? JSON.stringify([item.icon, item.path, item.title]) : undefined;
+  });
+  const failures = useRef({ count: 0, snapshot: '' });
   const [toggleFavorite, syncFavoriteSnapshot] = useHomeStore((s) => [
     s.toggleFavorite,
     s.syncFavoriteSnapshot,
@@ -47,15 +56,22 @@ export const useFavoriteToggle = (target: FavoriteTarget | undefined) => {
   // Titles change on every keystroke, so write once the target settles. The
   // favorite id is a dependency too: a rename made while the add was pending is
   // replayed once the confirmed row (and its real id) replaces the optimistic one.
+  // A failed write rolls the stored copy back, which reruns this effect; a
+  // snapshot that keeps failing stops after a few attempts instead of looping.
   useEffect(() => {
     if (!favoriteId || !type || !targetId || !title) return;
+    const snapshot = JSON.stringify([icon ?? null, path, title]);
+    if (failures.current.snapshot !== snapshot) failures.current = { count: 0, snapshot };
+    if (failures.current.count >= FAVORITE_SNAPSHOT_SYNC_ATTEMPTS) return;
+
     const timer = setTimeout(() => {
       syncFavoriteSnapshot(type, targetId, { icon, path, title }).catch((error) => {
+        if (failures.current.snapshot === snapshot) failures.current.count += 1;
         console.error('[favorite] failed to refresh the snapshot', error);
       });
     }, FAVORITE_SNAPSHOT_SYNC_DELAY);
     return () => clearTimeout(timer);
-  }, [favoriteId, type, targetId, title, icon, path, syncFavoriteSnapshot]);
+  }, [favoriteId, storedSnapshot, type, targetId, title, icon, path, syncFavoriteSnapshot]);
 
   const toggle = useCallback(async () => {
     if (!target) return;

@@ -14,6 +14,7 @@ const mockUpdate = vi.fn();
 const modelScopes: unknown[][] = [];
 
 vi.mock('@/database/models/favorite', () => ({
+  FavoriteLimitError: class FavoriteLimitError extends Error {},
   FavoriteModel: vi.fn(function (...args: unknown[]) {
     modelScopes.push(args.slice(1));
     return { add: mockAdd, update: mockUpdate };
@@ -52,6 +53,15 @@ describe('favoriteRouter', () => {
       expect(mockUpdate).not.toHaveBeenCalled();
     },
   );
+
+  it('reports a full sidebar as a bad request', async () => {
+    const { FavoriteLimitError } = await import('@/database/models/favorite');
+    mockAdd.mockRejectedValue(new FavoriteLimitError());
+
+    await expect(favoriteRouter.createCaller(ctx).add(input)).rejects.toMatchObject({
+      code: 'BAD_REQUEST',
+    });
+  });
 
   it('refuses a blank title', async () => {
     await expect(

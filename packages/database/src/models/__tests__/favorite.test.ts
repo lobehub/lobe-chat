@@ -1,10 +1,11 @@
 // @vitest-environment node
+import { FAVORITE_LIMIT } from '@lobechat/types';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
 import { userFavorites, users, workspaces } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
-import { FavoriteModel } from '../favorite';
+import { FavoriteLimitError, FavoriteModel } from '../favorite';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 
@@ -91,6 +92,33 @@ describe('FavoriteModel', () => {
 
     await workspaceModel.remove(own.id);
     expect(await workspaceModel.query()).toHaveLength(0);
+  });
+
+  it('stops adding at the limit a reorder can still carry, but keeps refreshing existing rows', async () => {
+    await serverDB.insert(userFavorites).values(
+      Array.from({ length: FAVORITE_LIMIT }, (_, index) => ({
+        path: `/page/docs_${index}`,
+        sortOrder: index,
+        targetId: `docs_${index}`,
+        title: `Page ${index}`,
+        type: 'page' as const,
+        userId,
+      })),
+    );
+
+    await expect(personalModel.add(topic('tpc_over'))).rejects.toBeInstanceOf(FavoriteLimitError);
+    await personalModel.add({
+      path: '/page/docs_0',
+      targetId: 'docs_0',
+      title: 'Renamed',
+      type: 'page',
+    });
+    // Another sidebar has its own allowance.
+    await workspaceModel.add(topic('tpc_ws'));
+
+    const items = await personalModel.query();
+    expect(items).toHaveLength(FAVORITE_LIMIT);
+    expect(items[0].title).toBe('Renamed');
   });
 
   it('removes by target', async () => {

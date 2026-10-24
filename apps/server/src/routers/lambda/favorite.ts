@@ -1,8 +1,9 @@
-import { FAVORITE_TYPES, type FavoriteItem } from '@lobechat/types';
+import { FAVORITE_LIMIT, FAVORITE_TYPES, type FavoriteItem } from '@lobechat/types';
+import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { wsCompatProcedure } from '@/business/server/trpc-middlewares/workspaceAuth';
-import { FavoriteModel } from '@/database/models/favorite';
+import { FavoriteLimitError, FavoriteModel } from '@/database/models/favorite';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 
@@ -40,7 +41,15 @@ export const favoriteRouter = router({
         type: favoriteType,
       }),
     )
-    .mutation(async ({ ctx, input }): Promise<FavoriteItem> => ctx.favoriteModel.add(input)),
+    .mutation(async ({ ctx, input }): Promise<FavoriteItem> => {
+      try {
+        return await ctx.favoriteModel.add(input);
+      } catch (error) {
+        if (error instanceof FavoriteLimitError)
+          throw new TRPCError({ cause: error, code: 'BAD_REQUEST', message: error.message });
+        throw error;
+      }
+    }),
 
   list: favoriteProcedure.query(async ({ ctx }): Promise<FavoriteItem[]> =>
     ctx.favoriteModel.query(),
@@ -57,7 +66,7 @@ export const favoriteRouter = router({
     ),
 
   reorder: favoriteProcedure
-    .input(z.object({ ids: z.array(z.string()).max(1000) }))
+    .input(z.object({ ids: z.array(z.string()).max(FAVORITE_LIMIT) }))
     .mutation(async ({ ctx, input }) => ctx.favoriteModel.reorder(input.ids)),
 
   update: favoriteProcedure
