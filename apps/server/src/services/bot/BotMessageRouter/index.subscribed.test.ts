@@ -511,6 +511,31 @@ describe('BotMessageRouter', () => {
       expect(mockHandleSubscribedMessage).toHaveBeenCalledTimes(1);
     });
 
+    it('marks a watch-keyword wake as a followup, which may end in silence', async () => {
+      const handler = await loadSubscribedHandler({
+        dmPolicy: 'open',
+        watchKeywords: [{ keyword: 'bug' }],
+      });
+
+      await handler(makeThread(), makeMessage({ text: 'I think we have a bug in checkout' }));
+
+      expect(mockHandleSubscribedMessage.mock.calls[0][2]).toMatchObject({ wakeKind: 'followup' });
+    });
+
+    it.each([
+      ['an @mention', { isMention: true, text: 'there is a bug, please look' }, false],
+      ['a DM', { isMention: false, text: 'hello there' }, true],
+    ])('keeps %s as a mention that is always answered', async (_name, overrides, isDM) => {
+      const handler = await loadSubscribedHandler({
+        dmPolicy: 'open',
+        watchKeywords: [{ keyword: 'bug' }],
+      });
+
+      await handler(makeThread({ isDM }), makeMessage(overrides));
+
+      expect(mockHandleSubscribedMessage.mock.calls[0][2]).toMatchObject({ wakeKind: 'mention' });
+    });
+
     it('should drop a keyword wake when messageMonitoring access is not allowed', async () => {
       mockGetBotFeatureAccessState.mockImplementation(async (params: any) =>
         params?.feature === 'messageMonitoring'
