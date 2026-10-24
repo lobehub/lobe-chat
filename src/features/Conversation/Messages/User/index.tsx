@@ -1,5 +1,5 @@
 import { agentDisplayName } from '@lobechat/types';
-import { Tag } from '@lobehub/ui';
+import { Flexbox, Tag } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { type MouseEventHandler } from 'react';
 import { memo, useCallback, useMemo } from 'react';
@@ -119,6 +119,7 @@ const UserMessage = memo<UserMessageProps>(({ id, disableEditing, index }) => {
       belowMessage={<ScheduledRunFooter id={id} />}
       customAvatarRender={scmSource ? () => <ScmEventAvatar /> : undefined}
       editing={editing}
+      headerAddon={scmSource ? <ScmEventSenderTitle source={scmSource} /> : undefined}
       id={id}
       message={content}
       messageExtra={<UserMessageExtra extra={extra} id={id} />}
@@ -129,14 +130,6 @@ const UserMessage = memo<UserMessageProps>(({ id, disableEditing, index }) => {
       actionAddon={
         commentCount > 0 && commentTopicId ? (
           <MessageCommentBadge count={commentCount} messageId={id} topicId={commentTopicId} />
-        ) : undefined
-      }
-      headerAddon={
-        scmSource || metadata?.steer ? (
-          <>
-            {scmSource && <ScmEventSenderTitle source={scmSource} />}
-            {metadata?.steer && <Tag>{t('steer.tag')}</Tag>}
-          </>
         ) : undefined
       }
       titleAddon={
@@ -163,7 +156,16 @@ const UserMessage = memo<UserMessageProps>(({ id, disableEditing, index }) => {
       onDoubleClick={onDoubleClick}
       onMouseEnter={onMouseEnter}
     >
-      <UserMessageContent {...item} />
+      {metadata?.steer ? (
+        // The steer tag labels the instruction itself, so it sits inside the
+        // bubble rather than in the sender header.
+        <Flexbox align={'flex-start'} gap={4}>
+          <Tag>{t('steer.tag')}</Tag>
+          <UserMessageContent {...item} />
+        </Flexbox>
+      ) : (
+        <UserMessageContent {...item} />
+      )}
     </ChatItem>
   );
 }, isEqual);
