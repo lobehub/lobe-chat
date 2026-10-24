@@ -1778,6 +1778,8 @@
   "subscriptionAccounts.activeRuns.untitledTopic": "Untitled topic",
   "subscriptionAccounts.activeRuns.waiting": "Waiting",
   "subscriptionAccounts.columns.account": "Account",
+  "subscriptionAccounts.columns.plan": "Plan",
+  "subscriptionAccounts.columns.quota": "Quota",
   "subscriptionAccounts.columns.rotation": "Balancing",
   "subscriptionAccounts.columns.status": "Status",
   "subscriptionAccounts.empty.desc": "Sign in to Claude Code, Codex or Kimi Code on a connected device. The account appears here once it reports its quota.",

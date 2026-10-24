@@ -10,7 +10,7 @@ import SkeletonBar from '@/components/Skeleton/Bar';
 import { cacheScope } from '@/libs/replica';
 import { agentQuotaSelectors, type QuotaAccount, useAgentQuotaStore } from '@/store/agentQuota';
 
-import AccountDetailDrawer from './AccountDetailDrawer';
+import AccountDetailPanel from './AccountDetailPanel';
 import AccountRow, { AccountListHeader, LIST_MIN_WIDTH, PROVIDER_NAME } from './AccountRow';
 import {
   isSubscriptionProvider,
@@ -97,7 +97,12 @@ const SubscriptionAccounts = () => {
       <Flexbox gap={2} style={{ minWidth: LIST_MIN_WIDTH }}>
         <AccountListHeader />
         {visible.map((account) => (
-          <AccountRow account={account} key={account.id} onOpen={() => setOpenId(account.id)} />
+          <AccountRow
+            account={account}
+            active={account.id === openId}
+            key={account.id}
+            onOpen={() => setOpenId(account.id)}
+          />
         ))}
         {visible.length === 0 && (
           <Empty description={t('subscriptionAccounts.filterEmpty')} style={{ paddingBlock: 40 }} />
@@ -148,8 +153,18 @@ const SubscriptionAccounts = () => {
           />
         </Flexbox>
       </Flexbox>
-      {body}
-      <AccountDetailDrawer account={openAccount} onClose={() => setOpenId(undefined)} />
+      <Flexbox horizontal gap={20} style={{ minWidth: 0 }}>
+        <Flexbox flex={1} style={{ minWidth: 0 }}>
+          {body}
+        </Flexbox>
+        {openAccount && (
+          <AccountDetailPanel
+            account={openAccount}
+            key={openAccount.id}
+            onClose={() => setOpenId(undefined)}
+          />
+        )}
+      </Flexbox>
     </Flexbox>
   );
 };

@@ -9,7 +9,6 @@ import {
   Input,
   Progress,
   Switch,
-  Tag,
   Text,
   toast,
   Tooltip,
@@ -32,25 +31,27 @@ import { type AccountStatus, deriveAccountView, type SubscriptionProvider } from
 
 /** Column widths shared by {@link AccountRow} and {@link AccountListHeader}. */
 export const COLUMN_WIDTH = {
-  account: 220,
+  account: 140,
   actions: 28,
-  meter: 120,
+  plan: 72,
+  quota: 200,
   rotation: 64,
-  status: 180,
+  status: 120,
 } as const;
 
 /**
  * Narrowest the list may get before it scrolls sideways instead: every
- * column at its minimum, the 16px gaps between the six columns and the row
+ * column at its minimum, the 16px gaps between the seven columns and the row
  * padding. Below this the rotation switch and menu would clip.
  */
 export const LIST_MIN_WIDTH =
-  COLUMN_WIDTH.meter * 2 +
+  COLUMN_WIDTH.plan +
+  COLUMN_WIDTH.quota +
   COLUMN_WIDTH.status +
   COLUMN_WIDTH.rotation +
   COLUMN_WIDTH.actions +
   COLUMN_WIDTH.account +
-  16 * 5 +
+  16 * 6 +
   12 * 2;
 
 const styles = stylex.create({
@@ -72,6 +73,8 @@ const styles = stylex.create({
     backgroundColor: { 'default': 'transparent', ':hover': cssVar.colorFillTertiary },
     outline: { 'default': 'none', ':focus-visible': `2px solid ${cssVar.colorPrimary}` },
   },
+  // The account whose panel is open.
+  rowActive: { backgroundColor: cssVar.colorFillSecondary },
 });
 
 const PROVIDER_META: Record<
@@ -103,16 +106,18 @@ const LEVEL_COLOR: Record<UsageLevel, string> = {
 export const accountDisplayName = (account: QuotaAccount) =>
   account.label || account.email || account.externalAccountId || account.id;
 
-/** One window's usage: a thin bar with its percentage, `—` before any reading. */
-const WindowMeter = ({ value }: { value?: number }) => {
+/** One window's usage: its label, a thin bar and the percentage, `—` before any reading. */
+const WindowMeter = ({ label, value }: { label: string; value?: number }) => {
   const level = usageLevel(value);
   return (
-    <Flexbox
-      horizontal
-      align={'center'}
-      gap={8}
-      style={{ flex: 'none', width: COLUMN_WIDTH.meter }}
-    >
+    <Flexbox horizontal align={'center'} gap={8}>
+      <Text
+        fontSize={12}
+        style={{ flex: 'none', whiteSpace: 'nowrap', width: 40 }}
+        type={'secondary'}
+      >
+        {label}
+      </Text>
       <Progress
         percent={value ?? 0}
         showInfo={false}
@@ -147,9 +152,9 @@ export const AccountListHeader = () => {
         flex: 2,
         minWidth: COLUMN_WIDTH.account,
       })}
+      {label(t('subscriptionAccounts.columns.plan'), { flex: 'none', width: COLUMN_WIDTH.plan })}
       {label(t('subscriptionAccounts.columns.status'), { flex: 1, minWidth: COLUMN_WIDTH.status })}
-      {label(t('subscriptionAccounts.meter.session'), { flex: 'none', width: COLUMN_WIDTH.meter })}
-      {label(t('subscriptionAccounts.meter.weekly'), { flex: 'none', width: COLUMN_WIDTH.meter })}
+      {label(t('subscriptionAccounts.columns.quota'), { flex: 'none', width: COLUMN_WIDTH.quota })}
       {label(t('subscriptionAccounts.columns.rotation'), {
         flex: 'none',
         width: COLUMN_WIDTH.rotation,
@@ -161,11 +166,13 @@ export const AccountListHeader = () => {
 
 interface AccountRowProps {
   account: QuotaAccount & { provider: SubscriptionProvider };
+  /** This account's side panel is open. */
+  active?: boolean;
   /** Open this account's side panel. */
   onOpen: () => void;
 }
 
-const AccountRow = ({ account, onOpen }: AccountRowProps) => {
+const AccountRow = ({ account, active, onOpen }: AccountRowProps) => {
   const { t } = useTranslation('setting');
   const { t: tCommon } = useTranslation('common');
   const [useFetchQuotaReadings, renameQuotaAccount, setQuotaAccountEnabled] = useAgentQuotaStore(
@@ -236,7 +243,8 @@ const AccountRow = ({ account, onOpen }: AccountRowProps) => {
 
   return (
     <div
-      {...stylex.props(styles.row)}
+      {...stylex.props(styles.row, active && styles.rowActive)}
+      aria-current={active || undefined}
       role={'button'}
       tabIndex={0}
       onClick={editing ? undefined : onOpen}
@@ -289,22 +297,24 @@ const AccountRow = ({ account, onOpen }: AccountRowProps) => {
               />
             </Flexbox>
           ) : (
-            <Flexbox horizontal align={'center'} gap={8} style={{ minWidth: 0 }}>
-              <Text ellipsis title={name} weight={500}>
-                {name}
-              </Text>
-              {account.planTier && (
-                <Tag size={'small'} style={{ flex: 'none' }}>
-                  {account.planTier}
-                </Tag>
-              )}
-            </Flexbox>
+            <Text ellipsis title={name} weight={500}>
+              {name}
+            </Text>
           )}
           <Text ellipsis fontSize={12} type={'secondary'}>
             {subtitle}
           </Text>
         </Flexbox>
       </Flexbox>
+
+      <Text
+        ellipsis
+        fontSize={13}
+        style={{ flex: 'none', width: COLUMN_WIDTH.plan }}
+        type={account.planTier ? undefined : 'secondary'}
+      >
+        {account.planTier || '—'}
+      </Text>
 
       <Flexbox
         horizontal
@@ -318,8 +328,17 @@ const AccountRow = ({ account, onOpen }: AccountRowProps) => {
         </Text>
       </Flexbox>
 
-      <WindowMeter value={view.session?.usedPercent} />
-      <WindowMeter value={view.weekly?.usedPercent} />
+      {/* Both windows stacked in one column, so the pair reads as one quota. */}
+      <Flexbox gap={6} style={{ flex: 'none', width: COLUMN_WIDTH.quota }}>
+        <WindowMeter
+          label={t('subscriptionAccounts.meter.session')}
+          value={view.session?.usedPercent}
+        />
+        <WindowMeter
+          label={t('subscriptionAccounts.meter.weekly')}
+          value={view.weekly?.usedPercent}
+        />
+      </Flexbox>
 
       <Flexbox horizontal style={{ flex: 'none', width: COLUMN_WIDTH.rotation }} {...stop}>
         <Tooltip title={t('subscriptionAccounts.rotationTooltip')}>

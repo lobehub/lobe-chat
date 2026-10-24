@@ -4615,6 +4615,8 @@ When I am ___, I need ___
   'subscriptionAccounts.searchPlaceholder': 'Search accounts…',
   'subscriptionAccounts.usageTitle': 'Usage history',
   'subscriptionAccounts.columns.account': 'Account',
+  'subscriptionAccounts.columns.plan': 'Plan',
+  'subscriptionAccounts.columns.quota': 'Quota',
   'subscriptionAccounts.columns.rotation': 'Balancing',
   'subscriptionAccounts.columns.status': 'Status',
   'subscriptionAccounts.empty.desc':

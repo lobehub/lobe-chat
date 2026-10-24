@@ -1,10 +1,11 @@
 'use client';
 
 import { DEFAULT_AVATAR } from '@lobechat/const';
-import { Avatar, Drawer, Empty, Flexbox, Text } from '@lobehub/ui';
+import { ActionIcon, Avatar, Empty, Flexbox, Text } from '@lobehub/ui';
 import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
 import * as stylex from '@stylexjs/stylex';
 import dayjs from 'dayjs';
+import { XIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import SkeletonBar from '@/components/Skeleton/Bar';
@@ -21,6 +22,21 @@ import type { SubscriptionProvider } from './accountView';
 const ACTIVE_RUNS_REFRESH_MS = 15_000;
 
 const styles = stylex.create({
+  // Sits beside the list and squeezes it rather than covering it, and stays in
+  // view while the list scrolls under the settings header.
+  panel: {
+    position: 'sticky',
+    top: 0,
+    alignSelf: 'flex-start',
+    flexShrink: 0,
+    width: 'min(480px, 40%)',
+    maxHeight: 'calc(100vh - 120px)',
+    overflowY: 'auto',
+    paddingInlineStart: '20px',
+    borderInlineStartWidth: '1px',
+    borderInlineStartStyle: 'solid',
+    borderInlineStartColor: cssVar.colorBorderSecondary,
+  },
   run: {
     paddingBlock: '8px',
     paddingInline: '8px',
@@ -80,13 +96,17 @@ const ActiveRuns = ({ accountId }: { accountId: string }) => {
           <Avatar
             avatar={run.agentAvatar || DEFAULT_AVATAR}
             background={run.agentBackgroundColor ?? undefined}
-            size={28}
+            size={24}
           />
-          <Flexbox flex={1} gap={2} style={{ minWidth: 0 }}>
-            <Text ellipsis weight={500}>
+          {/* One line, agent · topic: the pair is what identifies a run. */}
+          <Flexbox horizontal align={'baseline'} flex={1} gap={6} style={{ minWidth: 0 }}>
+            <Text ellipsis style={{ flex: 'none', maxWidth: '50%' }} weight={500}>
               {run.agentTitle || t('subscriptionAccounts.activeRuns.untitledAgent')}
             </Text>
-            <Text ellipsis fontSize={12} type={'secondary'}>
+            <Text style={{ flex: 'none' }} type={'secondary'}>
+              ·
+            </Text>
+            <Text ellipsis type={'secondary'}>
               {run.topicTitle || t('subscriptionAccounts.activeRuns.untitledTopic')}
             </Text>
           </Flexbox>
@@ -103,49 +123,47 @@ const ActiveRuns = ({ accountId }: { accountId: string }) => {
   );
 };
 
-interface AccountDetailDrawerProps {
-  account?: Account;
+interface AccountDetailPanelProps {
+  account: Account;
   onClose: () => void;
 }
 
 /**
  * The account's side panel: which agents are spending it right now, then its
- * usage history. A side panel rather than a modal keeps the list beside it, so
- * the admin can step through accounts without closing anything.
+ * usage history. It sits beside the list and narrows it instead of covering
+ * it, so the admin can step through accounts with the list still in view.
  */
-const AccountDetailDrawer = ({ account, onClose }: AccountDetailDrawerProps) => {
+const AccountDetailPanel = ({ account, onClose }: AccountDetailPanelProps) => {
   const { t } = useTranslation('setting');
+  const { t: tCommon } = useTranslation('common');
 
   return (
-    <Drawer
-      containerMaxWidth={'100%'}
-      open={!!account}
-      placement={'right'}
-      title={account ? accountDisplayName(account) : undefined}
-      width={'min(720px, 92vw)'}
-      onClose={onClose}
-    >
-      {account ? (
-        <Flexbox gap={24} paddingBlock={8}>
-          <Flexbox gap={8}>
-            <Text weight={500}>{t('subscriptionAccounts.activeRuns.title')}</Text>
-            <ActiveRuns accountId={account.id} />
-          </Flexbox>
-          <Flexbox gap={8}>
-            <Text weight={500}>{t('subscriptionAccounts.usageTitle')}</Text>
-            {account.externalAccountId ? (
-              <QuotaCalendar
-                externalAccountId={account.externalAccountId}
-                provider={account.provider}
-              />
-            ) : (
-              <Empty description={t('subscriptionAccounts.status.noData')} />
-            )}
-          </Flexbox>
+    <aside {...stylex.props(styles.panel)}>
+      <Flexbox gap={20}>
+        <Flexbox horizontal align={'center'} gap={8} justify={'space-between'}>
+          <Text ellipsis fontSize={16} weight={600}>
+            {accountDisplayName(account)}
+          </Text>
+          <ActionIcon icon={XIcon} size={'small'} title={tCommon('close')} onClick={onClose} />
         </Flexbox>
-      ) : null}
-    </Drawer>
+        <Flexbox gap={8}>
+          <Text weight={500}>{t('subscriptionAccounts.activeRuns.title')}</Text>
+          <ActiveRuns accountId={account.id} />
+        </Flexbox>
+        <Flexbox gap={8}>
+          <Text weight={500}>{t('subscriptionAccounts.usageTitle')}</Text>
+          {account.externalAccountId ? (
+            <QuotaCalendar
+              externalAccountId={account.externalAccountId}
+              provider={account.provider}
+            />
+          ) : (
+            <Empty description={t('subscriptionAccounts.status.noData')} />
+          )}
+        </Flexbox>
+      </Flexbox>
+    </aside>
   );
 };
 
-export default AccountDetailDrawer;
+export default AccountDetailPanel;

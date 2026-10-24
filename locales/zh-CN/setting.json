@@ -1778,6 +1778,8 @@
   "subscriptionAccounts.activeRuns.untitledTopic": "未命名话题",
   "subscriptionAccounts.activeRuns.waiting": "等待中",
   "subscriptionAccounts.columns.account": "账号",
+  "subscriptionAccounts.columns.plan": "套餐",
+  "subscriptionAccounts.columns.quota": "额度",
   "subscriptionAccounts.columns.rotation": "参与分配",
   "subscriptionAccounts.columns.status": "状态",
   "subscriptionAccounts.empty.desc": "在已连接的设备上登录 Claude Code、Codex 或 Kimi Code，账号上报额度后会出现在这里。",
