@@ -226,6 +226,8 @@ export default {
     'This workspace is frozen by an admin and cannot run requests. Please contact the workspace owner to resolve the issue.',
   'response.WorkspaceFrozenByRiskControl':
     'This workspace was auto-frozen by risk control and cannot run requests. Please contact support to review the status.',
+  'response.withRequestDetail': '{{message}} (HTTP {{status}} · Request ID: {{requestId}})',
+  'response.withStatusDetail': '{{message}} (HTTP {{status}})',
   'unknownError.troubleshoot': 'Troubleshoot',
   'workspaceBillingInactive.bannerHint': 'Click for details',
   'workspaceBillingInactive.bannerTitle': 'Workspace subscription inactive',
@@ -310,6 +312,8 @@ export default {
     'The current deployment mode does not support uploading non-image files. To upload files in {{ext}} format, please switch to server database deployment or use the {{cloud}} service.',
   'upload.networkError':
     "Please check your network connection and ensure that the file storage service's cross-origin configuration is correct.",
+  'upload.serviceUnavailable':
+    'The upload service is temporarily unavailable. Please try again in a moment.',
   'upload.storageBlock.billingUnavailable':
     'Your subscription billing status cannot be verified. Please try again later or update your billing details.',
   'upload.storageBlock.cleanupFiles': 'Free up space',
