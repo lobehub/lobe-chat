@@ -1,3 +1,4 @@
+import { GOAL_CLARIFICATION_OPTION } from '@lobechat/const/goal';
 import type { GoalDecisionOption } from '@lobechat/types';
 
 import type { DecisionActor, DecisionRow } from './decisionList';
@@ -71,13 +72,19 @@ export const buildDecisionGraph = (
 
   const chosen = options.find((option) => option.state === 'chosen');
   const effect = chosen?.effect;
+  // The free-text option carries no wording of its own, so the words are the
+  // answer itself: `buildDecisionRows` keeps them on `choice` instead of the
+  // `note` written next to a picked option. The graph has to show them either
+  // way, or expanding the decision would hide what the person actually said.
+  const answered = decision.resolvedOptionId === GOAL_CLARIFICATION_OPTION.answer;
+  const written = row.note ?? (answered || !chosen ? row.choice : undefined);
   return {
     options,
     result: {
       actor: row.actor,
       ...(effect ? { effect } : {}),
       from: chosen ? 'option' : 'root',
-      ...(row.note ? { note: row.note } : {}),
+      ...(written ? { note: written } : {}),
     },
   };
 };

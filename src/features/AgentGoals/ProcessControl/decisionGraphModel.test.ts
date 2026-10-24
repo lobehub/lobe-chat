@@ -60,6 +60,16 @@ describe('buildDecisionGraph', () => {
     expect(model.result).toMatchObject({ from: 'root', note: 'words' });
   });
 
+  it('shows the written answer when the question was answered in free text', () => {
+    const model = buildDecisionGraph(
+      row({ resolvedOptionId: 'answer' }, { choice: 'ship it on Friday' }),
+      [...labels, { id: 'answer', label: 'Answer with my note' }],
+    );
+
+    expect(model.options.find((option) => option.state === 'chosen')?.id).toBe('answer');
+    expect(model.result).toMatchObject({ from: 'option', note: 'ship it on Friday' });
+  });
+
   it('keeps who settled it on the result', () => {
     expect(buildDecisionGraph(row({}, { actor: 'agent' }), labels).result?.actor).toBe('agent');
   });
