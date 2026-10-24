@@ -3586,7 +3586,7 @@
   "workingPanel.tabs.pinned": "Pinned tab",
   "workingPanel.tabs.unpin": "Unpin tab",
   "workingPanel.title": "Working Panel",
-  "workingPanel.works.canvasPublished": "Published",
+  "workingPanel.works.canvasShared": "Shared",
   "workingPanel.works.canvasUntitled": "Untitled canvas",
   "workingPanel.works.changeType.created": "Created",
   "workingPanel.works.changeType.updated": "Updated",
