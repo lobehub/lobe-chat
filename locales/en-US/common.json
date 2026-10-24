@@ -558,6 +558,8 @@
   "userPanel.usages": "Usage",
   "userPanel.workspaceSetting": "Workspace Settings",
   "userPanel.workspaceUsage": "Workspace Usage",
+  "userProfileCard.memberSince": "Member Since",
+  "userProfileCard.role": "Role",
   "version": "Version",
   "viewExecutionDetails": "View execution details",
   "visibilityConfirm.irreversible": " (irreversible)",

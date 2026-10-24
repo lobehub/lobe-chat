@@ -665,6 +665,8 @@ export default {
   'userPanel.usages': 'Usage',
   'userPanel.workspaceSetting': 'Workspace Settings',
   'userPanel.workspaceUsage': 'Workspace Usage',
+  'userProfileCard.memberSince': 'Member Since',
+  'userProfileCard.role': 'Role',
   'version': 'Version',
   'zoom': 'Zoom',
 };

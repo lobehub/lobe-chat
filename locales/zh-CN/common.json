@@ -558,6 +558,8 @@
   "userPanel.usages": "用量",
   "userPanel.workspaceSetting": "工作区设置",
   "userPanel.workspaceUsage": "工作区用量",
+  "userProfileCard.memberSince": "加入时间",
+  "userProfileCard.role": "角色",
   "version": "版本",
   "viewExecutionDetails": "查看执行详情",
   "visibilityConfirm.irreversible": "（不可逆）",
