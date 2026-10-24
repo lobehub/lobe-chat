@@ -2903,6 +2903,9 @@ export default {
   'goalProcess.node.artifactsTooltip':
     '{{count}} work versions registered. Opening them needs a server read that does not exist yet.',
   'goalProcess.node.humanTouched': 'You took part in this task',
+  'goalProcess.decisions.title': 'Decisions',
+  'goalProcess.decisions.empty': 'No decision has been asked on this goal yet.',
+  'goalProcess.decisions.pending': 'Awaiting decision',
   'goalProcess.findings.title': 'Findings',
   'goalProcess.findings.empty': 'No findings yet.',
   'goalProcess.findings.answers': 'Answers “{{title}}”',
