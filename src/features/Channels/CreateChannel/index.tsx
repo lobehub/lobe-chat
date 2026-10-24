@@ -26,7 +26,7 @@ export const openCreateChannel = (props: CreateChannelProps = {}) =>
     content: <CreateChannel {...props} />,
     footer: null,
     title: t(props.existing ? 'addMembers' : 'create', { ns: 'channel' }),
-    width: 'min(90vw, 640px)',
+    width: 'min(90vw, 800px)',
   });
 
 /**
