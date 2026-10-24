@@ -454,6 +454,11 @@ export class ResourceManagerStoreActionImpl {
         if (!libraryId) return;
 
         await kbStore.removeFilesFromKnowledgeBase(libraryId, resourceIds);
+        // The rows still exist, so they cannot be dropped from every cached
+        // search by id; but they no longer match this library's searches.
+        // Refetch the search surfaces so the hits and counts follow the server.
+        void this.#invalidateExplorerSearch();
+        void this.collapseHierarchySearch();
         this.clearSelectAllState();
         return;
       }

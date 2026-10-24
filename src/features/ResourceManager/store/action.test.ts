@@ -276,6 +276,40 @@ describe('resource manager store actions', () => {
     expect(mockForgetSnapshot).toHaveBeenCalledTimes(1);
   });
 
+  // Regression: removing search hits from the library only refreshed the
+  // folder list, so the removed rows and the old count stayed in the library's
+  // search results.
+  it('should refresh the cached library searches after removing hits from the library', async () => {
+    const { useKnowledgeBaseStore } = await import('@/store/library');
+    const removeFilesFromKnowledgeBase = vi.fn().mockResolvedValue(undefined);
+    useKnowledgeBaseStore.setState({ removeFilesFromKnowledgeBase } as any);
+
+    const params = { libraryId: 'lib-1', pageSize: 50, q: 'report' } as any;
+    const key = explorerSearchResource.key(params);
+    useResourceManagerStore.setState({
+      explorerSearchEntries: {
+        [key]: {
+          currentPage: 0,
+          hasMore: false,
+          items: [{ fileType: 'application/pdf', id: 'hit-1', name: 'hit-1' }],
+          pageSize: 50,
+          searchParams: params,
+          total: 1,
+        },
+      },
+      libraryId: 'lib-1',
+      selectAllState: 'loaded',
+      selectedFileIds: ['hit-1'],
+    });
+
+    await useResourceManagerStore.getState().onActionClick('removeFromKnowledgeBase');
+
+    expect(removeFilesFromKnowledgeBase).toHaveBeenCalledWith('lib-1', ['hit-1']);
+    await vi.waitFor(() =>
+      expect(useResourceManagerStore.getState().explorerSearchEntries[key]).toBeUndefined(),
+    );
+  });
+
   // Regression: while the search overlay was up, "select all" and the batch
   // delete resolved against the folder list behind it, so they acted on rows
   // the user had never seen instead of the search hits.
