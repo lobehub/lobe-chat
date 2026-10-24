@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 
 import WideScreenContainer from '../../../WideScreenContainer';
+import { PrintModeContext } from '../../components/PrintModeContext';
 import { CONVERSATION_PRINT_ROOT_CLASS } from '../constants';
 import { useIsPrinting } from '../hooks/useIsPrinting';
 
@@ -30,11 +31,14 @@ const PrintTranscript = ({ dataSource, itemContent }: PrintTranscriptProps) => {
   // Paper is white: re-scope the theme variables to light even in dark mode.
   return createPortal(
     <div className={CONVERSATION_PRINT_ROOT_CLASS} data-theme={'light'}>
-      {dataSource.map((id, index) => (
-        <WideScreenContainer fullWidth key={id}>
-          {itemContent(index, id)}
-        </WideScreenContainer>
-      ))}
+      {/* Rows are the live renderer, so mark them static: no editor lifecycle may start here. */}
+      <PrintModeContext value>
+        {dataSource.map((id, index) => (
+          <WideScreenContainer fullWidth key={id}>
+            {itemContent(index, id)}
+          </WideScreenContainer>
+        ))}
+      </PrintModeContext>
     </div>,
     document.body,
   );
