@@ -2520,7 +2520,8 @@ export default {
   'goalProcess.acceptance.errored': 'Verification error',
   'goalProcess.acceptance.rejected': 'Rejected',
   'goalProcess.tag.verifying': 'Verifying',
-  'goalProcess.tag.lost': 'Lost',
+  'goalProcess.tag.stalled': 'Stalled',
+  'goalProcess.tag.waitingQuota': 'Waiting for quota',
   'goalProcess.tag.done': 'Done',
   'goalProcess.tag.retired': 'Retired',
   'goalProcess.gate.decisionPointLabel': 'What needs your decision',
@@ -2656,8 +2657,12 @@ export default {
   'goalProcess.attempts.failed': 'Did not pass',
   'goalProcess.attempts.retired': 'Retired',
   'goalProcess.attempts.running': 'Running',
-  'goalProcess.stale.description':
-    'No heartbeat for {{duration}}. The next advance marks this attempt lost and starts a fresh one — it does not count as a failure.',
+  'goalProcess.stalled.description':
+    'No heartbeat for {{duration}}. The next advance restarts this attempt — it does not count as a failure.',
+  'goalProcess.quota.resumeAt': 'Resumes {{time}}',
+  'goalProcess.quota.resumeSoon': 'Resuming soon',
+  'goalProcess.quota.tooltip':
+    'The usage limit was reached. The goal resumes this task on its own once the quota resets — it does not count as a failure.',
   'goalProcess.running.elapsed': 'Running {{duration}}',
   'goalProcess.graph.title': 'Exploration map',
   'goalProcess.graph.view.stage': 'Current stage',
