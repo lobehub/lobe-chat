@@ -446,3 +446,65 @@ describe('buildLibraryTreeSnapshot', () => {
     expect(buildLibraryTreeSnapshot({}, {})).toBeUndefined();
   });
 });
+
+describe('TreeActionImpl.revalidateLoaded — a delete only the server can enumerate', () => {
+  beforeEach(() => {
+    mockGetKnowledgeItems.mockReset();
+  });
+
+  /** Root holding two folders, both expanded and loaded, with one row each. */
+  const loadTwoFolders = async () => {
+    const { actions, state } = setup();
+    mockGetKnowledgeItems.mockResolvedValue({
+      items: [serverRow('folder-a', true), serverRow('folder-b', true)],
+    });
+    actions.init('kb-1');
+    await vi.waitFor(() => expect(state.children['']).toHaveLength(2));
+    state.expanded = { 'folder-a': true, 'folder-b': true };
+    state.children['folder-a'] = [file('doc-a')];
+    state.children['folder-b'] = [file('doc-b')];
+    return { actions, state };
+  };
+
+  it('refetches every loaded folder, not only the one behind the explorer', async () => {
+    const { actions, state } = await loadTwoFolders();
+
+    // The search-wide delete matched rows in both folders; the server's answer no
+    // longer lists them. The sidebar has to follow in each of them.
+    mockGetKnowledgeItems.mockReset().mockResolvedValue({ items: [] });
+    await actions.revalidateLoaded('');
+
+    const requested = mockGetKnowledgeItems.mock.calls.map(([args]) => args.parentId);
+    expect(new Set(requested)).toEqual(new Set([null, 'folder-a', 'folder-b']));
+    expect(state.children['folder-a']).toEqual([]);
+    expect(state.children['folder-b']).toEqual([]);
+
+    const stored = JSON.stringify(state.snapshotMap['kb-1'] ?? {});
+    expect(stored).not.toContain('doc-a');
+    expect(stored).not.toContain('doc-b');
+  });
+
+  it('writes the snapshot once, after every folder settled', async () => {
+    const { actions, state } = await loadTwoFolders();
+    actions.forgetSnapshot();
+
+    const pending = deferred();
+    mockGetKnowledgeItems
+      .mockReset()
+      .mockImplementation(({ parentId }) =>
+        parentId === 'folder-b' ? pending.promise : Promise.resolve({ items: [] }),
+      );
+
+    const batch = actions.revalidateLoaded('');
+    await vi.waitFor(() => expect(state.children['folder-a']).toEqual([]));
+    // folder-b still holds the deleted row: persisting now would store it again.
+    expect(state.snapshotMap['kb-1']).toBeUndefined();
+
+    pending.resolve({ items: [] });
+    await batch;
+
+    const stored = JSON.stringify(state.snapshotMap['kb-1'] ?? {});
+    expect(stored).not.toContain('doc-a');
+    expect(stored).not.toContain('doc-b');
+  });
+});

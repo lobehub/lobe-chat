@@ -427,10 +427,13 @@ export class ResourceManagerStoreActionImpl {
           await fileStore.evictResourceLists();
           // The deleted set is only known to the server here, so the persisted
           // tree cannot drop those rows by id either: drop the snapshot and
-          // refetch the listed folder. Dropping it first means a refetch that
-          // never lands still cannot repaint the deleted rows on reload.
+          // refetch every loaded folder — a library-wide search hits rows in
+          // folders the sidebar has expanded, and refreshing only the folder
+          // behind the explorer would leave those painting the deleted rows.
+          // Dropping it first means a refetch that never lands still cannot
+          // repaint the deleted rows on reload.
           useTreeStore.getState().forgetSnapshot();
-          void useTreeStore.getState().revalidate(currentFolderKey);
+          void useTreeStore.getState().revalidateLoaded(currentFolderKey);
 
           this.clearSelectAllState();
           return;

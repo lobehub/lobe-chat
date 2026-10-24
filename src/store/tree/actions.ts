@@ -113,6 +113,14 @@ export class TreeActionImpl {
   #pendingTx = new Set<symbol>();
 
   /**
+   * Batched refreshes in flight (`revalidateLoaded`). The snapshot is written
+   * once they all settle: persisting after each folder would store the rows of
+   * the folders that have not been refetched yet, and for a delete only the
+   * server can enumerate those rows are exactly the deleted ones.
+   */
+  #pendingBatch = 0;
+
+  /**
    * Commit with the snapshot paused, then persist what survived (applied or
    * rolled back). Resolves `false` when the tree was reset meanwhile: the
    * caller's follow-up refresh would address the previous scope's folders.
@@ -163,7 +171,7 @@ export class TreeActionImpl {
    * change, so a revalidation that confirms the tree costs no storage write.
    */
   #persistSnapshot = () => {
-    if (this.#pendingTx.size > 0) return;
+    if (this.#pendingTx.size > 0 || this.#pendingBatch > 0) return;
     const { children, expanded, knowledgeBaseId, snapshotMap } = this.#get();
     if (!knowledgeBaseId) return;
     // A folder showing the explorer's optimistic overlay keeps its last stored
@@ -401,6 +409,29 @@ export class TreeActionImpl {
   revalidate = async (folderKey: string) => {
     void revalidateHierarchySearch();
     await this.#revalidateFolder(this.#resolveFolderKey(folderKey));
+  };
+
+  /**
+   * Refetch every loaded folder, for a mutation whose scope only the server
+   * knows: a library-wide search reaches rows in folders the sidebar has
+   * expanded, so refreshing the folder behind the explorer leaves the other
+   * cached folders painting the deleted rows — and the snapshot written after
+   * that single refresh would persist them too. `fallbackKey` keeps the
+   * explorer's own folder in the batch when the sidebar never loaded it (a
+   * deep link before its ancestors arrive).
+   */
+  revalidateLoaded = async (fallbackKey = ''): Promise<void> => {
+    void revalidateHierarchySearch();
+    const targets = new Set(this.#loadedVisibleFolders());
+    targets.add(this.#resolveFolderKey(fallbackKey));
+
+    this.#pendingBatch += 1;
+    try {
+      await Promise.all([...targets].map((folderId) => this.#revalidateFolder(folderId)));
+    } finally {
+      this.#pendingBatch -= 1;
+      this.#persistSnapshot();
+    }
   };
 
   /**

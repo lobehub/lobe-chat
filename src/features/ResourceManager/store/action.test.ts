@@ -13,13 +13,13 @@ const {
   mockDropNodes,
   mockForgetSnapshot,
   mockResolveSelectionIds,
-  mockRevalidateTree,
+  mockRevalidateLoaded,
 } = vi.hoisted(() => ({
   mockDeleteResourcesByQuery: vi.fn(),
   mockDropNodes: vi.fn(async () => undefined),
   mockForgetSnapshot: vi.fn(),
   mockResolveSelectionIds: vi.fn(),
-  mockRevalidateTree: vi.fn(async () => undefined),
+  mockRevalidateLoaded: vi.fn(async () => undefined),
 }));
 
 vi.mock('@/store/tree', () => ({
@@ -27,7 +27,7 @@ vi.mock('@/store/tree', () => ({
     getState: () => ({
       dropNodes: mockDropNodes,
       forgetSnapshot: mockForgetSnapshot,
-      revalidate: mockRevalidateTree,
+      revalidateLoaded: mockRevalidateLoaded,
     }),
   },
 }));
@@ -258,7 +258,7 @@ describe('resource manager store actions', () => {
     expect(useResourceManagerStore.getState().explorerSearchEntries[key]).toBeUndefined();
   });
 
-  it('should refresh the listed folder when the deleted set is only known to the server', async () => {
+  it('should refresh every loaded folder when the deleted set is only known to the server', async () => {
     useResourceManagerStore.setState({ selectAllState: 'all', selectedFileIds: [] });
     useFileStore.setState({
       deleteResources: vi.fn(),
@@ -269,8 +269,10 @@ describe('resource manager store actions', () => {
 
     await useResourceManagerStore.getState().onActionClick('delete');
 
-    // Individual ids never reach the client here, so the whole folder is refetched.
-    expect(mockRevalidateTree).toHaveBeenCalledWith('folder-a');
+    // Individual ids never reach the client here. A library-wide search also
+    // matched rows in other expanded folders, so every loaded folder is refetched
+    // — not only the one behind the explorer.
+    expect(mockRevalidateLoaded).toHaveBeenCalledWith('folder-a');
     expect(mockDropNodes).not.toHaveBeenCalled();
     // A refetch that never lands must not leave the deleted rows in the persisted tree.
     expect(mockForgetSnapshot).toHaveBeenCalledTimes(1);
