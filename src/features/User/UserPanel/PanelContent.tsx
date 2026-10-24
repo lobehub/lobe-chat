@@ -38,7 +38,7 @@ const PanelContent: FC<{ closePopover: () => void }> = ({ closePopover }) => {
     <Flexbox gap={2} style={{ minWidth: 300 }}>
       {isDesktop || isLoginWithAuth ? (
         <>
-          <UserInfo avatarProps={{ clickable: false }} onNavigate={closePopover} />
+          <UserInfo avatarProps={{ clickable: false }} />
           <UserPanelStatistics />
           {enableBusinessFeatures && <BusinessPanelContent />}
           <UserPanelWorkspaceSection onSwitch={closePopover} />

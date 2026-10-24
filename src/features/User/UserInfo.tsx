@@ -14,12 +14,9 @@ import UserAvatar from './UserAvatar';
 export interface UserInfoProps extends FlexboxProps {
   avatarProps?: Partial<UserAvatarProps>;
   onClick?: () => void;
-  /** Called after an in-panel link navigates away, so a host popover can close itself. */
-  onNavigate?: () => void;
 }
 
-// This variant has no in-panel links; pull `onNavigate` out so it is not spread onto the DOM.
-const UserInfo = memo<UserInfoProps>(({ avatarProps, onClick, onNavigate: _, ...rest }) => {
+const UserInfo = memo<UserInfoProps>(({ avatarProps, onClick, ...rest }) => {
   const isSignedIn = useUserStore(authSelectors.isLogin);
   const [nickname, username] = useUserStore((s) => [
     userProfileSelectors.nickName(s),

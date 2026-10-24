@@ -5,6 +5,7 @@ import { type PropsWithChildren } from 'react';
 import { memo, Suspense, useState } from 'react';
 
 import { isDesktop } from '@/const/version';
+import { useCloseOnNavigate } from '@/hooks/useCloseOnNavigate';
 
 import PanelContent from './PanelContent';
 import PanelContentSkeleton from './PanelContentSkeleton';
@@ -27,6 +28,8 @@ const styles = createStaticStyles(({ css }) => {
 const UserPanel = memo<PropsWithChildren>(({ children }) => {
   const hasNewVersion = useNewVersion();
   const [open, setOpen] = useState(false);
+  // Panel entries, including business slots, may navigate without a close callback.
+  useCloseOnNavigate(open, () => setOpen(false));
 
   return (
     <Suspense fallback={children}>
