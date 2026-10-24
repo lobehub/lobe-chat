@@ -163,6 +163,33 @@ describe('ChatHydration', () => {
     });
   });
 
+  /** @example ⌘K Ask AI: reloading the topic it created sent the question a second time. */
+  it('drops a consumed message param when the send moves to its new topic', async () => {
+    useParamsMock.mockReturnValue({ aid: 'agt_test' });
+    useLocationMock.mockReturnValue({
+      hash: '',
+      pathname: '/agent/agt_test',
+      search: '?message=hello&thread=thd_456',
+    });
+    useSearchParamsMock.mockReturnValue([
+      new URLSearchParams('message=hello&thread=thd_456'),
+      setSearchParamsMock,
+    ]);
+
+    render(<ChatHydration />);
+    navigateMock.mockClear();
+
+    await act(async () => {
+      useChatStore.setState({ activeTopicId: 'tpc_new' }, false);
+    });
+
+    await waitFor(() => {
+      expect(navigateMock).toHaveBeenCalledWith('/agent/agt_test/tpc_new?thread=thd_456', {
+        replace: true,
+      });
+    });
+  });
+
   /** @example Edit changes topic and clears an already-absent thread without reverting the URL. */
   it('does not rewrite the old URL when an edited topic clears an absent thread', async () => {
     // ROOT CAUSE:

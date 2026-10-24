@@ -1,45 +1,21 @@
 'use client';
 
-import {
-  Button,
-  createStaticStyles,
-  cssVar,
-  Flexbox,
-  Segmented,
-  Text,
-  TextArea,
-  toast,
-} from '@lobehub/ui';
-import { SendHorizontalIcon } from 'lucide-react';
-import { memo, useState } from 'react';
+import { createStaticStyles, cssVar, Flexbox, Text } from '@lobehub/ui';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
 
 import AsyncError from '@/components/AsyncError';
 import { RouteLoading } from '@/components/Skeleton/RouteSegment';
 import ProjectDisabled from '@/features/Projects/ProjectDisabled';
-import type { ProjectDetail } from '@/store/project';
 import { useCurrentProjectDetail, useProjectStore } from '@/store/project';
 import { useUserStore } from '@/store/user';
 import { labPreferSelectors } from '@/store/user/selectors';
 
+import ProjectComposer from './ProjectComposer';
 import ProjectDashboard from './ProjectDashboard';
-import { type ProjectComposerMode, useProjectComposer } from './useProjectComposer';
 
 const styles = createStaticStyles(({ css }) => ({
-  composer: css`
-    overflow: hidden;
-
-    border: 1px solid ${cssVar.colorBorder};
-    border-radius: 18px;
-
-    background: ${cssVar.colorBgContainer};
-    box-shadow: ${cssVar.boxShadowSecondary};
-  `,
-  composerFooter: css`
-    padding-block: 6px 8px;
-    padding-inline: 14px 8px;
-  `,
   content: css`
     overflow: auto;
     width: 100%;
@@ -68,76 +44,7 @@ const styles = createStaticStyles(({ css }) => ({
     height: 100%;
     background: ${cssVar.colorBgContainer};
   `,
-  textarea: css`
-    padding-block: 15px 8px !important;
-    padding-inline: 16px !important;
-    border: 0 !important;
-
-    font-size: 15px !important;
-
-    background: transparent !important;
-    box-shadow: none !important;
-  `,
 }));
-
-const ProjectComposer = ({ project }: { project: ProjectDetail['project'] }) => {
-  const { t } = useTranslation('project');
-  const [mode, setMode] = useState<ProjectComposerMode>('chat');
-  const { draft: message, send, sending, setDraft: setMessage } = useProjectComposer(project);
-
-  const submit = async () => {
-    try {
-      await send(mode);
-    } catch (error) {
-      console.error('Failed to send from the project home', error);
-      toast.error(t(mode === 'task' ? 'overview.createTaskFailed' : 'overview.sendFailed'));
-    }
-  };
-
-  return (
-    <Flexbox className={styles.composer}>
-      <TextArea
-        autoFocus
-        autoSize={{ maxRows: 7, minRows: 3 }}
-        className={styles.textarea}
-        disabled={sending}
-        value={message}
-        placeholder={t(
-          mode === 'task' ? 'overview.taskPlaceholder' : 'overview.composerPlaceholder',
-        )}
-        onChange={(event) => setMessage(event.target.value)}
-        onKeyDown={(event) => {
-          if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') void submit();
-        }}
-      />
-      <Flexbox
-        horizontal
-        align={'center'}
-        className={styles.composerFooter}
-        justify={'space-between'}
-      >
-        <Segmented
-          size={'small'}
-          value={mode}
-          options={[
-            { label: t('overview.mode.chat'), value: 'chat' },
-            { label: t('overview.mode.task'), value: 'task' },
-          ]}
-          onChange={(value) => setMode(value as ProjectComposerMode)}
-        />
-        <Button
-          aria-label={t(mode === 'task' ? 'overview.createTask' : 'overview.startConversation')}
-          disabled={!message.trim()}
-          icon={SendHorizontalIcon}
-          loading={sending}
-          shape={'circle'}
-          type={'primary'}
-          onClick={submit}
-        />
-      </Flexbox>
-    </Flexbox>
-  );
-};
 
 const ProjectWorkspace = memo(() => {
   const { t } = useTranslation('project');
@@ -162,7 +69,7 @@ const ProjectWorkspace = memo(() => {
               </Text>
               <Text type={'secondary'}>{t('overview.description')}</Text>
             </Flexbox>
-            <ProjectComposer key={detail.project.id} project={detail.project} />
+            <ProjectComposer detail={detail} key={detail.project.id} />
           </Flexbox>
           <ProjectDashboard detail={detail} projectId={detail.project.id} />
         </Flexbox>
