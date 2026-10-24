@@ -3,6 +3,7 @@ import { BUILTIN_AGENT_SLUGS } from '@lobechat/builtin-agents';
 import type { SandboxStorageClaim } from '@lobechat/builtin-tool-cloud-sandbox';
 import type { LobeChatDatabase } from '@lobechat/database';
 import type {
+  AgentRunInitRequest,
   AgentSenderMetadata,
   ExecAgentResult,
   ExecGroupAgentParams,
@@ -13,7 +14,11 @@ import type {
   ScheduleAgentRunParams,
   ScheduleAgentRunResult,
 } from '@lobechat/types';
-import { RequestTrigger } from '@lobechat/types';
+import {
+  agentShareFileAccessScope,
+  ordinaryFileAccessScope,
+  RequestTrigger,
+} from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 
@@ -48,12 +53,14 @@ import type {
   GroupActionMemberBridgeParams,
 } from '@/server/services/agentRuntime/types';
 import { ComposioService } from '@/server/services/composio';
+import { DocumentService } from '@/server/services/document';
 import { MarketService } from '@/server/services/market';
 import type { SteerQueueScope } from '@/server/services/redis/steerQueue';
 
 import { createGraphAwareAgentFactory } from './helpers/agentFactory';
 import { InterventionController } from './intervention/InterventionController';
 import type { ApprovalClaimState } from './pipeline/approvalResume';
+import { runDeferredOperationInit } from './pipeline/deferredInit';
 import { execAgentTurn, type ExecAgentTurnDeps } from './pipeline/execTurn';
 import {
   createGroupMemberApprovalDeps,
@@ -64,6 +71,7 @@ import { resolveNewThread } from './pipeline/newThread';
 import { createGroupAgentTopic, type PrecreatedTopicDeps } from './pipeline/precreatedTopic';
 import { scheduleAgentRun } from './pipeline/scheduleAgentRun';
 import { runWithTopicStart, type TopicStartDeps } from './pipeline/topicStart';
+import { bindTopicWorkingDirectory } from './pipeline/topicWorkingDirectory';
 import type { RunFacts } from './runFacts';
 import { resolveAgentSenderFromOperation } from './sourceAttribution';
 import { startQueuedFollowUp } from './steerQueue';
@@ -167,6 +175,7 @@ export class AiAgentService {
         execVirtualSubAgent: this.execVirtualSubAgent,
         execGroupMember: this.execGroupMember,
         injectQueuedFollowUp: this.injectQueuedFollowUp,
+        runDeferredInit: this.runDeferredInit,
         startQueuedFollowUp: this.startQueuedFollowUp,
         verifyShareRunStillAuthorized: this.verifyShareRunStillAuthorized,
       },
@@ -621,6 +630,45 @@ export class AiAgentService {
       userId: this.userId,
       workspaceId: this.workspaceId,
     });
+
+  /**
+   * `AgentRuntimeDelegate.runDeferredInit` implementation — see
+   * `runDeferredOperationInit` in `./pipeline/deferredInit`.
+   *
+   * Arrow field (not a method) so it stays bound when handed to
+   * AgentRuntimeService.
+   */
+  runDeferredInit = async (params: {
+    operationId: string;
+    request: AgentRunInitRequest;
+    state: AgentState;
+  }) =>
+    runDeferredOperationInit(
+      {
+        agentDocumentsService: this.agentDocumentsService,
+        agentModel: this.agentModel,
+        bindTopicWorkingDirectory: (p) =>
+          bindTopicWorkingDirectory({ topicModel: this.topicModel }, p),
+        composioService: this.composioService,
+        connectorModel: this.connectorModel,
+        connectorToolModel: this.connectorToolModel,
+        db: this.db,
+        getMarketService: (runFacts) => this.getMarketService(runFacts),
+        messageModel: this.messageModel,
+        pluginModel: this.pluginModel,
+        readFileContent: async (fileId, shareGate) =>
+          (
+            await new DocumentService(this.db, this.userId, this.workspaceId).parseFile(
+              fileId,
+              shareGate ? agentShareFileAccessScope(shareGate) : ordinaryFileAccessScope,
+            )
+          ).content ?? undefined,
+        topicModel: this.topicModel,
+        userId: this.userId,
+        workspaceId: this.workspaceId,
+      },
+      params,
+    );
 
   /**
    * `AgentRuntimeDelegate.verifyShareRunStillAuthorized` implementation — see
