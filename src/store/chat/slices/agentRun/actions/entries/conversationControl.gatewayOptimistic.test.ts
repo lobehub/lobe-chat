@@ -269,6 +269,74 @@ describe('Gateway approval cards update before the resume returns', () => {
     expect(interventionOf('tool-1')?.status).toBe('approved');
   });
 
+  const stopApproval = () => {
+    const op = Object.values(useChatStore.getState().operations).find(
+      (operation) => operation.type === 'approveToolCalling',
+    );
+    act(() => {
+      void useChatStore.getState().cancelOperation(op!.id, 'User stopped');
+    });
+    return op!.id;
+  };
+
+  it('sends no claim when Stop lands before the approval leaves', async () => {
+    seedPendingTools(['tool-1']);
+    const { result } = setupGateway();
+
+    await act(async () => {
+      const approval = result.current.approveToolCalling('tool-1', '');
+      stopApproval();
+      await approval;
+    });
+
+    expect(lambdaClient.aiAgent.resolveAgentInterventionBySource.mutate).not.toHaveBeenCalled();
+    expect(result.current.executeGatewayAgent).not.toHaveBeenCalled();
+    expect(interventionOf('tool-1')?.status).toBe('pending');
+    expect(useChatStore.getState().updateTopicStatus).not.toHaveBeenCalled();
+  });
+
+  it('hands Stop to the resumed run when it lands while the claim is in flight', async () => {
+    seedPendingTools(['tool-1']);
+    const { result, resume } = setupGateway();
+    const refresh = vi.spyOn(result.current, 'refreshMessages').mockResolvedValue(undefined);
+    let claim!: (value: unknown) => void;
+    vi.mocked(lambdaClient.aiAgent.resolveAgentInterventionBySource.mutate).mockReturnValueOnce(
+      new Promise((resolve) => (claim = resolve)) as any,
+    );
+
+    let approval!: Promise<void>;
+    let operationId!: string;
+    await act(async () => {
+      approval = result.current.approveToolCalling('tool-1', '');
+      await vi.waitFor(() =>
+        expect(lambdaClient.aiAgent.resolveAgentInterventionBySource.mutate).toHaveBeenCalled(),
+      );
+      operationId = stopApproval();
+      claim({
+        execution: { operationId: 'resumed-op' },
+        state: 'claimed',
+        success: true,
+      });
+      await vi.waitFor(() => expect(result.current.executeGatewayAgent).toHaveBeenCalled());
+    });
+
+    expect(result.current.executeGatewayAgent).toHaveBeenCalledWith(
+      expect.objectContaining({ parentOperationId: operationId }),
+    );
+
+    await act(async () => {
+      resume.resolve();
+      await approval;
+    });
+
+    expect(refresh).toHaveBeenCalled();
+    // The claim landed, so the topic no longer waits on the user. The local row
+    // already reads `active`, so only a forced write reaches the server.
+    expect(useChatStore.getState().updateTopicStatus).toHaveBeenCalledWith(
+      expect.objectContaining({ force: true, status: 'active' }),
+    );
+  });
+
   it('keeps the claim request on the still-pending server row', async () => {
     seedPendingTools(['tool-1']);
     const { result, resume } = setupGateway();

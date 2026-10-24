@@ -532,7 +532,7 @@ export class ConversationControlActionImpl {
     }, HETERO_INTERVENTION_ACK_TIMEOUT_MS);
   };
 
-  #writeTopicStatus = (context: ConversationContext, status: ChatTopicStatus): void => {
+  #writeTopicStatus = (context: ConversationContext, status: ChatTopicStatus, force?: boolean) => {
     // A share visitor's topic belongs to the creator; the owner-scoped topic
     // write would be rejected, and the share page has no topic status UI.
     if (!context.topicId || context.agentShareId) return;
@@ -544,6 +544,7 @@ export class ConversationControlActionImpl {
       agentId: context.agentId,
       groupId: context.groupId,
       ...(topicScope ? { scope: topicScope } : {}),
+      force,
       status,
       topicId: context.topicId,
     });
@@ -707,6 +708,88 @@ export class ConversationControlActionImpl {
     return !!op && op.status !== 'running';
   };
 
+  /**
+   * Claim a Gateway approval and start the run that resumes it, for both single
+   * and batch approve. The card already shows the decision and no longer covers
+   * the composer, so Stop is reachable while the claim is in flight:
+   * - Before the claim leaves, nothing reached the server: undo locally.
+   * - After it, `executeGatewayAgent` interrupts the started run (via
+   *   `parentOperationId`). The local decision is undone and the server's state
+   *   reloaded, since the refresh merge would otherwise keep the local approval.
+   */
+  #resumeGatewayApproval = async (approval: {
+    action: AgentInterventionSourceAction;
+    anchorMessageId: string;
+    context: ConversationContext;
+    logTag: string;
+    /** Runs once the resumed run started; `handled` means the source store took the decision. */
+    onClaimed?: (handled: boolean) => Promise<void>;
+    operationId: string;
+    /** Resume through the message-row claim when no source store handles the decision. */
+    resumeLegacy: (params: Parameters<ChatStore['executeGatewayAgent']>[0]) => Promise<unknown>;
+    rollbackLocalDecision: () => void;
+    toolMessageIds: string[];
+  }): Promise<void> => {
+    const { anchorMessageId, context, logTag, operationId, toolMessageIds } = approval;
+    const isStopped = () => this.#get().operations[operationId]?.status === 'cancelled';
+    const settleStopped = () => {
+      this.#interventions.rollback(toolMessageIds);
+      return this.#get()
+        .refreshMessages(context)
+        .catch((error) => console.error(`${logTag} refresh after Stop failed:`, error));
+    };
+    if (isStopped()) return approval.rollbackLocalDecision();
+
+    // Retired only once the resume starts, so a retry still sees Gateway mode.
+    const pausedOpIds = this.#getRunningServerOps(context).map((op) => op.id);
+    const params = {
+      context,
+      message: '',
+      metadata: this.#getRequestMetadataFromMessageChain(anchorMessageId),
+      parentMessageId: anchorMessageId,
+      parentOperationId: operationId,
+    };
+    try {
+      const sourceResolution = await this.tryResolveAgentInterventionBySource({
+        action: approval.action,
+        context,
+        toolMessageIds,
+      });
+      if (this.#discardAlreadyResolvedSource(sourceResolution, operationId)) return;
+
+      this.#emitRunResumed(context, {
+        operationId,
+        parentMessageId: anchorMessageId,
+        runtimeType: 'gateway',
+      });
+      if (!sourceResolution.handled) await approval.resumeLegacy(params);
+      else if (sourceResolution.execution) {
+        await this.#get().executeGatewayAgent({
+          ...params,
+          precreatedResult: sourceResolution.execution,
+        });
+      }
+      await approval.onClaimed?.(sourceResolution.handled);
+      // The server took the decision. A stopped run never writes its own status,
+      // so force past the local row: it already reads `active` (pinned when the
+      // paused run ended) while the server's still reads `waitingForHuman`.
+      this.#writeTopicStatus(context, 'active', isStopped());
+      this.#completeOpsById(pausedOpIds);
+      if (isStopped()) return await settleStopped();
+      this.#get().completeOperation(operationId);
+    } catch (error) {
+      if (isStopped()) return await settleStopped();
+      const err = error as Error;
+      console.error(`${logTag} Gateway resume failed:`, err);
+      approval.rollbackLocalDecision();
+      this.#get().failOperation(operationId, {
+        type: 'approveToolCalling',
+        message: err.message || 'Unknown error',
+      });
+      throw error;
+    }
+  };
+
   approveToolCalling = async (
     toolMessageId: string,
     _assistantGroupId: string,
@@ -777,13 +860,9 @@ export class ConversationControlActionImpl {
       );
     }
 
-    // NOTE: intentionally do NOT bail on Stop here. `intervention: approved` is
-    // already persisted above; returning early would leave the tool marked
-    // approved but never executed — a stuck conversation. Stop pressed in this
-    // sub-second window is best-effort (the paused run can't be aborted yet);
-    // let the approval complete atomically and honor the next Stop normally.
-    const requestMetadata = this.#getRequestMetadataFromMessageChain(toolMessageId);
-
+    // NOTE: the client path intentionally does NOT bail on Stop here: the
+    // approval is persisted above, so returning would leave the tool approved
+    // but never executed. The Gateway path below honors Stop around its claim.
     // 2.5. Server-mode: start a **new** Gateway op carrying the approval
     // decision via `resumeApproval`. The server reads the target tool
     // message, persists `intervention=approved`, dispatches the approved
@@ -799,80 +878,41 @@ export class ConversationControlActionImpl {
         completeOperation(operationId);
         return;
       }
-      // Snapshot paused op IDs before the resume call; retire them only
-      // after executeGatewayAgent succeeds so a transient failure leaves
-      // the running marker intact and `#shouldUseGatewayResume` still flags
-      // Gateway mode on retry.
-      const pausedOpIds = this.#getRunningServerOps(effectiveContext).map((op) => op.id);
       // A share run belongs to the agent's owner, so a server-side `remember`
       // would write the OWNER's allow list (the share mirror rejects it). A
       // visitor's "don't ask again" approves once and lands in their own allow
       // list instead, which their share runs send as `userInterventionConfig`.
       const remembersOnServer = !!options?.rememberToolKey && !effectiveContext.agentShareId;
-      try {
-        const sourceResolution = await this.tryResolveAgentInterventionBySource({
-          action: {
-            ...(options?.editedArguments && {
-              edits: { [toolMessageId]: options.editedArguments },
-            }),
-            scope: remembersOnServer ? 'remember' : 'once',
-            type: 'approve_tool',
-          },
-          context: effectiveContext,
-          toolMessageIds: [toolMessageId],
-        });
-        if (this.#discardAlreadyResolvedSource(sourceResolution, operationId)) return;
-
-        this.#emitRunResumed(effectiveContext, {
-          operationId,
-          parentMessageId: toolMessageId,
-          runtimeType: 'gateway',
-        });
-        if (sourceResolution.handled) {
-          if (sourceResolution.execution) {
-            await this.#get().executeGatewayAgent({
-              context: effectiveContext,
-              message: '',
-              metadata: requestMetadata,
-              parentMessageId: toolMessageId,
-              precreatedResult: sourceResolution.execution,
-            });
+      await this.#resumeGatewayApproval({
+        action: {
+          ...(options?.editedArguments && {
+            edits: { [toolMessageId]: options.editedArguments },
+          }),
+          scope: remembersOnServer ? 'remember' : 'once',
+          type: 'approve_tool',
+        },
+        anchorMessageId: toolMessageId,
+        context: effectiveContext,
+        logTag: '[approveToolCalling][server]',
+        onClaimed: async (handled) => {
+          if (options?.rememberToolKey && !(handled && remembersOnServer)) {
+            await useUserStore.getState().addToolToAllowList(options.rememberToolKey);
           }
-        } else {
+        },
+        operationId,
+        resumeLegacy: async (params) => {
           // OSS compatibility: no generic durable store. Persist a staged edit
           // only now, after the generic capability probe, then use the existing
           // message-row claim path.
-          if (options?.editedArguments) {
-            await options.onLegacyEditFallback?.();
-          }
+          if (options?.editedArguments) await options.onLegacyEditFallback?.();
           await this.#get().executeGatewayAgent({
-            context: effectiveContext,
-            message: '',
-            metadata: requestMetadata,
-            parentMessageId: toolMessageId,
-            resumeApproval: {
-              decision: 'approved',
-              parentMessageId: toolMessageId,
-              toolCallId,
-            },
+            ...params,
+            resumeApproval: { decision: 'approved', parentMessageId: toolMessageId, toolCallId },
           });
-        }
-        if (options?.rememberToolKey && !(sourceResolution.handled && remembersOnServer)) {
-          await useUserStore.getState().addToolToAllowList(options.rememberToolKey);
-        }
-        this.#writeTopicStatus(effectiveContext, 'active');
-        this.#completeOpsById(pausedOpIds);
-        completeOperation(operationId);
-      } catch (error) {
-        const err = error as Error;
-        console.error('[approveToolCalling][server] Gateway resume failed:', err);
-        rollbackLocalDecision();
-        this.#get().failOperation(operationId, {
-          type: 'approveToolCalling',
-          message: err.message || 'Unknown error',
-        });
-        throw error;
-      }
+        },
+        rollbackLocalDecision,
+        toolMessageIds: [toolMessageId],
+      });
       return;
     }
 
@@ -1051,7 +1091,7 @@ export class ConversationControlActionImpl {
       return;
     }
 
-    const { completeOperation, startOperation } = this.#get();
+    const { startOperation } = this.#get();
 
     // Drop anything that can't be addressed: an optimistic row (`tmp_`) has no
     // server identity yet, and a tool message without `tool_call_id` can't be
@@ -1074,65 +1114,29 @@ export class ConversationControlActionImpl {
     // The op-level anchor. The server re-derives the spine anchor from the
     // batch itself, so this only has to be one of the batch's own rows.
     const anchorMessageId = decisions.at(-1)!.parentMessageId;
+    const approvedIds = decisions.map(({ parentMessageId }) => parentMessageId);
 
     const { operationId } = startOperation({
       type: 'approveToolCalling',
       context: { ...effectiveContext, messageId: anchorMessageId },
     });
     const rollbackLocalDecision = this.#interventions.applyLocalDecision(
-      decisions.map(({ parentMessageId }) => parentMessageId),
+      approvedIds,
       { status: 'approved' },
       { operationId },
     );
 
-    const requestMetadata = this.#getRequestMetadataFromMessageChain(anchorMessageId);
-    const pausedOpIds = this.#getRunningServerOps(effectiveContext).map((op) => op.id);
-
-    try {
-      const sourceResolution = await this.tryResolveAgentInterventionBySource({
-        action: { scope: 'once', type: 'approve_tool' },
-        context: effectiveContext,
-        toolMessageIds: decisions.map(({ parentMessageId }) => parentMessageId),
-      });
-      if (this.#discardAlreadyResolvedSource(sourceResolution, operationId)) return;
-
-      this.#emitRunResumed(effectiveContext, {
-        operationId,
-        parentMessageId: anchorMessageId,
-        runtimeType: 'gateway',
-      });
-      if (sourceResolution.handled) {
-        if (sourceResolution.execution) {
-          await this.#get().executeGatewayAgent({
-            context: effectiveContext,
-            message: '',
-            metadata: requestMetadata,
-            parentMessageId: anchorMessageId,
-            precreatedResult: sourceResolution.execution,
-          });
-        }
-      } else {
-        await this.#get().executeGatewayAgent({
-          context: effectiveContext,
-          message: '',
-          metadata: requestMetadata,
-          parentMessageId: anchorMessageId,
-          resumeApprovals: decisions,
-        });
-      }
-      this.#writeTopicStatus(effectiveContext, 'active');
-      this.#completeOpsById(pausedOpIds);
-      completeOperation(operationId);
-    } catch (error) {
-      const err = error as Error;
-      console.error('[approveAllToolCalls][server] Gateway resume failed:', err);
-      rollbackLocalDecision();
-      this.#get().failOperation(operationId, {
-        type: 'approveToolCalling',
-        message: err.message || 'Unknown error',
-      });
-      throw error;
-    }
+    await this.#resumeGatewayApproval({
+      action: { scope: 'once', type: 'approve_tool' },
+      anchorMessageId,
+      context: effectiveContext,
+      logTag: '[approveAllToolCalls][server]',
+      operationId,
+      resumeLegacy: (params) =>
+        this.#get().executeGatewayAgent({ ...params, resumeApprovals: decisions }),
+      rollbackLocalDecision,
+      toolMessageIds: approvedIds,
+    });
   };
 
   submitToolInteraction = async (
