@@ -10,6 +10,7 @@ import { TRPCError } from '@trpc/server';
 
 import { MetricModel } from '@/database/models/metric';
 import { GoalRepository } from '@/database/repositories/goal';
+import type { LobeChatDatabase } from '@/database/type';
 
 import {
   compareMetric,
@@ -339,9 +340,11 @@ export const setAcceptanceCriteria = async (
 export const evaluateMetricCriteria = async (
   ctx: GoalServiceContext,
   graph: GoalGraphSnapshot,
+  /** Pass a transaction to hold the evidence locks until the caller commits. */
+  db: LobeChatDatabase = ctx.db,
 ): Promise<GoalMetricCriteriaState> => {
   const declared = graph.goal.config?.acceptance?.metrics ?? [];
-  const metricModel = new MetricModel(ctx.db, ctx.userId, ctx.workspaceId);
+  const metricModel = new MetricModel(db, ctx.userId, ctx.workspaceId);
 
   // Two queries for the whole contract, not two per clause: this runs on
   // every terminal tick, and a goal carrying a large acceptance payload would
@@ -364,11 +367,7 @@ export const evaluateMetricCriteria = async (
   // A clause bound to a Widget subscription reads that subscription's accepted
   // observation (fresh, provenance-checked); an unbound clause keeps reading the
   // series' latest point.
-  const subscriptions = await new GoalSubscriptionService(
-    ctx.db,
-    ctx.userId,
-    ctx.workspaceId,
-  ).criteria(
+  const subscriptions = await new GoalSubscriptionService(db, ctx.userId, ctx.workspaceId).criteria(
     graph.goal.id,
     declared.map((criterion) => criterion.key),
   );

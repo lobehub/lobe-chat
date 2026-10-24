@@ -589,10 +589,17 @@ export class GoalSubscriptionService {
         .for('update');
       if (!sub?.enabled || (revision !== undefined && revision !== sub.bindingRevision)) return;
       if (!['planning', 'running'].includes(goal.status)) {
-        await db
-          .update(goalSubscriptions)
-          .set({ enabled: false, bindingRevision: sub.bindingRevision + 1, updatedAt: new Date() })
-          .where(eq(goalSubscriptions.id, id));
+        // A review gate only defers consumption: the answer returns the Goal to
+        // `running` with its bindings intact. Only a stopped Goal releases them.
+        if (['paused', 'canceled', 'achieved', 'failed'].includes(goal.status))
+          await db
+            .update(goalSubscriptions)
+            .set({
+              enabled: false,
+              bindingRevision: sub.bindingRevision + 1,
+              updatedAt: new Date(),
+            })
+            .where(eq(goalSubscriptions.id, id));
         return;
       }
       const source = await this.source(db, sub, goal.userId);

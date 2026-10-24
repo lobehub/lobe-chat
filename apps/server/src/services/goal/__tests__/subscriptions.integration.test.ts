@@ -370,6 +370,20 @@ describe('durable Widget to Goal subscriptions', () => {
     },
   );
 
+  it('keeps bindings through a review gate and consumes once the Goal runs again', async () => {
+    const f = await fixture();
+    await db.update(goals).set({ status: 'review' }).where(eq(goals.id, f.goal.id));
+    const run = await reserve(f);
+    await finish(f, run, 'succeeded', 9);
+    await GoalSubscriptionService.forWidget(db, f.widget.id);
+    const gated = (await service.list(f.goal.id))[0].subscription;
+    expect(gated.enabled).toBe(true);
+    expect(gated.bindingRevision).toBe(f.sub.bindingRevision);
+    await db.update(goals).set({ status: 'running' }).where(eq(goals.id, f.goal.id));
+    await service.consume(f.sub.id, f.sub.bindingRevision);
+    expect((await service.criterion(f.goal.id, 'followers')).point?.value).toBe(9);
+  });
+
   it('explicit rebind fences old callbacks and establishes a non-replay baseline', async () => {
     const f = await fixture();
     const run = await reserve(f);
