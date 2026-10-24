@@ -51,7 +51,8 @@ const ExceededContextWindowError = memo<ExceededContextWindowErrorProps>(
     const handleCompact = useCallback(async () => {
       if (!canCompact || !context.topicId) return;
 
-      // Leave the failed turn out of the summary so it can be regenerated afterwards.
+      // Leave the failed turn out of the summary so it can be regenerated afterwards. A failed
+      // compaction keeps the original history, so retrying would hit the same error again.
       await retryParentMessage(() =>
         useChatStore.getState().executeCompression(context, '', { beforeMessageId: parentId }),
       );
