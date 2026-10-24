@@ -659,7 +659,6 @@ export class GoalSubscriptionService {
         if (
           run.userId === source.widget.userId &&
           run.workspaceId === sub.workspaceId &&
-          run.trigger !== 'preview' &&
           run.versionId === sub.confirmedVersionId &&
           run.status === 'succeeded' &&
           run.output?.meta?.complete !== false
