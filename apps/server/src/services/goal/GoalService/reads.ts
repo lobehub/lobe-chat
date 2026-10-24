@@ -8,6 +8,7 @@ import type {
   GoalStatus,
 } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
+import pMap from 'p-map';
 
 import { AgentOperationModel } from '@/database/models/agentOperation';
 
@@ -211,9 +212,11 @@ export const collectQuotaWaits = async (
   const nodeByTaskId = new Map(activeTasks.map((node) => [node.taskId, node.id]));
   const operationModel = new AgentOperationModel(ctx.db, ctx.userId, ctx.workspaceId);
   const waits: Record<string, Date> = {};
-  // Paused active Tasks are rare, so the per-task read stays off the common poll.
-  await Promise.all(
-    paused.map(async (task) => {
+  // Paused active Tasks are rare, so the per-task read stays off the common poll;
+  // the cap keeps a goal with many held Tasks from bursting the pool on every poll.
+  await pMap(
+    paused,
+    async (task) => {
       const [latest] = await ctx.taskTopicModel.findWithHandoff(task.id, 1);
       if (!latest?.operationId) return;
       const operation = await operationModel.findById(latest.operationId);
@@ -221,7 +224,8 @@ export const collectQuotaWaits = async (
       const nodeId = nodeByTaskId.get(task.id);
       if (failure.kind !== 'quota_reset' || !nodeId) return;
       waits[nodeId] = new Date(failure.resetsAt! + QUOTA_RESET_MARGIN_MS);
-    }),
+    },
+    { concurrency: 5 },
   );
 
   return Object.keys(waits).length > 0 ? waits : undefined;
