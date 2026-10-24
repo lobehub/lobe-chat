@@ -70,7 +70,7 @@ export class GoalSubscriptionService {
       throw unavailable();
     if (
       goal.agentId &&
-      !(await new AgentModel(db, this.userId, this.workspaceId).findById(goal.agentId))
+      !(await new AgentModel(db, this.userId, this.workspaceId).existsById(goal.agentId))
     )
       throw unavailable();
     if (this.workspaceId) {
