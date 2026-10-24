@@ -61,6 +61,7 @@ export * from './session';
 export * from './signal';
 export * from './systemBotProvider';
 export * from './task';
+export * from './taskExternalLink';
 export * from './topic';
 export * from './topicComment';
 export * from './trash';

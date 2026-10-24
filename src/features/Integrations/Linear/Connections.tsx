@@ -13,11 +13,14 @@ import {
   Text,
   toast,
 } from '@lobehub/ui';
-import { ChevronDownIcon, PlusIcon } from 'lucide-react';
+import { ChevronDownIcon, DownloadIcon, PlusIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useIsWorkspaceViewer } from '@/business/client/hooks/useIsWorkspaceViewer';
 import { linearService } from '@/services/linear';
+
+import { openLinearIssueImportModal } from './IssueSync';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
   card: css`
@@ -70,14 +73,18 @@ interface ConnectionsProps {
   connections: LinearConnectionView[];
   installHref?: string;
   onChanged: () => void;
+  /** After issues were imported or a sync rule was saved. */
+  onSynced?: () => void;
   /** Workspace rows say who connected them; personal rows belong to the viewer. */
   scope: 'personal' | 'workspace';
 }
 
 /** Every Linear workspace connected in this scope. */
 const Connections = memo<ConnectionsProps>(
-  ({ configured, connections, installHref, onChanged, scope }) => {
+  ({ configured, connections, installHref, onChanged, onSynced, scope }) => {
     const { t } = useTranslation('integration');
+    // Viewers can see connections but cannot create tasks from them.
+    const isViewer = useIsWorkspaceViewer();
 
     const disconnect = (connection: LinearConnectionView) => {
       confirmModal({
@@ -144,6 +151,15 @@ const Connections = memo<ConnectionsProps>(
                       {detail}
                     </Text>
                   </Flexbox>
+                  <Button
+                    disabled={isViewer}
+                    icon={<Icon icon={DownloadIcon} />}
+                    size="small"
+                    title={isViewer ? t('linear.sync.viewerDisabled') : undefined}
+                    onClick={() => openLinearIssueImportModal({ connection, onSynced })}
+                  >
+                    {t('linear.sync.importIssues')}
+                  </Button>
                   <DropdownMenu
                     placement="bottomRight"
                     items={[

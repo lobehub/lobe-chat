@@ -3,7 +3,13 @@ import { getTestDB } from '@lobechat/database/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LinearConnectionModel } from '@/database/models/linear';
-import { linearConnections, users, workspaceMembers, workspaces } from '@/database/schemas';
+import {
+  linearConnections,
+  linearSyncRules,
+  users,
+  workspaceMembers,
+  workspaces,
+} from '@/database/schemas';
 
 import { linearRouter } from '../linear';
 
@@ -15,10 +21,36 @@ vi.mock('@/envs/linear', () => ({
   linearEnv: { ENABLED_LINEAR: true },
 }));
 
-const mocks = vi.hoisted(() => ({ revoke: vi.fn() }));
+const mocks = vi.hoisted(() => ({
+  getToken: vi.fn(),
+  listTeams: vi.fn(),
+  revoke: vi.fn(),
+  syncByFilter: vi.fn(),
+}));
 vi.mock('@/server/services/linear/client', () => ({
   LINEAR_INSTALL_PATH: '/api/webhooks/linear/install',
+  LinearApiError: class LinearApiError extends Error {
+    constructor(
+      message: string,
+      readonly status: number,
+    ) {
+      super(message);
+    }
+  },
   revokeLinearToken: mocks.revoke,
+}));
+vi.mock('@/server/services/linear/token', () => ({
+  getLinearAccessToken: mocks.getToken,
+  LinearReconnectRequiredError: class LinearReconnectRequiredError extends Error {},
+}));
+vi.mock('@/server/services/linear/issues', () => ({
+  listLinearProjects: vi.fn(),
+  listLinearTeams: mocks.listTeams,
+}));
+vi.mock('@/server/services/linear/issueSync', () => ({
+  LinearIssueSyncService: vi.fn().mockImplementation(function () {
+    return { syncByFilter: mocks.syncByFilter };
+  }),
 }));
 vi.mock('@/server/modules/KeyVaultsEncrypt', () => ({
   KeyVaultsGateKeeper: {
@@ -58,6 +90,7 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
+  await serverDB.delete(linearSyncRules);
   await serverDB.delete(linearConnections);
   await serverDB.delete(workspaces);
   await serverDB.delete(users);
@@ -122,5 +155,118 @@ describe('linearRouter', () => {
     await expect(
       caller({ userId }).disconnect({ connectionId: connection.id }),
     ).rejects.toMatchObject({ code: 'NOT_FOUND' });
+  });
+
+  describe('issue sync', () => {
+    const syncResult = {
+      closed: 0,
+      created: 2,
+      keptLocalEdits: 0,
+      skipped: [],
+      truncated: false,
+      unchanged: 0,
+      updated: 0,
+    };
+
+    it("does not read Linear through another scope's connection", async () => {
+      const other = await connect({ userId: otherUserId });
+
+      await expect(caller({ userId }).listTeams({ connectionId: other.id })).rejects.toMatchObject({
+        code: 'NOT_FOUND',
+      });
+      expect(mocks.getToken).not.toHaveBeenCalled();
+    });
+
+    it('asks to reconnect when Linear rejects the token', async () => {
+      const connection = await connect({ userId });
+      const { LinearApiError } = await import('@/server/services/linear/client');
+      mocks.getToken.mockResolvedValue('token');
+      mocks.listTeams.mockRejectedValue(new LinearApiError('Linear API error: Unauthorized', 401));
+
+      await expect(
+        caller({ userId }).listTeams({ connectionId: connection.id }),
+      ).rejects.toMatchObject({
+        code: 'PRECONDITION_FAILED',
+        message: 'LINEAR_RECONNECT_REQUIRED',
+      });
+    });
+
+    it('saves a rule, runs it with its filter and records the outcome', async () => {
+      const connection = await connect({ userId });
+      mocks.getToken.mockResolvedValue('token');
+      mocks.syncByFilter.mockResolvedValue(syncResult);
+
+      const rule = await caller({ userId }).createSyncRule({
+        connectionId: connection.id,
+        stateTypes: ['backlog', 'unstarted'],
+        teamId: 'team-1',
+        teamName: 'Engineering',
+      });
+      const result = await caller({ userId }).runSyncRule({ ruleId: rule.id });
+
+      expect(result).toEqual(syncResult);
+      expect(mocks.syncByFilter).toHaveBeenCalledWith(
+        'token',
+        { linearProjectId: null, stateTypes: ['backlog', 'unstarted'], teamId: 'team-1' },
+        { targetProjectId: null },
+      );
+      const [saved] = await caller({ userId }).listSyncRules();
+      expect(saved).toMatchObject({ id: rule.id, lastResult: syncResult, teamName: 'Engineering' });
+      expect(saved.lastRunAt).toBeInstanceOf(Date);
+    });
+
+    it("hides another user's personal rules", async () => {
+      const connection = await connect({ userId: otherUserId });
+      const rule = await caller({ userId: otherUserId }).createSyncRule({
+        connectionId: connection.id,
+        stateTypes: ['backlog'],
+        teamId: 'team-1',
+        teamName: 'Engineering',
+      });
+
+      expect(await caller({ userId }).listSyncRules()).toEqual([]);
+      await expect(caller({ userId }).runSyncRule({ ruleId: rule.id })).rejects.toMatchObject({
+        code: 'NOT_FOUND',
+      });
+      await expect(caller({ userId }).deleteSyncRule({ ruleId: rule.id })).rejects.toMatchObject({
+        code: 'NOT_FOUND',
+      });
+    });
+
+    it('rejects a target project the caller cannot see', async () => {
+      const connection = await connect({ userId });
+
+      await expect(
+        caller({ userId }).createSyncRule({
+          connectionId: connection.id,
+          stateTypes: ['backlog'],
+          targetProjectId: 'proj_missing',
+          teamId: 'team-1',
+          teamName: 'Engineering',
+        }),
+      ).rejects.toMatchObject({ code: 'NOT_FOUND' });
+    });
+
+    it('keeps a rule removable after its connection is disconnected, and asks to reconnect on run', async () => {
+      const connection = await connect({ userId });
+      const rule = await caller({ userId }).createSyncRule({
+        connectionId: connection.id,
+        stateTypes: ['backlog'],
+        teamId: 'team-1',
+        teamName: 'Engineering',
+      });
+      await LinearConnectionModel.revoke(serverDB, connection.id);
+      const { LinearReconnectRequiredError } = await import('@/server/services/linear/token');
+      mocks.getToken.mockRejectedValue(new LinearReconnectRequiredError());
+
+      await expect(caller({ userId }).runSyncRule({ ruleId: rule.id })).rejects.toMatchObject({
+        code: 'PRECONDITION_FAILED',
+        message: 'LINEAR_RECONNECT_REQUIRED',
+      });
+      await expect(caller({ userId }).deleteSyncRule({ ruleId: rule.id })).resolves.toEqual({
+        ok: true,
+      });
+      expect(await caller({ userId }).listSyncRules()).toEqual([]);
+    });
   });
 });
