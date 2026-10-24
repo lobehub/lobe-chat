@@ -124,9 +124,11 @@ Author names and attachment availability are resolved at read time.
 - Existing hard-delete paths already reach Channel rows: Agent deletion (including trash purge,
   session and group deletion) cascades direct conversations, `UserModel.deleteUser` removes
   personal channels and direct conversations, and workspace deletion cascades every channel in it.
-  The storage cascade removes jobs and directory locks; it does not stop external processes.
-  Before Channel creation is exposed, these paths must stop active writers and confirm physical
-  termination first. This unactivated foundation does not provide that orchestration.
+  Cascades do not stop external processes. The integration's `channel_preserve_active_writer`
+  database trigger rejects any job deletion while `writer_held` is true, including cascades.
+  Stop replies and confirm physical termination before retrying the deletion. This prevents
+  existing deletion paths from silently dropping a live directory lock; it does not automatically
+  stop external processes on behalf of a destructive operation.
 - Deleting a Channel deletes its jobs/public history, not ordinary conversations or execution
   records. Deleting a topic/operation clears the corresponding job reference; it does not delete
   the Channel timeline or release an unconfirmed writer.

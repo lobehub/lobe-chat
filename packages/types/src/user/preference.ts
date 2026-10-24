@@ -191,6 +191,8 @@ export const UserLabSchema = z.object({
    * enable multi-agent group chat mode
    */
   enableGroupChat: z.boolean().optional(),
+  /** Enable experimental multi-agent collaboration Channels. */
+  enableChannels: z.boolean().optional(),
   /**
    * enable the iMessage channel (BlueBubbles Desktop bridge)
    */

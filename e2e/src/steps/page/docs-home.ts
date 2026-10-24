@@ -13,7 +13,12 @@
  */
 import type { CustomWorld } from '../../support/world';
 
-const NOTICE_TITLE = /Pages and Resources are now Docs|页面和资源已合并为 Docs/;
+/**
+ * The modal title is read when the notice opens and can still be the raw key if the `file`
+ * namespace has not loaded, so the always-translated intro identifies the notice too.
+ */
+const NOTICE_TEXT =
+  /Pages and Resources are now (Docs|one place)|「文稿」和「资源」已(经)?合并为「云文档」/;
 const NOTICE_CONFIRM = /^(Got it|知道了|我知道了)$/;
 
 /** How long to wait for a late-mounting notice before deciding it is absent. */
@@ -24,7 +29,7 @@ export async function dismissDocsMergeNotice(
   world: CustomWorld,
   appearTimeout: number = NOTICE_APPEAR_TIMEOUT,
 ): Promise<void> {
-  const title = world.page.getByText(NOTICE_TITLE).first();
+  const title = world.page.getByText(NOTICE_TEXT).first();
 
   await title.waitFor({ state: 'visible', timeout: appearTimeout }).catch(() => {});
   if (!(await title.isVisible().catch(() => false))) return;
