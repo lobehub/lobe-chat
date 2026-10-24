@@ -36,6 +36,20 @@ export const COLUMN_WIDTH = {
   status: 200,
 } as const;
 
+/**
+ * Narrowest the list may get before it scrolls sideways instead: the fixed
+ * columns, the 16px gaps between the six columns, the row padding, and room
+ * for an account name. Below this the rotation switch and menu would clip.
+ */
+export const LIST_MIN_WIDTH =
+  COLUMN_WIDTH.meter * 2 +
+  COLUMN_WIDTH.status +
+  COLUMN_WIDTH.rotation +
+  COLUMN_WIDTH.actions +
+  16 * 5 +
+  12 * 2 +
+  200;
+
 const styles = stylex.create({
   presence: (color: string) => ({
     flex: 'none',

@@ -10,7 +10,7 @@ import SkeletonBar from '@/components/Skeleton/Bar';
 import { cacheScope } from '@/libs/replica';
 import { agentQuotaSelectors, type QuotaAccount, useAgentQuotaStore } from '@/store/agentQuota';
 
-import AccountRow, { AccountListHeader, PROVIDER_NAME } from './AccountRow';
+import AccountRow, { AccountListHeader, LIST_MIN_WIDTH, PROVIDER_NAME } from './AccountRow';
 import {
   isSubscriptionProvider,
   sortAccounts,
@@ -31,7 +31,9 @@ const ALL = 'all';
 const SubscriptionAccounts = () => {
   const { t } = useTranslation('setting');
   const useFetchQuotaAccounts = useAgentQuotaStore((s) => s.useFetchQuotaAccounts);
+  const readQuotaReadings = useAgentQuotaStore((s) => s.readQuotaReadings);
   const { error, isValidating, revalidate } = useFetchQuotaAccounts();
+  const [refreshing, setRefreshing] = useState(false);
   const scope = cacheScope.use();
   const confirmed = useAgentQuotaStore(agentQuotaSelectors.isAccountsConfirmed(scope));
   const loaded = useAgentQuotaStore(agentQuotaSelectors.accounts);
@@ -45,6 +47,20 @@ const SubscriptionAccounts = () => {
   const active = provider !== ALL && present.includes(provider) ? provider : ALL;
   const visible = active === ALL ? accounts : accounts.filter((a) => a.provider === active);
   const inRotation = accounts.filter((a) => a.enabled !== false).length;
+
+  // The meters read each account's own readings, which the list sync does not
+  // touch: refreshing re-reads them too, or a newer sample would never show.
+  const refresh = async () => {
+    setRefreshing(true);
+    try {
+      await Promise.allSettled([
+        revalidate(),
+        ...accounts.map((account) => readQuotaReadings(account.id, { fresh: true })),
+      ]);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   // A hydrated empty list may be stale: only the server's answer settles "none yet".
   const settling = !confirmed && !error && accounts.length === 0;
@@ -68,12 +84,16 @@ const SubscriptionAccounts = () => {
       title={t('subscriptionAccounts.empty.title')}
     />
   ) : (
-    <Flexbox gap={2}>
-      <AccountListHeader />
-      {visible.map((account) => (
-        <AccountRow account={account} key={account.id} />
-      ))}
-    </Flexbox>
+    // The settings pane hides horizontal overflow, so a narrow pane scrolls the
+    // list sideways rather than clipping the switch and menu off the row.
+    <div style={{ overflowX: 'auto' }}>
+      <Flexbox gap={2} style={{ minWidth: LIST_MIN_WIDTH }}>
+        <AccountListHeader />
+        {visible.map((account) => (
+          <AccountRow account={account} key={account.id} />
+        ))}
+      </Flexbox>
+    </div>
   );
 
   return (
@@ -101,9 +121,9 @@ const SubscriptionAccounts = () => {
         </Flexbox>
         <ActionIcon
           icon={RefreshCwIcon}
-          loading={isValidating}
+          loading={isValidating || refreshing}
           title={t('subscriptionAccounts.refresh')}
-          onClick={() => void revalidate()}
+          onClick={() => void refresh()}
         />
       </Flexbox>
       {body}
