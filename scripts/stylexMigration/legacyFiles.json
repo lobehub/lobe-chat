@@ -630,7 +630,6 @@
   "src/features/Conversation/Messages/AssistantGroup/components/Group.tsx",
   "src/features/Conversation/Messages/AssistantGroup/components/MessageContent.tsx",
   "src/features/Conversation/Messages/AssistantGroup/components/ProcessFold.tsx",
-  "src/features/Conversation/Messages/AssistantGroup/components/SteerMessage.tsx",
   "src/features/Conversation/Messages/CompressedGroup/index.tsx",
   "src/features/Conversation/Messages/EditedFilesCard/index.tsx",
   "src/features/Conversation/Messages/GoalTaskCard/PlanChain.tsx",
