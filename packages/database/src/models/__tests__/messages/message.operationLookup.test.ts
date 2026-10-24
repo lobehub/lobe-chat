@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../../core/getTestDB';
-import { messages, topics, users } from '../../../schemas';
+import { messages, threads, topics, users } from '../../../schemas';
 import type { LobeChatDatabase } from '../../../type';
 import { MessageModel } from '../../message';
 
@@ -183,7 +183,9 @@ describe('MessageModel.findVerifyMessageByOperationId', () => {
 
 describe('MessageModel.listLatestTurnAssistantContents', () => {
   const at = (minute: number) => new Date(Date.UTC(2026, 9, 22, 19, minute));
-  const insert = (rows: { content: string; id: string; minute: number; role: string }[]) =>
+  const insert = (
+    rows: { content: string; id: string; minute: number; role: string; threadId?: string }[],
+  ) =>
     serverDB.insert(messages).values(
       rows.map(({ minute, ...row }) => ({
         ...row,
@@ -212,6 +214,35 @@ describe('MessageModel.listLatestTurnAssistantContents', () => {
       'final report',
       'progress note',
     ]);
+  });
+
+  it('ignores subagent thread rows sharing the topic', async () => {
+    await serverDB
+      .insert(threads)
+      .values({ id: 'turn-thread', topicId, type: 'isolation', userId });
+    await insert([
+      { content: 'run prompt', id: 'sub-u1', minute: 0, role: 'user' },
+      { content: 'parent report', id: 'sub-a1', minute: 1, role: 'assistant' },
+      {
+        content: 'subagent prompt',
+        id: 'sub-u2',
+        minute: 2,
+        role: 'user',
+        threadId: 'turn-thread',
+      },
+      {
+        content: 'subagent partial result',
+        id: 'sub-a2',
+        minute: 3,
+        role: 'assistant',
+        threadId: 'turn-thread',
+      },
+      { content: 'trailing remark', id: 'sub-a3', minute: 4, role: 'assistant' },
+    ]);
+
+    const replies = await messageModel.listLatestTurnAssistantContents({ limit: 10, topicId });
+
+    expect(replies.map((reply) => reply.content)).toEqual(['trailing remark', 'parent report']);
   });
 
   it('honors the limit', async () => {

@@ -199,13 +199,16 @@ export class MessageLookupQueries extends MessageScope {
   };
 
   /**
-   * The newest assistant replies of a topic's latest turn — every assistant row
-   * written after the topic's last user message — newest first, content only.
+   * The newest assistant replies of a topic's latest turn — every main-thread
+   * assistant row written after the main thread's last user message — newest
+   * first, content only.
    *
    * Used by the task lifecycle to find a run's final report when the run's very
    * last reply is only a trailing remark. Heterogeneous runs (Claude Code,
    * Codex) carry no `metadata.operationId` on their rows, so the latest user
    * message (the run prompt) is what bounds the run inside its topic.
+   * Subagent rows share the topic under their own `threadId`, so both the
+   * boundary and the replies are read from the main thread only.
    */
   listLatestTurnAssistantContents = async ({
     limit,
@@ -217,7 +220,14 @@ export class MessageLookupQueries extends MessageScope {
     const lastUserAt = this.db
       .select({ createdAt: sql`max(${messages.createdAt})` })
       .from(messages)
-      .where(and(this.ownership(), eq(messages.topicId, topicId), eq(messages.role, 'user')));
+      .where(
+        and(
+          this.ownership(),
+          eq(messages.topicId, topicId),
+          isNull(messages.threadId),
+          eq(messages.role, 'user'),
+        ),
+      );
 
     return this.db
       .select({ content: messages.content, createdAt: messages.createdAt })
@@ -240,6 +250,7 @@ export class MessageLookupQueries extends MessageScope {
                 ),
               ),
           ),
+          isNull(messages.threadId),
           eq(messages.role, 'assistant'),
           sql`${messages.createdAt} >= coalesce((${lastUserAt}), '-infinity'::timestamptz)`,
         ),
