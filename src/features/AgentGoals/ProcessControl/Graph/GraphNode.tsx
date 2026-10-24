@@ -207,7 +207,7 @@ const styles = createStaticStyles(({ css }) => ({
     border-color: ${cssVar.colorPrimaryBorder};
   `,
   stale: css`
-    border-color: ${cssVar.colorErrorBorder};
+    border-color: ${cssVar.colorWarningBorder};
   `,
   subtitle: css`
     overflow: hidden;
