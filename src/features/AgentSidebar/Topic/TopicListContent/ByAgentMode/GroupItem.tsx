@@ -42,12 +42,14 @@ import { useProjectDirectories } from '@/store/projectWorkingDirectory';
 import { useTopicListScope } from '../../TopicListScope';
 import ProjectTopicList from '../ByProjectMode/ProjectTopicList';
 import { type GroupItemComponentProps } from '../GroupedAccordion';
+import DevicePresenceDot from './DevicePresenceDot';
 
 const AGENT_GROUP_PREFIX = 'agent:';
 const SUB_GROUP_MODES: ProjectTopicSubGroupMode[] = ['none', 'byDevice', 'byTime', 'byStatus'];
 
 const styles = createStaticStyles(({ css }) => ({
   avatarWrap: css`
+    position: relative;
     flex: none;
     border-radius: 50%;
     background: ${cssVar.colorFillTertiary};
@@ -161,6 +163,7 @@ const GroupItem = memo<GroupItemComponentProps>(({ group }) => {
           <Flexbox horizontal align="center" gap={8} height={24} style={{ overflow: 'hidden' }}>
             <Center className={styles.avatarWrap} flex={'none'} height={18} width={18}>
               <Avatar avatar={avatar} name={name} size={18} />
+              {agentId && <DevicePresenceDot agentId={agentId} />}
             </Center>
             <Text ellipsis fontSize={14} style={{ flex: 1 }}>
               {name}

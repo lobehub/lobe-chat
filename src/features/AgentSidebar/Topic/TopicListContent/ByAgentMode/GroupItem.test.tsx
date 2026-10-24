@@ -108,6 +108,8 @@ vi.mock('@/store/chat/selectors', () => ({
   },
 }));
 
+vi.mock('./DevicePresenceDot', () => ({ default: () => null }));
+
 vi.mock('@/components/RingLoading', () => ({ default: () => <span /> }));
 
 // Capture what the group hands each row: by-agent buckets are named in the
