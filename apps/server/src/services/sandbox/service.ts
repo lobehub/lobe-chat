@@ -17,7 +17,9 @@ import {
   buildSandboxEnvironmentInitCommand,
   environmentInitRan,
   environmentInitReport,
+  hasEnvironmentInitWork,
   SANDBOX_ENVIRONMENT_INIT_TIMEOUT_MS,
+  withEnvironmentVariables,
 } from './environmentInit';
 import type {
   SandboxCommandResult,
@@ -54,7 +56,10 @@ export class SandboxMiddlewareService implements SandboxService {
     const report = await this.ensureEnvironmentInitialized();
     if (report) this.pendingEnvironmentReport = report;
     await this.ensureFilesInitialized();
-    const result = await this.provider.callTool(toolName, params);
+    const result = await this.provider.callTool(
+      toolName,
+      this.applyEnvironmentVariables(toolName, params),
+    );
 
     // Held until a shell result can carry it: a first call that lists or
     // reads files has no output to put it in, and dropping it would hide a
@@ -64,6 +69,29 @@ export class SandboxMiddlewareService implements SandboxService {
     this.pendingEnvironmentReport = undefined;
 
     return withEnvironmentReport(toolName, result, pending);
+  }
+
+  /**
+   * A shell call with the topic's environment variables exported in front of
+   * its command, so the conversation's commands — and anything they start,
+   * like a coding agent — see what the environment declares, not only its
+   * clone and setup. Other tools, and calls without a string command, pass
+   * through unchanged.
+   */
+  private applyEnvironmentVariables(
+    toolName: string,
+    params: Record<string, unknown>,
+  ): Record<string, unknown> {
+    const env = this.options.sandboxInitialization?.env;
+    if (
+      !env ||
+      !SHELL_TOOLS.has(toolName) ||
+      typeof params.command !== 'string' ||
+      !params.command.trim()
+    )
+      return params;
+
+    return { ...params, command: withEnvironmentVariables(params.command, env) };
   }
 
   /**
@@ -83,7 +111,9 @@ export class SandboxMiddlewareService implements SandboxService {
     this.environmentInitialized = true;
 
     const init = this.options.sandboxInitialization;
-    if (!init || !this.provider.capabilities.shell) return;
+    // An environment that only declares variables has nothing to apply to the
+    // folder: its variables go on each command instead.
+    if (!init || !hasEnvironmentInitWork(init) || !this.provider.capabilities.shell) return;
 
     try {
       const result = await this.provider.callTool('runCommand', {
