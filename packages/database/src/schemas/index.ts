@@ -60,6 +60,7 @@ export * from './resourceTransferRequest';
 export * from './scm';
 export * from './session';
 export * from './signal';
+export * from './signalDecision';
 export * from './systemBotProvider';
 export * from './task';
 export * from './topic';
