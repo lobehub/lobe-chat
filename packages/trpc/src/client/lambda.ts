@@ -115,7 +115,20 @@ const errorHandlingLink: TRPCLink<LambdaRouter> = () => {
                     // query there must not log the reader out or leave the page.
                     if (!isDesktop && !isPublicShareRoute()) {
                       const { getUserStoreState } = await import('@/store/user/store');
-                      const { isSignedIn, logout } = getUserStoreState();
+                      const { isSignedIn, logout, openLogin } = getUserStoreState();
+                      const { getAccountSuspensionNotice } =
+                        await import('@/business/client/accountSuspension');
+                      const suspensionNotice = await getAccountSuspensionNotice();
+                      if (suspensionNotice) {
+                        if (isSignedIn) {
+                          const params = new URLSearchParams({ callbackUrl: location.toString() });
+                          params.set('reason', 'accountSuspended');
+                          await logout({ redirectTo: `/signin?${params.toString()}` });
+                        } else {
+                          await openLogin('accountSuspended');
+                        }
+                        break;
+                      }
                       // If user is still marked as signed in but got 401,
                       // session is invalid - clear client state first
                       if (isSignedIn) {

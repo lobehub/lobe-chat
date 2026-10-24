@@ -15,6 +15,7 @@ import { Mail } from 'lucide-react';
 import { type CSSProperties, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import type { AccountSuspensionNotice } from '@/business/client/accountSuspension';
 import AuthIcons from '@/components/AuthIcons';
 import AuthCard from '@/features/AuthCard';
 import AuthAgreement from '@/features/AuthShell/AuthAgreement';
@@ -43,7 +44,18 @@ const PROVIDER_ICON_STYLE: CSSProperties = {
 const getProviderName = (provider: string) =>
   provider.toLowerCase().replaceAll(/(^|[_-])([a-z])/g, (_, __, c) => c.toUpperCase());
 
+export const formatSuspensionRetryAt = (retryAt: string, locale: string): string =>
+  new Intl.DateTimeFormat(locale, {
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    month: 'short',
+    timeZoneName: 'short',
+  }).format(new Date(retryAt));
+
 export interface SignInEmailStepProps {
+  accountSuspended?: boolean;
+  accountSuspensionNotice?: AccountSuspensionNotice;
   agreementChecked: boolean;
   continueWithAgreement: (continueAction: () => void) => void;
   disableEmailPassword?: boolean;
@@ -63,6 +75,8 @@ export interface SignInEmailStepProps {
 }
 
 export const SignInEmailStep = ({
+  accountSuspended,
+  accountSuspensionNotice,
   agreementChecked,
   continueWithAgreement,
   disableEmailPassword,
@@ -80,7 +94,7 @@ export const SignInEmailStep = ({
   onSetPassword,
   onSocialSignIn,
 }: SignInEmailStepProps) => {
-  const { t } = useTranslation('auth');
+  const { i18n, t } = useTranslation('auth');
   const emailInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -105,9 +119,29 @@ export const SignInEmailStep = ({
   // Config is injected synchronously via window.__SERVER_CONFIG__, so the email
   // form is the primary path unless the account is social-only.
   const showEmailForm = !disableEmailPassword && !isSocialOnly;
+  const retryAt = accountSuspensionNotice?.retryAt
+    ? formatSuspensionRetryAt(
+        accountSuspensionNotice.retryAt,
+        i18n.language || i18n.resolvedLanguage || 'en-US',
+      )
+    : undefined;
 
   return (
     <AuthCard title={t('signin.subtitle', { appName: BRANDING_NAME })}>
+      {accountSuspended && (
+        <Alert
+          showIcon
+          message={t('betterAuth.signin.accountSuspended')}
+          style={{ marginBlockEnd: 12 }}
+          type="error"
+          variant="filled"
+          description={
+            retryAt
+              ? t('betterAuth.signin.accountSuspendedDescription', { time: retryAt })
+              : t('betterAuth.signin.accountSuspendedDescriptionFallback')
+          }
+        />
+      )}
       {sessionExpired && (
         <Alert
           showIcon

@@ -92,7 +92,7 @@ export class UserAuthActionImpl {
     });
   };
 
-  openLogin = async (reason?: 'sessionExpired'): Promise<void> => {
+  openLogin = async (reason?: 'accountSuspended' | 'sessionExpired'): Promise<void> => {
     // Skip if already on a login page (/signin, /signup)
     const pathname = location.pathname;
     if (pathname.startsWith('/signin') || pathname.startsWith('/signup')) {

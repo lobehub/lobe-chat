@@ -8,6 +8,8 @@ import { useSignIn } from './useSignIn';
 
 const SignIn = () => {
   const {
+    accountSuspended,
+    accountSuspensionNotice,
     agreementChecked,
     continueWithAgreement,
     disableEmailPassword,
@@ -58,6 +60,8 @@ const SignIn = () => {
   return (
     <>
       <SignInEmailStep
+        accountSuspended={accountSuspended}
+        accountSuspensionNotice={accountSuspensionNotice}
         agreementChecked={agreementChecked}
         continueWithAgreement={continueWithAgreement}
         disableEmailPassword={disableEmailPassword}

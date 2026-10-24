@@ -146,6 +146,11 @@ export default {
   'betterAuth.signin.continueWithOkta': 'Sign in with Okta',
   'betterAuth.signin.continueWithWechat': 'Sign in with WeChat',
   'betterAuth.signin.continueWithZitadel': 'Sign in with Zitadel',
+  'betterAuth.signin.accountSuspended': 'Account temporarily suspended',
+  'betterAuth.signin.accountSuspendedDescription':
+    'Repeated image safety violations temporarily restricted this account. Access resumes after {{time}}. Try again then, or sign in with a different account.',
+  'betterAuth.signin.accountSuspendedDescriptionFallback':
+    'This account is temporarily suspended. Try again later, or sign in with a different account.',
   'betterAuth.signin.emailPlaceholder': 'Enter your email or username',
   'betterAuth.signin.emailSent.changeEmail': 'Use a different email',
   'betterAuth.signin.emailSent.checkSpam':

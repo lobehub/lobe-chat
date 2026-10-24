@@ -153,6 +153,34 @@ describe('createAuthSlice', () => {
       });
     });
 
+    it('should explain an account suspension on the signin page', async () => {
+      const originalLocation = window.location;
+      Object.defineProperty(window, 'location', {
+        configurable: true,
+        value: {
+          ...originalLocation,
+          href: '',
+          pathname: '/image',
+          toString: () => 'http://localhost/image',
+        },
+        writable: true,
+      });
+
+      const { result } = renderHook(() => useUserStore());
+
+      await act(async () => {
+        await result.current.openLogin('accountSuspended');
+      });
+
+      expect(window.location.href).toContain('reason=accountSuspended');
+
+      Object.defineProperty(window, 'location', {
+        configurable: true,
+        value: originalLocation,
+        writable: true,
+      });
+    });
+
     it('should not redirect when already on signin page', async () => {
       const originalLocation = window.location;
       Object.defineProperty(window, 'location', {

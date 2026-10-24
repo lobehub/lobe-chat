@@ -4,6 +4,7 @@ import { Alert, Button, cssVar, Flexbox } from '@lobehub/ui';
 import { memo, type PropsWithChildren, useEffect, useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { getAccountSuspensionNotice } from '@/business/client/accountSuspension';
 import { DEFAULT_PREFERENCE } from '@/const/user';
 import { useSession } from '@/libs/better-auth/auth-client';
 import { useAppPainted } from '@/spa/atoms/app';
@@ -103,6 +104,8 @@ const UserUpdater = memo(({ children }: PropsWithChildren) => {
       return;
     }
 
+    const wasSignedIn = useUserStore.getState().isSignedIn;
+
     // Clear user data when session becomes unavailable
     useUserStore.setState({
       isLoaded: true,
@@ -110,6 +113,12 @@ const UserUpdater = memo(({ children }: PropsWithChildren) => {
       preference: DEFAULT_PREFERENCE,
       user: undefined,
     });
+
+    if (wasSignedIn) {
+      void getAccountSuspensionNotice().then((notice) => {
+        if (notice) void useUserStore.getState().openLogin('accountSuspended');
+      });
+    }
   }, [betterAuthUser, error, isPending, isRefetching]);
 
   /** Keep auth unresolved on transport failures; show recovery instead of a guest page. */

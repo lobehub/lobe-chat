@@ -13,11 +13,13 @@ import { lambdaClient } from './lambda';
 
 const openLogin = vi.fn<(reason?: string) => void>();
 const logout = vi.fn();
+const getAccountSuspensionNotice = vi.fn();
 const userState = { isSignedIn: false, logout, openLogin };
 
 vi.mock('@/const/version', () => ({ isDesktop: false }));
 vi.mock('@/services/_auth', () => ({ createHeaderWithAuth: async () => ({}) }));
 vi.mock('@/business/client/trpc-headers', () => ({ getBusinessTrpcHeaders: async () => ({}) }));
+vi.mock('@/business/client/accountSuspension', () => ({ getAccountSuspensionNotice }));
 vi.mock('i18next', () => ({ t: (key: string) => key }));
 vi.mock('@/store/user/store', () => ({ getUserStoreState: () => userState }));
 vi.mock('@/components/Error/loginRequiredNotification', () => ({
@@ -51,6 +53,7 @@ describe('lambdaClient 401 handling on a public share page', () => {
     vi.spyOn(Date, 'now').mockReturnValue(clock);
     openLogin.mockReset();
     logout.mockReset();
+    getAccountSuspensionNotice.mockReset();
   });
 
   afterEach(() => {
@@ -97,6 +100,7 @@ describe('lambdaClient 401 handling outside share pages', () => {
     vi.spyOn(Date, 'now').mockReturnValue(clock);
     openLogin.mockReset();
     logout.mockReset();
+    getAccountSuspensionNotice.mockReset();
   });
 
   afterEach(() => {
@@ -132,5 +136,47 @@ describe('lambdaClient 401 handling outside share pages', () => {
     const params = new URL(redirectTo, 'http://localhost').searchParams;
     expect(params.get('reason')).toBe('sessionExpired');
     expect(params.get('callbackUrl')).toBe('http://localhost/agent/agt_1');
+  });
+
+  it('preserves an account suspension notice before logging a banned user out', async () => {
+    userState.isSignedIn = true;
+    getAccountSuspensionNotice.mockResolvedValue({
+      reason: 'provider_content_moderation',
+      retryAt: '2026-10-31T10:00:00.000Z',
+    });
+    fetchMock.mockResolvedValue(unauthorized('image.getGenerationStatus'));
+
+    await expect(
+      lambdaClient.generation.getGenerationStatus.query({
+        asyncTaskId: 'task-1',
+        generationId: 'gen-1',
+      }),
+    ).rejects.toBeDefined();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(getAccountSuspensionNotice).toHaveBeenCalledTimes(1);
+    const { redirectTo } = logout.mock.calls[0][0] as { redirectTo: string };
+    const params = new URL(redirectTo, 'http://localhost').searchParams;
+    expect(params.get('reason')).toBe('accountSuspended');
+  });
+
+  it('opens the suspension state after get-session already marked the banned user signed out', async () => {
+    userState.isSignedIn = false;
+    getAccountSuspensionNotice.mockResolvedValue({
+      reason: 'provider_content_moderation',
+      retryAt: '2026-10-31T10:00:00.000Z',
+    });
+    fetchMock.mockResolvedValue(unauthorized('image.getGenerationStatus'));
+
+    await expect(
+      lambdaClient.generation.getGenerationStatus.query({
+        asyncTaskId: 'task-1',
+        generationId: 'gen-1',
+      }),
+    ).rejects.toBeDefined();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(logout).not.toHaveBeenCalled();
+    expect(openLogin).toHaveBeenCalledWith('accountSuspended');
   });
 });
