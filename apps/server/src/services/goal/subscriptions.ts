@@ -596,7 +596,7 @@ export class GoalSubscriptionService {
       const source = await this.source(db, sub, goal.userId);
       const cursor = { ...sub.cursor };
       const now = Date.now();
-      const previous = await this.acceptedPoint(db, sub);
+      let previousValue = (await this.acceptedPoint(db, sub))?.value;
       let shouldWake =
         cursor.pendingWake === true ||
         (sub.wakeCondition.type === 'observation_window' &&
@@ -615,6 +615,11 @@ export class GoalSubscriptionService {
         .orderBy(asc(widgetRuns.createdAt), asc(widgetRuns.id))
         .limit(100);
       for (const { run, position } of runs) {
+        // Previews never publish eligible observations, even if their worker is lost.
+        if (run.trigger === 'preview') {
+          cursor.run = { createdAt: position, runId: run.id };
+          continue;
+        }
         if (run.status === 'running') break;
         let valid = false;
         let value: number | undefined;
@@ -660,9 +665,10 @@ export class GoalSubscriptionService {
         }
         if (
           valid &&
-          subscriptionWakes(sub.wakeCondition, value, previous?.value, cursor.lastWakeAt, now)
+          subscriptionWakes(sub.wakeCondition, value, previousValue, cursor.lastWakeAt, now)
         )
           shouldWake = true;
+        if (valid) previousValue = value;
         cursor.run = { createdAt: position, runId: run.id };
       }
       cursor.pendingWake = shouldWake;
@@ -746,10 +752,9 @@ export class GoalSubscriptionService {
       .from(goalSubscriptions)
       .where(and(eq(goalSubscriptions.goalId, goalId), eq(goalSubscriptions.enabled, true)));
     for (const sub of subs)
-      await new GoalSubscriptionService(db, sub.userId, sub.workspaceId ?? undefined).consume(
-        sub.id,
-        sub.bindingRevision,
-      );
+      await new GoalSubscriptionService(db, sub.userId, sub.workspaceId ?? undefined)
+        .consume(sub.id, sub.bindingRevision)
+        .catch((error) => console.error('[goal:subscription] Goal scan failed', sub.id, error));
   }
 
   /** Bounded cyclic pass. Stable UUID ordering; scheduling never depends on notification delivery. */

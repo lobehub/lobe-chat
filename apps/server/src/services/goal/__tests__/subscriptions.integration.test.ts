@@ -179,6 +179,73 @@ describe('durable Widget to Goal subscriptions', () => {
     expect((await service.criterion(f.goal.id, 'followers')).point?.value).toBe(9);
   });
 
+  it.each(['deleted', 'republished'] as const)(
+    'isolates a %s source during Goal scans and still consumes healthy bindings',
+    async (unavailable) => {
+      const invalid = await fixture();
+      const healthy = await fixture();
+      await db
+        .update(goalSubscriptions)
+        .set({ goalId: invalid.goal.id, criterionKey: null })
+        .where(eq(goalSubscriptions.id, healthy.sub.id));
+      const run = await reserve(healthy);
+      await finish(healthy, run);
+      if (unavailable === 'deleted') {
+        await db.update(widgets).set({ isDeleted: true }).where(eq(widgets.id, invalid.widget.id));
+      } else {
+        const version = await model.createVersion(invalid.widget.id, {
+          outputType: 'stat',
+          runtime: 'node',
+          sourceType: 'agent',
+          script: 'console.log(JSON.stringify({type:"stat",value:999}))',
+        });
+        await model.publishVersion(invalid.widget.id, version!.id);
+      }
+      const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+      await expect(GoalSubscriptionService.forGoal(db, invalid.goal.id)).resolves.toBeUndefined();
+      expect(error).toHaveBeenCalled();
+      expect((await service.criterion(invalid.goal.id, 'followers')).point).toBeUndefined();
+      const [stored] = await db
+        .select()
+        .from(goalSubscriptions)
+        .where(eq(goalSubscriptions.id, healthy.sub.id));
+      expect(stored.cursor.run?.runId).toBe(run.id);
+    },
+  );
+
+  it('passes an abandoned running preview without accepting it or blocking collection', async () => {
+    const f = await fixture();
+    const preview = (await model.startRun(f.widget.id, { trigger: 'preview' }))!;
+    const run = await reserve(f);
+    await finish(f, run, 'succeeded', 9);
+    await service.consume(f.sub.id);
+    expect((await service.criterion(f.goal.id, 'followers')).point?.value).toBe(9);
+    expect((await service.list(f.goal.id))[0].subscription.cursor.run?.runId).toBe(run.id);
+    const [storedPreview] = await db.select().from(widgetRuns).where(eq(widgetRuns.id, preview.id));
+    expect(storedPreview.status).toBe('running');
+  });
+
+  it.each([false, true])('detects change with split consumption = %s', async (split) => {
+    const f = await fixture();
+    await service.update({
+      ...policy,
+      id: f.sub.id,
+      bindingRevision: f.sub.bindingRevision,
+      enabled: true,
+      wakeCondition: { type: 'change', minimumAbsoluteChange: 5 },
+    });
+    const first = await reserve(f);
+    await finish(f, first, 'succeeded', 0);
+    if (split) await service.consume(f.sub.id);
+    const second = await reserve(f);
+    await finish(f, second, 'succeeded', 10);
+    await service.consume(f.sub.id);
+    const cursor = (await service.list(f.goal.id))[0].subscription.cursor;
+    expect(cursor.pendingWake).toBe(true);
+    expect(cursor.run?.runId).toBe(second.id);
+    expect((await service.criterion(f.goal.id, 'followers')).point?.value).toBe(10);
+  });
+
   it.each(['failed', 'timeout', 'partial'] as const)(
     'does not achieve from %s sampling',
     async (status) => {
