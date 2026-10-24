@@ -3,7 +3,7 @@
  */
 import { render, screen, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { TopicListScopeContext } from '../../TopicListScope';
 import TopicItem from './index';
@@ -18,6 +18,7 @@ const agentRuntimeRunningMock = vi.hoisted(() => ({ value: false }));
 const runningStartTimeMock = vi.hoisted(() => ({ value: undefined as number | undefined }));
 const topicUnreadCompletedMock = vi.hoisted(() => ({ value: false }));
 const onlyMineMock = vi.hoisted(() => ({ value: false }));
+const currentUserIdMock = vi.hoisted(() => ({ value: 'user-1' as string | undefined }));
 const topicMetaCardMock = vi.hoisted(() => ({
   value: undefined as
     | { pullRequest?: { ciStatus?: 'failure' | 'pending' | 'success' | 'unknown'; state: string } }
@@ -100,6 +101,12 @@ vi.mock('@/store/agent', () => ({
       builtinAgentIdMap: {},
     }),
 }));
+vi.mock('@/store/user', () => ({
+  useUserStore: (selector: (state: unknown) => unknown) => selector({}),
+}));
+vi.mock('@/store/user/selectors', () => ({
+  userProfileSelectors: { userId: () => currentUserIdMock.value },
+}));
 vi.mock('@/hooks/useTopicOnlyMine', () => ({ useTopicOnlyMine: () => onlyMineMock.value }));
 vi.mock('@/features/TopicCreatorAvatar', () => ({
   default: ({ userId }: { userId?: string }) => (
@@ -180,22 +187,42 @@ describe('TopicItem active state', () => {
     topicUnreadCompletedMock.value = false;
     topicMetaCardMock.value = undefined;
     onlyMineMock.value = false;
+    currentUserIdMock.value = 'user-1';
     vi.useRealTimers();
   });
 
   describe('creator avatar', () => {
+    beforeEach(() => {
+      useTopicNavigationMock.mockReturnValue({
+        focusTopicPopup: vi.fn(),
+        isInAgentSubRoute: false,
+        isInTopicContextRoute: false,
+        navigateToTopic: vi.fn(),
+        routeTopicId: undefined,
+        urlTopicId: undefined,
+      });
+    });
+
     it('shows the creator avatar on a shared agent topic', () => {
       render(<TopicItem id="tpc_test" title="Topic" userId="user-1" />);
 
       expect(screen.getByTestId('creator-avatar')).toHaveAttribute('data-user-id', 'user-1');
     });
 
-    it('hides the creator avatar when only my topics are shown', () => {
+    it('hides the creator avatar on my own topic when only my topics are shown', () => {
       onlyMineMock.value = true;
 
       render(<TopicItem id="tpc_test" title="Topic" userId="user-1" />);
 
       expect(screen.queryByTestId('creator-avatar')).not.toBeInTheDocument();
+    });
+
+    it('keeps the creator avatar on a retained teammate topic when only my topics are shown', () => {
+      onlyMineMock.value = true;
+
+      render(<TopicItem id="tpc_test" title="Topic" userId="user-2" />);
+
+      expect(screen.getByTestId('creator-avatar')).toHaveAttribute('data-user-id', 'user-2');
     });
   });
 

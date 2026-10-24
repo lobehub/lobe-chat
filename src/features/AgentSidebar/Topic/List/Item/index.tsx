@@ -47,6 +47,8 @@ import { agentSelectors, builtinAgentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { operationSelectors } from '@/store/chat/selectors';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
+import { useUserStore } from '@/store/user';
+import { userProfileSelectors } from '@/store/user/selectors';
 
 import { markSidebarTopicActivation } from '../../hooks/useScrollActiveTopicIntoView';
 import { useTopicNavigation } from '../../hooks/useTopicNavigation';
@@ -280,11 +282,15 @@ const TopicItemRow = memo<TopicItemRowProps>(
     const activeWorkspaceSlug = useActiveWorkspaceSlug();
     // Creator of the topic — resolves only inside an active workspace; drives
     // the identity-first icon layout below.
-    // "Only my topics" makes every row the viewer's own, so the creator avatar
-    // carries no information — drop it and fall back to the personal-mode row.
-    // Bot topics still resolve their initiator via `botCreator`.
+    // "Only my topics" makes the viewer's own rows self-evident, so the creator
+    // avatar carries no information there — drop it and fall back to the
+    // personal-mode row. A teammate's topic can still be listed (the active
+    // topic is retained under the filter) and keeps its ownership cue. Bot
+    // topics still resolve their initiator via `botCreator`.
     const onlyMine = useTopicOnlyMine();
-    const creatorUserId = isSharedAgent && !metadata?.bot && !onlyMine ? userId : undefined;
+    const currentUserId = useUserStore(userProfileSelectors.userId);
+    const hideOwnCreator = onlyMine && userId === currentUserId;
+    const creatorUserId = isSharedAgent && !metadata?.bot && !hideOwnCreator ? userId : undefined;
     const author = useTopicCreator(creatorUserId, metadata?.botCreator);
 
     const loadingRingColor = isDarkMode
