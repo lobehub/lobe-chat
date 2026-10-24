@@ -117,6 +117,24 @@ describe('Dispute panel selection', () => {
     ]);
   });
 
+  /**
+   * Regression: fallback seats only had to differ by model, so three models
+   * from one vendor could make up the majority that waives a check.
+   */
+  it('never seats a second model from a provider already on the panel', async () => {
+    mocks.init.mockImplementation(async (_db, _user, provider) => {
+      if (provider !== 'openai') throw new Error('absent');
+      return {};
+    });
+    mocks.agent.mockResolvedValue({ model: 'gpt-4.1', provider: 'openai' });
+    mocks.goal.mockResolvedValue({ model: 'o3', provider: 'openai' });
+
+    // The builtin verifier, the task model and the goal model are all OpenAI: one seat only.
+    const seated = await panel();
+    expect(seated).toHaveLength(1);
+    expect(seated[0].provider).toBe('openai');
+  });
+
   it('returns a short panel rather than seating the same model twice', async () => {
     mocks.init.mockImplementation(async (_db, _user, provider) => {
       if (provider !== 'openai') throw new Error('absent');

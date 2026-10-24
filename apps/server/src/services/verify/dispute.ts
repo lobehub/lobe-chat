@@ -378,7 +378,7 @@ export const fileCheckDispute = async (
     if (!(await write(filed, claim))) return refused();
     return {
       error: 'PANEL_UNAVAILABLE',
-      message: `Only ${panel.length} of the ${DISPUTE_PANEL_SIZE} review models a ruling needs are available, so the dispute was recorded but not arbitrated and "${item.title}" stands. Say so in your handoff so the owner can decide.`,
+      message: `Only ${panel.length} of the ${DISPUTE_PANEL_SIZE} review providers a ruling needs are available, so the dispute was recorded but not arbitrated and "${item.title}" stands. Say so in your handoff so the owner can decide.`,
       success: false,
     };
   }

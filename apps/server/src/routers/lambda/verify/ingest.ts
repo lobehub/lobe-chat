@@ -336,6 +336,8 @@ export const ingestRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const namedRun = await resolveRunByOperation(ctx, input.operationId);
+      // An operation-scoped builder token may dispute only its own run.
+      assertOperationInScope(ctx, namedRun.operationId);
       assertWorkspaceRowManageable(ctx, namedRun.userId, 'verify run');
       const run = await resolveLiveRoundForItem(ctx, namedRun, input.checkItemId);
       if (run.id !== namedRun.id) assertWorkspaceRowManageable(ctx, run.userId, 'verify run');

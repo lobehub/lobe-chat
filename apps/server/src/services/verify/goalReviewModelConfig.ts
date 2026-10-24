@@ -111,8 +111,11 @@ export const DISPUTE_PANEL_SIZE = 3;
 /**
  * The models that arbitrate a disputed check: the pinned cross-vendor panel
  * first, topped up from the review model chain when a pinned provider is not
- * configured. Returns fewer than {@link DISPUTE_PANEL_SIZE} only when the scope
- * has no more distinct usable models — the caller must not rule on that.
+ * configured. Every seat is a different provider — three models from one
+ * vendor share its blind spots, so a same-vendor majority is not the
+ * independent second opinion the panel exists to give. Returns fewer than
+ * {@link DISPUTE_PANEL_SIZE} when the scope has no more usable providers; the
+ * caller must not rule on that.
  */
 export const resolveDisputePanelModelConfigs = async (
   db: LobeChatDatabase,
@@ -123,14 +126,19 @@ export const resolveDisputePanelModelConfigs = async (
   // The panel rules on the check's wording against the requirement; it reads no frames.
   const usable = await createReviewModelProbe(db, userId, false, workspaceId);
   const panel: VerifyModelConfig[] = [];
-  for (const member of DEFAULT_ACCEPTANCE_DISPUTE_PANEL) {
-    const config = await usable(member);
+  const seat = async (candidate: ModelCandidate) => {
+    // A provider already seated is skipped before probing, which also spares the probe.
+    if (!candidate?.provider || panel.some((member) => member.provider === candidate.provider))
+      return;
+    const config = await usable(candidate);
     if (config) panel.push(config);
+  };
+  for (const member of DEFAULT_ACCEPTANCE_DISPUTE_PANEL) {
+    await seat(member);
     if (panel.length === DISPUTE_PANEL_SIZE) return panel;
   }
   for await (const candidate of reviewModelCandidates(db, userId, params, workspaceId)) {
-    const config = await usable(candidate);
-    if (config) panel.push(config);
+    await seat(candidate);
     if (panel.length === DISPUTE_PANEL_SIZE) return panel;
   }
   return panel;

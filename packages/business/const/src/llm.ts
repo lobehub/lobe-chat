@@ -35,8 +35,9 @@ export const DEFAULT_REVIEW_PREDICT_PROVIDER = 'google';
  * The panel that arbitrates a builder's dispute that an Acceptance check itself
  * is invalid. Three members from three vendors, so one model's blind spot cannot
  * decide alone; the ruling is a majority vote. A member whose provider is not
- * configured is replaced from the review model chain, and a dispute without
- * three usable members stays undecided (the check stands).
+ * configured is replaced from the review model chain by a provider not yet
+ * seated, and a dispute without three distinct usable providers stays
+ * undecided (the check stands).
  */
 export const DEFAULT_ACCEPTANCE_DISPUTE_PANEL: { model: string; provider: string }[] = [
   { model: 'claude-sonnet-5', provider: 'anthropic' },
