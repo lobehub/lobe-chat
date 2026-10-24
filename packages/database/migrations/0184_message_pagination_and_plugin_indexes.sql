@@ -1,0 +1,3 @@
+CREATE INDEX IF NOT EXISTS "message_plugins_identifier_idx" ON "message_plugins" USING btree ("identifier");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "message_plugins_api_name_idx" ON "message_plugins" USING btree ("api_name");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "messages_topic_id_created_at_id_idx" ON "messages" USING btree ("topic_id","created_at","id") WHERE "messages"."message_group_id" IS NULL;
