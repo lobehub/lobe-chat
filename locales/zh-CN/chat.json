@@ -962,6 +962,7 @@
   "goalProcess.lifecycle.note.mainAgent": "主 Agent：{{text}}",
   "goalProcess.lifecycle.note.recoveredAbandoned": "上一次运行已失去响应，已自动重新开始",
   "goalProcess.lifecycle.note.retryAfterVerification": "验收未通过，已自动开始下一次尝试",
+  "goalProcess.linked.checking": "正在确认状态…",
   "goalProcess.linked.open": "查看目标进度",
   "goalProcess.manager.pending": "等待首次执行",
   "goalProcess.manager.title": "主 Agent",

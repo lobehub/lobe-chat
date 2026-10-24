@@ -1,7 +1,7 @@
 'use client';
 
 import { createStaticStyles, cssVar, cx, Flexbox, Icon, Text } from '@lobehub/ui';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, CircleDashed } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -9,7 +9,7 @@ import { goalStatusKey } from '@/features/AgentGoals/goalPresentation';
 import GoalStatusGlyph from '@/features/AgentGoals/GoalStatusGlyph';
 import type { GoalListItem } from '@/services/goal';
 import { useChatStore } from '@/store/chat';
-import { useGoalStore } from '@/store/goal';
+import { goalSelectors, useGoalStore } from '@/store/goal';
 import { useUserStore } from '@/store/user';
 import { labPreferSelectors } from '@/store/user/selectors';
 
@@ -44,7 +44,13 @@ const styles = createStaticStyles(({ css }) => ({
   `,
 }));
 
-const LinkedGoalRow = memo<{ item: GoalListItem }>(({ item }) => {
+/**
+ * `confirmed` is false while the row is still the persisted copy: its status,
+ * gates and progress are whatever they were when it was stored, so the row
+ * names the goal and holds a neutral "confirming" state until the server
+ * answers rather than presenting a stale "running" as live.
+ */
+const LinkedGoalRow = memo<{ confirmed: boolean; item: GoalListItem }>(({ confirmed, item }) => {
   const { t } = useTranslation('chat');
   const openGoal = useChatStore((s) => s.openGoal);
   const { goal, pendingDecisions, taskDone, taskTotal } = item;
@@ -67,12 +73,16 @@ const LinkedGoalRow = memo<{ item: GoalListItem }>(({ item }) => {
         open();
       }}
     >
-      <GoalStatusGlyph size={14} status={goal.status} />
+      {confirmed ? (
+        <GoalStatusGlyph size={14} status={goal.status} />
+      ) : (
+        <Icon color={cssVar.colorTextQuaternary} icon={CircleDashed} size={14} />
+      )}
       <Text ellipsis fontSize={12} style={{ flex: 1, minWidth: 0 }} weight={500}>
         {goal.title}
       </Text>
       {/* Something blocked on the user outranks progress — it is the reason to click. */}
-      {pendingDecisions > 0 ? (
+      {!confirmed ? null : pendingDecisions > 0 ? (
         <Text fontSize={12} style={{ color: cssVar.colorWarning, flexShrink: 0 }}>
           {t('goalList.needsYou', { count: pendingDecisions })}
         </Text>
@@ -85,7 +95,11 @@ const LinkedGoalRow = memo<{ item: GoalListItem }>(({ item }) => {
       )}
       <Text fontSize={12} style={{ flexShrink: 0 }} type={'secondary'}>
         {/* A `/goal` run marks its goal running at creation; until the plan lands a Task it is still being planned. */}
-        {planning ? t('goalTask.status.planning') : t(goalStatusKey(goal.status))}
+        {!confirmed
+          ? t('goalProcess.linked.checking')
+          : planning
+            ? t('goalTask.status.planning')
+            : t(goalStatusKey(goal.status))}
       </Text>
       <Icon color={cssVar.colorTextQuaternary} icon={ChevronRight} size={14} />
     </Flexbox>
@@ -117,11 +131,13 @@ const LinkedGoalTray = memo<LinkedGoalTrayProps>(({ topAttached }) => {
       messageStateSelectors.isAIGenerating(s),
     ),
   );
-  const { data } = useFetchTopicGoals(enabled ? topicId : undefined, goalRequestGenerating);
+  useFetchTopicGoals(enabled ? topicId : undefined, goalRequestGenerating);
+  const topicGoals = useGoalStore(goalSelectors.topicGoals(topicId));
+  const confirmed = useGoalStore(goalSelectors.topicGoalsConfirmed(topicId));
 
   const goals = useMemo(
-    () => selectLinkedGoals(data?.goals, displayMessages),
-    [data, displayMessages],
+    () => selectLinkedGoals(topicGoals, displayMessages),
+    [topicGoals, displayMessages],
   );
 
   if (!enabled || !topicId || goals.length === 0) return null;
@@ -129,7 +145,7 @@ const LinkedGoalTray = memo<LinkedGoalTrayProps>(({ topAttached }) => {
   return (
     <Flexbox className={cx(styles.container, topAttached && styles.containerTopAttached)}>
       {goals.map((item) => (
-        <LinkedGoalRow item={item} key={item.goal.id} />
+        <LinkedGoalRow confirmed={confirmed} item={item} key={item.goal.id} />
       ))}
     </Flexbox>
   );
