@@ -79,6 +79,9 @@ interface SelectAccountOptions {
   runnableExternalAccountIds?: string[];
 }
 
+/** How recently a run must have billed an account to count as running on it. */
+const ACTIVE_RUN_WINDOW_MS = 6 * 60 * 60 * 1000;
+
 export class AgentQuotaService {
   private accounts: AgentProviderAccountModel;
   private bindings: AgentAccountBindingModel;
@@ -361,6 +364,21 @@ export class AgentQuotaService {
         (row.cacheReadTokens ?? 0) +
         (row.cacheWriteTokens ?? 0) +
         (row.reasoningTokens ?? 0),
+    }));
+  };
+
+  /**
+   * Agent runs still in flight on an account. Only runs that billed it within
+   * the last few hours count: an operation left `running` by a crashed client
+   * would otherwise stay listed forever.
+   */
+  listActiveRuns = async (accountId: string, now: number = Date.now()) => {
+    const rows = await this.ledger.listActiveRuns(accountId, new Date(now - ACTIVE_RUN_WINDOW_MS));
+
+    return rows.map((row) => ({
+      ...row,
+      lastTurnAt: row.lastTurnAt.getTime(),
+      startedAt: row.startedAt?.getTime() ?? null,
     }));
   };
 

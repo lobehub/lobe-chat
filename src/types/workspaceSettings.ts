@@ -36,6 +36,7 @@ export enum WorkspaceSettingsTabs {
   Skill = 'skill',
   Stats = 'statistics',
   Storage = 'storage',
+  SubscriptionAccounts = 'subscription-accounts',
   Teams = 'teams',
   Usage = 'usage',
 }

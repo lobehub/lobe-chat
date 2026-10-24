@@ -218,6 +218,14 @@ export const workspaceSettingsContentRoute: RouteObject = {
     },
     {
       element: dynamicElement(
+        () => import('@/routes/(main)/[workspaceSlug]/settings/subscription-accounts'),
+        'Desktop > Workspace > Settings > Subscription Accounts',
+      ),
+      handle: { meta: routeMeta({ Skeleton: createSurfaceSkeleton('list') }) },
+      path: 'subscription-accounts',
+    },
+    {
+      element: dynamicElement(
         () => import('@/routes/(main)/[workspaceSlug]/settings/environments'),
         'Desktop > Workspace > Settings > Environments',
       ),
