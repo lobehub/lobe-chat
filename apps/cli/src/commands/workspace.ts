@@ -8,6 +8,7 @@ import { CLI_PRIMARY_BIN } from '../constants/identity';
 import { type ActiveWorkspaceRecord, resolveServerUrl, saveActiveWorkspace } from '../settings';
 import { formatCost, outputJson, printTable, timeAgo, timeUntil, truncate } from '../utils/format';
 import { log } from '../utils/logger';
+import { workspaceUrl } from './resourceUrl';
 
 interface WorkspaceRow {
   id: string;
@@ -193,7 +194,11 @@ export function registerWorkspaceCommand(program: Command) {
     .option('--json [fields]', 'Output JSON')
     .action(async (options: { json?: boolean | string }) => {
       const workspaces = await listWorkspaces();
-      if (options.json !== undefined) return outputJson(workspaces, options.json);
+      if (options.json !== undefined)
+        return outputJson(
+          workspaces.map((w) => ({ ...w, url: workspaceUrl(w) })),
+          options.json,
+        );
       if (workspaces.length === 0) return console.log('No workspaces found.');
 
       // The marker has to follow the same precedence every other command uses,
@@ -226,7 +231,8 @@ export function registerWorkspaceCommand(program: Command) {
         process.exit(1);
       }
 
-      if (options.json !== undefined) return outputJson(detail, options.json);
+      if (options.json !== undefined)
+        return outputJson({ ...detail, url: workspaceUrl(detail) }, options.json);
 
       const row = detail as WorkspaceRow & { description?: string | null; frozen?: boolean };
       console.log(`\n${pc.bold(row.name)} ${pc.dim(row.id)}`);
@@ -264,7 +270,8 @@ export function registerWorkspaceCommand(program: Command) {
 
         if (options.use) persistScope(created.id);
 
-        if (options.json !== undefined) return outputJson(created, options.json);
+        if (options.json !== undefined)
+          return outputJson({ ...created, url: workspaceUrl(created) }, options.json);
         console.log(`Created ${pc.bold(created.name)} ${pc.dim(created.id)}`);
         if (options.use) {
           console.log(`Scope set to ${pc.bold(created.name)}.`);

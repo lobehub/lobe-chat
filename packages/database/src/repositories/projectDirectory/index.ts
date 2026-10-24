@@ -12,6 +12,7 @@ import {
 import { hasLiveTaskCallbackReservation } from '../../models/topic';
 import { agents, devices, projectEnvironments, topics } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
+import { joinTopicAgentsToProjects } from '../../utils/projectTopicAgents';
 import { buildWorkspaceWhere } from '../../utils/workspace';
 
 /**
@@ -210,6 +211,7 @@ export class ProjectDirectoryRepository {
         const found = new Set(selected.map((topic) => topic.id));
         for (const id of topicIds)
           if (!found.has(id)) skippedTopics.push({ id, reason: 'notFound' });
+        const filedTopicIds: string[] = [];
         // Filing is a convenience on top of the binding: one conversation that
         // cannot move must not cost the directory or the others, so it is
         // skipped and reported instead of failing the whole bind.
@@ -241,7 +243,9 @@ export class ProjectDirectoryRepository {
               metadata: { ...metadata, boundDeviceId: device.deviceId },
             })
             .where(eq(topics.id, topic.id));
+          filedTopicIds.push(topic.id);
         }
+        await joinTopicAgentsToProjects(db, { topicIds: filedTopicIds });
       }
       return { ...directory, skippedTopics };
     });
@@ -326,6 +330,7 @@ export class ProjectDirectoryRepository {
         })
         .where(eq(topics.id, topicId))
         .returning();
+      await joinTopicAgentsToProjects(db, { topicIds: [topicId] });
       return updated;
     });
   }

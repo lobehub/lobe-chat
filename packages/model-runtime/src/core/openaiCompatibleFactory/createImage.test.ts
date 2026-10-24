@@ -1,5 +1,5 @@
 // @vitest-environment node
-import * as imageToBase64Module from '@lobechat/utils';
+import * as imageToBase64Module from '../../utils/imageToBase64';
 import type OpenAI from 'openai';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 

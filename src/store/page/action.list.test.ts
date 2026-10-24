@@ -67,7 +67,7 @@ const lobeDoc = (id: string, overrides: Partial<LobeDocument> = {}): LobeDocumen
 });
 
 /** The replica sync queries the slice registered with the SWR driver. */
-const syncCalls = async (name: 'pageDetail' | 'pageList') => {
+const syncCalls = async (name: 'pageDetail' | 'pageList' | 'pageSection') => {
   const { useClientDataSWR } = await import('@/libs/swr');
   return vi
     .mocked(useClientDataSWR)
@@ -137,6 +137,36 @@ describe('pageActions — useFetchDocuments', () => {
 
     // An HTML page is a page too; an arbitrary upload is not.
     expect(page.items.map((item) => item.id)).toEqual(['docs_page', 'docs_html']);
+  });
+});
+
+describe('pageActions — useFetchPageSection', () => {
+  it('lists authored pages only, never parsed uploads', async () => {
+    renderHook(() => pageActions.useFetchPageSection('mine', 20));
+    const [call] = await syncCalls('pageSection');
+
+    vi.mocked(documentService.queryDocuments).mockResolvedValue({
+      items: [
+        row('docs_page'),
+        // A page written into a library keeps a mirror file id; still a page.
+        row('docs_library_page', { fileId: 'file_mirror' }),
+        // An uploaded .txt parsed into a document is a Drive file, not a page.
+        row('docs_parsed_upload', {
+          fileId: 'file_upload',
+          filename: 'run-transcript.txt',
+          source: 'files/2026-10-23/a.txt',
+          sourceType: 'file',
+        }),
+      ],
+      total: 3,
+    });
+
+    const docs = (await call.fetcher()) as LobeDocument[];
+
+    expect(documentService.queryDocuments).toHaveBeenCalledWith(
+      expect.objectContaining({ creator: 'self', sourceTypes: [DocumentSourceType.API] }),
+    );
+    expect(docs.map((doc) => doc.id)).toEqual(['docs_page', 'docs_library_page']);
   });
 });
 

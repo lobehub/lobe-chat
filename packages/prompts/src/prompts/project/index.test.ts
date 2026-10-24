@@ -50,6 +50,17 @@ describe('buildProjectContextPrompt', () => {
     expect(prompt).not.toContain('<coordination_rules>');
   });
 
+  it('leaves the identifier out for a project without its own prefix', () => {
+    const prompt = buildProjectContextPrompt({
+      ...input,
+      currentAgentId: 'agt_coord',
+      project: { ...input.project, identifier: null },
+    });
+
+    expect(prompt).toContain('<project status="active">Apollo</project>');
+    expect(prompt).not.toContain('identifier=');
+  });
+
   it('omits empty knowledge and says there is no open work', () => {
     const prompt = buildProjectContextPrompt({
       ...input,

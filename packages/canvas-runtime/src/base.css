@@ -169,7 +169,7 @@
     color: var(--lobe-color-text-description);
   }
 
-  /* shiki writes the theme background on the <pre> as an inline style */
+  /* the highlighter writes the theme background on the <pre> as an inline style */
   [data-lobe-canvas-code] pre {
     border: 0;
     border-radius: 0;

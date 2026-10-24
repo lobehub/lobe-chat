@@ -3,19 +3,11 @@
 import {
   BrainCircuit,
   Download,
-  FilePenIcon,
-  FilesIcon,
-  FileText,
   HomeIcon,
   Image,
-  ImageIcon,
-  LayoutPanelTopIcon,
-  LibraryBigIcon,
-  Mic2,
   Scale,
   Settings,
   ShapesIcon,
-  SquarePlay,
   Video,
 } from 'lucide-react';
 import { createElement, type ReactElement } from 'react';
@@ -24,7 +16,6 @@ import type { RouteObject } from 'react-router';
 import {
   BusinessDesktopRoutesWithMainLayout,
   BusinessDesktopRoutesWithoutMainLayout,
-  BusinessResourceRoutes,
 } from '@/business/client/BusinessDesktopRoutes';
 import AppsSkeleton from '@/components/Skeleton/Apps';
 import CommunityHomeSkeleton from '@/components/Skeleton/CommunityHome';
@@ -35,7 +26,6 @@ import ConversationSegmentSkeleton from '@/components/Skeleton/Conversation/Segm
 import { delayed } from '@/components/Skeleton/Delayed';
 import GenerationSkeleton from '@/components/Skeleton/Generation';
 import MemorySkeleton from '@/components/Skeleton/Memory';
-import ResourceHomeSkeleton from '@/components/Skeleton/ResourceHome';
 import ProviderSettingsSkeleton, {
   ProviderDetailSkeleton,
 } from '@/components/Skeleton/Settings/Provider';
@@ -75,16 +65,15 @@ import { agentDocumentListLoader } from '@/spa/router/agentDocumentListLoader';
 import { channelDataLoader } from '@/spa/router/channelDataLoader';
 import { contextListLoader } from '@/spa/router/contextListLoader';
 import { identitiesListLoader } from '@/spa/router/identitiesListLoader';
-import { libraryTreeLoader } from '@/spa/router/libraryTreeLoader';
 import { pageListLoader } from '@/spa/router/pageListLoader';
 import { preferenceListLoader } from '@/spa/router/preferenceListLoader';
 import { projectWorkspaceRoute } from '@/spa/router/projectWorkspaceRoutes';
 import { agentAccessLoader, agentGroupAccessLoader } from '@/spa/router/resourceAccessLoader';
+import { resourceRoute } from '@/spa/router/resourceRoutes';
 import { NoRouteSkeleton, routeMeta } from '@/spa/router/routeMeta';
 import { scheduledTaskListLoader } from '@/spa/router/scheduledTaskListLoader';
 import { taskWorkspaceChildren } from '@/spa/router/taskWorkspaceRoutes';
 import { withSegmentFallback } from '@/spa/router/withSegmentFallback';
-import { worksLoader } from '@/spa/router/worksLoader';
 import { workspaceSettingsContentRoute } from '@/spa/router/workspaceSettingsRoutes';
 import { SettingsTabs } from '@/store/global/initialState';
 import { dynamicElement, dynamicLayout, ErrorBoundary, redirectElement } from '@/utils/router';
@@ -102,23 +91,6 @@ const groupChatElement = dynamicElement(
   'Desktop > Agent Group',
   { fallback: delayed(<ConversationLayoutSkeleton />), preloadId: 'group' },
 );
-
-const resourceCategoryRoutes: RouteObject[] = [
-  { icon: LayoutPanelTopIcon, path: 'all', titleKey: 'navigation.resourceAll' },
-  { icon: FileText, path: 'documents', titleKey: 'navigation.resourceDocuments' },
-  { icon: ImageIcon, path: 'images', titleKey: 'navigation.resourceImages' },
-  { icon: SquarePlay, path: 'videos', titleKey: 'navigation.resourceVideos' },
-  { icon: Mic2, path: 'audios', titleKey: 'navigation.resourceAudios' },
-  { icon: FilesIcon, path: 'files', titleKey: 'navigation.resourceFiles' },
-].map(({ icon, path, titleKey }) => ({
-  element: dynamicElement(
-    () => import('@/routes/(main)/resource/(home)'),
-    `Desktop > Resource > Home > ${path}`,
-    { preloadId: 'resource' },
-  ),
-  handle: { meta: routeMeta({ icon, titleKey }) },
-  path,
-}));
 
 export interface MainAreaRouteOptions {
   /** Electron renders Home inside each tab router; Web renders it beside the router outlet. */
@@ -639,120 +611,7 @@ export const sharedMainAreaChildren: RouteObject[] = [
     path: 'community',
   },
 
-  // Resource routes
-  {
-    children: [
-      // Home routes (resource list)
-      {
-        children: [
-          {
-            element: dynamicElement(
-              () => import('@/routes/(main)/resource/(home)'),
-              'Desktop > Resource > Home',
-              { preloadId: 'resource' },
-            ),
-            handle: {
-              meta: routeMeta({
-                icon: LibraryBigIcon,
-                Skeleton: ResourceHomeSkeleton,
-                titleKey: 'navigation.resources',
-              }),
-            },
-            index: true,
-            loader: worksLoader,
-          },
-          ...BusinessResourceRoutes,
-          ...resourceCategoryRoutes,
-          // /resource/page needs a static segment: the dynamic `:category`
-          // ties with the workspace mirror `/:workspaceSlug/page` on route
-          // score, and the workspace tree would swallow it into a slug 404.
-          {
-            element: dynamicElement(
-              () => import('@/routes/(main)/resource/(home)'),
-              'Desktop > Resource > Home > Pages',
-              { preloadId: 'resource' },
-            ),
-            handle: {
-              meta: routeMeta({ icon: FilePenIcon, titleKey: 'navigation.resourcePages' }),
-            },
-            path: 'page',
-          },
-          // Category views share the home page: /resource/documents, /resource/images, …
-          {
-            element: dynamicElement(
-              () => import('@/routes/(main)/resource/(home)'),
-              'Desktop > Resource > Home > Category',
-              { preloadId: 'resource' },
-            ),
-            handle: {
-              meta: routeMeta({ icon: LibraryBigIcon, titleKey: 'navigation.resources' }),
-            },
-            loader: worksLoader,
-            path: ':category',
-          },
-        ],
-        element: dynamicElement(
-          () => import('@/routes/(main)/resource/(home)/_layout'),
-          'Desktop > Resource > Home > Layout',
-          { preloadId: 'resource' },
-        ),
-        handle: { meta: routeMeta({ Skeleton: ResourceCategorySkeleton }) },
-      },
-      // Library routes (knowledge base detail)
-      {
-        children: [
-          {
-            element: dynamicElement(
-              () => import('@/routes/(main)/resource/library'),
-              'Desktop > Resource > Library',
-            ),
-            handle: {
-              meta: routeMeta({ icon: LibraryBigIcon, titleKey: 'navigation.knowledgeBase' }),
-            },
-            index: true,
-          },
-          {
-            element: dynamicElement(
-              () => import('@/routes/(main)/resource/library/permission'),
-              'Desktop > Resource > Library > Permission',
-            ),
-            handle: {
-              meta: routeMeta({
-                icon: LibraryBigIcon,
-                Skeleton: createSurfaceSkeleton('form'),
-                titleKey: 'navigation.knowledgeBase',
-              }),
-            },
-            path: 'permission',
-          },
-          {
-            element: dynamicElement(
-              () => import('@/routes/(main)/resource/library/[slug]'),
-              'Desktop > Resource > Library > Slug',
-            ),
-            handle: {
-              meta: routeMeta({ icon: LibraryBigIcon, titleKey: 'navigation.knowledgeBase' }),
-            },
-            path: ':slug',
-          },
-        ],
-        element: dynamicElement(
-          () => import('@/routes/(main)/resource/library/_layout'),
-          'Desktop > Resource > Library > Layout',
-        ),
-        loader: libraryTreeLoader,
-        path: 'library/:id',
-      },
-    ],
-    element: dynamicElement(
-      () => import('@/routes/(main)/resource/_layout'),
-      'Desktop > Resource > Layout',
-      { preloadId: 'resource' },
-    ),
-    errorElement: <ErrorBoundary />,
-    handle: { meta: routeMeta({ Skeleton: createSurfaceSkeleton('list') }) },
-    path: 'resource',
-  },
+  resourceRoute,
 
   // Memory routes
   {
@@ -1070,30 +929,18 @@ export const sharedMainAreaChildren: RouteObject[] = [
     ),
   },
 
-  // Pages routes
+  // Pages live in Docs: /page → /resource, /page/:id → /resource/page/:id.
+  ...(['page', 'page/:id'] as const).map((path) => ({
+    element: dynamicElement(
+      () => import('@/routes/(main)/page/redirect'),
+      `Desktop > Page > Redirect (${path})`,
+    ),
+    handle: { meta: pageRouteMeta },
+    path,
+  })),
+  // The page permission screen keeps the Pages layout.
   {
     children: [
-      {
-        element: dynamicElement(() => import('@/routes/(main)/page'), 'Desktop > Page', {
-          preloadId: 'page',
-        }),
-        handle: {
-          meta: routeMeta({
-            icon: FilePenIcon,
-            Skeleton: createSurfaceSkeleton('list'),
-            titleKey: 'navigation.pages',
-          }),
-        },
-        index: true,
-      },
-      {
-        element: dynamicElement(
-          () => import('@/routes/(main)/page/[id]'),
-          'Desktop > Page > Detail',
-        ),
-        handle: { meta: pageRouteMeta },
-        path: ':id',
-      },
       {
         element: dynamicElement(
           () => import('@/routes/(main)/page/[id]/permission'),

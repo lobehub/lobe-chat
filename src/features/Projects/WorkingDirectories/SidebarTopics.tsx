@@ -20,6 +20,7 @@ import {
 } from '@/features/AgentSidebar/Topic/TopicListScope';
 import { useOnlyMineTopics, useScopedTopics } from '@/features/AgentSidebar/Topic/useScopedTopics';
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';
+import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useWorkspacePreferenceReady } from '@/hooks/useWorkspacePreferenceReady';
 import {
   useProjectDirectories,
@@ -29,6 +30,8 @@ import {
 import { filterTopics, type TopicListFilter } from '@/utils/client/topic';
 
 import { openProjectTopicModal } from './StartDirectoryModal';
+import { canStageDraftOn, startProjectTopicDraft } from './startProjectTopicDraft';
+import { useAgentFixedDeviceId } from './useAgentFixedDeviceId';
 import { useProjectTopicReveal } from './useProjectTopicReveal';
 
 export function ProjectDirectoryTopics(props: { projectId: string; coordinatorAgentId: string }) {
@@ -79,6 +82,8 @@ function ProjectTopicList({
   // nothing else on a project route syncs that preference. Hold the list until
   // it is known so the unfiltered rows never paint.
   const isPreferenceLoading = !useWorkspacePreferenceReady();
+  const navigate = useWorkspaceAwareNavigate();
+  const fixedDeviceId = useAgentFixedDeviceId(coordinatorAgentId);
   return (
     <Flexbox gap={1} paddingBlock={12}>
       <Flexbox horizontal align="center" justify="space-between" paddingInline={8}>
@@ -94,14 +99,27 @@ function ProjectTopicList({
             icon={PlusIcon}
             size="small"
             title={t('sidebar.newConversation')}
-            onClick={() =>
+            onClick={() => {
+              // Same habit as an agent's "+": a blank conversation on the first
+              // directory the coordinator can run in, switchable in the composer before the first
+              // send. The modal only remains for a project with none yet.
+              const directory = directories.find((d) => canStageDraftOn(d, fixedDeviceId));
+              if (directory) {
+                startProjectTopicDraft({
+                  agentId: coordinatorAgentId,
+                  directoryId: directory.id,
+                  navigate,
+                  projectId,
+                });
+                return;
+              }
               openProjectTopicModal({
                 title: t('sidebar.newConversation'),
                 coordinatorAgentId,
                 directories,
                 projectId,
-              })
-            }
+              });
+            }}
           />
         </Flexbox>
       </Flexbox>
@@ -114,7 +132,7 @@ function ProjectTopicList({
       {!request.hasData || isPreferenceLoading ? (
         <SkeletonList />
       ) : !topics.length && !request.error ? (
-        <Text style={{ paddingInline: 8 }} type="secondary">
+        <Text fontSize={12} style={{ paddingInline: 8 }} type="secondary">
           {t('directories.noConversations')}
         </Text>
       ) : filteredEmpty ? (

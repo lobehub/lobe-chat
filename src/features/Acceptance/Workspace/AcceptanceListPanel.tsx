@@ -34,10 +34,11 @@ import {
 import type { ReactNode } from 'react';
 import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router';
+import { useParams } from 'react-router';
 
 import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import { SkeletonList } from '@/features/NavPanel/components/SkeletonList';
+import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useLocalStorageState } from '@/hooks/useLocalStorageState';
 import type { AcceptanceStatusOverride } from '@/services/verify';
 import { verifyService } from '@/services/verify';
@@ -64,6 +65,7 @@ import {
   resetAcceptanceListFacets,
 } from './acceptanceListFilter';
 import AcceptanceRow from './AcceptanceRow';
+import AcceptanceScopeSwitcher from './AcceptanceScopeSwitcher';
 import {
   acceptanceBatchTargets,
   acceptanceProjectTargets,
@@ -303,7 +305,7 @@ interface AcceptanceListPanelProps extends ReportPanelExpand {
 const AcceptanceListPanel = memo<AcceptanceListPanelProps>(
   ({ expand, headerLeading, hosted, isNarrow, projectActionItems, projectId, setExpand }) => {
     const { t } = useTranslation('verify');
-    const navigate = useNavigate();
+    const navigate = useWorkspaceAwareNavigate();
     const routeBase = useAcceptanceRouteBase();
     const { acceptanceId } = useParams<{ acceptanceId: string }>();
 
@@ -722,6 +724,7 @@ const AcceptanceListPanel = memo<AcceptanceListPanelProps>(
                 <Text ellipsis strong style={{ fontSize: 15, minWidth: 0 }}>
                   {t('acceptance.workspace.title')}
                 </Text>
+                {!projectId && <AcceptanceScopeSwitcher />}
               </Flexbox>
               <button
                 aria-label={t('workspace.collapse')}

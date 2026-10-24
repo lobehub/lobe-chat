@@ -57,7 +57,6 @@ import { chatService } from '@/services/chat';
 import { resolveSelectedSkillsWithContent } from '@/services/chat/mecha/skillPreload';
 import { resolveSelectedToolsWithContent } from '@/services/chat/mecha/toolPreload';
 import { messageService } from '@/services/message';
-import { projectWorkingDirectoryService } from '@/services/projectWorkingDirectory';
 import { topicService } from '@/services/topic';
 import { getAgentStoreState } from '@/store/agent';
 import {
@@ -66,7 +65,10 @@ import {
   chatConfigByIdSelectors,
 } from '@/store/agent/selectors';
 import { agentGroupByIdSelectors, getChatGroupStoreState } from '@/store/agentGroup';
-import { getPendingSandboxSelection } from '@/store/chat/pendingSandboxSelection';
+import {
+  getPendingSandboxSelection,
+  toSandboxTopicMetadata,
+} from '@/store/chat/pendingSandboxSelection';
 import { consumePendingTopicRepos, getPendingTopicRepos } from '@/store/chat/pendingTopicRepos';
 import {
   dbMessageSelectors,
@@ -118,7 +120,6 @@ import { getElectronStoreState } from '@/store/electron';
 import { getFileStoreState } from '@/store/file/store';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
-import { findProjectDirectory } from '@/store/projectWorkingDirectory';
 import { pageAgentRuntime } from '@/store/tool/slices/builtin/executors/pageAgentRuntime';
 import { type StoreSetter } from '@/store/types';
 import { getUserStoreState } from '@/store/user';
@@ -142,6 +143,7 @@ import {
 } from './commandBus';
 import { mergePartialPersistedMessages, resolveSendResponseMessages } from './persistedMessages';
 import { resolveExistingTopicForRun } from './resolveExistingTopic';
+import { resolveProjectDirectoryRun } from './resolveProjectDirectoryRun';
 
 /**
  * Extended params for sendMessage with context
@@ -459,31 +461,15 @@ export class ConversationLifecycleActionImpl {
       pendingDirectory?.agentId === ownerAgentId
         ? pendingDirectory.projectWorkingDirectoryId
         : undefined;
-    const projectDirectoryId = boundTopic?.projectWorkingDirectoryId ?? stagedDirectoryId;
-    let stagedDirectory: { id: string; path: string; projectId: string } | undefined;
-    if (projectDirectoryId) {
-      // The sidebar's directory replica already holds the row; read it locally
-      // so the optimistic pair is not held behind a network round trip. The
-      // server re-validates the directory (environment link, enabled state,
-      // permission) when it starts the run. Only a cold replica pays for resolve.
-      const directory =
-        findProjectDirectory(projectDirectoryId) ??
-        (await projectWorkingDirectoryService.resolve(projectDirectoryId)).data;
-      if (stagedDirectoryId) stagedDirectory = directory;
-      if (stagedDirectory) consumePendingTopicRepos(ownerAgentId); // a cloud repo pick conflicts
-      if (!isGatewayMode)
-        throw new Error('Enable Gateway Mode to run in a project working directory');
-      if (
-        agencyConfig?.executionTargetSelectionPolicy === 'fixed' &&
-        agencyConfig.boundDeviceId !== directory.deviceId
-      )
-        throw new Error('Agent is fixed to another execution target');
-      agencyConfig = {
-        ...agencyConfig,
-        boundDeviceId: directory.deviceId,
-        executionTarget: 'device',
-      };
-    }
+    const projectRun = await resolveProjectDirectoryRun({
+      agencyConfig,
+      boundDirectoryId: boundTopic?.projectWorkingDirectoryId,
+      isGatewayMode,
+      stagedDirectoryId,
+    });
+    ({ agencyConfig } = projectRun);
+    const { stagedDirectory } = projectRun;
+    if (stagedDirectory) consumePendingTopicRepos(ownerAgentId); // a cloud repo pick conflicts
 
     // Legacy agents may only carry `model: '<cli-type>'`. Keep gateway routing
     // unchanged when it is available. Recover the provider when gateway mode is
@@ -1307,12 +1293,7 @@ export class ConversationLifecycleActionImpl {
       willCreateNewTopic && operationContext.agentId
         ? getPendingSandboxSelection(operationContext.agentId)
         : undefined;
-    const sandboxInstanceMetadata: ChatTopicMetadata | undefined = pendingSandboxSelection
-      ? {
-          sandboxInstanceId: pendingSandboxSelection.instanceId,
-          sandboxMode: pendingSandboxSelection.mode,
-        }
-      : undefined;
+    const sandboxInstanceMetadata = toSandboxTopicMetadata(pendingSandboxSelection);
     /** First-send persistence bypasses turnSetup, so both runtime paths must carry the effort snapshot. */
     const optimisticTopicMetadata =
       newTopicReasoningSnapshot || sandboxInstanceMetadata
@@ -1423,6 +1404,9 @@ export class ConversationLifecycleActionImpl {
           );
         }
         void this.#get().switchTopic(null, { skipRefreshMessage: true });
+        // Adopting the minted topic consumed the staging; the topic never came
+        // to be, so the blank conversation still belongs to that directory.
+        if (stagedDirectory) this.#get().setPendingNewTopicDirectory(pendingDirectory);
       }
       this.#get().internal_dispatchTopic(
         { ...optimisticTopicScope, type: 'deleteTopic', id: optimisticTopic.id },

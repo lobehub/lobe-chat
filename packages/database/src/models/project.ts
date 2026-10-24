@@ -1,9 +1,10 @@
 import { BUILTIN_AGENT_SLUGS, createProjectCoordinatorAgentConfig } from '@lobechat/builtin-agents';
 import { INBOX_SESSION_ID } from '@lobechat/const';
 import type { ProjectStatus, ProjectVisibility } from '@lobechat/types';
-import { and, asc, desc, eq, inArray, isNull, max, or, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, inArray, isNull, max, ne, or, sql } from 'drizzle-orm';
 
 import { agents } from '../schemas/agent';
+import { chatGroupsAgents } from '../schemas/chatGroup';
 import { environments } from '../schemas/environment';
 import { knowledgeBases } from '../schemas/file';
 import {
@@ -14,18 +15,23 @@ import {
 } from '../schemas/project';
 import { projectEnvironments } from '../schemas/projectEnvironment';
 import { projectWorks } from '../schemas/projectWork';
+import { agentsToSessions } from '../schemas/relations';
 import { tasks } from '../schemas/task';
 import { topics } from '../schemas/topic';
 import { works } from '../schemas/work';
 import type { LobeChatDatabase } from '../type';
+import { joinTopicAgentsToProjects } from '../utils/projectTopicAgents';
 import { buildWorkspacePayload, buildWorkspaceWhere } from '../utils/workspace';
 import { AgentModel } from './agent';
 import { EnvironmentModel } from './environment';
 
 export interface CreateProjectInput {
   avatar?: string;
+  /** Lead the project with an existing agent instead of provisioning a dedicated one. */
+  coordinatorAgentId?: string;
   description?: string;
-  identifier: string;
+  /** Task prefix for this project; omit to keep the scope's default prefix. */
+  identifier?: string | null;
   name: string;
   slug?: string;
   visibility?: ProjectVisibility;
@@ -138,27 +144,32 @@ export class ProjectModel {
   }
 
   async create(input: CreateProjectInput) {
-    const identifier = input.identifier.trim().toUpperCase();
-    if (identifier.length < 3 || identifier.length > 6) {
+    const identifier = input.identifier?.trim().toUpperCase() || null;
+    if (identifier && (identifier.length < 3 || identifier.length > 6)) {
       throw new Error('Project identifier must be between 3 and 6 characters');
     }
 
     return this.db.transaction(async (tx) => {
-      const coordinatorConfig = createProjectCoordinatorAgentConfig({
-        avatar: input.avatar,
-        description: input.description,
-        identifier,
-        name: input.name,
-      });
-      const coordinator = await new AgentModel(
-        tx as LobeChatDatabase,
-        this.userId,
-        this.workspaceId,
-      ).create({
-        ...coordinatorConfig,
-        visibility: input.visibility,
-        virtual: true,
-      });
+      const coordinator = input.coordinatorAgentId
+        ? await this.findAccessibleAgent(tx as LobeChatDatabase, input.coordinatorAgentId)
+        : await new AgentModel(tx as LobeChatDatabase, this.userId, this.workspaceId).create({
+            ...createProjectCoordinatorAgentConfig({
+              avatar: input.avatar,
+              description: input.description,
+              identifier,
+              name: input.name,
+            }),
+            visibility: input.visibility,
+            virtual: true,
+          });
+      if (!coordinator) throw new Error('Agent not found');
+      if (input.coordinatorAgentId) {
+        this.assertSharedResource(
+          { visibility: input.visibility ?? 'private', workspaceId: this.workspaceId ?? null },
+          (coordinator as { visibility: string }).visibility,
+          'A shared project only takes shared agents',
+        );
+      }
 
       const [project] = await tx
         .insert(projects)
@@ -209,6 +220,25 @@ export class ProjectModel {
    * (user agents, LobeAI) stay with their sessions intact.
    */
   private async deleteDedicatedCoordinator(db: LobeChatDatabase, agentId: string) {
+    if (!(await this.isDedicatedCoordinator(agentId, { db }))) return;
+    await new AgentModel(db, this.userId, this.workspaceId).delete(agentId);
+  }
+
+  /**
+   * A coordinator provisioned for one project: a virtual, non-builtin agent no
+   * other project leads or counts as a member, and no group or session holds.
+   */
+  async isDedicatedCoordinator(
+    agentId: string,
+    {
+      db = this.db,
+      exceptProjectId,
+    }: {
+      db?: LobeChatDatabase;
+      /** Ask before handing this project over: its own lead and membership do not count as "still used". */
+      exceptProjectId?: string;
+    } = {},
+  ) {
     const [agent] = await db
       .select({ slug: agents.slug, virtual: agents.virtual })
       .from(agents)
@@ -219,16 +249,46 @@ export class ProjectModel {
         ),
       )
       .limit(1);
-    if (!agent?.virtual || (agent.slug && BUILTIN_SLUGS.has(agent.slug))) return;
+    if (!agent?.virtual || (agent.slug && BUILTIN_SLUGS.has(agent.slug))) return false;
 
     const [stillUsed] = await db
       .select({ id: projects.id })
       .from(projects)
-      .where(eq(projects.coordinatorAgentId, agentId))
+      .where(
+        and(
+          eq(projects.coordinatorAgentId, agentId),
+          exceptProjectId ? ne(projects.id, exceptProjectId) : undefined,
+        ),
+      )
       .limit(1);
-    if (stillUsed) return;
+    if (stillUsed) return false;
 
-    await new AgentModel(db, this.userId, this.workspaceId).delete(agentId);
+    // A group's own members are virtual and slugless as well; they belong to the group.
+    // A session link would take the agent's conversations with it on delete, and a
+    // member of another project would drop out of it.
+    const [linked] = await db
+      .select({ agentId: chatGroupsAgents.agentId })
+      .from(chatGroupsAgents)
+      .where(eq(chatGroupsAgents.agentId, agentId))
+      .union(
+        db
+          .select({ agentId: agentsToSessions.agentId })
+          .from(agentsToSessions)
+          .where(eq(agentsToSessions.agentId, agentId)),
+      )
+      .union(
+        db
+          .select({ agentId: projectAgents.agentId })
+          .from(projectAgents)
+          .where(
+            and(
+              eq(projectAgents.agentId, agentId),
+              exceptProjectId ? ne(projectAgents.projectId, exceptProjectId) : undefined,
+            ),
+          ),
+      )
+      .limit(1);
+    return !linked;
   }
 
   /**
@@ -317,12 +377,80 @@ export class ProjectModel {
       .from(projects)
       .leftJoin(agents, eq(agents.id, projects.coordinatorAgentId))
       .where(and(this.readable(), statusWhere))
+      // Recently updated first for every caller; the sidebar applies the manual
+      // `sort_order` itself, so the order stays a sidebar view, not the API default.
       .orderBy(desc(projects.updatedAt))
       .limit(limit)
       .offset(offset);
     // Coordinators are virtual agents the client agent list never loads, so the
     // list carries their display meta for the owner column.
     return rows.map(({ coordinatorAgent, project }) => ({ ...project, coordinatorAgent }));
+  }
+
+  /**
+   * Move one project in the scope's shared manual order, placing it directly
+   * before or after `anchorId` (both must be visible to the caller).
+   *
+   * The order spans every project in the scope — including other members'
+   * private ones the caller cannot see — so the move is applied to that full
+   * list and every row is renumbered. Positions never collide across members,
+   * no caller needs to send the whole list, and a per-scope lock makes sure
+   * concurrent moves in one scope apply one after another. `updated_at` is left alone:
+   * moving a project is not an edit, and the "recently updated" order must not
+   * jump.
+   */
+  async move(id: string, anchor: { afterId: string } | { beforeId: string }) {
+    const anchorId = 'beforeId' in anchor ? anchor.beforeId : anchor.afterId;
+    if (anchorId === id) return;
+
+    await this.db.transaction(async (tx) => {
+      // Serialize moves per scope before reading the order. Locking the rows in
+      // the ordered read itself is not enough: under READ COMMITTED a waiting
+      // transaction would return the order it sorted before the wait.
+      await tx.execute(
+        sql`SELECT pg_advisory_xact_lock(hashtext(${`project-order:${this.workspaceId ?? `user:${this.userId}`}`}))`,
+      );
+
+      const visible = await tx
+        .select({ id: projects.id })
+        .from(projects)
+        .where(and(inArray(projects.id, [id, anchorId]), this.manageable()));
+      if (visible.length !== 2) throw new Error('Project not found');
+
+      const scope = buildWorkspaceWhere(
+        { userId: this.userId, workspaceId: this.workspaceId },
+        {
+          isDeleted: projects.isDeleted,
+          userId: projects.userId,
+          workspaceId: projects.workspaceId,
+        },
+      );
+      const rows = await tx
+        .select({ id: projects.id })
+        .from(projects)
+        .where(scope)
+        .orderBy(sql`${projects.sortOrder} ASC NULLS FIRST`, desc(projects.updatedAt));
+
+      // Either project may have been deleted since the check above.
+      const ids = rows.map((row) => row.id);
+      if (!ids.includes(id) || !ids.includes(anchorId)) throw new Error('Project not found');
+
+      const order = ids.filter((rowId) => rowId !== id);
+      const anchorIndex = order.indexOf(anchorId);
+      order.splice('beforeId' in anchor ? anchorIndex : anchorIndex + 1, 0, id);
+
+      const position = sql.join(
+        order.map((rowId, index) => sql`WHEN ${rowId} THEN ${index}`),
+        sql` `,
+      );
+      await tx
+        .update(projects)
+        .set({
+          sortOrder: sql`(CASE ${projects.id} ${position} END)::integer`,
+          updatedAt: sql`${projects.updatedAt}`,
+        })
+        .where(and(inArray(projects.id, order), scope));
+    });
   }
 
   async update(id: string, input: UpdateProjectInput) {
@@ -395,22 +523,38 @@ export class ProjectModel {
       .orderBy(...coordinatorFirst, asc(projectAgents.sortOrder), asc(projectAgents.createdAt));
   }
 
+  /**
+   * TODO(2026-12-31): remove this runtime backfill. Topics filed before their
+   * agents joined the project on write still leave those agents out of the
+   * members; opening the member list brings them in. Read-only viewers only
+   * look, so their visit changes nothing.
+   */
+  async joinTopicAgents(projectId: string) {
+    if (this.options.readOnly || !(await this.findById(projectId))) return;
+    await joinTopicAgentsToProjects(this.db, { projectId });
+  }
+
+  private async findAccessibleAgent(db: LobeChatDatabase, agentId: string) {
+    const [agent] = await db
+      .select({ id: agents.id, visibility: agents.visibility })
+      .from(agents)
+      .where(
+        and(
+          eq(agents.id, agentId),
+          buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, agents),
+        ),
+      )
+      .limit(1);
+    return agent ?? null;
+  }
+
   async addAgent(projectId: string, input: ProjectAgentInput) {
     const project = await this.findMembersManageableById(projectId);
     if (!project) return null;
     if (project.coordinatorAgentId === input.agentId) {
       throw new Error('The project coordinator is managed by the project');
     }
-    const [agent] = await this.db
-      .select({ id: agents.id, visibility: agents.visibility })
-      .from(agents)
-      .where(
-        and(
-          eq(agents.id, input.agentId),
-          buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, agents),
-        ),
-      )
-      .limit(1);
+    const agent = await this.findAccessibleAgent(this.db, input.agentId);
     if (!agent) throw new Error('Agent not found');
     this.assertSharedResource(
       project,
@@ -465,6 +609,74 @@ export class ProjectModel {
       .where(and(eq(projectAgents.projectId, projectId), eq(projectAgents.agentId, agentId)))
       .returning({ id: projectAgents.id });
     return deleted.length > 0;
+  }
+
+  /**
+   * Point the project at another main agent and seat it as an enabled member.
+   * Returns the predecessor so the caller can retire or keep it; handing over a
+   * coordinator's history spans other aggregates and lives in
+   * `ProjectCoordinatorRepository`. Call it inside that transaction.
+   */
+  async assignCoordinator(projectId: string, agentId: string) {
+    const [project] = await this.db
+      .select()
+      .from(projects)
+      .where(and(eq(projects.id, projectId), this.membersManageable()))
+      .limit(1)
+      .for('update');
+    if (!project) return null;
+    if (project.coordinatorAgentId === agentId) return { previousId: null, project };
+
+    const [agent] = await this.db
+      .select({ id: agents.id, visibility: agents.visibility })
+      .from(agents)
+      .where(
+        and(
+          eq(agents.id, agentId),
+          buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, agents),
+        ),
+      )
+      .limit(1);
+    if (!agent) throw new Error('Agent not found');
+    this.assertSharedResource(
+      project,
+      agent.visibility,
+      'A shared project only takes shared agents',
+    );
+
+    const [updated] = await this.db
+      .update(projects)
+      .set({ coordinatorAgentId: agentId, updatedAt: new Date() })
+      .where(eq(projects.id, projectId))
+      .returning();
+    await this.db
+      .insert(projectAgents)
+      .values({
+        addedByUserId: this.userId,
+        agentId,
+        projectId,
+        workspaceId: this.workspaceId ?? null,
+      })
+      .onConflictDoUpdate({
+        set: { enabled: true, updatedAt: new Date() },
+        target: [projectAgents.projectId, projectAgents.agentId],
+      });
+
+    const previousId = project.coordinatorAgentId;
+    if (previousId) {
+      // The project role belonged to the main agent; as a member it reads like any other.
+      await this.db
+        .update(projectAgents)
+        .set({ role: null, updatedAt: new Date() })
+        .where(
+          and(
+            eq(projectAgents.projectId, projectId),
+            eq(projectAgents.agentId, previousId),
+            eq(projectAgents.role, 'coordinator'),
+          ),
+        );
+    }
+    return { previousId, project: updated };
   }
 
   async listKnowledgeBases(projectId: string) {
@@ -856,6 +1068,12 @@ export class ProjectModel {
         agentTitle: agents.title,
         agentName: agents.name,
         agentAvatar: agents.avatar,
+        // The agent's execution-target pin, so a sidebar group can tell where
+        // the agent may start without loading every agent's full config.
+        agentExecutionTargetSelectionPolicy: sql<
+          string | null
+        >`${agents.agencyConfig}->>'executionTargetSelectionPolicy'`,
+        agentBoundDeviceId: sql<string | null>`${agents.agencyConfig}->>'boundDeviceId'`,
         updatedAt: topics.updatedAt,
         projectWorkingDirectoryId: topics.projectWorkingDirectoryId,
       })

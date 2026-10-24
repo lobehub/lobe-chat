@@ -5,8 +5,8 @@ import { Button, copyToClipboard, Flexbox, Text, toast } from '@lobehub/ui';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router';
 
+import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useIsHydrated } from '@/hooks/useIsHydrated';
 import { mutate as globalMutate } from '@/libs/swr';
 import { isAcceptanceListKey } from '@/libs/swr/keys';
@@ -20,7 +20,11 @@ import { acceptanceCheckPath, useAcceptanceRouteBase } from '../routes';
 import { useAcceptanceBundle } from '../useAcceptanceBundle';
 import { useAcceptanceTurn } from '../useAcceptanceTurn';
 import { formatAcceptanceCountsText, LIVE_ACCEPTANCE_STATUSES } from '../verdict';
-import { canReviewAcceptance, isReadOnlyAcceptanceDecider } from '../visibility';
+import {
+  canRejectAcceptanceOnly,
+  canReviewAcceptance,
+  isReadOnlyAcceptanceDecider,
+} from '../visibility';
 import DecisionBar from './DecisionBar';
 import FeedbackDrawer, { type FeedbackListEntry } from './FeedbackDrawer';
 import { draftRepairPromptInMobile } from './mobileBridge';
@@ -33,7 +37,7 @@ interface AcceptanceDecisionProps {
 
 const AcceptanceDecision = ({ onDraftToComposer }: AcceptanceDecisionProps) => {
   const { t } = useTranslation('verify');
-  const navigate = useNavigate();
+  const navigate = useWorkspaceAwareNavigate();
   const hydrated = useIsHydrated();
   const { acceptanceId, embedded } = useAcceptanceScope();
   const routeBase = useAcceptanceRouteBase();
@@ -41,9 +45,16 @@ const AcceptanceDecision = ({ onDraftToComposer }: AcceptanceDecisionProps) => {
   const { turn, setTurn } = useAcceptanceTurn(embedded);
   const [pending, setPending] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
-  const { approvals, canApprove } = useAcceptanceComments(acceptanceId);
-  const readOnly = isReadOnlyAcceptanceDecider(data, canApprove);
-  if (!data || (!canReviewAcceptance(data) && !readOnly) || data.acceptance.status === 'closed')
+  const { approvals, canApprove, canManageAccess, items } = useAcceptanceComments(acceptanceId);
+  // A grant is narrower than deciding, so it is checked before the read-only
+  // fallback: a teammate granted reject access gets the live reject button.
+  const rejectOnly = canRejectAcceptanceOnly(data);
+  const readOnly = !rejectOnly && isReadOnlyAcceptanceDecider(data, canApprove);
+  if (
+    !data ||
+    (!canReviewAcceptance(data) && !readOnly && !rejectOnly) ||
+    data.acceptance.status === 'closed'
+  )
     return null;
 
   if (flowPlanPhase(data.rounds.at(-1))) return null;
@@ -133,7 +144,23 @@ const AcceptanceDecision = ({ onDraftToComposer }: AcceptanceDecisionProps) => {
     const count = approvals.filter((approval) => approval.contextRoundIndex === roundIndex).length;
     return count > 0 ? t('acceptance.comments.approvalCount', { count }) : undefined;
   })();
-  const subTextWithApprovals = [barTexts.subText, approvalText].filter(Boolean).join(' · ');
+  // Requests waiting on this decider, so a reviewer's ask does not sit unread
+  // in the discussion while the decider is here on the checks.
+  const pendingAccessCount = canManageAccess
+    ? items.filter(
+        (item) =>
+          item.kind === 'access_request' &&
+          !item.deletedAt &&
+          item.accessRequest?.status === 'pending',
+      ).length
+    : 0;
+  const accessText =
+    pendingAccessCount > 0
+      ? t('acceptance.access.pendingCount', { count: pendingAccessCount })
+      : undefined;
+  const subTextWithApprovals = [barTexts.subText, approvalText, accessText]
+    .filter(Boolean)
+    .join(' · ');
 
   const currentRoundIndex = currentRound?.run.roundIndex ?? 0;
   const groupFeedbackEntries = rounds.flatMap((round) =>
@@ -198,6 +225,7 @@ const AcceptanceDecision = ({ onDraftToComposer }: AcceptanceDecisionProps) => {
         needsFixCount={needsFixCount}
         pending={pending}
         readOnlyReason={readOnly ? t('acceptance.bar.readOnlyReason') : undefined}
+        rejectOnlyReason={rejectOnly ? t('acceptance.bar.rejectOnlyReason') : undefined}
         repairing={acceptance.status === 'repairing'}
         rerunAvailable={embedded}
         rerunPending={false}
@@ -242,10 +270,10 @@ const AcceptanceDecision = ({ onDraftToComposer }: AcceptanceDecisionProps) => {
             // `origin` is only visible to the record owner, so this is the
             // viewer's promise, not the server's gate — the copy path below
             // opts out of dispatch explicitly.
-            dispatchAvailable: Boolean(data.origin?.topic),
+            dispatchAvailable: Boolean(data.origin?.topic) || Boolean(data.repairDispatchAvailable),
             acceptanceId: acceptance.id,
             onConfirm: async (comment) => {
-              if (!data.origin?.topic) {
+              if (!data.origin?.topic && !data.repairDispatchAvailable) {
                 const rejected = await runAction(() =>
                   rejectCopyOnly({
                     acceptanceId: acceptance.id,

@@ -1,9 +1,9 @@
 'use client';
 
 import { Center, Flexbox, Spin, Text } from '@lobehub/ui';
-import { memo, useCallback, useLayoutEffect } from 'react';
+import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Navigate, useParams } from 'react-router';
+import { Navigate, useParams, useSearchParams } from 'react-router';
 
 import AsyncError from '@/components/AsyncError';
 import TopicActions from '@/features/AgentSidebar/Topic/List/Item/Actions';
@@ -18,9 +18,17 @@ import { useAgentStore } from '@/store/agent';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 import { useCurrentProjectDetail, useProjectStore } from '@/store/project';
-import { useProjectDirectoryStore, useProjectTopics } from '@/store/projectWorkingDirectory';
+import {
+  useProjectDirectories,
+  useProjectDirectoryStore,
+  useProjectTopics,
+} from '@/store/projectWorkingDirectory';
 
 import { getProjectConversationPath } from '../Layout/navigation';
+import { freshProjectTopicAgentId } from './freshProjectTopicAgentId';
+import { useMarkProjectTopicRead } from './useMarkProjectTopicRead';
+import { useProjectDraftStaging } from './useProjectDraftStaging';
+import { useRevalidateWhileUnlisted } from './useRevalidateWhileUnlisted';
 
 const ProjectConversation = memo(() => {
   const { t } = useTranslation('project');
@@ -32,18 +40,55 @@ const ProjectConversation = memo(() => {
   );
   const topics = useProjectTopics(detail?.project.id);
   const selectedTopic = topics.find((topic) => topic.id === topicId);
-  const conversationAgentId = topicId
-    ? (selectedTopic?.agentId ?? undefined)
-    : detail?.project.coordinatorAgentId;
   const projectSlug = detail?.project.slug ?? projectId;
   const storedTopic = useChatStore((s) =>
     topicId ? topicSelectors.getTopicById(topicId)(s) : undefined,
   );
+  // A sidebar "+" opens a blank draft instead of creating a row (see
+  // `startProjectTopicDraft`). The draft rides in this pane's route, so split
+  // panes keep their own; the first message creates the topic.
+  const [searchParams] = useSearchParams();
+  const draftAgentParam = topicId ? null : searchParams.get('agent');
+  const draftDirectoryParam = topicId ? null : searchParams.get('dir');
+  const directoriesRequest = useProjectDirectoryStore((s) => s.useFetchDirectories)(
+    detail?.project.id,
+  );
+  const directories = useProjectDirectories(detail?.project.id);
+  const directoryIds = useMemo(() => new Set(directories.map((d) => d.id)), [directories]);
+  const draft = useMemo(
+    () =>
+      draftAgentParam && draftDirectoryParam && directoryIds.has(draftDirectoryParam)
+        ? { agentId: draftAgentParam, projectWorkingDirectoryId: draftDirectoryParam }
+        : undefined,
+    [draftAgentParam, draftDirectoryParam, directoryIds],
+  );
+  const draftAgentId = draft?.agentId;
+  const restageDraft = useProjectDraftStaging(draft, directoryIds);
+  const chatAgentId = useChatStore((s) => s.activeAgentId);
+  // Keep the conversation on its agent instead of flashing "not found" while
+  // the project list catches up with a topic the first send just created.
+  const freshOwnerRef = useRef<{ agentId: string; topicId: string }>(undefined);
+  const freshTopicAgentId = freshProjectTopicAgentId({
+    listed: !!selectedTopic,
+    projectId: detail?.project.id,
+    rememberedOwner: freshOwnerRef.current,
+    storedTopic,
+    topicId,
+  });
+  useEffect(() => {
+    if (freshTopicAgentId && topicId)
+      freshOwnerRef.current = { agentId: freshTopicAgentId, topicId };
+  }, [freshTopicAgentId, topicId]);
+  const isFreshTopic = !!freshTopicAgentId;
+  const conversationAgentId = topicId
+    ? (selectedTopic?.agentId ?? freshTopicAgentId)
+    : draftAgentId;
+  useRevalidateWhileUnlisted(isFreshTopic, topicId, topicsRequest.revalidate);
   const topicTitle = storedTopic?.title;
 
   const agent = useInitAgentConfig(conversationAgentId);
   const topicDetail = useChatStore((s) => s.useFetchTopicDetail)(selectedTopic?.id);
-  const activeAgentId = useChatStore((s) => s.activeAgentId);
+  useMarkProjectTopicRead(detail?.project.id, selectedTopic);
 
   useLayoutEffect(() => {
     if (!conversationAgentId) return;
@@ -76,9 +121,19 @@ const ProjectConversation = memo(() => {
     return (
       <AsyncError error={topicsRequest.error} variant="page" onRetry={topicsRequest.revalidate} />
     );
-  // New project conversations start from the project home composer.
-  if (!topicId) return <Navigate replace relative="path" to=".." />;
-  if (topicsRequest.hasData && !selectedTopic)
+  if (!topicId && !draftAgentId) {
+    // A draft's directory list may still be loading; wait for it rather than
+    // sending the draft away.
+    if (draftAgentParam && !directoriesRequest.hasData)
+      return (
+        <Center height="100%" width="100%">
+          <Spin size="small" />
+        </Center>
+      );
+    // Other new project conversations start from the project home composer.
+    return <Navigate replace relative="path" to=".." />;
+  }
+  if (topicId && topicsRequest.hasData && !selectedTopic && !isFreshTopic)
     return (
       <Center height="100%">
         <Text>{t('topics.notFound')}</Text>
@@ -92,7 +147,7 @@ const ProjectConversation = memo(() => {
     !conversationAgentId ||
     agent.isLoading ||
     (!storedTopic && topicDetail.isValidating) ||
-    activeAgentId !== conversationAgentId
+    chatAgentId !== conversationAgentId
   ) {
     return (
       <Center height="100%" width="100%">
@@ -114,21 +169,30 @@ const ProjectConversation = memo(() => {
             <Flexbox horizontal align="center" gap={4}>
               <TerminalPanelToggle />
               <WorkingPanelToggle />
-              <TopicActions
-                id={topicId}
-                status={selectedTopic?.status}
-                title={topicTitle || selectedTopic?.title || t('directories.untitled')}
-                completionLabel={t(
-                  selectedTopic?.status === 'completed' ? 'topics.resume' : 'topics.complete',
-                )}
-              />
+              {topicId && (
+                <TopicActions
+                  id={topicId}
+                  status={selectedTopic?.status}
+                  title={topicTitle || selectedTopic?.title || t('directories.untitled')}
+                  completionLabel={t(
+                    selectedTopic?.status === 'completed' ? 'topics.resume' : 'topics.complete',
+                  )}
+                />
+              )}
             </Flexbox>
           }
         />
       }
     >
       <ChatHydration getConversationPath={getConversationPath} getTopicPath={getTopicPath} />
-      <ChatConversation />
+      <Flexbox
+        flex={1}
+        style={{ minHeight: 0, minWidth: 0 }}
+        onFocusCapture={restageDraft}
+        onPointerDownCapture={restageDraft}
+      >
+        <ChatConversation />
+      </Flexbox>
     </ConversationWorkspace>
   );
 });

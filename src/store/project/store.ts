@@ -19,6 +19,7 @@ import {
 } from '@/services/project';
 import { createDevtools } from '@/store/middleware/createDevtools';
 import { expose } from '@/store/middleware/expose';
+import { useProjectDirectoryStore } from '@/store/projectWorkingDirectory';
 
 import {
   PROJECT_LIST_KEY,
@@ -46,14 +47,23 @@ interface ProjectStore extends ProjectStoreState {
   addProjectAgents: (projectId: string, agentIds: string[]) => Promise<void>;
   addProjectKnowledgeBases: (projectId: string, knowledgeBaseIds: string[]) => Promise<void>;
   createProject: (input: {
-    identifier: string;
+    coordinatorAgentId?: string;
+    identifier?: string;
     name: string;
     slug?: string;
   }) => Promise<ProjectListItem>;
   deleteProject: (id: string) => Promise<void>;
+  /**
+   * Drop a project at a new place in the shared manual order. `ids` is the list
+   * as the user now sees it; the list moves at once and the write is queued
+   * behind earlier moves so they land in drop order.
+   */
+  moveProject: (id: string, ids: string[]) => Promise<void>;
   refreshProjectList: () => Promise<void>;
   removeProjectAgent: (projectId: string, agentId: string) => Promise<void>;
   removeProjectKnowledgeBase: (projectId: string, knowledgeBaseId: string) => Promise<void>;
+  /** Make another agent the main agent; a dedicated coordinator hands over its history and goes. */
+  replaceProjectCoordinator: (projectId: string, agentId: string) => Promise<void>;
   updateProject: (
     id: string,
     input: Parameters<typeof projectService.update>[1],
@@ -114,6 +124,10 @@ export const useProjectStore = createWithEqualityFn<ProjectStore>()(
     const projectEntity = linkReplicaEntity<ProjectListItem>([list, detail]);
 
     const refreshList = () => list.revalidate(PROJECT_LIST_KEY);
+    let moveQueue: Promise<unknown> = Promise.resolve();
+    let moveGeneration = 0;
+    let reconciling: Promise<unknown> | undefined;
+    let pendingMoves = 0;
 
     // A project page is keyed by its route param, so one project can sit under
     // both its id and its slug.
@@ -171,6 +185,57 @@ export const useProjectStore = createWithEqualityFn<ProjectStore>()(
       refreshProjectList: async () => {
         await refreshList();
       },
+      moveProject: (id, ids) => {
+        // After a failed move the visible order is stale until the refetch
+        // lands; a drop made in that window would be computed against it, so
+        // ignore it — the list snaps back to the server order.
+        if (reconciling) return reconciling.then(() => undefined);
+
+        const index = ids.indexOf(id);
+        const anchor =
+          index < ids.length - 1 ? { beforeId: ids[index + 1] } : { afterId: ids[index - 1] };
+        // Only the positions change: the list itself is shared with pages that
+        // show it in their own order, and the sidebar sorts by `sortOrder`.
+        const position = new Map(ids.map((itemId, i) => [itemId, i]));
+        list.update(PROJECT_LIST_KEY, (items) =>
+          items?.map((item) =>
+            position.has(item.id) ? { ...item, sortOrder: position.get(item.id)! } : item,
+          ),
+        );
+        pendingMoves += 1;
+
+        // Moves are computed against the order the user sees, which assumes
+        // every earlier move landed. Once one fails, the queued ones are stale:
+        // drop them, and hold the queue until the refetch shows the real order.
+        const generation = moveGeneration;
+        const write = moveQueue.then(() =>
+          generation === moveGeneration ? projectService.move(id, anchor) : undefined,
+        );
+        moveQueue = write.then(
+          () => {
+            pendingMoves -= 1;
+            // Once the queue is idle, read back the server order: a list
+            // revalidation that raced this write, or another member's move, may
+            // have left the local positions behind.
+            if (pendingMoves === 0 && !reconciling) void refreshList();
+          },
+          () => {
+            pendingMoves -= 1;
+            moveGeneration += 1;
+            reconciling ??= refreshList().finally(() => {
+              reconciling = undefined;
+            });
+            return reconciling;
+          },
+        );
+        return write.then(
+          () => undefined,
+          async (error) => {
+            await moveQueue;
+            throw error;
+          },
+        );
+      },
       removeProjectAgent: async (projectId, agentId) => {
         patchDetail(projectId, (value) => ({
           ...value,
@@ -189,6 +254,14 @@ export const useProjectStore = createWithEqualityFn<ProjectStore>()(
         await mutateAndRefresh(projectId, () =>
           projectService.removeKnowledgeBase(projectId, knowledgeBaseId),
         );
+      },
+      replaceProjectCoordinator: async (projectId, agentId) => {
+        await mutateAndRefresh(projectId, () =>
+          projectService.replaceCoordinator(projectId, agentId),
+        );
+        // The handed-over conversations now group under the new main agent.
+        void useProjectDirectoryStore.getState().refreshProjectTopics(projectId);
+        void refreshList();
       },
       updateProjectAgent: async (projectId, agentId, patch) => {
         patchDetail(projectId, (value) => ({

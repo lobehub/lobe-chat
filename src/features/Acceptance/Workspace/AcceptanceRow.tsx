@@ -31,10 +31,10 @@ import {
 } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router';
 
 import { openRenameModal } from '@/components/RenameModal';
 import NavItem from '@/features/NavPanel/components/NavItem';
+import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import type { AcceptanceListItem } from '@/services/verify';
 import { verifyService } from '@/services/verify';
 import { useVerifyStore } from '@/store/verify';
@@ -129,7 +129,7 @@ const AcceptanceRow = memo<{
   onToggleSelect?: (shift: boolean) => void;
 }>(({ active, item, onChanged, onToggleSelect, selectable, selected, showProject }) => {
   const { t } = useTranslation('verify');
-  const navigate = useNavigate();
+  const navigate = useWorkspaceAwareNavigate();
   const routeBase = useAcceptanceRouteBase();
   const [mutating, setMutating] = useState(false);
 

@@ -9,6 +9,7 @@ import {
   agents,
   environments,
   knowledgeBases,
+  projectAgents,
   projectCompletionReviews,
   projectEnvironments,
   projects,
@@ -51,6 +52,96 @@ describe('ProjectModel', () => {
     await serverDB.delete(projectEnvironments);
     await serverDB.delete(environments);
     await serverDB.delete(users);
+  });
+
+  describe('move', () => {
+    // The manual order as the sidebar reads it: sort_order, unplaced first, newest first.
+    const ids = async (m: ProjectModel) =>
+      (await m.list())
+        .toSorted(
+          (a, b) =>
+            (a.sortOrder ?? -1) - (b.sortOrder ?? -1) ||
+            b.updatedAt.getTime() - a.updatedAt.getTime(),
+        )
+        .map((p) => p.name);
+
+    it('leaves the list API in recently-updated order', async () => {
+      const a = await createProject(model, { name: 'A' });
+      const b = await createProject(model, { name: 'B' });
+      await model.move(a.id, { beforeId: b.id });
+
+      expect((await model.list()).map((p) => p.name)).toEqual(['B', 'A']);
+    });
+
+    it('places a project before or after another and keeps the order', async () => {
+      const a = await createProject(model, { name: 'A' });
+      const b = await createProject(model, { name: 'B' });
+      const c = await createProject(model, { name: 'C' });
+      expect(await ids(model)).toEqual(['C', 'B', 'A']);
+
+      await model.move(a.id, { beforeId: c.id });
+      expect(await ids(model)).toEqual(['A', 'C', 'B']);
+
+      await model.move(a.id, { afterId: b.id });
+      expect(await ids(model)).toEqual(['C', 'B', 'A']);
+      expect((await model.findById(c.id))?.sortOrder).toBe(0);
+    });
+
+    it('lists projects never placed above placed ones', async () => {
+      const a = await createProject(model, { name: 'A' });
+      const b = await createProject(model, { name: 'B' });
+      await model.move(a.id, { beforeId: b.id });
+      await createProject(model, { name: 'New' });
+
+      expect(await ids(model)).toEqual(['New', 'A', 'B']);
+    });
+
+    it('keeps updatedAt so the recently-updated order does not move', async () => {
+      const a = await createProject(model, { name: 'A' });
+      const b = await createProject(model, { name: 'B' });
+      const before = await model.findByIds([a.id, b.id]);
+
+      await model.move(a.id, { beforeId: b.id });
+
+      for (const row of await model.findByIds([a.id, b.id])) {
+        const original = before.find((p) => p.id === row.id)!;
+        expect(row.updatedAt.getTime()).toBe(original.updatedAt.getTime());
+      }
+    });
+
+    it('rejects projects outside the caller scope', async () => {
+      const mine = await createProject(model, { name: 'Mine' });
+      const theirs = await createProject(otherModel, { name: 'Theirs' });
+
+      await expect(model.move(theirs.id, { beforeId: mine.id })).rejects.toThrow(
+        'Project not found',
+      );
+      expect((await otherModel.findById(theirs.id))?.sortOrder).toBeNull();
+    });
+
+    it("keeps each member's private projects in place when another member moves", async () => {
+      await serverDB.insert(workspaces).values({
+        id: 'project-order-workspace',
+        name: 'Project Order Workspace',
+        primaryOwnerId: userId,
+        slug: 'project-order-workspace',
+      });
+      const alice = new ProjectModel(serverDB, userId, 'project-order-workspace');
+      const bob = new ProjectModel(serverDB, otherUserId, 'project-order-workspace');
+      const publicA = await createProject(alice, { name: 'PublicA' });
+      const publicB = await createProject(alice, { name: 'PublicB' });
+      const privateA = await createProject(alice, { name: 'PrivateA', visibility: 'private' });
+      const privateB = await createProject(bob, { name: 'PrivateB', visibility: 'private' });
+
+      await alice.move(privateA.id, { beforeId: publicA.id });
+      await alice.move(publicB.id, { afterId: publicA.id });
+      expect(await ids(alice)).toEqual(['PrivateA', 'PublicA', 'PublicB']);
+
+      await bob.move(privateB.id, { afterId: publicB.id });
+
+      expect(await ids(alice)).toEqual(['PrivateA', 'PublicA', 'PublicB']);
+      expect(await ids(bob)).toEqual(['PublicA', 'PublicB', 'PrivateB']);
+    });
   });
 
   it('lets several projects share one main agent', async () => {
@@ -112,6 +203,79 @@ describe('ProjectModel', () => {
       expect.objectContaining({ coordinatorAgentId: inbox?.id, id: project.id }),
     ]);
     expect(await model.delete(project.id)).toEqual(expect.objectContaining({ id: project.id }));
+  });
+
+  it('tells whether replacing a main agent retires it', async () => {
+    const project = await createProject(model, { name: 'Disposition' });
+    const inbox = (await new AgentModel(serverDB, userId).getBuiltinAgent(INBOX_SESSION_ID))!;
+    const user = await new AgentModel(serverDB, userId).create({ title: 'Planner' });
+
+    // The project's own lead is ignored only when asked about handing it over.
+    expect(
+      await model.isDedicatedCoordinator(project.coordinatorAgentId, {
+        exceptProjectId: project.id,
+      }),
+    ).toBe(true);
+    expect(await model.isDedicatedCoordinator(project.coordinatorAgentId)).toBe(false);
+    // A member of another project is still in use there.
+    const other = await createProject(model, { name: 'Borrower' });
+    await model.addAgent(other.id, { agentId: project.coordinatorAgentId });
+    expect(
+      await model.isDedicatedCoordinator(project.coordinatorAgentId, {
+        exceptProjectId: project.id,
+      }),
+    ).toBe(false);
+    expect(await model.isDedicatedCoordinator(inbox.id, { exceptProjectId: project.id })).toBe(
+      false,
+    );
+    expect(await model.isDedicatedCoordinator(user.id, { exceptProjectId: project.id })).toBe(
+      false,
+    );
+  });
+
+  it('creates a project led by a picked agent without provisioning a coordinator', async () => {
+    const picked = await new AgentModel(serverDB, userId).create({ title: 'Planner' });
+    const agentCount = (await serverDB.select().from(agents).where(eq(agents.userId, userId)))
+      .length;
+
+    const project = await createProject(model, { coordinatorAgentId: picked.id, name: 'Picked' });
+
+    expect(project.coordinatorAgentId).toBe(picked.id);
+    expect(await serverDB.select().from(agents).where(eq(agents.userId, userId))).toHaveLength(
+      agentCount,
+    );
+    expect(
+      await serverDB
+        .select({ role: projectAgents.role })
+        .from(projectAgents)
+        .where(eq(projectAgents.projectId, project.id)),
+    ).toEqual([{ role: 'coordinator' }]);
+
+    await model.delete(project.id);
+    expect(await serverDB.select().from(agents).where(eq(agents.id, picked.id))).toHaveLength(1);
+  });
+
+  it('lets the identifier be omitted, keeping the default task prefix', async () => {
+    const named = await model.create({ identifier: 'ace', name: 'Named' });
+    const unnamed = await model.create({ name: 'Unnamed' });
+    const taskModel = new TaskModel(serverDB, userId);
+
+    const namedTask = await taskModel.create({ instruction: 'a', projectId: named.id });
+    const unnamedTask = await taskModel.create({ instruction: 'b', projectId: unnamed.id });
+
+    expect(named.identifier).toBe('ACE');
+    expect(unnamed.identifier).toBeNull();
+    expect(namedTask.identifier).toBe('ACE-1');
+    expect(unnamedTask.identifier).toBe('T-2');
+  });
+
+  it('refuses to create a project led by an agent outside the scope', async () => {
+    const foreign = await new AgentModel(serverDB, otherUserId).create({ title: 'Foreign' });
+
+    await expect(
+      createProject(model, { coordinatorAgentId: foreign.id, name: 'Foreign-led' }),
+    ).rejects.toThrow('Agent not found');
+    expect(await serverDB.select().from(projects).where(eq(projects.userId, userId))).toEqual([]);
   });
 
   it('creates, lists, updates, and deletes a project in the owner scope', async () => {
@@ -419,6 +583,32 @@ describe('ProjectModel', () => {
     expect(await model.removeKnowledgeBase(project.id, knowledgeBase.id)).toBe(true);
     expect(await model.removeAgent(project.id, agent.id)).toBe(false);
     expect(await model.removeKnowledgeBase(project.id, knowledgeBase.id)).toBe(false);
+  });
+
+  it('refuses to lead a shared workspace project with a private agent', async () => {
+    const workspaceId = 'project-shared-lead-workspace';
+    await serverDB.insert(workspaces).values({
+      id: workspaceId,
+      name: 'Shared Lead Workspace',
+      primaryOwnerId: userId,
+      slug: workspaceId,
+    });
+    const creator = new ProjectModel(serverDB, userId, workspaceId);
+    const [privateAgent] = await serverDB
+      .insert(agents)
+      .values({ title: 'Private lead', userId, visibility: 'private', workspaceId })
+      .returning();
+
+    await expect(
+      createProject(creator, {
+        coordinatorAgentId: privateAgent.id,
+        name: 'Shared-led',
+        visibility: 'public',
+      }),
+    ).rejects.toThrow('A shared project only takes shared agents');
+    expect(
+      await serverDB.select().from(projects).where(eq(projects.workspaceId, workspaceId)),
+    ).toEqual([]);
   });
 
   // A private binding on a shared project would be filtered out for every reader but its creator.
@@ -839,6 +1029,35 @@ describe('ProjectModel', () => {
       userId,
     });
     await expect(otherModel.listTopics(project.id)).rejects.toThrow('access denied');
+  });
+
+  it("carries each agent's execution-target pin on its project topics", async () => {
+    const project = await createProject(model, { name: 'Pinned host' });
+    const [pinned] = await serverDB
+      .insert(agents)
+      .values({
+        agencyConfig: { boundDeviceId: 'device-mac', executionTargetSelectionPolicy: 'fixed' },
+        title: 'Pinned',
+        userId,
+      })
+      .returning();
+    const topicModel = new TopicModel(serverDB, userId);
+    await topicModel.create({ agentId: pinned.id, projectId: project.id, title: 'Pinned work' });
+    await topicModel.create({
+      agentId: project.coordinatorAgentId,
+      projectId: project.id,
+      title: 'Free work',
+    });
+
+    const list = await model.listTopics(project.id);
+    expect(list.find((t) => t.agentId === pinned.id)).toMatchObject({
+      agentBoundDeviceId: 'device-mac',
+      agentExecutionTargetSelectionPolicy: 'fixed',
+    });
+    expect(list.find((t) => t.agentId === project.coordinatorAgentId)).toMatchObject({
+      agentBoundDeviceId: null,
+      agentExecutionTargetSelectionPolicy: null,
+    });
   });
 
   it('keeps agentless conversations visible in project listings', async () => {

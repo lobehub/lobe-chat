@@ -77,6 +77,8 @@ export enum SettingsTabs {
   Credits = 'credits',
   Creds = 'credential',
   Devices = 'devices',
+  /** The cloud sandbox's network drives — labelled “Storage”; `storage` is local data. */
+  Drive = 'drive',
   Environments = 'environments',
   Hotkey = 'hotkey',
   /** @deprecated Use ServiceModel instead */
@@ -159,6 +161,9 @@ export interface AgentDocumentSort {
   foldersFirst: boolean;
   order: 'asc' | 'desc';
 }
+
+/** How the sidebar project list is ordered; `manual` follows the shared drag order. */
+export type ProjectListSortBy = 'manual' | 'createdAt' | 'updatedAt';
 
 export interface SystemStatus {
   /**
@@ -319,6 +324,11 @@ export interface SystemStatus {
    * number of private agents (ungrouped) to display in the Private sidebar bucket
    */
   privateAgentPageSize?: number;
+  /**
+   * Order of the sidebar project list. Device-local view setting; the manual
+   * order itself is shared and lives on `projects.sort_order`.
+   */
+  projectListSortBy?: ProjectListSortBy;
   /**
    * Per byProject group (keyed by the group id, e.g. `project-id:<id>`): how its
    * topics are sectioned. Absent means `none`.
