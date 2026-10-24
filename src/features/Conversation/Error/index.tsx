@@ -463,9 +463,6 @@ const ErrorMessageExtra = memo<ErrorExtraProps>(
               console.error('[ErrorMessageExtra] Failed to cancel scheduled continuation:', error);
               toast.error(t('heteroRateLimit.cancelFailed'));
             }),
-          // Same fallback as the retry button: `onRegenerate` is absent on the
-          // standalone surfaces, where a bare `onRegenerate?.()` was a no-op.
-          onRunNow: handleManualRetry,
           onSchedule: () =>
             void scheduleHeteroContinuation({
               failedAssistantMessageId: data.id,
@@ -484,16 +481,7 @@ const ErrorMessageExtra = memo<ErrorExtraProps>(
         autoRetry,
         error: sessionErrorBody,
         onDismiss: () => void updateMessageError(data.id, null),
-        onOpenSystemTools: () =>
-          navigate(
-            isDesktop
-              ? '/settings/system-tools'
-              : activeAgentId
-                ? `/agent/${activeAgentId}/profile`
-                : '/settings/credential',
-          ),
-        onRetry: () => void handleHeterogeneousRetry(),
-        onTransfer:
+        onHandoff:
           isRateLimitError && conversationAgentId && conversationTopicId
             ? () =>
                 createTopicForwardModal({
@@ -503,6 +491,15 @@ const ErrorMessageExtra = memo<ErrorExtraProps>(
                   topicTitle: conversationTopic?.title || '',
                 })
             : undefined,
+        onOpenSystemTools: () =>
+          navigate(
+            isDesktop
+              ? '/settings/system-tools'
+              : activeAgentId
+                ? `/agent/${activeAgentId}/profile`
+                : '/settings/credential',
+          ),
+        onRetry: () => void handleHeterogeneousRetry(),
         schedule,
       };
 
