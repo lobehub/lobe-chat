@@ -23,6 +23,16 @@ const isAbortError = (error: unknown, abortController?: AbortController) =>
       error.message.includes('aborted') ||
       error.message.includes('cancelled')));
 
+export interface ContextCompressionOptions {
+  /** Keep this message and everything after it out of the summary. */
+  beforeMessageId?: string;
+  /**
+   * Retry action offered in the failure toast. Defaults to running the same compaction again;
+   * callers that chain work after compaction (e.g. compact-and-retry) pass their full flow.
+   */
+  onRetry?: () => void;
+}
+
 const createAbortError = () =>
   Object.assign(new Error('Compression cancelled'), { name: 'AbortError' });
 
@@ -37,7 +47,7 @@ export const executeContextCompression = async (
   get: () => ChatStore,
   context: Record<string, any>,
   parentOperationId: string,
-  options?: { beforeMessageId?: string },
+  options?: ContextCompressionOptions,
 ): Promise<boolean> => {
   const { agentId, topicId } = context;
   if (!topicId) return false;
@@ -157,7 +167,27 @@ export const executeContextCompression = async (
 
     const reason = error instanceof Error ? error.message : String(error);
     get().failOperation(operationId, { message: reason, type: 'compression_failed' });
-    toast.error({ description: reason, title: t('compression.failed', { ns: 'chat' }) });
+    // Keep the toast until dismissed: the conversation looks unchanged after the rollback, so a
+    // toast that fades on its own leaves no trace that compaction was attempted.
+    const retry =
+      options?.onRetry ??
+      (() => void get().executeCompression(context, parentOperationId, options));
+    const failureToast = toast.error({
+      actions: [
+        {
+          label: t('retry', { ns: 'common' }),
+          // A failed retry raises its own toast, so close this one instead of stacking them
+          onClick: () => {
+            failureToast.close();
+            retry();
+          },
+          variant: 'text',
+        },
+      ],
+      description: t('compression.failedReason', { ns: 'chat', reason }),
+      duration: 0,
+      title: t('compression.failed', { ns: 'chat' }),
+    });
     return false;
   }
 };

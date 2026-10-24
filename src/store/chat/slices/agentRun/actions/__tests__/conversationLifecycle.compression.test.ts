@@ -29,6 +29,8 @@ const originalMessages = [
   createMockMessage({ content: 'answer', id: 'assistant-1', role: 'assistant', topicId }),
 ];
 
+const closeToast = vi.fn();
+
 const getMessageIds = () => (useChatStore.getState().dbMessagesMap[key] ?? []).map((m) => m.id);
 
 beforeEach(() => {
@@ -52,11 +54,12 @@ beforeEach(() => {
   vi.spyOn(messageService, 'cancelCompression').mockResolvedValue({
     messages: originalMessages,
   });
-  vi.spyOn(toast, 'error').mockImplementation(() => ({}) as any);
+  vi.spyOn(toast, 'error').mockImplementation(() => ({ close: closeToast }) as any);
 });
 
 afterEach(() => {
   vi.restoreAllMocks();
+  closeToast.mockReset();
 });
 
 describe('executeCompression', () => {
@@ -82,8 +85,50 @@ describe('executeCompression', () => {
     });
     expect(getMessageIds()).toEqual(['user-1', 'assistant-1']);
     expect(toast.error).toHaveBeenCalledWith(
-      expect.objectContaining({ description: 'Request blocked by chat security' }),
+      expect.objectContaining({
+        description: expect.stringContaining('Request blocked by chat security'),
+        duration: 0,
+      }),
     );
+  });
+
+  it('reruns the compaction from the failure toast', async () => {
+    const fetchSpy = vi
+      .spyOn(chatService, 'fetchPresetTaskResult')
+      .mockImplementation(async ({ onError }) => {
+        onError?.(new Error('timeout'), undefined);
+      });
+
+    await act(async () => {
+      await useChatStore.getState().executeCompression(context, '');
+    });
+
+    const [{ actions }] = vi.mocked(toast.error).mock.calls[0] as [any];
+    await act(async () => {
+      actions[0].onClick();
+    });
+
+    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(2));
+    expect(messageService.createCompressionGroup).toHaveBeenCalledTimes(2);
+    expect(closeToast).toHaveBeenCalledTimes(1);
+  });
+
+  it('runs the caller retry flow from the failure toast when provided', async () => {
+    const onRetry = vi.fn();
+    vi.spyOn(chatService, 'fetchPresetTaskResult').mockImplementation(async ({ onError }) => {
+      onError?.(new Error('timeout'), undefined);
+    });
+
+    await act(async () => {
+      await useChatStore.getState().executeCompression(context, '', { onRetry });
+    });
+
+    const [{ actions }] = vi.mocked(toast.error).mock.calls[0] as [any];
+    actions[0].onClick();
+
+    expect(onRetry).toHaveBeenCalledTimes(1);
+    expect(closeToast).toHaveBeenCalledTimes(1);
+    expect(messageService.createCompressionGroup).toHaveBeenCalledTimes(1);
   });
 
   it('does not finalize an empty summary', async () => {

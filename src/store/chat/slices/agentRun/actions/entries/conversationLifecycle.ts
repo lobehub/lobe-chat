@@ -134,7 +134,7 @@ import {
   parseSingleAgentMentionDirectRoute,
   processCommands,
 } from './commandBus';
-import { executeContextCompression } from './contextCompression';
+import { type ContextCompressionOptions, executeContextCompression } from './contextCompression';
 import { mergePartialPersistedMessages, resolveSendResponseMessages } from './persistedMessages';
 import { resolveExistingTopicForRun } from './resolveExistingTopic';
 import { resolveProjectDirectoryRun } from './resolveProjectDirectoryRun';
@@ -2370,7 +2370,7 @@ export class ConversationLifecycleActionImpl {
   executeCompression = async (
     context: Record<string, any>,
     parentOperationId: string,
-    options?: { beforeMessageId?: string },
+    options?: ContextCompressionOptions,
   ): Promise<boolean> => executeContextCompression(this.#get, context, parentOperationId, options);
 }
 

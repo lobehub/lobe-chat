@@ -53,9 +53,18 @@ const ExceededContextWindowError = memo<ExceededContextWindowErrorProps>(
 
       // Leave the failed turn out of the summary so it can be regenerated afterwards. A failed
       // compaction keeps the original history, so retrying would hit the same error again.
-      await retryParentMessage(() =>
-        useChatStore.getState().executeCompression(context, '', { beforeMessageId: parentId }),
-      );
+      // The failure toast's Retry reruns this whole flow, not only the compaction: once a bare
+      // compaction succeeds, compacting again from this card finds nothing to summarize and
+      // would skip the regeneration.
+      const compactAndRetry = (): Promise<void> =>
+        retryParentMessage(() =>
+          useChatStore.getState().executeCompression(context, '', {
+            beforeMessageId: parentId,
+            onRetry: () => void compactAndRetry(),
+          }),
+        );
+
+      await compactAndRetry();
     }, [canCompact, context, parentId, retryParentMessage]);
 
     return (
