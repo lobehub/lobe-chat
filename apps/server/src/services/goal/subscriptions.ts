@@ -14,9 +14,12 @@ import { WidgetModel } from '@/database/models/widget';
 import { goals } from '@/database/schemas/goal';
 import { type GoalSubscriptionRow, goalSubscriptions } from '@/database/schemas/goalSubscription';
 import { metricPoints, metrics } from '@/database/schemas/metric';
-import { widgetRuns, widgets } from '@/database/schemas/widget';
+import { widgetRuns, widgets, widgetVersions } from '@/database/schemas/widget';
 import { workspaceMembers } from '@/database/schemas/workspace';
 import type { LobeChatDatabase } from '@/database/type';
+
+import { widgetRunLeaseMs } from '../widget/lease';
+import { WIDGET_SANDBOX_MAX_TIMEOUT_MS } from '../widget/sandbox/types';
 
 import { scheduleGoalAdvance } from './scheduler';
 import {
@@ -620,7 +623,30 @@ export class GoalSubscriptionService {
           cursor.run = { createdAt: position, runId: run.id };
           continue;
         }
-        if (run.status === 'running') break;
+        if (run.status === 'running') {
+          // Manual refreshes have no scheduler retry. Close abandoned reservations
+          // under the producer's Widget lock, with the same lease fence as completion.
+          if (run.trigger !== 'manual') break;
+          const [version] = await db
+            .select({ manifest: widgetVersions.manifest })
+            .from(widgetVersions)
+            .where(eq(widgetVersions.id, run.versionId));
+          const leaseMs = widgetRunLeaseMs(
+            version?.manifest ?? { timeoutMs: WIDGET_SANDBOX_MAX_TIMEOUT_MS },
+          );
+          if (now - run.startedAt.getTime() <= leaseMs) break;
+          const completed = await WidgetModel.finishRun(db, run.id, {
+            expectedStartedAt: run.startedAt,
+            status: 'timeout',
+            error: {
+              code: 'MANUAL_RUN_LEASE_EXPIRED',
+              message: 'Manual collection worker did not complete before its lease expired',
+            },
+          });
+          if (!completed) break;
+          cursor.run = { createdAt: position, runId: run.id };
+          continue;
+        }
         let valid = false;
         let value: number | undefined;
         if (

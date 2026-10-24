@@ -21,6 +21,7 @@ import {
 import type { LobeChatDatabase } from '@/database/type';
 
 import { executeWidgetRun } from '../../widget/executeRun';
+import { widgetRunLeaseMs } from '../../widget/lease';
 import { recordWidgetMetrics } from '../../widget/metrics';
 import { scheduleGoalAdvance } from '../scheduler';
 import { GoalSubscriptionService } from '../subscriptions';
@@ -223,6 +224,37 @@ describe('durable Widget to Goal subscriptions', () => {
     expect((await service.list(f.goal.id))[0].subscription.cursor.run?.runId).toBe(run.id);
     const [storedPreview] = await db.select().from(widgetRuns).where(eq(widgetRuns.id, preview.id));
     expect(storedPreview.status).toBe('running');
+  });
+
+  it('expires abandoned manual reservations, preserves live barriers and rejects late completion', async () => {
+    const f = await fixture();
+    const abandoned = await reserve(f);
+    const later = await reserve(f);
+    await finish(f, later, 'succeeded', 9);
+    await service.consume(f.sub.id);
+    // An active manual worker still owns the contiguous-prefix barrier.
+    expect((await service.criterion(f.goal.id, 'followers')).point).toBeUndefined();
+    const expiredAt = new Date(Date.now() - widgetRunLeaseMs(f.version.manifest) - 1000);
+    await db
+      .update(widgetRuns)
+      .set({ startedAt: expiredAt })
+      .where(eq(widgetRuns.id, abandoned.id));
+    // Restart / missing-notification recovery uses the durable scanner, not a new execution.
+    await GoalSubscriptionService.reconcile(db);
+    const [expired] = await db.select().from(widgetRuns).where(eq(widgetRuns.id, abandoned.id));
+    expect(expired.status).toBe('timeout');
+    expect(expired.error?.code).toBe('MANUAL_RUN_LEASE_EXPIRED');
+    expect((await service.criterion(f.goal.id, 'followers')).point?.value).toBe(9);
+    expect((await service.list(f.goal.id))[0].subscription.cursor.run?.runId).toBe(later.id);
+    await expect(
+      WidgetModel.finishRun(db, abandoned.id, {
+        expectedStartedAt: expiredAt,
+        status: 'succeeded',
+        output: { type: 'stat', value: 999 },
+      }),
+    ).resolves.toBeUndefined();
+    await service.consume(f.sub.id);
+    expect((await service.criterion(f.goal.id, 'followers')).point?.value).toBe(9);
   });
 
   it.each([false, true])('detects change with split consumption = %s', async (split) => {

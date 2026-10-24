@@ -1,4 +1,4 @@
-import type { WidgetManifest, WidgetRunStatus } from '@lobechat/types';
+import type { WidgetRunStatus } from '@lobechat/types';
 import debug from 'debug';
 import pMap from 'p-map';
 
@@ -8,7 +8,7 @@ import type { LobeChatDatabase } from '@/database/type';
 
 import { GoalSubscriptionService } from '../goal/subscriptions';
 import { executeWidgetRun, type ExecuteWidgetRunDeps } from './executeRun';
-import { clampSandboxTimeout, WIDGET_SANDBOX_REQUEST_OVERHEAD_MS } from './sandbox/types';
+import { widgetRunLeaseMs } from './lease';
 import { nextScheduleOccurrence } from './schedule';
 
 const log = debug('lobe-server:widget:scheduler');
@@ -18,21 +18,10 @@ const DEFAULT_TICK_LIMIT = 50;
 const DEFAULT_INLINE_CONCURRENCY = 4;
 const DEFAULT_DISPATCH_CONCURRENCY = 10;
 
-/** Slack on top of the sandbox bounds before a reserved run counts as abandoned. */
-export const WIDGET_RUN_LEASE_MARGIN_MS = 60_000;
+export { WIDGET_RUN_LEASE_MARGIN_MS, widgetRunLeaseMs } from './lease';
+
 /** Reservations older than this are no longer resumed — that occurrence is long gone. */
 const RESUME_HORIZON_MS = 24 * 60 * 60 * 1000;
-
-/**
- * How long a worker may hold a reserved scheduled run before another worker
- * may take it over: the version's (clamped) script timeout, plus what the
- * sandbox request may add on top, plus a margin for credential resolution
- * and closing the run.
- */
-export const widgetRunLeaseMs = (manifest?: Pick<WidgetManifest, 'timeoutMs'> | null) =>
-  clampSandboxTimeout(manifest?.timeoutMs) +
-  WIDGET_SANDBOX_REQUEST_OVERHEAD_MS +
-  WIDGET_RUN_LEASE_MARGIN_MS;
 
 /** The shortest lease any version can have — the coarse cut for the stale query. */
 const MIN_LEASE_MS = widgetRunLeaseMs({ timeoutMs: 1 });
