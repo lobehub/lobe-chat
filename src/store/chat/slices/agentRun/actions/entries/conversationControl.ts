@@ -848,21 +848,20 @@ export class ConversationControlActionImpl {
       });
     }
 
-    // Local runtime owns its message mutation. Gateway resumes claim the
-    // still-pending row atomically on the server, so they must not persist an
-    // optimistic approved state before calling the claim endpoint.
+    // Local runtime persists the decision itself. A Gateway claim needs the row still
+    // `pending` on the server, so it must not persist an optimistic approval first.
     if (!shouldUseGatewayResume) {
-      this.#interventions.settle([toolMessageId]);
-      await this.#get().optimisticUpdateMessagePlugin(
-        toolMessageId,
-        { intervention: { status: 'approved' } },
-        optimisticContext,
+      await this.#interventions.settleAfter([toolMessageId], () =>
+        this.#get().optimisticUpdateMessagePlugin(
+          toolMessageId,
+          { intervention: { status: 'approved' } },
+          optimisticContext,
+        ),
       );
     }
 
-    // NOTE: the client path intentionally does NOT bail on Stop here: the
-    // approval is persisted above, so returning would leave the tool approved
-    // but never executed. The Gateway path below honors Stop around its claim.
+    // NOTE: the client path does NOT bail on Stop: the approval is persisted above, so
+    // returning would leave the tool approved but never run. Gateway honors Stop below.
     // 2.5. Server-mode: start a **new** Gateway op carrying the approval
     // decision via `resumeApproval`. The server reads the target tool
     // message, persists `intervention=approved`, dispatches the approved
@@ -2127,18 +2126,19 @@ export class ConversationControlActionImpl {
       ? `User reject this tool calling with reason: ${reason}`
       : 'User reject this tool calling without reason';
     if (!shouldUseGatewayResume) {
-      this.#interventions.settle([messageId]);
-      await this.#get().optimisticUpdateMessagePlugin(
-        toolMessage.id,
-        { intervention: { rejectedReason: reason, status: 'rejected' } },
-        optimisticContext,
-      );
-      await this.#get().optimisticUpdateMessageContent(
-        messageId,
-        toolContent,
-        undefined,
-        optimisticContext,
-      );
+      await this.#interventions.settleAfter([messageId], async () => {
+        await this.#get().optimisticUpdateMessagePlugin(
+          toolMessage.id,
+          { intervention: { rejectedReason: reason, status: 'rejected' } },
+          optimisticContext,
+        );
+        await this.#get().optimisticUpdateMessageContent(
+          messageId,
+          toolContent,
+          undefined,
+          optimisticContext,
+        );
+      });
     }
     const requestMetadata = this.#getRequestMetadataFromMessageChain(messageId);
 
