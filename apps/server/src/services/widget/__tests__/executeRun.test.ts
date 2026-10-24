@@ -75,6 +75,8 @@ describe('executeWidgetRun', () => {
       {},
       'run-1',
       expect.objectContaining({ status: 'succeeded', stderr: 'sent [REDACTED:GITHUB_TOKEN]' }),
+      // Metric publication runs inside the finish transaction.
+      expect.any(Function),
     );
   });
 
