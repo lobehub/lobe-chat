@@ -375,7 +375,6 @@ export class LinearIssueSyncService {
     // Every issue lands in exactly one bucket besides `closed`: updated, kept
     // local edits, skipped, or unchanged.
     let counted = false;
-    let syncedHash = link.syncedHash;
     if (!options.closeOnly) {
       const fields = linearIssueToTaskFields(issue);
       const nextHash = hashSyncedFields(fields);
@@ -385,7 +384,6 @@ export class LinearIssueSyncService {
       } else if (nextHash !== link.syncedHash) {
         const applied = await this.applyLinearFields(task.id, link, fields, nextHash);
         if (applied === 'updated') {
-          syncedHash = nextHash;
           result.updated += 1;
         } else {
           // Edited (or removed) since the batch was loaded.
@@ -406,14 +404,11 @@ export class LinearIssueSyncService {
 
     if (!counted) result.unchanged += 1;
 
-    // Nothing moved on either side: leave the link row alone.
+    // Display facts only. `syncedHash` is written solely by `create` and
+    // `applyLinearFields`, together with the task, so a run working from an
+    // older read can never put a stale hash back.
     const issueUpdatedAt = new Date(issue.updatedAt);
-    if (
-      syncedHash === link.syncedHash &&
-      link.externalUpdatedAt?.getTime() === issueUpdatedAt.getTime()
-    ) {
-      return;
-    }
+    if (link.externalUpdatedAt?.getTime() === issueUpdatedAt.getTime()) return;
 
     await this.linkModel.update(link.id, {
       externalContainerId: issue.team.id,
@@ -421,7 +416,6 @@ export class LinearIssueSyncService {
       externalUpdatedAt: issueUpdatedAt,
       externalUrl: issue.url,
       metadata: linkMetadata(issue),
-      syncedHash,
     });
   }
 

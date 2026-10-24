@@ -313,4 +313,36 @@ describe('LinearIssueSyncService (real PostgreSQL)', () => {
     expect(result.skipped).toEqual([{ identifier: 'ENG-1', reason: 'running' }]);
     expect((await linkedTask('1'))?.status).toBe('running');
   });
+
+  it('keeps the hash a concurrent run wrote, so later Linear changes still apply', async () => {
+    serve([issue({ id: '1' })]);
+    await new LinearIssueSyncService(db, userId).importIssues(TOKEN, ['1']);
+
+    // Run B reads the batch; run A then syncs the same rename and commits first.
+    serve([issue({ id: '1', title: 'Renamed once', updatedAt: '2026-10-02T00:00:00.000Z' })]);
+    const findByIds = TaskModel.prototype.findByIds;
+    let raced = false;
+    const spy = vi.spyOn(TaskModel.prototype, 'findByIds').mockImplementation(async function (
+      this: TaskModel,
+      ids: string[],
+    ) {
+      const rows = await findByIds.call(this, ids);
+      if (!raced) {
+        raced = true;
+        spy.mockRestore();
+        await new LinearIssueSyncService(db, userId).importIssues(TOKEN, ['1']);
+      }
+      return rows;
+    });
+    await new LinearIssueSyncService(db, userId).importIssues(TOKEN, ['1']);
+    spy.mockRestore();
+    expect((await linkedTask('1'))?.name).toBe('Renamed once');
+
+    // A later Linear change must still apply, not be mistaken for a local edit.
+    serve([issue({ id: '1', title: 'Renamed twice', updatedAt: '2026-10-03T00:00:00.000Z' })]);
+    const result = await new LinearIssueSyncService(db, userId).importIssues(TOKEN, ['1']);
+
+    expect(result).toMatchObject({ keptLocalEdits: 0, updated: 1 });
+    expect((await linkedTask('1'))?.name).toBe('Renamed twice');
+  });
 });
