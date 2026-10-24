@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -27,10 +27,15 @@ vi.mock('@/components/Menu', () => ({
 }));
 
 vi.mock('../UserInfo', () => ({
-  default: vi.fn(({ onClick }) => (
-    <button type={'button'} onClick={onClick}>
-      Mocked UserInfo
-    </button>
+  default: vi.fn(({ onClick, onNavigate }) => (
+    <>
+      <button type={'button'} onClick={onClick}>
+        Mocked UserInfo
+      </button>
+      <button type={'button'} onClick={onNavigate}>
+        UserInfo navigate
+      </button>
+    </>
   )),
 }));
 
@@ -114,6 +119,18 @@ describe('PanelContent', () => {
 
       expect(screen.getAllByText('Mocked Menu')).toHaveLength(1);
       expect(screen.getByText('Logout')).toBeInTheDocument();
+    });
+
+    it('should close the popover when UserInfo navigates away', () => {
+      act(() => {
+        useUserStore.setState({ isSignedIn: true });
+      });
+      closePopover.mockClear();
+
+      renderWithRouter(<PanelContent closePopover={closePopover} />);
+      fireEvent.click(screen.getByText('UserInfo navigate'));
+
+      expect(closePopover).toHaveBeenCalledTimes(1);
     });
 
     it('should render SignInBlock when user is not signed in', () => {
