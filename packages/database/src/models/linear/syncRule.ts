@@ -53,12 +53,13 @@ export class LinearSyncRuleModel {
   static recordRun = async (
     db: LobeChatDatabase,
     id: string,
+    scope: LinearConnectionScope,
     result: LinearSyncResult,
   ): Promise<void> => {
     await db
       .update(linearSyncRules)
       .set({ lastResult: result, lastRunAt: new Date(), updatedAt: new Date() })
-      .where(eq(linearSyncRules.id, id));
+      .where(and(eq(linearSyncRules.id, id), scopeCondition(scope)));
   };
 
   static toView = (row: LinearSyncRuleItem): LinearSyncRuleView => ({

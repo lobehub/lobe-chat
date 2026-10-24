@@ -212,7 +212,7 @@ export const linearRouter = router({
           { targetProjectId },
         ),
       );
-      await LinearSyncRuleModel.recordRun(ctx.serverDB, rule.id, result);
+      await LinearSyncRuleModel.recordRun(ctx.serverDB, rule.id, ctx.scope, result);
       return result;
     }),
 });

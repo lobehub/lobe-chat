@@ -74,7 +74,7 @@ const IssueList = memo<IssueListProps>(({ disabled, filter, onSelectionChange, s
   }
   if (isLoading || !data) return <Skeleton height={160} />;
 
-  const issues: LinearIssueSummary[] = data.flatMap((page) => page.issues);
+  const issues: LinearIssueSummary[] = data.flatMap((page) => page.issues ?? []);
   if (issues.length === 0) {
     return <Empty description={t('linear.sync.list.empty')} />;
   }

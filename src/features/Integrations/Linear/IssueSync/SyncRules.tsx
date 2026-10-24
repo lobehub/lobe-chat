@@ -26,11 +26,12 @@ interface SyncRulesProps {
 /** Saved sync rules: re-run one with a click, or remove it. Running never writes to Linear. */
 const SyncRules = memo<SyncRulesProps>(({ connections }) => {
   const { t } = useTranslation('integration');
-  const { data: rules, mutate } = useLinearSyncRules();
+  const { data, mutate } = useLinearSyncRules();
+  const rules = data ?? [];
   const projects = useCurrentProjectList();
   const [running, setRunning] = useState<string | null>(null);
 
-  if (!rules || rules.length === 0) return null;
+  if (rules.length === 0) return null;
 
   const organizationOf = (rule: LinearSyncRuleView) =>
     connections.find((connection) => connection.id === rule.connectionId)?.organizationName;
@@ -90,7 +91,7 @@ const SyncRules = memo<SyncRulesProps>(({ connections }) => {
                   .join(' › ')}
               </Text>
               <Flexbox horizontal align={'center'} gap={4} wrap={'wrap'}>
-                {rule.stateTypes.map((type) => (
+                {(rule.stateTypes ?? []).map((type) => (
                   <Tag key={type}>{t(`linear.sync.state.${type}`)}</Tag>
                 ))}
                 <Text style={{ fontSize: 13 }} type="secondary">
