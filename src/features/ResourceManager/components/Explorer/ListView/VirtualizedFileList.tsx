@@ -27,6 +27,8 @@ interface VirtualizedFileListProps {
   height?: string;
   /** Next-page loader; defaults to the folder list's. */
   loadMore?: () => Promise<void>;
+  /** Failure of a page past the head, rendered as a retry row in the footer. */
+  loadMoreError?: unknown;
   showUploader?: boolean;
   virtuosoRef: RefObject<VirtuosoHandle | null>;
 }
@@ -37,6 +39,7 @@ const VirtualizedFileList = ({
   hasMore,
   height = 'calc(100vh - 100px)',
   loadMore,
+  loadMoreError,
   showUploader = true,
   virtuosoRef,
 }: VirtualizedFileListProps) => {
@@ -53,6 +56,7 @@ const VirtualizedFileList = ({
     dataLength: data.length,
     hasMore,
     loadMore,
+    loadMoreError,
     showUploader,
   });
   const dataRef = useRef<FileListItem[]>(data);

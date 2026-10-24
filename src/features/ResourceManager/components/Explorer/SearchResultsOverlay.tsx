@@ -38,6 +38,7 @@ const SearchResultsOverlay = memo(() => {
     isLoading,
     isLoadingMore,
     loadMore,
+    loadMoreError,
     revalidate,
     searchParams,
     total,
@@ -76,10 +77,17 @@ const SearchResultsOverlay = memo(() => {
   const handleMasonryScroll = useCallback(
     (e: UIEvent<HTMLDivElement>) => {
       const { clientHeight, scrollHeight, scrollTop } = e.currentTarget;
-      if (hasMore && !isLoadingMore && scrollHeight - scrollTop - clientHeight < 300)
+      // While a page failed, stop auto-fetching: the tail shows a retry and
+      // scrolling must not re-issue the failing request on every frame.
+      if (
+        hasMore &&
+        !isLoadingMore &&
+        !loadMoreError &&
+        scrollHeight - scrollTop - clientHeight < 300
+      )
         void loadMore();
     },
-    [hasMore, isLoadingMore, loadMore],
+    [hasMore, isLoadingMore, loadMore, loadMoreError],
   );
 
   if (!searchParams) return null;
@@ -138,6 +146,7 @@ const SearchResultsOverlay = memo(() => {
               hasMore={hasMore}
               height={'100%'}
               loadMore={loadMore}
+              loadMoreError={loadMoreError}
               showUploader={showUploader}
               virtuosoRef={virtuosoRef}
             />
@@ -165,6 +174,16 @@ const SearchResultsOverlay = memo(() => {
                 overflow: 'hidden',
               }}
             />
+            {loadMoreError ? (
+              <div style={{ paddingBlockStart: 8 }}>
+                <AsyncError
+                  error={loadMoreError}
+                  retrying={isLoadingMore}
+                  variant={'inline'}
+                  onRetry={() => void loadMore()}
+                />
+              </div>
+            ) : null}
           </div>
         </div>
       )}

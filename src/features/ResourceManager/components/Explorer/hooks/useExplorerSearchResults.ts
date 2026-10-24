@@ -58,6 +58,10 @@ export const useExplorerSearchResults = () => {
     isLoading: !!searchParams && !current && !error,
     isLoadingMore: current?.isLoadingMore ?? false,
     loadMore,
+    // A page past the head can fail on its own; the head error never covers it.
+    // Returning it lets the overlay stop scrolling into the failure and offer a
+    // retry at the tail instead of silently dropping the remaining rows.
+    loadMoreError: current?.loadMoreError,
     revalidate,
     searchParams,
     total: current?.total,

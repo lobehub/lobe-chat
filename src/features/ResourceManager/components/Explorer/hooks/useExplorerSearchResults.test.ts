@@ -59,6 +59,23 @@ describe('useExplorerSearchResults', () => {
     expect(result.current).toMatchObject({ hasMore: true, isLoading: false, total: 120 });
   });
 
+  // Regression: a failed page past the head was dropped on the floor — the
+  // loading row disappeared while more rows remained. The overlay needs the
+  // error to render a retry at the tail.
+  it('should surface a failed next page of the query on screen', () => {
+    const key = seedSearch(true);
+    const loadMoreError = new Error('page 2 failed');
+    const entry = useResourceManagerStore.getState().explorerSearchEntries[key];
+
+    useResourceManagerStore.setState({
+      explorerSearchEntries: { [key]: { ...entry, loadMoreError } },
+    });
+
+    const { result } = renderHook(() => useExplorerSearchResults());
+
+    expect(result.current.loadMoreError).toBe(loadMoreError);
+  });
+
   // Regression: the overlay never requested the next page, so a keyword with
   // more than one page of hits only ever showed the first 50.
   it('should load the next page of the query on screen', async () => {
