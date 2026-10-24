@@ -9,11 +9,13 @@ import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspace
 import { useActiveWorkspaceSlug } from '@/business/client/hooks/useActiveWorkspaceSlug';
 import AsyncError from '@/components/AsyncError';
 import { useAppOrigin } from '@/hooks/useAppOrigin';
+import { useProjectStore } from '@/store/project';
 
 import { useLinearIntegration } from '../useLinearIntegration';
 import Connections from './Connections';
 import { LINEAR_INTEGRATION } from './definition';
 import { buildLinearInstallHref } from './installHref';
+import SyncRules, { useLinearSyncRules } from './IssueSync/SyncRules';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
   back: css`
@@ -80,6 +82,8 @@ const LinearIntegration = memo<LinearIntegrationProps>(({ onBack }) => {
   const workspaceId = useActiveWorkspaceId();
   const scope = workspaceSlug ? 'workspace' : 'personal';
   const data = useLinearIntegration();
+  const syncRules = useLinearSyncRules();
+  useProjectStore((s) => s.useFetchProjectList)();
 
   useEffect(() => {
     if (typeof window === 'undefined' || !ready) return;
@@ -142,13 +146,17 @@ const LinearIntegration = memo<LinearIntegrationProps>(({ onBack }) => {
       {data.isInitialLoading ? (
         <Skeleton height={96} />
       ) : (
-        <Connections
-          configured={!!config?.enabled}
-          connections={connections}
-          installHref={installHref}
-          scope={scope}
-          onChanged={data.mutate}
-        />
+        <>
+          <Connections
+            configured={!!config?.enabled}
+            connections={connections}
+            installHref={installHref}
+            scope={scope}
+            onChanged={data.mutate}
+            onSynced={() => void syncRules.mutate()}
+          />
+          <SyncRules connections={connections} />
+        </>
       )}
     </Flexbox>
   );
