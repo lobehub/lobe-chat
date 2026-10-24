@@ -56,6 +56,15 @@ describe('lambdaClient large-input query transport', () => {
       'topicIds',
       1000,
     ],
+    [
+      'device.getAgentDeviceBindings',
+      () =>
+        lambdaClient.device.getAgentDeviceBindings.query({
+          agentIds: Array.from({ length: 100 }, (_, i) => `agt_${String(i).padStart(12, '0')}`),
+        }),
+      'agentIds',
+      100,
+    ],
   ] as const)(
     'sends %s with a large path/id array as a POST request',
     async (path, call, arrayField, expectedLength) => {

@@ -1,5 +1,6 @@
 import { useClientDataSWR } from '@/libs/swr';
 import { deviceService } from '@/services/device';
+import { AGENT_DEVICE_BINDING_SWR_KEY } from '@/store/device/agentDeviceBinding';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
@@ -52,7 +53,7 @@ export const useAgentDeviceBinding = (agentId: string | undefined) => {
   const isLogin = useUserStore(authSelectors.isLogin);
 
   return useClientDataSWR<string | null>(
-    isLogin && agentId ? ['agent-device-binding', agentId] : null,
+    isLogin && agentId ? [AGENT_DEVICE_BINDING_SWR_KEY, agentId] : null,
     () => loadAgentDeviceBinding(agentId!),
   );
 };
