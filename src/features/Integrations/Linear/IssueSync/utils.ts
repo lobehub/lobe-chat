@@ -29,6 +29,29 @@ export const formatLinearSyncResult = (
   return parts.join(' · ');
 };
 
+/** One result for several sync calls, e.g. an import split into batches. */
+export const mergeLinearSyncResults = (results: LinearSyncResult[]): LinearSyncResult =>
+  results.reduce(
+    (total, result) => ({
+      closed: total.closed + result.closed,
+      created: total.created + result.created,
+      keptLocalEdits: total.keptLocalEdits + result.keptLocalEdits,
+      skipped: [...total.skipped, ...result.skipped],
+      truncated: total.truncated || result.truncated,
+      unchanged: total.unchanged + result.unchanged,
+      updated: total.updated + result.updated,
+    }),
+    {
+      closed: 0,
+      created: 0,
+      keptLocalEdits: 0,
+      skipped: [],
+      truncated: false,
+      unchanged: 0,
+      updated: 0,
+    } as LinearSyncResult,
+  );
+
 export const linearStateTypeOptions = (t: TFunction<'integration'>) =>
   LINEAR_ISSUE_STATE_TYPES.map((type: LinearIssueStateType) => ({
     label: t(`linear.sync.state.${type}`),

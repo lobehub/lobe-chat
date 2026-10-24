@@ -124,9 +124,9 @@ const Filters = memo<FiltersProps>(({ connectionId, disabled, onChange, value })
           />
         </Field>
       </Flexbox>
-      {teams.error ? (
+      {teams.error || projects.error ? (
         <Text style={{ fontSize: 13 }} type="danger">
-          {linearSyncErrorMessage(teams.error, t)}
+          {linearSyncErrorMessage(teams.error ?? projects.error, t)}
         </Text>
       ) : null}
     </Flexbox>

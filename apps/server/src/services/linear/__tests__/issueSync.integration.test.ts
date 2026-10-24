@@ -240,4 +240,28 @@ describe('LinearIssueSyncService (real PostgreSQL)', () => {
       unchanged: MAX_TASKS_CREATED_PER_SYNC,
     });
   }, 60_000);
+
+  it('reads further pages on the next run once the first ones are imported', async () => {
+    const many = Array.from({ length: 160 }, (_, index) => issue({ id: `page-${index}` }));
+    linear.listLinearIssues.mockImplementation(
+      async (_token: string, _filter: unknown, { after }: { after?: string } = {}) => {
+        const start = after ? Number(after) : 0;
+        const end = start + 50;
+        return {
+          cursor: end < many.length ? String(end) : undefined,
+          hasMore: end < many.length,
+          issues: many.slice(start, end),
+        };
+      },
+    );
+    linear.getLinearIssuesByIds.mockResolvedValue([]);
+    const service = new LinearIssueSyncService(db, userId);
+    const options = { ...filter, stateTypes: [...filter.stateTypes] };
+
+    const first = await service.syncByFilter(TOKEN, options);
+    expect(first).toMatchObject({ created: 100, truncated: true });
+
+    const second = await service.syncByFilter(TOKEN, options);
+    expect(second).toMatchObject({ created: 60, truncated: false, unchanged: 100 });
+  }, 60_000);
 });

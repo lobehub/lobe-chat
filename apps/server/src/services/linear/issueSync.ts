@@ -28,8 +28,8 @@ import {
 
 const log = debug('lobe-server:linear:issue-sync');
 
-/** Issues one filtered sync reads from Linear. Reads are cheap; this only bounds a run. */
-export const MAX_ISSUES_PER_SYNC = 1000;
+/** Safety bound on the issues one filtered sync reads (200 pages). */
+export const MAX_ISSUES_PER_SYNC = 10_000;
 /**
  * Tasks one sync creates. Already linked issues are still checked, so running
  * the sync again picks up where the previous run stopped.
@@ -203,6 +203,9 @@ export class LinearIssueSyncService {
   ): Promise<LinearSyncResult> {
     const result = emptyResult();
     const issues: LinearIssue[] = [];
+    // Read until this run has as many not-yet-imported issues as it may create.
+    // Already linked issues do not count, so the next run reaches further.
+    let unlinked = 0;
     let after: string | undefined;
     do {
       const page = await listLinearIssues(accessToken, filter, {
@@ -211,7 +214,12 @@ export class LinearIssueSyncService {
       });
       issues.push(...page.issues);
       after = page.cursor;
-    } while (after && issues.length < MAX_ISSUES_PER_SYNC);
+      const linked = await this.linkModel.findByExternalIds(
+        'linear',
+        page.issues.map((issue) => issue.id),
+      );
+      unlinked += page.issues.length - linked.length;
+    } while (after && issues.length < MAX_ISSUES_PER_SYNC && unlinked < MAX_TASKS_CREATED_PER_SYNC);
     result.truncated = !!after;
 
     await this.syncIssues(
