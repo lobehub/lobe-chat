@@ -31,9 +31,10 @@ if ! have_compatible_node; then
   install_node
 fi
 
-if ! command -v supervisord >/dev/null 2>&1; then
+# tree-kill uses ps to enumerate child processes on Linux.
+if ! command -v supervisord >/dev/null 2>&1 || ! command -v ps >/dev/null 2>&1; then
   apt-get update
-  DEBIAN_FRONTEND=noninteractive apt-get install -y supervisor
+  DEBIAN_FRONTEND=noninteractive apt-get install -y supervisor procps
 fi
 
 for bin in node npm; do
