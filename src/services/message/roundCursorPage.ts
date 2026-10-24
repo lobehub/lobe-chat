@@ -46,6 +46,47 @@ export const toRoundCursorQueryInput = (
   topicShareId: params.topicShareId,
 });
 
+/**
+ * Per-topic window warmed by a visible-row prefetch. Deliberately a fraction of
+ * `MESSAGE_PAGE_ROW_BUDGET`: the budget is multiplied by the number of rows on
+ * screen, and a first paint only needs the newest rounds — the returned cursor
+ * still pages older history on demand.
+ */
+export const PREFETCH_PAGE: ForwardPageSize = { countBudget: 120, roundLimit: 10 };
+
+/** Topics per `getMessagesByCursorBatch` request; matches the server-side cap. */
+export const PREFETCH_BATCH_SIZE = 8;
+
+export interface BatchReadItem {
+  agentId?: string | null;
+  groupId?: string | null;
+  topicId: string;
+}
+
+/**
+ * Newest pages for several conversations in one request, keyed by topic.
+ *
+ * Always whole payloads (no tool-payload projection): a primed page is handed
+ * to whichever head read arrives first, and a projected payload would lose tool
+ * results for a reader that turns the list into LLM context. The prefetch window
+ * is smaller than a normal page, so the page a reader takes here is a faster
+ * first paint, not a different read contract.
+ */
+export const readMessagesByRoundCursorBatch = async (
+  items: BatchReadItem[],
+): Promise<Map<string, MessageListPage>> => {
+  if (items.length === 0) return new Map();
+
+  const pages = await lambdaClient.message.getMessagesByCursorBatch.query({
+    countBudget: PREFETCH_PAGE.countBudget,
+    includeFileWorks: true,
+    items: items.map(({ agentId, groupId, topicId }) => ({ agentId, groupId, topicId })),
+    roundLimit: PREFETCH_PAGE.roundLimit,
+  });
+
+  return new Map(pages.map((page) => [page.topicId, toMessageListPage(page)]));
+};
+
 export type RoundCursorQueryResult = Awaited<
   ReturnType<typeof lambdaClient.message.getMessagesByCursor.query>
 >;
