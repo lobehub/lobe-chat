@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "b3d8ea2d-0a0c-4db5-8444-9d8bb8ab6f15",
+  "id": "5eb76168-4960-4d66-8711-f6865ca19f4b",
   "policies": {},
   "prevId": "441054df-5d72-4ff2-b7fc-742c8cfb5db5",
   "roles": {},
@@ -10784,12 +10784,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "environment_revision": {
-          "name": "environment_revision",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
         "requested_by_member_id": {
           "name": "requested_by_member_id",
           "type": "uuid",
@@ -10837,27 +10831,6 @@
         }
       },
       "indexes": {
-        "channel_member_grants_member_revision_unique": {
-          "name": "channel_member_grants_member_revision_unique",
-          "columns": [
-            {
-              "expression": "member_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "environment_revision",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
         "channel_member_grants_owner_status_idx": {
           "name": "channel_member_grants_owner_status_idx",
           "columns": [
@@ -10875,6 +10848,21 @@
             }
           ],
           "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "channel_member_grants_member_unique": {
+          "name": "channel_member_grants_member_unique",
+          "columns": [
+            {
+              "expression": "member_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -10989,27 +10977,6 @@
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false
-        },
-        "execution_paused": {
-          "name": "execution_paused",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "environment_revision": {
-          "name": "environment_revision",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
-        },
-        "environment_cutoff": {
-          "name": "environment_cutoff",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
         },
         "active": {
           "name": "active",

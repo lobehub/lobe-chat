@@ -102,7 +102,13 @@ describe('Channel topic continuation', () => {
       if (reason === 'environment')
         await db
           .update(channelMembers)
-          .set({ environmentRevision: 1 })
+          .set({
+            config: {
+              ...state.agent.config,
+              deviceId: 'device-1',
+              workingDirectory: '/different-repo',
+            },
+          })
           .where(eq(channelMembers.id, state.agent.id));
       if (reason === 'config')
         await db

@@ -134,11 +134,6 @@ export const channelMembers = pgTable(
     description: text('description').notNull().default(''),
     /** Channel-specific device/directory environment only. */
     config: jsonb('config').$type<ChannelMemberConfig>(),
-    executionPaused: boolean('execution_paused').notNull().default(false),
-    /** Incremented on every device or directory switch; grants bind to one revision. */
-    environmentRevision: integer('environment_revision').notNull().default(0),
-    /** Messages at or before this sequence must not run late in the new environment. */
-    environmentCutoff: integer('environment_cutoff').notNull().default(0),
 
     /** False once the member leaves; retain job and Thread references. */
     active: boolean('active').notNull().default(true),
@@ -199,7 +194,6 @@ export const channelMemberGrants = pgTable(
     deviceId: varchar('device_id', { length: 64 }).notNull(),
     /** Canonical path, so `/repo` and `/repo/` bind to the same grant. */
     workingDirectory: text('working_directory').notNull(),
-    environmentRevision: integer('environment_revision').notNull(),
     /** Person who pulled the member in or switched its environment. */
     requestedByMemberId: uuid('requested_by_member_id').notNull(),
 
@@ -211,10 +205,7 @@ export const channelMemberGrants = pgTable(
     updatedAt: updatedAt(),
   },
   (t) => [
-    uniqueIndex('channel_member_grants_member_revision_unique').on(
-      t.memberId,
-      t.environmentRevision,
-    ),
+    uniqueIndex('channel_member_grants_member_unique').on(t.memberId),
     index('channel_member_grants_owner_status_idx').on(t.deviceOwnerId, t.status),
     foreignKey({
       columns: [t.channelId, t.memberId],

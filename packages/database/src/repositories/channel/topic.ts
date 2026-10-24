@@ -49,7 +49,6 @@ export const resolveTopic = async (
     !prior.isolatedAt &&
     prior.draft !== null &&
     previous.operation?.status === 'done' &&
-    prior.manifest.environmentRevision === member.environmentRevision &&
     isEqual(prior.executionConfig, executionConfig) &&
     topic.agentId === member.agentId &&
     topic.userId === userId &&

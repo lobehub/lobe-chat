@@ -28,7 +28,6 @@ export const buildManifest = (params: {
 
   return {
     afterSequence,
-    environmentRevision: member.environmentRevision,
     // Jobs inherit the request's branch, so the request itself always sorts last.
     cutoffSequence: request.sequence,
     requestMessageId: request.id,

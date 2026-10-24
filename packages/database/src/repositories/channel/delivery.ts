@@ -92,9 +92,7 @@ export const deliver = async (
   agents: ChannelMemberItem[],
   requesterMemberId: string,
 ): Promise<string[]> => {
-  const recipients = agents.filter(
-    (agent) => agent.actorType === 'agent' && message.sequence > agent.environmentCutoff,
-  );
+  const recipients = agents.filter((agent) => agent.actorType === 'agent');
   if (!recipients.length) return [];
 
   await tx
