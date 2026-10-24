@@ -275,6 +275,67 @@ describe('resource manager store actions', () => {
     // A refetch that never lands must not leave the deleted rows in the persisted tree.
     expect(mockForgetSnapshot).toHaveBeenCalledTimes(1);
   });
+
+  // Regression: while the search overlay was up, "select all" and the batch
+  // delete resolved against the folder list behind it, so they acted on rows
+  // the user had never seen instead of the search hits.
+  describe('while the search overlay is up', () => {
+    beforeEach(() => {
+      useResourceManagerStore.setState({ searchQuery: 'report' });
+      useFileStore.setState({ queryParams: { parentId: 'folder-a' } as any });
+    });
+
+    it('should select every search hit, not the folder list', async () => {
+      mockResolveSelectionIds.mockResolvedValue({ ids: ['hit-1', 'hit-2'], total: 2 });
+
+      await useResourceManagerStore.getState().selectAllResources();
+
+      const query = mockResolveSelectionIds.mock.calls[0][0];
+      expect(query).toMatchObject({ filesOnly: true, q: 'report' });
+      expect(query).not.toHaveProperty('parentId');
+      expect(useResourceManagerStore.getState().selectionTotal).toBe(2);
+    });
+
+    it('should delete the selected search hits by id instead of by the folder query', async () => {
+      const deleteResources = vi.fn().mockResolvedValue(undefined);
+      useResourceManagerStore.setState({ selectAllState: 'all', selectedFileIds: ['hit-2'] });
+      useFileStore.setState({ deleteResources } as any);
+      mockResolveSelectionIds.mockResolvedValue({ ids: ['hit-1', 'hit-2', 'hit-3'], total: 3 });
+
+      await useResourceManagerStore.getState().onActionClick('delete');
+
+      expect(mockResolveSelectionIds).toHaveBeenCalledWith(
+        expect.objectContaining({ q: 'report' }),
+      );
+      expect(mockDeleteResourcesByQuery).not.toHaveBeenCalled();
+      expect(deleteResources).toHaveBeenCalledWith(['hit-1', 'hit-3']);
+      expect(mockDropNodes).toHaveBeenCalledWith(['hit-1', 'hit-3'], 'folder-a');
+    });
+
+    it('should chunk search hits that live outside the listed folder', async () => {
+      const parseFilesToChunks = vi.fn().mockResolvedValue(undefined);
+      const params = { pageSize: 50, q: 'report' } as any;
+      useResourceManagerStore.setState({
+        explorerSearchEntries: {
+          [explorerSearchResource.key(params)]: {
+            currentPage: 0,
+            hasMore: false,
+            items: [{ fileType: 'application/pdf', id: 'hit-1', name: 'report.pdf' }],
+            pageSize: 50,
+            searchParams: params,
+            total: 1,
+          },
+        },
+        selectAllState: 'loaded',
+        selectedFileIds: ['hit-1'],
+      });
+      useFileStore.setState({ parseFilesToChunks } as any);
+
+      await useResourceManagerStore.getState().onActionClick('batchChunking');
+
+      expect(parseFilesToChunks).toHaveBeenCalledWith(['hit-1'], { skipExist: true });
+    });
+  });
 });
 
 describe('library sidebar search', () => {

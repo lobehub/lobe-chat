@@ -13,6 +13,8 @@ interface UseExplorerInfiniteScrollOptions {
   };
   dataLength: number;
   hasMore: boolean;
+  /** Next-page loader; defaults to the folder list's. */
+  loadMore?: () => Promise<void>;
   showUploader?: boolean;
 }
 
@@ -20,9 +22,11 @@ export const useExplorerInfiniteScroll = ({
   columnWidths,
   dataLength,
   hasMore,
+  loadMore,
   showUploader = true,
 }: UseExplorerInfiniteScrollOptions) => {
   const loadMoreResources = useFileStore((s) => s.loadMoreResources);
+  const loadNextPage = loadMore ?? loadMoreResources;
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const handleEndReached = useCallback(async () => {
@@ -30,11 +34,11 @@ export const useExplorerInfiniteScroll = ({
 
     setIsLoadingMore(true);
     try {
-      await loadMoreResources();
+      await loadNextPage();
     } finally {
       setIsLoadingMore(false);
     }
-  }, [hasMore, isLoadingMore, loadMoreResources]);
+  }, [hasMore, isLoadingMore, loadNextPage]);
 
   const Footer = useCallback(() => {
     if (isLoadingMore && hasMore)

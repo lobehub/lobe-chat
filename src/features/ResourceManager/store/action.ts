@@ -15,7 +15,7 @@ import { useFileStore } from '@/store/file';
 import type { StoreSetter } from '@/store/types';
 import { flattenActions } from '@/store/utils/flattenActions';
 import type { FilesTabs, ResourceSourceFilter, SortType } from '@/types/files';
-import type { ResourceItem } from '@/types/resource';
+import type { ResourceItem, ResourceQueryParams } from '@/types/resource';
 import { setNamespace } from '@/utils/storeDebug';
 
 import type { ResourceListVisibilityFilter, SelectAllState, State, ViewMode } from './initialState';
@@ -30,6 +30,7 @@ import {
   hierarchySearchResource,
   type HierarchySearchValue,
 } from './projection';
+import { getExplorerSearchParams } from './selectors';
 
 const n = setNamespace('resourceManager');
 
@@ -75,6 +76,17 @@ const toSearchPageResult = (
     (response.hasMore ? undefined : (cursor ?? 0) * pageSize + response.items.length),
 });
 
+/** The resource query an explorer search narrows to, without paging or preview. */
+const toExplorerSearchQuery = (params: ExplorerSearchParams): ResourceQueryParams => ({
+  category: params.category,
+  filesOnly: !params.libraryId,
+  libraryId: params.libraryId,
+  q: params.q,
+  showFilesInKnowledgeBase: !params.libraryId,
+  sourceFilter: params.sourceFilter,
+  visibility: params.visibility,
+});
+
 const fetchExplorerSearchPage = async (
   params: ExplorerSearchParams,
   cursor?: number,
@@ -83,16 +95,10 @@ const fetchExplorerSearchPage = async (
   const pageSize = params.pageSize ?? DEFAULT_SEARCH_PAGE_SIZE;
 
   const response = await resourceService.queryResources({
-    category: params.category,
-    filesOnly: !params.libraryId,
+    ...toExplorerSearchQuery(params),
     includeContentPreview: params.includeContentPreview,
-    libraryId: params.libraryId,
     limit: pageSize,
     offset: (cursor ?? 0) * pageSize,
-    q: params.q,
-    showFilesInKnowledgeBase: !params.libraryId,
-    sourceFilter: params.sourceFilter,
-    visibility: params.visibility,
   });
 
   return toSearchPageResult(response, cursor, pageSize);
@@ -354,6 +360,25 @@ export class ResourceManagerStoreActionImpl {
     void this.#searchHits.revalidate();
   };
 
+  /**
+   * The query "select all" stands for: the search overlay's while a keyword is
+   * typed, the folder list's otherwise. Resolving against the folder list while
+   * the overlay is up would act on rows the user never saw.
+   */
+  #selectionQuery = (): ResourceQueryParams | undefined => {
+    const searchParams = getExplorerSearchParams(this.#get());
+    if (searchParams) return toExplorerSearchQuery(searchParams);
+
+    return useFileStore.getState().queryParams;
+  };
+
+  #findSearchHit = (id: string): ResourceItem | undefined => {
+    for (const entry of Object.values(this.#get().explorerSearchEntries)) {
+      const hit = entry?.items.find((item) => item.id === id);
+      if (hit) return hit;
+    }
+  };
+
   clearSelectAllState = (): void => {
     this.#set({ selectAllState: 'none', selectedFileIds: [], selectionTotal: undefined });
   };
@@ -379,7 +404,11 @@ export class ResourceManagerStoreActionImpl {
         const { useTreeStore } = await import('@/store/tree');
         const currentFolderKey = fileStore.queryParams?.parentId ?? '';
 
-        if (selectAllState === 'all' && fileStore.queryParams) {
+        // Delete-by-query only stands for the folder list: search hits span
+        // every folder, so a select-all over them deletes by resolved ids below.
+        const isSearching = !!getExplorerSearchParams(this.#get());
+
+        if (selectAllState === 'all' && !isSearching && fileStore.queryParams) {
           const { resourceService } = await import('@/services/resource');
 
           await resourceService.deleteResourcesByQuery(
@@ -437,7 +466,8 @@ export class ResourceManagerStoreActionImpl {
       case 'batchChunking': {
         const resourceIds = await resolveSelectedResourceIds();
         const chunkableFileIds = resourceIds.filter((id) => {
-          const resource = fileStore.resourceMap?.get(id);
+          // Search hits from other folders are not in the folder list's map.
+          const resource = fileStore.resourceMap?.get(id) ?? this.#findSearchHit(id);
           // For server-resolved IDs not yet in the local map, include them
           // and let the server handle unsupported type filtering
           if (!resource) return selectAllState === 'all';
@@ -466,12 +496,11 @@ export class ResourceManagerStoreActionImpl {
     if (selectAllState !== 'all') return selectedFileIds;
 
     const { resourceService } = await import('@/services/resource');
-    const { useFileStore } = await import('@/store/file');
-    const queryParams = useFileStore.getState().queryParams;
+    const queryParams = this.#selectionQuery();
 
     if (!queryParams) return selectedFileIds;
 
-    const result = await resourceService.resolveSelectionIds(queryParams as any);
+    const result = await resourceService.resolveSelectionIds(queryParams);
     return result.ids.filter((id) => !selectedFileIds.includes(id));
   };
 
@@ -481,11 +510,11 @@ export class ResourceManagerStoreActionImpl {
 
   selectAllResources = async (): Promise<void> => {
     const { resourceService } = await import('@/services/resource');
-    const queryParams = useFileStore.getState().queryParams;
+    const queryParams = this.#selectionQuery();
 
     if (!queryParams) return;
 
-    const { total } = await resourceService.resolveSelectionIds(queryParams as any);
+    const { total } = await resourceService.resolveSelectionIds(queryParams);
     this.#set({ selectAllState: 'all', selectedFileIds: [], selectionTotal: total });
   };
 

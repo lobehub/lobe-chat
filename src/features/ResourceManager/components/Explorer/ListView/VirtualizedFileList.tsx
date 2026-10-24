@@ -20,6 +20,8 @@ interface VirtualizedFileListProps {
   };
   data: FileListItem[];
   hasMore: boolean;
+  /** Next-page loader; defaults to the folder list's. */
+  loadMore?: () => Promise<void>;
   showUploader?: boolean;
   virtuosoRef: RefObject<VirtuosoHandle | null>;
 }
@@ -28,6 +30,7 @@ const VirtualizedFileList = ({
   columnWidths,
   data,
   hasMore,
+  loadMore,
   showUploader = true,
   virtuosoRef,
 }: VirtualizedFileListProps) => {
@@ -43,6 +46,7 @@ const VirtualizedFileList = ({
     columnWidths,
     dataLength: data.length,
     hasMore,
+    loadMore,
     showUploader,
   });
   const dataRef = useRef<FileListItem[]>(data);
