@@ -30,9 +30,9 @@ import { useTranslation } from 'react-i18next';
 
 import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import { useActiveWorkspaceSlug } from '@/business/client/hooks/useActiveWorkspaceSlug';
-import Avatar from '@/components/Avatar';
 import TailMarquee from '@/components/TailMarquee';
 import { useCommitWorkingDirectory } from '@/features/ChatInput/ControlBar/useCommitWorkingDirectory';
+import ProjectAvatar from '@/features/Projects/ProjectAvatar';
 import { AgentDirectoryActions } from '@/features/Projects/WorkingDirectories/AgentDirectoryActions';
 import { canStageDraftOn } from '@/features/Projects/WorkingDirectories/startProjectTopicDraft';
 import { useAgentFixedDeviceId } from '@/features/Projects/WorkingDirectories/useAgentFixedDeviceId';
@@ -329,8 +329,8 @@ const GroupItem = memo<GroupItemComponentProps>(({ group, expanded }) => {
           <Flexbox horizontal align="center" gap={8} height={24} style={{ overflow: 'hidden' }}>
             <Center flex="none" height={24} width={28}>
               {project ? (
-                <Avatar
-                  avatar={project.projectAvatar || undefined}
+                <ProjectAvatar
+                  avatar={project.projectAvatar}
                   name={project.projectName}
                   size={18}
                 />
