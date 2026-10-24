@@ -67,6 +67,28 @@ describe('isVerificationStalled', () => {
     ).toBe(true);
   });
 
+  /**
+   * A generated first plan keeps its own item ids next to `sourceCriterionId`;
+   * the retry is re-planned from the acceptance union under the criterion id.
+   * Comparing local ids let identical failures look different.
+   */
+  it('matches the first attempt to a retry re-planned under criterion ids', () => {
+    const generated = {
+      ...round('failed'),
+      plan: plan.map((item) => ({ ...item, id: `gen-${item.id}`, sourceCriterionId: item.id })),
+    };
+    const retry = {
+      ...round('failed'),
+      plan: plan.map((item) => ({ ...item, sourceCriterionId: item.id })),
+    };
+    expect(
+      isVerificationStalled([
+        { results: [passed('gen-c1'), failed('gen-c2')], round: generated },
+        { results: [passed('c1'), failed('c2')], round: retry },
+      ]),
+    ).toBe(true);
+  });
+
   it('keeps retrying while each attempt fails on something else', () => {
     expect(
       isVerificationStalled([

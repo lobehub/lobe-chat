@@ -38,7 +38,10 @@ export const failureSignature = (round: StallRound, results: StallResult[]): str
       const result = resultByItem.get(item.id);
       return (result?.verdict ?? result?.status) !== 'passed';
     })
-    .map((item) => item.id)
+    // Named like the acceptance union names them: a generated first plan keeps
+    // its own item ids, while every Goal retry is re-planned from the union
+    // under the criterion id, so local ids differ between the first two attempts.
+    .map((item) => (item.sourceFlowNode ? item.id : (item.sourceCriterionId ?? item.id)))
     .sort();
   return open.length > 0 ? `checks:${open.join(',')}` : undefined;
 };
