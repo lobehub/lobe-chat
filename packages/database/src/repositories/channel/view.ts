@@ -72,7 +72,6 @@ export const readChannelView = async (
         agentId: channelMembers.agentId,
         avatar: agents.avatar,
         description: channelMembers.description,
-        executionPaused: channelMembers.executionPaused,
         id: channelMembers.id,
         name: channelMembers.name,
         role: channelMembers.role,

@@ -46,7 +46,6 @@ CREATE TABLE IF NOT EXISTS "channel_member_grants" (
 	"device_owner_id" text NOT NULL,
 	"device_id" varchar(64) NOT NULL,
 	"working_directory" text NOT NULL,
-	"environment_revision" integer NOT NULL,
 	"requested_by_member_id" uuid NOT NULL,
 	"status" text DEFAULT 'pending' NOT NULL,
 	"decided_at" timestamp with time zone,
@@ -67,9 +66,6 @@ CREATE TABLE IF NOT EXISTS "channel_members" (
 	"name" text,
 	"description" text DEFAULT '' NOT NULL,
 	"config" jsonb,
-	"execution_paused" boolean DEFAULT false NOT NULL,
-	"environment_revision" integer DEFAULT 0 NOT NULL,
-	"environment_cutoff" integer DEFAULT 0 NOT NULL,
 	"active" boolean DEFAULT true NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
@@ -203,7 +199,7 @@ CREATE INDEX IF NOT EXISTS "channel_jobs_member_queue_idx" ON "channel_jobs" USI
 CREATE INDEX IF NOT EXISTS "channel_jobs_lease_expires_idx" ON "channel_jobs" USING btree ("lease_expires_at") WHERE "channel_jobs"."writer_held" AND "channel_jobs"."isolated_at" IS NULL;--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "channel_jobs_active_member_unique" ON "channel_jobs" USING btree ("member_id") WHERE "channel_jobs"."writer_held" AND "channel_jobs"."isolated_at" IS NULL;--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "channel_jobs_active_directory_unique" ON "channel_jobs" USING btree ("device_id","working_directory") WHERE "channel_jobs"."device_id" IS NOT NULL AND "channel_jobs"."working_directory" IS NOT NULL AND "channel_jobs"."writer_held";--> statement-breakpoint
-CREATE UNIQUE INDEX IF NOT EXISTS "channel_member_grants_member_revision_unique" ON "channel_member_grants" USING btree ("member_id","environment_revision");--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS "channel_member_grants_member_unique" ON "channel_member_grants" USING btree ("member_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "channel_member_grants_owner_status_idx" ON "channel_member_grants" USING btree ("device_owner_id","status");--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "channel_members_channel_user_unique" ON "channel_members" USING btree ("channel_id","user_id") WHERE "channel_members"."user_id" IS NOT NULL;--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "channel_members_user_id_idx" ON "channel_members" USING btree ("user_id");--> statement-breakpoint
@@ -218,7 +214,8 @@ CREATE UNIQUE INDEX IF NOT EXISTS "channel_threads_root_unique" ON "channel_thre
 CREATE INDEX IF NOT EXISTS "channels_user_id_idx" ON "channels" USING btree ("user_id");--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "channels_direct_unique" ON "channels" USING btree ("agent_id","user_id",coalesce("workspace_id", '')) WHERE "channels"."agent_id" IS NOT NULL;--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "channels_project_id_idx" ON "channels" USING btree ("project_id") WHERE "channels"."project_id" IS NOT NULL;--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "channels_workspace_visibility_idx" ON "channels" USING btree ("workspace_id","visibility");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "channels_workspace_visibility_idx" ON "channels" USING btree ("workspace_id","visibility");
+--> statement-breakpoint
 -- Hard deletes can arrive through existing Agent/account/workspace cascades. Never erase
 -- a physical writer lock with its owning row: the caller must stop it and confirm exit first.
 CREATE OR REPLACE FUNCTION "channel_preserve_active_writer"() RETURNS trigger AS $$

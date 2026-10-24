@@ -79,7 +79,6 @@ const createMessage = async (channelId: string, authorMemberId: string, sequence
 
 const manifest = (requesterMemberId: string, memberId: string): ChannelInputManifest => ({
   afterSequence: 0,
-  environmentRevision: 0,
   cutoffSequence: 1,
   requestMessageId: 'unused',
   requesterMemberId,
@@ -408,13 +407,12 @@ describe('channel schema', () => {
   });
 
   describe('grants', () => {
-    it('binds one grant to each environment revision of a member', async () => {
+    it('binds one grant to each member', async () => {
       const { agent, channel, owner } = await createChannel();
       const grant = {
         channelId: channel.id,
         deviceId: 'device-1',
         deviceOwnerId: otherId,
-        environmentRevision: 0,
         memberId: agent.id,
         requestedByMemberId: owner.id,
         workingDirectory: '/repo',
@@ -427,8 +425,8 @@ describe('channel schema', () => {
       expect(created.status).toBe('pending');
       await expect(serverDB.insert(channelMemberGrants).values(grant)).rejects.toThrow();
       await expect(
-        serverDB.insert(channelMemberGrants).values({ ...grant, environmentRevision: 1 }),
-      ).resolves.toBeDefined();
+        serverDB.insert(channelMemberGrants).values({ ...grant, workingDirectory: '/other' }),
+      ).rejects.toThrow();
     });
   });
 

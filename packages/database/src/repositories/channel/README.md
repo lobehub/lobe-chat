@@ -69,7 +69,7 @@ Every claim reserves a new operation, but normally continues the previous topic 
 Channel Agent member, branch and requesting member. Requester isolation prevents resuming another
 person's credentials or internal context. The last claimed delivery (ordered by `claimedAt`, not request sequence) must have accepted input,
 finished successfully and released its writer without revocation/isolation. Publication may still
-be pending. Its Agent, execution configuration and environment revision must still match, and its
+be pending. Its Agent and execution configuration must still match, and its
 topic must exist in the same user/workspace scope and not be trashed.
 
 Like the Discord bridge, the main timeline starts a new topic when the previous topic's
@@ -84,7 +84,7 @@ prefix through its root plus its own messages. Continuation receives only public
 `(manifest.afterSequence, manifest.cutoffSequence]`. Its own published answers are excluded because
 they already exist in the ordinary transcript, including answers published after another request
 was queued. Other participants' messages remain new input. The manifest freezes bounds and the
-environment revision, not a duplicate transcript; later messages cannot change an earlier input.
+execution scope, not a duplicate transcript; later messages cannot change an earlier input.
 Author names and attachment availability are resolved at read time.
 
 ## Access and runtime integration
@@ -107,7 +107,7 @@ Author names and attachment availability are resolved at read time.
   continuing. CLI adapters resume from `topic.metadata.heteroSessionId`.
 - Dispatch with the job's frozen Agent settings and Channel environment, not `member.config` or
   a fresh settings lookup. Device routing and working-directory overrides come from the Channel
-  environment whose grant/revision and locks were checked, not the Agent's default device binding.
+  environment whose grant and locks were checked, not the Agent's default device binding.
   Knowledge and file contents still use the ordinary authorized runtime loaders; they are not
   copied into this settings snapshot.
 - Call `recordStart` for the reserved idle operation before acknowledging dispatch. Only an exact

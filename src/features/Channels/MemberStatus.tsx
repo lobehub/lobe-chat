@@ -27,10 +27,8 @@ export function MemberStatus({ detail }: { detail: ChannelDetail }) {
         const name = memberName(member, t('deletedMember'));
         const avatar = memberAvatar(member);
         const job = member.actorType === 'agent' ? memberCurrentJob(jobs, member.id) : undefined;
-        const tone = job ? channelJobTone(job) : member.executionPaused ? 'attention' : 'quiet';
-        const label = t(
-          job ? channelJobStatus(job) : member.executionPaused ? 'status.paused' : 'status.idle',
-        );
+        const tone = job ? channelJobTone(job) : 'quiet';
+        const label = t(job ? channelJobStatus(job) : 'status.idle');
         return (
           <Popover
             key={member.id}

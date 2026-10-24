@@ -84,7 +84,6 @@ describe('ChannelExecutionRepository', () => {
     });
     expect(claim?.job.manifest).toEqual({
       afterSequence: 0,
-      environmentRevision: 0,
       cutoffSequence: 1,
       requestMessageId: message.id,
       requesterMemberId: member.id,
@@ -195,7 +194,6 @@ describe('ChannelExecutionRepository', () => {
     // The job stores where its input ends, so its size does not grow with the branch.
     expect(mainClaim.job.manifest).toEqual({
       afterSequence: 0,
-      environmentRevision: 0,
       cutoffSequence: mainRequest.sequence,
       requestMessageId: mainRequest.id,
       requesterMemberId: member.id,

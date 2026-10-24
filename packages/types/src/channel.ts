@@ -123,8 +123,6 @@ export interface ChannelInputManifest {
   afterSequence: number;
   /** Immutable at claim time; later public messages belong to the next run. */
   cutoffSequence: number;
-  /** Environment revision frozen at claim; a changed environment starts a fresh topic. */
-  environmentRevision: number;
   /** The member that triggered this run; its user is the execution identity. */
   requesterMemberId: string;
   requestMessageId: string;
@@ -154,7 +152,6 @@ export interface ChannelPublicMember {
   agentId: string | null;
   avatar: string | null;
   description: string | null;
-  executionPaused: boolean;
   id: string;
   name: string | null;
   role: ChannelMemberRole | null;

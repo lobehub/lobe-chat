@@ -20,8 +20,6 @@ import { resolveTopic } from './topic';
 import { audit } from './transaction';
 
 export interface ChannelClaimOptions {
-  /** Environment revision the device acknowledged; a claim for any other revision waits. */
-  expectedEnvironmentRevision?: number;
   /** How long the claimer may go without a heartbeat before reconcile takes over. */
   leaseMs: number;
   /** Process or queue worker that will drive the run. */
@@ -87,7 +85,7 @@ const APPROVAL_PENDING: Block = {
 /**
  * Whether the member may run on its device. Fails closed: outside a personal channel, a
  * device that is not public in this workspace needs an approved grant for exactly the
- * member's current device, directory and environment revision. A missing grant (never
+ * member's current device and directory. A missing grant (never
  * requested, or deleted with the owner's account) blocks like a pending one.
  */
 const deviceBlock = async (
@@ -122,12 +120,7 @@ const deviceBlock = async (
   const [grant] = await tx
     .select()
     .from(channelMemberGrants)
-    .where(
-      and(
-        eq(channelMemberGrants.memberId, member.id),
-        eq(channelMemberGrants.environmentRevision, member.environmentRevision),
-      ),
-    );
+    .where(eq(channelMemberGrants.memberId, member.id));
   if (
     !grant ||
     grant.deviceId !== deviceId ||
@@ -201,13 +194,7 @@ export const claimJob = async (
     .select()
     .from(channelMembers)
     .where(and(eq(channelMembers.id, job.memberId), eq(channelMembers.active, true)));
-  if (
-    !member?.config ||
-    member.executionPaused ||
-    (options.expectedEnvironmentRevision !== undefined &&
-      member.environmentRevision !== options.expectedEnvironmentRevision)
-  )
-    return null;
+  if (!member?.config) return null;
 
   const [busy] = await tx
     .select({ id: channelJobs.id })
@@ -226,11 +213,6 @@ export const claimJob = async (
     .select()
     .from(channelMessages)
     .where(eq(channelMessages.id, job.messageId));
-  // Queued before an environment switch: never run an old instruction in the new directory.
-  if (request.sequence <= member.environmentCutoff) {
-    await cancel(tx, job, 'environment_changed');
-    return null;
-  }
   // The requester is the execution identity; without them there is nobody to run as.
   const [requester] = await tx
     .select({ id: channelMembers.id, userId: channelMembers.userId })

@@ -63,7 +63,6 @@ describe('claim guards', () => {
       channelId: channel.id,
       deviceId: 'device-2',
       deviceOwnerId: fixture.memberId,
-      environmentRevision: agent.environmentRevision,
       memberId: agent.id,
       requestedByMemberId: member.id,
       status: 'approved' as const,
@@ -120,24 +119,6 @@ describe('claim guards', () => {
     const { job } = await request(asMember, channel.id, agent.id, 'req');
 
     await db.update(channelMembers).set({ active: false }).where(eq(channelMembers.id, member.id));
-
-    expect(await execution.claim(channel.id, job.id, lease)).toBeNull();
-    expect((await jobById(job.id)).status).toBe('cancelled');
-  });
-
-  it('cancels an instruction queued before an environment switch', async () => {
-    const { asMember, channel } = await fixture.createTeamChannel();
-    const agent = await fixture.addAgent(channel.id, 'Coder', deviceConfig());
-    const { job, message } = await request(asMember, channel.id, agent.id, 'old');
-
-    await db
-      .update(channelMembers)
-      .set({
-        config: deviceConfig('/new-repo'),
-        environmentCutoff: message.sequence,
-        environmentRevision: agent.environmentRevision + 1,
-      })
-      .where(eq(channelMembers.id, agent.id));
 
     expect(await execution.claim(channel.id, job.id, lease)).toBeNull();
     expect((await jobById(job.id)).status).toBe('cancelled');
