@@ -2128,6 +2128,7 @@
   "trash.actions.purge": "彻底删除",
   "trash.actions.restore": "恢复",
   "trash.columns.deletedAt": "删除时间",
+  "trash.columns.deletedBy": "删除人",
   "trash.columns.expiresIn": "自动清理",
   "trash.columns.name": "名称",
   "trash.columns.type": "类型",

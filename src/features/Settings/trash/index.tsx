@@ -9,10 +9,11 @@ import SettingHeader from '@/features/Settings/features/SettingHeader';
 import TrashList from './features/TrashList';
 
 interface PageProps {
+  showDeletedBy?: boolean;
   showSettingHeader?: boolean;
 }
 
-const Page = ({ showSettingHeader = true }: PageProps) => {
+const Page = ({ showDeletedBy, showSettingHeader = true }: PageProps) => {
   const { t } = useTranslation('setting');
 
   return (
@@ -20,7 +21,7 @@ const Page = ({ showSettingHeader = true }: PageProps) => {
       {showSettingHeader && <SettingHeader title={t('tab.trash')} />}
       <Flexbox gap={12}>
         <Text type={'secondary'}>{t('trash.desc', { days: TRASH_RETENTION_DAYS })}</Text>
-        <TrashList />
+        <TrashList showDeletedBy={showDeletedBy} />
       </Flexbox>
     </>
   );
