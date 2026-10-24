@@ -44,6 +44,15 @@ const PROVIDER_ICON_STYLE: CSSProperties = {
 const getProviderName = (provider: string) =>
   provider.toLowerCase().replaceAll(/(^|[_-])([a-z])/g, (_, __, c) => c.toUpperCase());
 
+export const formatSuspensionRetryAt = (retryAt: string, locale: string): string =>
+  new Intl.DateTimeFormat(locale, {
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    month: 'short',
+    timeZoneName: 'short',
+  }).format(new Date(retryAt));
+
 export interface SignInEmailStepProps {
   accountSuspended?: boolean;
   accountSuspensionNotice?: AccountSuspensionNotice;
@@ -111,13 +120,10 @@ export const SignInEmailStep = ({
   // form is the primary path unless the account is social-only.
   const showEmailForm = !disableEmailPassword && !isSocialOnly;
   const retryAt = accountSuspensionNotice?.retryAt
-    ? new Intl.DateTimeFormat(i18n.resolvedLanguage || i18n.language, {
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        month: 'short',
-        timeZoneName: 'short',
-      }).format(new Date(accountSuspensionNotice.retryAt))
+    ? formatSuspensionRetryAt(
+        accountSuspensionNotice.retryAt,
+        i18n.language || i18n.resolvedLanguage,
+      )
     : undefined;
 
   return (
