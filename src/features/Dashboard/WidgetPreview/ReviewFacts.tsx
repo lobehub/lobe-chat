@@ -1,14 +1,11 @@
 'use client';
 
 import type { WidgetManifest } from '@lobechat/types';
-import { Flexbox } from '@lobehub/ui';
-import { Tag, Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { createStaticStyles, cssVar, Flexbox, Tag, Text } from '@lobehub/ui';
 import { memo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import AsyncError from '@/components/AsyncError';
-import { serverConfigSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 export const reviewStyles = createStaticStyles(({ css }) => ({
   label: css`
@@ -39,29 +36,16 @@ export const AccessFacts = memo<{ manifest?: WidgetManifest | null }>(({ manifes
   const { t } = useTranslation('dashboard');
   const hosts = manifest?.network?.allow ?? [];
   const env = manifest?.env ?? [];
-  // The boolean network format — the deployed Worker's only one — switches
-  // egress on for any nonempty allowlist without enforcing the hosts, so the
-  // facts must say the script can reach any host, not just the declared ones.
-  const enforcesHosts = useServerConfigStore(
-    serverConfigSelectors.widgetSandboxEnforcesNetworkHosts,
-  );
 
   return (
     <>
       <Fact label={t('publish.network')}>
         {hosts.length > 0 ? (
-          <>
-            {!enforcesHosts && (
-              <Text fontSize={12} type={'warning'}>
-                {t('publish.networkUnrestricted')}
-              </Text>
-            )}
-            {hosts.map((host) => (
-              <Tag key={host} size={'small'}>
-                {host}
-              </Tag>
-            ))}
-          </>
+          hosts.map((host) => (
+            <Tag key={host} size={'small'}>
+              {host}
+            </Tag>
+          ))
         ) : (
           <Text fontSize={12}>{t('publish.networkNone')}</Text>
         )}

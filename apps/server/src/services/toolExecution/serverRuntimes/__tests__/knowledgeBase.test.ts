@@ -6,6 +6,7 @@ import { knowledgeBaseRuntime } from '../knowledgeBase';
 
 const mocks = vi.hoisted(() => ({
   getAgentAssignedKnowledge: vi.fn(),
+  getEnabledKnowledgeBaseIds: vi.fn(),
   getEnabledKnowledgeBaseIdsForTask: vi.fn(),
   semanticSearchForChat: vi.fn(),
 }));
@@ -18,7 +19,10 @@ vi.mock('@/database/models/agent', () => ({
 
 vi.mock('@/database/models/project', () => ({
   ProjectModel: vi.fn().mockImplementation(function () {
-    return { getEnabledKnowledgeBaseIdsForTask: mocks.getEnabledKnowledgeBaseIdsForTask };
+    return {
+      getEnabledKnowledgeBaseIds: mocks.getEnabledKnowledgeBaseIds,
+      getEnabledKnowledgeBaseIdsForTask: mocks.getEnabledKnowledgeBaseIdsForTask,
+    };
   }),
 }));
 
@@ -46,6 +50,7 @@ const createRuntime = (context: Partial<ToolExecutionContext> = {}) =>
 describe('knowledgeBaseRuntime searchKnowledgeBase scope', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mocks.getEnabledKnowledgeBaseIds.mockResolvedValue([]);
     mocks.getEnabledKnowledgeBaseIdsForTask.mockResolvedValue([]);
   });
 
@@ -82,5 +87,31 @@ describe('knowledgeBaseRuntime searchKnowledgeBase scope', () => {
       expect.objectContaining({ knowledgeIds: ['kb_product'], query: 'launch checklist' }),
     );
     expect(result.content).toContain('No relevant files found');
+  });
+
+  it('searches the project knowledge for an agent talking inside a project', async () => {
+    // A project coordinator has no knowledge of its own and no task: before the
+    // project scope reached the runtime, its search always came back empty.
+    mocks.getAgentAssignedKnowledge.mockResolvedValue({
+      files: [],
+      knowledgeBases: [{ enabled: true, id: 'kb_agent' }],
+    });
+    mocks.getEnabledKnowledgeBaseIds.mockResolvedValue(['kb_project', 'kb_agent']);
+    mocks.semanticSearchForChat.mockResolvedValue({
+      chunks: [],
+      documents: [],
+      fileResults: [],
+      totalResults: 0,
+    });
+
+    await createRuntime({ projectId: 'proj_apollo', taskId: 'task_1' }).searchKnowledgeBase({
+      query: 'launch checklist',
+    });
+
+    expect(mocks.getEnabledKnowledgeBaseIds).toHaveBeenCalledWith('proj_apollo');
+    expect(mocks.getEnabledKnowledgeBaseIdsForTask).not.toHaveBeenCalled();
+    expect(mocks.semanticSearchForChat).toHaveBeenCalledWith(
+      expect.objectContaining({ knowledgeIds: ['kb_agent', 'kb_project'] }),
+    );
   });
 });

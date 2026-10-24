@@ -170,6 +170,7 @@ export const registerWorkFromIntent = async ({
         deleteDocumentWork: (params) => workModel.deleteDocumentWork(params),
         deleteTaskWork: (params) => workModel.deleteTaskWork(params),
         handleSkillToolResult: (params) => workModel.handleSkillToolResult(params),
+        registerCanvas: (params) => workModel.registerCanvas(params),
         registerDocument: (params) => workModel.registerDocument(params),
         registerTask: (params) => workModel.registerTask(params),
       },
@@ -630,6 +631,8 @@ export const buildServerAgentMemberRunner = (
 export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const isOperationInterrupted = async (ctx: RuntimeExecutorContext) => {
+  // The sentinel survives stale in-flight state writes and is cheaper than loading the state blob.
+  if (ctx.isInterrupted) return ctx.isInterrupted(ctx.operationId);
   if (!ctx.loadAgentState) return false;
 
   try {

@@ -6,8 +6,7 @@ import {
   type HeterogeneousAgentRuntimeStatus,
   useWatchBroadcast,
 } from '@lobechat/electron-client-ipc';
-import { Flexbox, Icon, Tooltip } from '@lobehub/ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import { createStaticStyles, cssVar, cx, Flexbox, Icon, Tooltip } from '@lobehub/ui';
 import { ActivityIcon, CircleAlertIcon, RadioTowerIcon, TimerResetIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -18,6 +17,7 @@ import DeviceSwitcher from '@/features/ChatInput/ControlBar/DeviceSwitcher';
 import WorkspaceControls from '@/features/ChatInput/ControlBar/WorkspaceControls';
 import { useAgentId } from '@/features/ChatInput/hooks/useAgentId';
 import { useChatInputResourceAccess } from '@/features/ChatInput/hooks/useChatInputResourceAccess';
+import { useTopicId } from '@/features/ChatInput/hooks/useTopicId';
 import { resolveExecutionTarget } from '@/helpers/executionTarget';
 import { useEffectiveAgencyConfig } from '@/hooks/useEffectiveAgencyConfig';
 import { useAgentStore } from '@/store/agent';
@@ -150,6 +150,7 @@ const HeteroControlBarSkeleton = ({ showRight }: { showRight?: boolean }) => (
 const HeteroControlBar = memo(() => {
   const { t: tChat } = useTranslation('chat');
   const agentId = useAgentId();
+  const topicId = useTopicId();
   const { canConfigureResource, isAccessLoading } = useChatInputResourceAccess();
   const [runtimeStatus, setRuntimeStatus] = useState<HeterogeneousAgentRuntimeStatus>();
 
@@ -162,7 +163,7 @@ const HeteroControlBar = memo(() => {
   const isLoading = useAgentStore(agentByIdSelectors.isAgentConfigLoadingById(agentId));
   // Effective config = shared row + this member's device override,
   // so the quota badges gate on where THIS member's run actually executes.
-  const { agencyConfig, workspaceScoped } = useEffectiveAgencyConfig(agentId);
+  const { agencyConfig, workspaceScoped } = useEffectiveAgencyConfig(agentId, { topicId });
 
   const heteroProvider = agencyConfig?.heterogeneousProvider;
   const executionTarget = resolveExecutionTarget(agencyConfig, {

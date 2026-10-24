@@ -1,8 +1,7 @@
 'use client';
 
-import { Flexbox, Tooltip } from '@lobehub/ui';
-import { InputNumber, Switch, TextArea } from '@lobehub/ui/base-ui';
-import { Form, type FormFieldProps, type FormGroupItem, useForm } from '@lobehub/ui/base-ui/form';
+import { Flexbox, InputNumber, Switch, TextArea, Tooltip } from '@lobehub/ui';
+import { Form, type FormFieldProps, type FormGroupItem, useForm } from '@lobehub/ui/form';
 import isEqual from 'fast-deep-equal';
 import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,7 +16,11 @@ import { usePermission } from '@/hooks/usePermission';
 import { useSaveState } from '@/hooks/useSaveState';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
-import type { SystemAgentItem, UserServiceModelConfigKey } from '@/types/user/settings';
+import {
+  PERSONAL_SYSTEM_AGENT_KEYS,
+  type SystemAgentItem,
+  type UserServiceModelConfigKey,
+} from '@/types/user/settings';
 
 type ModelAssignmentItemKey = Exclude<
   UserServiceModelConfigKey,
@@ -57,7 +60,15 @@ const MEMORY_MODEL_ITEMS: SystemAgentModelItem[] = [
   { contextLimit: true, key: 'userMemoryEmbedding', modelType: 'embedding' },
 ];
 
-const ModelAssignmentsForm = memo(() => {
+interface ModelAssignmentsFormProps {
+  /**
+   * Drop the personal chat-assist rows (follow-up, input completion). The
+   * workspace surface edits them on its own Chat Preferences tab instead.
+   */
+  hidePersonalPreferences?: boolean;
+}
+
+const ModelAssignmentsForm = memo<ModelAssignmentsFormProps>(({ hidePersonalPreferences }) => {
   const { t } = useTranslation('setting');
   const { allowed: canManageServiceModel, reason } = usePermission('manage_settings');
   const [defaultAgent, systemAgentSettings] = useUserStore(
@@ -233,7 +244,10 @@ const ModelAssignmentsForm = memo(() => {
     },
   );
 
-  const optionalFeatureItems: FormFieldProps[] = OPTIONAL_FEATURE_ITEMS.map(({ key }) => {
+  const optionalFeatureItems: FormFieldProps[] = OPTIONAL_FEATURE_ITEMS.filter(
+    ({ key }) =>
+      !hidePersonalPreferences || !(PERSONAL_SYSTEM_AGENT_KEYS as readonly string[]).includes(key),
+  ).map(({ key }) => {
     const value = systemAgentSettings[key];
     const featureDisabled = value.enabled === false;
 

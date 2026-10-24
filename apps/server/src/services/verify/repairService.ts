@@ -14,6 +14,7 @@ import { CompletionLifecycle } from '@/server/services/agentRuntime/CompletionLi
 import { AiAgentService } from '@/server/services/aiAgent';
 
 import { AcceptanceService } from './acceptanceService';
+import { carryPassedResultsForward } from './carryForward';
 import { settleFailedRepair } from './repairTerminal';
 import { VerifyStatusService } from './statusService';
 
@@ -99,7 +100,7 @@ export const createRepairRunner = (params: {
     params;
   if (!agentId || !topicId) return undefined;
 
-  return async ({ instruction, operationId, verifyMessageId }) => {
+  return async ({ failedItemIds, instruction, operationId, verifyMessageId }) => {
     const operationModel = new AgentOperationModel(db, userId, workspaceId);
 
     const round = await countRepairRounds(operationModel, operationId);
@@ -134,6 +135,25 @@ export const createRepairRunner = (params: {
               await new AcceptanceService(repairDB, userId, workspaceId).attachPolicyRun(
                 repairRun.id,
                 sourceRun.acceptanceId,
+              );
+            }
+
+            // The repair is asked to fix the failed checks only, so the rest keep
+            // the verdict and evidence they already earned instead of being
+            // judged again on a turn that never touched them.
+            if (sourceRun) {
+              await carryPassedResultsForward(
+                repairDB,
+                userId,
+                {
+                  excludeItemIds: failedItemIds,
+                  operationId: repairOperationId,
+                  plan,
+                  sourceRoundIndex: sourceRun.roundIndex,
+                  sourceRunId: sourceRun.id,
+                  targetRunId: repairRun.id,
+                },
+                workspaceId,
               );
             }
           }
@@ -266,6 +286,10 @@ const buildInstruction = (
   return [
     'The delivery checker found unresolved issues with the previous result. Fix only these, then stop:',
     ...lines,
+    '',
+    'The checks not listed here already passed and are carried forward; do not re-submit their evidence.',
+    'Submit fresh evidence for each check listed above to this run.',
+    'Your final reply is read by the verifier as the deliverable: describe the complete delivery as it now stands (what is implemented, where, and the evidence for it), not only what changed in this turn.',
   ].join('\n');
 };
 
@@ -326,6 +350,16 @@ export class VerifyRepairService {
   }
 
   /**
+   * Mark a failed round's auto-repair as declined, so readers (the persisted
+   * verify card) can treat its `failed` status as final rather than transient.
+   */
+  private async declineRepair(operationId: string): Promise<null> {
+    const run = await this.runModel.findByOperation(operationId);
+    if (run) await this.runModel.recordAutoRepair(run.id, 'declined');
+    return null;
+  }
+
+  /**
    * Trigger one round of auto-repair. Returns the repair operation id, or null
    * when there's nothing to repair or no spawner is available in this context.
    */
@@ -337,11 +371,11 @@ export class VerifyRepairService {
     if (failures.length === 0) return null;
     if (await this.isSuperseded(operationId)) {
       log('op %s round is superseded within its acceptance, not repairing', operationId);
-      return null;
+      return this.declineRepair(operationId);
     }
     if (!spawner) {
       log('auto-repair eligible for op %s but no spawner available', operationId);
-      return null;
+      return this.declineRepair(operationId);
     }
 
     const failedItemIds = failures.map((f) => f.item.id);
@@ -364,11 +398,13 @@ export class VerifyRepairService {
       operationId,
       verifyMessageId: verifyMessage?.id,
     });
-    if (!spawned) return null;
+    // Cap reached, or the spawn failed: the failure stands as this round's verdict.
+    if (!spawned) return this.declineRepair(operationId);
 
     // Link the repair operation onto each failed result and flip the rollup.
     const run = await this.runModel.findByOperation(operationId);
     if (run) {
+      await this.runModel.recordAutoRepair(run.id, 'spawned');
       for (const { item } of failures) {
         await this.resultModel.updateByCheckItem(run.id, item.id, {
           repairOperationId: spawned.repairOperationId,

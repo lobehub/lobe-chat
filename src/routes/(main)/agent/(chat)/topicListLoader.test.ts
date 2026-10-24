@@ -5,18 +5,28 @@ import { PRE_PAINT_HYDRATE_TIMEOUT } from '@/libs/replica/prePaint';
 import {
   agentChatTopicListLoader,
   preHydrateMessagesForRoute,
+  preHydrateThreadsForRoute,
   preHydrateTopicListForRoute,
 } from './topicListLoader';
 
 const preHydrateTopicListMock = vi.hoisted(() => vi.fn(async () => true));
 const getSidebarTopicListParamsMock = vi.hoisted(() => vi.fn());
-const readPersistedTranscriptMock = vi.hoisted(() => vi.fn());
-const chatState = vi.hoisted(() => ({
-  dbMessagesMap: {} as Record<string, unknown[]>,
-  replaceMessages: vi.fn(),
-}));
+const preHydrateMessagesMock = vi.hoisted(() => vi.fn(async () => true));
+const preHydrateThreadsMock = vi.hoisted(() => vi.fn(async (_topicId?: string) => true));
 const builtinAgentIdMap = vi.hoisted(() => ({ inbox: 'agt_inbox' }) as Record<string, string>);
 const preHydrateBuiltinAgentMock = vi.hoisted(() => vi.fn(async () => true));
+const agentSlugIdMap = vi.hoisted(() => ({}) as Record<string, string>);
+const preHydrateAgentSlugMock = vi.hoisted(() =>
+  vi.fn(async (slug: string) => {
+    if (slug === 'my-writer') agentSlugIdMap[slug] = 'agt_writer';
+    return agentSlugIdMap[slug];
+  }),
+);
+const preHydrateDeviceListMock = vi.hoisted(() => vi.fn(async () => true));
+const preHydrateVerifyRunsMock = vi.hoisted(() => vi.fn(async (_ids: string[]) => {}));
+const preHydrateWorkspacePreferenceMock = vi.hoisted(() => vi.fn(async () => true));
+
+const chatState = vi.hoisted(() => ({ dbMessagesMap: {} as Record<string, unknown[]> }));
 
 vi.mock('@lobechat/builtin-agents', () => ({
   BUILTIN_AGENT_SLUGS: { inbox: 'inbox' },
@@ -28,11 +38,20 @@ vi.mock('@/hooks/chatTopicListQuery', () => ({
 
 vi.mock('@/store/agent', () => ({
   useAgentStore: {
-    getState: () => ({ builtinAgentIdMap, preHydrateBuiltinAgent: preHydrateBuiltinAgentMock }),
+    getState: () => ({
+      agentSlugIdMap,
+      builtinAgentIdMap,
+      preHydrateAgentSlug: preHydrateAgentSlugMock,
+      preHydrateBuiltinAgent: preHydrateBuiltinAgentMock,
+    }),
   },
 }));
 
 vi.mock('@/store/agent/selectors', () => ({
+  agentSelectors: {
+    getAgentIdBySlug: (slug: string) => (state: { agentSlugIdMap: Record<string, string> }) =>
+      state.agentSlugIdMap[slug],
+  },
   builtinAgentSelectors: {
     getBuiltinAgentId: (slug: string) => (state: { builtinAgentIdMap: Record<string, string> }) =>
       state.builtinAgentIdMap[slug],
@@ -41,12 +60,27 @@ vi.mock('@/store/agent/selectors', () => ({
 
 vi.mock('@/store/chat', () => ({
   useChatStore: {
-    getState: () => ({ ...chatState, preHydrateTopicList: preHydrateTopicListMock }),
+    getState: () => ({
+      dbMessagesMap: chatState.dbMessagesMap,
+      preHydrateMessages: preHydrateMessagesMock,
+      preHydrateThreads: preHydrateThreadsMock,
+      preHydrateTopicList: preHydrateTopicListMock,
+    }),
   },
 }));
 
-vi.mock('@/services/message/replica', () => ({
-  readPersistedTranscript: readPersistedTranscriptMock,
+vi.mock('@/store/device', () => ({
+  useDeviceStore: { getState: () => ({ preHydrateDeviceList: preHydrateDeviceListMock }) },
+}));
+
+vi.mock('@/store/user', () => ({
+  useUserStore: {
+    getState: () => ({ preHydrateWorkspaceUserPreference: preHydrateWorkspacePreferenceMock }),
+  },
+}));
+
+vi.mock('@/store/verify', () => ({
+  useVerifyStore: { getState: () => ({ preHydrateVerifyRuns: preHydrateVerifyRunsMock }) },
 }));
 
 const loaderArgs = (aid?: string) => ({ params: aid ? { aid } : {} }) as never;
@@ -57,12 +91,80 @@ describe('agent chat topic list loader', () => {
     preHydrateTopicListMock.mockResolvedValue(true);
     preHydrateBuiltinAgentMock.mockClear();
     preHydrateBuiltinAgentMock.mockResolvedValue(true);
+    preHydrateAgentSlugMock.mockClear();
+    for (const slug of Object.keys(agentSlugIdMap)) delete agentSlugIdMap[slug];
+    preHydrateDeviceListMock.mockClear();
+    preHydrateDeviceListMock.mockResolvedValue(true);
     getSidebarTopicListParamsMock.mockReset();
     getSidebarTopicListParamsMock.mockReturnValue({ agentId: 'agt_1', pageSize: 20 });
+    preHydrateWorkspacePreferenceMock.mockReset();
+    preHydrateWorkspacePreferenceMock.mockResolvedValue(true);
+  });
+
+  /** @example "Only mine" set on another device: no local copy, so the cached page may be unfiltered. */
+  it('skips the topic seed in a workspace whose preference is still unknown', async () => {
+    preHydrateWorkspacePreferenceMock.mockResolvedValue(false);
+
+    await agentChatTopicListLoader(loaderArgs('agt_1'));
+
+    expect(preHydrateTopicListMock).not.toHaveBeenCalled();
+  });
+
+  it('seeds the topic page once the workspace preference is known', async () => {
+    await agentChatTopicListLoader(loaderArgs('agt_1'));
+
+    expect(preHydrateTopicListMock).toHaveBeenCalledWith({ agentId: 'agt_1', pageSize: 20 });
+  });
+
+  /** @example The "only mine" filter lives there; deriving params first seeds the unfiltered page. */
+  it('reads the workspace preference before deriving the sidebar params', async () => {
+    const order: string[] = [];
+    preHydrateWorkspacePreferenceMock.mockImplementation(async () => {
+      order.push('preference');
+      return true;
+    });
+    getSidebarTopicListParamsMock.mockImplementation(() => {
+      order.push('params');
+      return { agentId: 'agt_1', pageSize: 20 };
+    });
+
+    await agentChatTopicListLoader(loaderArgs('agt_1'));
+
+    expect(order).toEqual(['preference', 'params']);
+  });
+
+  it('does not let a stalled workspace preference read block the route', async () => {
+    vi.useFakeTimers();
+    preHydrateWorkspacePreferenceMock.mockImplementation(() => new Promise(() => {}));
+
+    const settled = vi.fn();
+    void agentChatTopicListLoader(loaderArgs('agt_1')).then(settled);
+
+    await vi.advanceTimersByTimeAsync(PRE_PAINT_HYDRATE_TIMEOUT * 2);
+    expect(settled).toHaveBeenCalled();
   });
 
   afterEach(() => {
     vi.useRealTimers();
+  });
+
+  // Without it the input bar's device chip read "Unknown device" until the
+  // mount-time hydrate (or the network) answered.
+  it('seeds the persisted device list before the route commits', async () => {
+    await agentChatTopicListLoader(loaderArgs('agt_1'));
+
+    expect(preHydrateDeviceListMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not let a stalled device-list read block the route', async () => {
+    vi.useFakeTimers();
+    preHydrateDeviceListMock.mockImplementation(() => new Promise(() => {}));
+
+    const settled = vi.fn();
+    void agentChatTopicListLoader(loaderArgs('agt_1')).then(settled);
+
+    await vi.advanceTimersByTimeAsync(PRE_PAINT_HYDRATE_TIMEOUT);
+    expect(settled).toHaveBeenCalled();
   });
 
   it('seeds the persisted page for the route agent before the route commits', async () => {
@@ -85,6 +187,35 @@ describe('agent chat topic list loader', () => {
     await agentChatTopicListLoader(loaderArgs('agt_1'));
 
     expect(preHydrateBuiltinAgentMock).not.toHaveBeenCalled();
+    expect(preHydrateAgentSlugMock).not.toHaveBeenCalled();
+  });
+
+  // A `/agent/<slug>` route used to wait on the network lookup before anything
+  // resolved; the persisted `slug → id` now seeds the agent's topics pre-paint.
+  it('resolves a user-chosen slug from its persisted id before the route commits', async () => {
+    await expect(agentChatTopicListLoader(loaderArgs('my-writer'))).resolves.toBeNull();
+
+    expect(preHydrateAgentSlugMock).toHaveBeenCalledWith('my-writer');
+    expect(preHydrateBuiltinAgentMock).not.toHaveBeenCalled();
+    expect(getSidebarTopicListParamsMock).toHaveBeenCalledWith({ agentId: 'agt_writer' });
+  });
+
+  it('falls back to the slug when nothing is persisted for it', async () => {
+    await agentChatTopicListLoader(loaderArgs('unknown-slug'));
+
+    expect(preHydrateAgentSlugMock).toHaveBeenCalledWith('unknown-slug');
+    expect(getSidebarTopicListParamsMock).toHaveBeenCalledWith({ agentId: 'unknown-slug' });
+  });
+
+  it('does not let a stalled slug read block the route', async () => {
+    vi.useFakeTimers();
+    preHydrateAgentSlugMock.mockImplementationOnce(() => new Promise(() => {}));
+
+    const settled = vi.fn();
+    void agentChatTopicListLoader(loaderArgs('my-writer')).then(settled);
+
+    await vi.advanceTimersByTimeAsync(PRE_PAINT_HYDRATE_TIMEOUT * 2);
+    expect(settled).toHaveBeenCalled();
   });
 
   it('resolves a builtin slug to its agent id', async () => {
@@ -125,41 +256,102 @@ describe('agent chat topic list loader', () => {
 });
 
 describe('agent chat transcript pre-hydrate', () => {
-  const rows = [{ content: 'hi', id: 'msg_1', role: 'user' }];
-
   beforeEach(() => {
     chatState.dbMessagesMap = {};
-    chatState.replaceMessages.mockClear();
-    readPersistedTranscriptMock.mockReset();
-    readPersistedTranscriptMock.mockResolvedValue({ items: rows });
+    preHydrateMessagesMock.mockReset();
+    preHydrateMessagesMock.mockResolvedValue(true);
+    preHydrateVerifyRunsMock.mockReset();
   });
 
   it("seeds the topic's persisted transcript into the chat store before the route commits", async () => {
     await agentChatTopicListLoader({ params: { aid: 'agt_1', topicId: 'tpc_1' } } as never);
 
-    const context = { agentId: 'agt_1', scope: 'main', topicId: 'tpc_1' };
-    expect(readPersistedTranscriptMock).toHaveBeenCalledWith(context);
-    expect(chatState.replaceMessages).toHaveBeenCalledWith(rows, {
-      action: 'preHydrateMessages',
-      context,
-      source: 'fetch',
+    expect(preHydrateMessagesMock).toHaveBeenCalledWith({
+      agentId: 'agt_1',
+      scope: 'main',
+      topicId: 'tpc_1',
     });
   });
 
-  it('never replaces rows the chat store already holds', async () => {
-    chatState.dbMessagesMap = { main_agt_1_tpc_1: [] };
+  it('seeds the verify cards of the seeded transcript before the route commits', async () => {
+    const order: string[] = [];
+    preHydrateMessagesMock.mockImplementation(async () => {
+      order.push('messages');
+      chatState.dbMessagesMap = {
+        main_agt_1_tpc_1: [
+          { content: 'hi', id: 'msg_1', role: 'user' },
+          { id: 'msg_2', metadata: { verifyOperationId: 'op_1' }, role: 'verify' },
+          { id: 'msg_3', metadata: {}, role: 'verify' },
+        ],
+      };
+      return true;
+    });
+    preHydrateVerifyRunsMock.mockImplementation(async () => {
+      order.push('verify');
+    });
 
     await preHydrateMessagesForRoute('agt_1', 'tpc_1');
 
-    expect(chatState.replaceMessages).not.toHaveBeenCalled();
+    expect(preHydrateVerifyRunsMock).toHaveBeenCalledWith(['op_1']);
+    expect(order).toEqual(['messages', 'verify']);
   });
 
-  it('skips a route without a topic and a miss in storage', async () => {
-    await preHydrateMessagesForRoute('agt_1');
-    expect(readPersistedTranscriptMock).not.toHaveBeenCalled();
+  it('never rejects the route when the verify cards cannot be read', async () => {
+    preHydrateVerifyRunsMock.mockRejectedValueOnce(new Error('storage exploded'));
 
-    readPersistedTranscriptMock.mockResolvedValue(undefined);
-    await preHydrateMessagesForRoute('agt_1', 'tpc_1');
-    expect(chatState.replaceMessages).not.toHaveBeenCalled();
+    await expect(preHydrateMessagesForRoute('agt_1', 'tpc_1')).resolves.toBeUndefined();
+    expect(preHydrateMessagesMock).toHaveBeenCalled();
+  });
+
+  it('skips a route without a topic', async () => {
+    await preHydrateMessagesForRoute('agt_1');
+
+    expect(preHydrateMessagesMock).not.toHaveBeenCalled();
+  });
+
+  it('never rejects the route when the transcript hydrate fails', async () => {
+    preHydrateMessagesMock.mockRejectedValueOnce(new Error('storage exploded'));
+
+    await expect(preHydrateMessagesForRoute('agt_1', 'tpc_1')).resolves.toBeUndefined();
+  });
+});
+
+describe('agent chat thread list pre-hydrate', () => {
+  beforeEach(() => {
+    preHydrateThreadsMock.mockReset();
+    preHydrateThreadsMock.mockResolvedValue(true);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("seeds the route topic's persisted threads before the route commits", async () => {
+    await agentChatTopicListLoader({ params: { aid: 'agt_1', topicId: 'tpc_1' } } as never);
+
+    expect(preHydrateThreadsMock).toHaveBeenCalledWith('tpc_1');
+  });
+
+  it('skips a route without a topic', async () => {
+    await agentChatTopicListLoader(loaderArgs('agt_1'));
+
+    expect(preHydrateThreadsMock).not.toHaveBeenCalled();
+  });
+
+  it('does not let a stalled thread read block the route', async () => {
+    vi.useFakeTimers();
+    preHydrateThreadsMock.mockImplementation(() => new Promise(() => {}));
+
+    const settled = vi.fn();
+    void preHydrateThreadsForRoute('tpc_1').then(settled);
+
+    await vi.advanceTimersByTimeAsync(PRE_PAINT_HYDRATE_TIMEOUT);
+    expect(settled).toHaveBeenCalled();
+  });
+
+  it('never rejects the route when the thread hydrate fails', async () => {
+    preHydrateThreadsMock.mockRejectedValueOnce(new Error('storage exploded'));
+
+    await expect(preHydrateThreadsForRoute('tpc_1')).resolves.toBeUndefined();
   });
 });

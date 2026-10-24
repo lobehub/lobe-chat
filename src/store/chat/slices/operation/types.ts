@@ -5,6 +5,8 @@ import type {
   UploadFileItem,
 } from '@lobechat/types';
 
+import type { QueuedFollowUpRequest } from '@/services/aiAgent';
+
 /**
  * Operation Type Definitions
  * Unified operation state management for all async operations
@@ -132,6 +134,12 @@ export interface OperationMetadata {
   // Cancel information
   cancelReason?: string;
   duration?: number;
+  /**
+   * The run ended without completing — stopped from another tab, device or the
+   * API — though it settles as `completed` here. Nothing drains its queue next.
+   */
+  endedWithoutCompletion?: boolean;
+
   endTime?: number;
 
   // Error information
@@ -149,16 +157,33 @@ export interface OperationMetadata {
    */
   heteroAutoRetryAvailable?: boolean;
 
+  /**
+   * External heterogeneous producer (e.g. `claude-code`) the server dispatched
+   * this Gateway run to. `null` denotes the native AgentRuntime; `undefined`
+   * means an older server or topic marker did not report it, so it may still
+   * be an external producer.
+   * @default undefined
+   */
+  heteroType?: string | null;
+
   // UI state (for sendMessage operation)
   inputEditorTempState?: any | null; // Editor state snapshot for cancel restoration
-
   inputSendErrorMsg?: string; // Error message to display in UI
+  /**
+   * User-facing LLM-call total for the running operation.
+   *
+   * Counts only actual model invocations — tool-only runtime iterations do not
+   * increment it. `stepCount` in operation metadata remains the internal
+   * scheduling/execution index.
+   */
+  llmCalls?: number;
   // Progress information
   progress?: {
     current: number;
     total: number;
     percentage?: number;
   };
+
   // Runtime hooks (collected during execution, executed after completion)
   runtimeHooks?: RuntimeHooks;
 
@@ -262,6 +287,23 @@ export interface QueuedFile {
  * optimistic-message path uses the `fileUrl || base64Url || previewUrl` fallback
  * chain, while the desktop chat-input file preview only reads `previewUrl`.
  */
+/**
+ * Snapshot file previews so the tray can render thumbnails and the resumed
+ * sendMessage can rebuild audioList/imageList/videoList — by the time the
+ * queue drains, chatUploadFileList has long been cleared.
+ */
+export const snapshotQueuedFiles = (files?: UploadFileItem[]): QueuedFile[] | undefined => {
+  if (!files?.length) return undefined;
+
+  return files.map((f) => ({
+    audioMetadata: f.audioMetadata,
+    id: f.id,
+    mimeType: f.file?.type ?? '',
+    name: f.file?.name ?? f.id,
+    url: f.fileUrl || f.base64Url || f.previewUrl || '',
+  }));
+};
+
 export const reconstructUploadFilesFromQueue = (files: QueuedFile[]): UploadFileItem[] =>
   files.map((f) => ({
     audioMetadata: f.audioMetadata,
@@ -289,7 +331,29 @@ export interface QueuedMessage {
   id: string;
   interruptMode: 'soft' | 'hard';
   metadata?: MessageMetadata;
+  /**
+   * Where the server holds this follow-up: `appending` while it is being
+   * handed to the server queue behind the running Gateway run, `server` once
+   * it is there. The server then joins it into that run or starts it as the
+   * next turn, so this client never sends it. Unset: only this client has it.
+   */
+  serverDelivery?: 'appending' | 'server';
+  /**
+   * The run request the server starts this follow-up with. Set when the send
+   * could be queued on the server; such an item may be handed over later.
+   */
+  serverRequest?: QueuedFollowUpRequest;
+  /**
+   * The append's answer was lost, so it may or may not be on the server. It
+   * stays the server's — never sent from here — until the same id is appended
+   * again and the server says where it is.
+   */
+  serverUnconfirmed?: boolean;
 }
+
+/** Whether only this client holds the queued message, so only it can send it. */
+export const isClientHeldQueuedMessage = (message: QueuedMessage): boolean =>
+  !message.serverDelivery;
 
 /**
  * Merged message ready for injection

@@ -184,6 +184,49 @@ describe('AgentQuotaService.selectForAgent', () => {
       claudeAccount.id,
     );
   });
+
+  it('balances only across accounts the caller can run, but still returns a pin', async () => {
+    const bindings = new AgentAccountBindingModel(serverDB, userId);
+    await serverDB.insert(agents).values([{ id: 'agent-3', slug: 'agent-3', title: 'A3', userId }]);
+    const local = await service.ingestSnapshot({
+      identity: { externalAccountId: 'local-acc' },
+      provider: 'claude-code',
+      readings: [],
+    });
+    const remote = await service.ingestSnapshot({
+      identity: { externalAccountId: 'remote-acc' },
+      provider: 'claude-code',
+      readings: [],
+    });
+    await bindings.upsert({ accountId: local.id, agentId: 'agent-3', role: QuotaBindingRole.pool });
+    await bindings.upsert({
+      accountId: remote.id,
+      agentId: 'agent-3',
+      role: QuotaBindingRole.pool,
+    });
+
+    const onlyRemote = { provider: 'claude-code', runnableExternalAccountIds: ['remote-acc'] };
+    const onlyLocal = { provider: 'claude-code', runnableExternalAccountIds: ['local-acc'] };
+    expect((await service.selectForAgent('agent-3', onlyRemote))?.accountId).toBe(remote.id);
+    expect((await service.selectForAgent('agent-3', onlyLocal))?.accountId).toBe(local.id);
+    expect(
+      await service.selectForAgent('agent-3', {
+        provider: 'claude-code',
+        runnableExternalAccountIds: [],
+      }),
+    ).toBeNull();
+
+    // A pinned account the caller cannot run is still the answer.
+    await bindings.upsert({
+      accountId: remote.id,
+      agentId: 'agent-3',
+      role: QuotaBindingRole.pinned,
+    });
+    expect(await service.selectForAgent('agent-3', onlyLocal)).toMatchObject({
+      accountId: remote.id,
+      reason: 'pinned',
+    });
+  });
 });
 
 describe('AgentQuotaService.listLatestReadings', () => {

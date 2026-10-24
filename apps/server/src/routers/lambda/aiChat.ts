@@ -17,12 +17,14 @@ import { LOADING_FLAT } from '@/const/message';
 import { AgentModel } from '@/database/models/agent';
 import { MessageModel } from '@/database/models/message';
 import { ThreadModel } from '@/database/models/thread';
-import { TopicModel } from '@/database/models/topic';
+import { TopicRepository } from '@/database/repositories/topic';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { markSilentTRPCErrorLog } from '@/libs/trpc/utils/errorLogger';
 import { unwrapPgError } from '@/server/modules/AgentRuntime/pgError';
+import { assertCanUseConversationTargets } from '@/server/routers/lambda/_helpers/conversationResourceGuard';
 import { resolveContext } from '@/server/routers/lambda/_helpers/resolveContext';
+import { resolveAgentReference } from '@/server/services/agent/resolveReference';
 import { AiChatService } from '@/server/services/aiChat';
 import { AiGenerationService } from '@/server/services/aiGeneration';
 import { FileService } from '@/server/services/file';
@@ -137,7 +139,7 @@ const aiChatProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) =
       fileService: new FileService(ctx.serverDB, ctx.userId, wsId),
       messageModel: new MessageModel(ctx.serverDB, ctx.userId, wsId),
       threadModel: new ThreadModel(ctx.serverDB, ctx.userId, wsId),
-      topicModel: new TopicModel(ctx.serverDB, ctx.userId, wsId),
+      topicRepo: new TopicRepository(ctx.serverDB, ctx.userId, wsId),
     },
   });
 });
@@ -204,7 +206,34 @@ export const aiChatRouter = router({
 
   sendMessageInServer: aiChatWriteProcedure
     .input(AiSendMessageServerSchema)
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input: rawInput, ctx }) => {
+      const context = await resolveContext(
+        rawInput,
+        ctx.serverDB,
+        ctx.userId,
+        ctx.workspaceId ?? undefined,
+      );
+      await assertCanUseConversationTargets(
+        { db: ctx.serverDB, userId: ctx.userId, workspaceId: ctx.workspaceId },
+        [context],
+      );
+      const replyId = rawInput.newAssistantMessage.agentId;
+      const replyAgentId =
+        replyId && (replyId.startsWith('ssn_') || replyId === 'inbox')
+          ? (
+              await resolveAgentReference(
+                replyId,
+                ctx.serverDB,
+                ctx.userId,
+                ctx.workspaceId ?? undefined,
+              )
+            ).agentId
+          : replyId;
+      const input = {
+        ...rawInput,
+        agentId: context.agentId ?? undefined,
+        sessionId: context.sessionId ?? undefined,
+      };
       const timingContext =
         input.newAssistantMessage.provider === 'lobehub'
           ? { requestId: createTimingRequestId(), startedAt: Date.now() }
@@ -223,16 +252,7 @@ export const aiChatRouter = router({
         input.newTopic,
         input.newThread,
       );
-      let sessionId = input.sessionId;
-      if (!sessionId) {
-        const context = await runTimedStage(
-          timingContext,
-          'lambda.aiChat.resolveContext',
-          () => resolveContext(input, ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined),
-          { hasAgentId: !!input.agentId },
-        );
-        if (!!context.sessionId) sessionId = context.sessionId;
-      }
+      const sessionId = input.sessionId;
 
       let topicId = input.topicId!;
       let threadId = input.threadId;
@@ -267,8 +287,8 @@ export const aiChatRouter = router({
             // conversation under; honour it so the topic never changes id
             // mid-flight. Absent (older client) → the model mints one.
             return modelTiming
-              ? ctx.topicModel.create(payload, input.newTopic!.id, modelTiming)
-              : ctx.topicModel.create(payload, input.newTopic!.id);
+              ? ctx.topicRepo.create(payload, input.newTopic!.id, modelTiming)
+              : ctx.topicRepo.create(payload, input.newTopic!.id);
           },
           {
             messageCount: input.newTopic.topicMessageIds?.length ?? 0,
@@ -449,7 +469,7 @@ export const aiChatRouter = router({
             topicId,
           } satisfies CreateMessageParams;
           const assistantMessage = {
-            agentId: input.newAssistantMessage.agentId ?? input.agentId,
+            agentId: replyAgentId ?? input.agentId,
             content: LOADING_FLAT,
             groupId: input.groupId,
             metadata: input.newAssistantMessage.metadata,

@@ -1,7 +1,5 @@
 import { type ImageProps } from '@lobehub/ui';
-import { Image } from '@lobehub/ui';
-import { ActionIcon } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import { ActionIcon, createStaticStyles, cssVar, cx, Image } from '@lobehub/ui';
 import { Trash } from 'lucide-react';
 import { type CSSProperties } from 'react';
 import { memo } from 'react';
@@ -95,6 +93,9 @@ const ImageItem = memo<ImageItemProps>(
         style={{
           aspectRatio,
           height: aspectRatio || isSafari ? 'auto' : '100%',
+          // the grid's min-height and row stretch would push wide images past their ratio, leaving a blank strip
+          alignSelf: aspectRatio ? 'start' : undefined,
+          minHeight: aspectRatio ? 'auto' : undefined,
           width: '100%',
           ...style,
         }}

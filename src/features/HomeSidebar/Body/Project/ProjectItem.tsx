@@ -1,19 +1,22 @@
 'use client';
 
-import type { MenuProps } from '@lobehub/ui';
-import { DropdownMenu, Icon } from '@lobehub/ui';
-import { ActionIcon, Avatar, confirmModal, toast } from '@lobehub/ui/base-ui';
+import type { DropdownItem } from '@lobehub/ui';
+import { ActionIcon, Avatar, confirmModal, DropdownMenu, Icon, toast } from '@lobehub/ui';
 import { FolderClosedIcon, MoreHorizontalIcon, PencilIcon, TrashIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import NavItem from '@/features/NavPanel/components/NavItem';
 import { openRenameProjectModal } from '@/features/Projects/RenameProjectModal';
+import { useCanManageProject } from '@/features/Projects/useCanManageProject';
 import WorkspaceLink from '@/features/Workspace/WorkspaceLink';
 import type { ProjectListItem } from '@/store/project';
 import { useProjectStore } from '@/store/project';
-import { useUserStore } from '@/store/user';
-import { userProfileSelectors } from '@/store/user/selectors';
+
+// `avatar` is an emoji or image URL, not a component: `Icon` would pass it to
+// createElement as a tag name and crash the whole page.
+export const projectIcon = (project: Pick<ProjectListItem, 'avatar'>) =>
+  project.avatar ? <Avatar avatar={project.avatar} shape={'square'} size={18} /> : FolderClosedIcon;
 
 interface ProjectItemProps {
   project: ProjectListItem;
@@ -23,8 +26,7 @@ const ProjectItem = memo<ProjectItemProps>(({ project }) => {
   const { t } = useTranslation(['project', 'common']);
   const [deleting, setDeleting] = useState(false);
   const deleteProject = useProjectStore((s) => s.deleteProject);
-  const currentUserId = useUserStore(userProfileSelectors.userId);
-  const canManage = currentUserId === project.userId;
+  const canManage = useCanManageProject();
 
   const handleDelete = async () => {
     setDeleting(true);
@@ -38,7 +40,7 @@ const ProjectItem = memo<ProjectItemProps>(({ project }) => {
     }
   };
 
-  const menuItems: MenuProps['items'] = canManage
+  const menuItems: DropdownItem[] = canManage
     ? [
         {
           icon: <Icon icon={PencilIcon} />,
@@ -70,6 +72,7 @@ const ProjectItem = memo<ProjectItemProps>(({ project }) => {
       <NavItem
         contextMenuItems={canManage ? menuItems : undefined}
         disabled={deleting}
+        icon={projectIcon(project)}
         title={project.name}
         actions={
           canManage ? (
@@ -77,15 +80,6 @@ const ProjectItem = memo<ProjectItemProps>(({ project }) => {
               <ActionIcon icon={MoreHorizontalIcon} loading={deleting} size={'small'} />
             </DropdownMenu>
           ) : undefined
-        }
-        // `avatar` is an emoji or image URL, not a component: `Icon` would pass it to
-        // createElement as a tag name and crash the whole page.
-        icon={
-          project.avatar ? (
-            <Avatar avatar={project.avatar} shape={'square'} size={18} />
-          ) : (
-            FolderClosedIcon
-          )
         }
       />
     </WorkspaceLink>

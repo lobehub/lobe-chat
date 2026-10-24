@@ -10,6 +10,9 @@ import { registerGenerateCommand } from './generate';
 
 const { mockTrpcClient } = vi.hoisted(() => ({
   mockTrpcClient: {
+    aiChat: {
+      outputJSON: { mutate: vi.fn() },
+    },
     asr: {
       transcribe: { mutate: vi.fn() },
     },
@@ -38,10 +41,6 @@ const { getAuthInfo: mockGetAuthInfo } = vi.hoisted(() => ({
   getAuthInfo: vi.fn(),
 }));
 
-const { writeFileSync: mockWriteFileSync } = vi.hoisted(() => ({
-  writeFileSync: vi.fn(),
-}));
-
 const { uploadLocalFile: mockUploadLocalFile } = vi.hoisted(() => ({
   uploadLocalFile: vi.fn(),
 }));
@@ -53,10 +52,6 @@ vi.mock('../utils/uploadLocalFile', async (importOriginal) => {
 
 vi.mock('../api/client', () => ({ getTrpcClient: mockGetTrpcClient }));
 vi.mock('../api/http', () => ({ getAuthInfo: mockGetAuthInfo }));
-vi.mock('node:fs', async (importOriginal) => {
-  const actual: Record<string, unknown> = await importOriginal();
-  return { ...actual, writeFileSync: mockWriteFileSync };
-});
 describe('generate command', () => {
   let exitSpy: ReturnType<typeof vi.spyOn>;
   let consoleSpy: ReturnType<typeof vi.spyOn>;
@@ -197,7 +192,7 @@ describe('generate command', () => {
       expect(log.error).not.toHaveBeenCalled();
     });
 
-    it('should output collected SSE as JSON when --json is used without --stream', async () => {
+    it('should output collected SSE as JSON when --json is used', async () => {
       vi.stubGlobal('fetch', vi.fn().mockResolvedValue(sseResponse(geminiEvents)));
 
       const program = createProgram();
@@ -210,24 +205,11 @@ describe('generate command', () => {
       });
     });
 
-    it('should stream Gemini content parts without printing the stop reason', async () => {
-      vi.stubGlobal('fetch', vi.fn().mockResolvedValue(sseResponse(geminiEvents)));
-
-      const program = createProgram();
-      await program.parseAsync(['node', 'test', 'generate', 'text', 'Hi', '--stream']);
-
-      const fetchCall = vi.mocked(fetch).mock.calls[0];
-      const body = JSON.parse(fetchCall[1]!.body as string);
-      expect(body.stream).toBe(true);
-
-      expect(writtenText()).toBe('Hello there, how are you?\n');
-    });
-
-    it('should stream only text events from the LobeHub protocol', async () => {
+    it('should collect only text events from the LobeHub protocol', async () => {
       vi.stubGlobal('fetch', vi.fn().mockResolvedValue(sseResponse(openaiEvents)));
 
       const program = createProgram();
-      await program.parseAsync(['node', 'test', 'generate', 'text', 'Hi', '--stream']);
+      await program.parseAsync(['node', 'test', 'generate', 'text', 'Hi']);
 
       expect(writtenText()).toBe('Hello, world\n');
     });
@@ -280,7 +262,7 @@ describe('generate command', () => {
       expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('generate image'));
     });
 
-    it('should stream plain OpenAI chat-completion chunks', async () => {
+    it('should collect plain OpenAI chat-completion chunks', async () => {
       vi.stubGlobal(
         'fetch',
         vi
@@ -294,20 +276,9 @@ describe('generate command', () => {
       );
 
       const program = createProgram();
-      await program.parseAsync(['node', 'test', 'generate', 'text', 'Hi', '--stream']);
+      await program.parseAsync(['node', 'test', 'generate', 'text', 'Hi']);
 
       expect(writtenText()).toBe('Hello\n');
-    });
-
-    it('should print each SSE event as a JSON line with --stream --json', async () => {
-      vi.stubGlobal('fetch', vi.fn().mockResolvedValue(sseResponse(geminiEvents.slice(0, 3))));
-
-      const program = createProgram();
-      await program.parseAsync(['node', 'test', 'generate', 'text', 'Hi', '--stream', '--json']);
-
-      expect(consoleSpy.mock.calls.map(([line]) => JSON.parse(line as string))).toEqual(
-        geminiEvents.slice(0, 3),
-      );
     });
 
     it('should exit when the SSE stream reports an error', async () => {
@@ -361,6 +332,224 @@ describe('generate command', () => {
       await program.parseAsync(['node', 'test', 'generate', 'text', 'fail']);
 
       expect(log.error).toHaveBeenCalledWith(expect.stringContaining('500'));
+      expect(exitSpy).toHaveBeenCalledWith(1);
+    });
+  });
+
+  describe('json', () => {
+    it('should send the schema to aiChat.outputJSON', async () => {
+      const fetchMock = vi.fn();
+      vi.stubGlobal('fetch', fetchMock);
+      mockTrpcClient.aiChat.outputJSON.mutate.mockResolvedValue({
+        data: { name: 'Maya' },
+        tracingId: 'trace-1',
+      });
+
+      const program = createProgram();
+      await program.parseAsync([
+        'node',
+        'test',
+        'generate',
+        'json',
+        'Invent a person',
+        '--schema',
+        '{"properties":{"name":{"type":"string"}},"required":["name"],"type":"object"}',
+        '--schema-name',
+        'person',
+      ]);
+
+      expect(mockTrpcClient.aiChat.outputJSON.mutate).toHaveBeenCalledWith({
+        messages: [{ content: 'Invent a person', role: 'user' }],
+        model: 'gpt-4o-mini',
+        provider: 'openai',
+        schema: {
+          name: 'person',
+          schema: { properties: { name: { type: 'string' } }, required: ['name'], type: 'object' },
+        },
+      });
+      expect(consoleSpy).toHaveBeenCalledWith(JSON.stringify({ name: 'Maya' }, null, 2));
+      // Structured output never touches the chat endpoint
+      expect(fetchMock).not.toHaveBeenCalled();
+    });
+
+    it('should require --schema', async () => {
+      const program = createProgram();
+      await program.parseAsync(['node', 'test', 'generate', 'json', 'Return JSON']);
+
+      expect(log.error).toHaveBeenCalledWith(expect.stringContaining('`--schema` is required'));
+      expect(exitSpy).toHaveBeenCalledWith(1);
+      expect(mockTrpcClient.aiChat.outputJSON.mutate).not.toHaveBeenCalled();
+    });
+
+    it('should keep slashes in the model id when --provider is given', async () => {
+      mockTrpcClient.aiChat.outputJSON.mutate.mockResolvedValue({ data: { ok: true } });
+
+      const program = createProgram();
+      await program.parseAsync([
+        'node',
+        'test',
+        'generate',
+        'json',
+        'Hi',
+        '--provider',
+        'siliconcloud',
+        '--model',
+        'Qwen/Qwen3.6-27B',
+        '--schema',
+        '{"type":"object","properties":{}}',
+      ]);
+
+      expect(mockTrpcClient.aiChat.outputJSON.mutate).toHaveBeenCalledWith(
+        expect.objectContaining({ model: 'Qwen/Qwen3.6-27B', provider: 'siliconcloud' }),
+      );
+    });
+
+    it('should reject schema keywords the server drops', async () => {
+      const program = createProgram();
+      await program.parseAsync([
+        'node',
+        'test',
+        'generate',
+        'json',
+        'Hi',
+        '--schema',
+        '{"type":"object","properties":{},"minProperties":1}',
+      ]);
+
+      expect(log.error).toHaveBeenCalledWith(expect.stringContaining('minProperties'));
+      expect(exitSpy).toHaveBeenCalledWith(1);
+      expect(mockTrpcClient.aiChat.outputJSON.mutate).not.toHaveBeenCalled();
+    });
+
+    it('should mark the schema strict when --strict is passed', async () => {
+      mockTrpcClient.aiChat.outputJSON.mutate.mockResolvedValue({ data: { age: 29 } });
+
+      const program = createProgram();
+      await program.parseAsync([
+        'node',
+        'test',
+        'generate',
+        'json',
+        'Give me an age',
+        '--schema',
+        '{"properties":{"age":{"type":"number"}},"type":"object"}',
+        '--strict',
+      ]);
+
+      expect(mockTrpcClient.aiChat.outputJSON.mutate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          schema: {
+            name: 'response',
+            schema: { properties: { age: { type: 'number' } }, type: 'object' },
+            strict: true,
+          },
+        }),
+      );
+    });
+
+    it('should read the schema from a file when --schema is a path', async () => {
+      const schemaPath = path.join(os.tmpdir(), `lh-gen-schema-${process.pid}.json`);
+      await fsWriteFile(
+        schemaPath,
+        JSON.stringify({ properties: { age: { type: 'number' } }, type: 'object' }),
+      );
+      mockTrpcClient.aiChat.outputJSON.mutate.mockResolvedValue({ data: { age: 29 } });
+
+      try {
+        const program = createProgram();
+        await program.parseAsync([
+          'node',
+          'test',
+          'generate',
+          'json',
+          'Give me an age',
+          '--schema',
+          schemaPath,
+        ]);
+      } finally {
+        await fsRm(schemaPath, { force: true });
+      }
+
+      expect(mockTrpcClient.aiChat.outputJSON.mutate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          schema: {
+            name: 'response',
+            schema: { properties: { age: { type: 'number' } }, type: 'object' },
+          },
+        }),
+      );
+    });
+
+    it('should reject an unreadable schema file', async () => {
+      const program = createProgram();
+      await program.parseAsync([
+        'node',
+        'test',
+        'generate',
+        'json',
+        'Hi',
+        '--schema',
+        './no-such-schema.json',
+      ]);
+
+      expect(log.error).toHaveBeenCalledWith(expect.stringContaining('Cannot read schema file'));
+      expect(exitSpy).toHaveBeenCalledWith(1);
+      expect(mockTrpcClient.aiChat.outputJSON.mutate).not.toHaveBeenCalled();
+    });
+
+    it('should reject a schema that is not an object schema', async () => {
+      const program = createProgram();
+      await program.parseAsync([
+        'node',
+        'test',
+        'generate',
+        'json',
+        'Hi',
+        '--schema',
+        '{"type":"array","properties":{}}',
+      ]);
+
+      expect(log.error).toHaveBeenCalledWith(expect.stringContaining('object schema'));
+      expect(exitSpy).toHaveBeenCalledWith(1);
+      expect(mockTrpcClient.aiChat.outputJSON.mutate).not.toHaveBeenCalled();
+    });
+
+    it('should fail when the endpoint returns no parsed data', async () => {
+      mockTrpcClient.aiChat.outputJSON.mutate.mockResolvedValue({
+        data: undefined,
+        tracingId: 'trace-1',
+      });
+
+      const program = createProgram();
+      await program.parseAsync([
+        'node',
+        'test',
+        'generate',
+        'json',
+        'Hi',
+        '--schema',
+        '{"type":"object","properties":{}}',
+      ]);
+
+      expect(log.error).toHaveBeenCalledWith(expect.stringContaining('not valid JSON'));
+      expect(exitSpy).toHaveBeenCalledWith(1);
+    });
+
+    it('should report a failed request', async () => {
+      mockTrpcClient.aiChat.outputJSON.mutate.mockRejectedValue(new Error('provider down'));
+
+      const program = createProgram();
+      await program.parseAsync([
+        'node',
+        'test',
+        'generate',
+        'json',
+        'Hi',
+        '--schema',
+        '{"type":"object","properties":{}}',
+      ]);
+
+      expect(log.error).toHaveBeenCalledWith(expect.stringContaining('provider down'));
       expect(exitSpy).toHaveBeenCalledWith(1);
     });
   });
@@ -476,37 +665,6 @@ describe('generate command', () => {
           provider: 'zhipu',
         }),
       );
-    });
-  });
-
-  describe('tts', () => {
-    it('should call OpenAI TTS endpoint and save file', async () => {
-      const audioBuffer = new ArrayBuffer(100);
-      vi.stubGlobal(
-        'fetch',
-        vi.fn().mockResolvedValue({
-          arrayBuffer: vi.fn().mockResolvedValue(audioBuffer),
-          ok: true,
-        }),
-      );
-
-      const program = createProgram();
-      await program.parseAsync([
-        'node',
-        'test',
-        'generate',
-        'tts',
-        'Hello world',
-        '--output',
-        '/tmp/test.mp3',
-      ]);
-
-      expect(fetch).toHaveBeenCalledWith(
-        'https://app.lobehub.com/webapi/tts/openai',
-        expect.objectContaining({ method: 'POST' }),
-      );
-      expect(mockWriteFileSync).toHaveBeenCalledWith('/tmp/test.mp3', expect.any(Buffer));
-      expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Audio saved'));
     });
   });
 

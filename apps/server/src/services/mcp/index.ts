@@ -1,3 +1,4 @@
+import { isDesktop } from '@lobechat/const';
 import {
   type CheckMcpInstallResult,
   type CustomPluginMetadata,
@@ -20,12 +21,18 @@ import {
   type StdioMCPParams,
 } from '@/libs/mcp';
 import { MCPClient } from '@/libs/mcp';
+import { getMCPErrorLogMetadata, getMCPLogOrigin } from '@/libs/mcp/utils';
 
 import { type ProcessContentBlocksFn } from './contentProcessor';
 import { contentBlocksToString } from './contentProcessor';
 import { mcpSystemDepsCheckService } from './deps';
 
 const log = debug('lobe-mcp:service');
+
+interface MCPConnectionLogMetadata {
+  origin?: string;
+  type: MCPClientParams['type'];
+}
 
 /**
  * MCP Tool call raw result type
@@ -81,11 +88,15 @@ export class MCPService {
     return { content, state, success: true };
   }
 
-  private sanitizeForLogging = <T extends Record<string, any>>(obj: T): Omit<T, 'env'> => {
-    if (!obj) return obj;
+  /**
+   * Keep MCP logs allowlist-only so future connection fields cannot silently expose credentials.
+   */
+  private getConnectionLogMetadata = (params: MCPClientParams): MCPConnectionLogMetadata => {
+    if (params.type === 'http') {
+      return { origin: getMCPLogOrigin(params.url), type: params.type };
+    }
 
-    const { env: _, ...rest } = obj;
-    return rest as Omit<T, 'env'>;
+    return { type: params.type };
   };
 
   /**
@@ -103,13 +114,14 @@ export class MCPService {
     operationName: string,
     operation: (client: MCPClient) => Promise<T>,
   ): Promise<T> {
-    const loggableParams = this.sanitizeForLogging(params);
+    const connection = this.getConnectionLogMetadata(params);
 
     return retry(
       async (bail, attemptNumber) => {
         // Skip cache on retry attempts to drop the stale (dead) session
         const skipCache = attemptNumber > 1;
-        log(`${operationName} for params: %O (attempt ${attemptNumber})`, loggableParams);
+        const operationLog = { attempt: attemptNumber, connection, operation: operationName };
+        log('MCP operation attempt: %O', operationLog);
 
         try {
           // Keep getClient inside the guarded block: a client initialization
@@ -121,7 +133,10 @@ export class MCPService {
         } catch (error) {
           // Only retry for NoValidSessionId errors
           if ((error as Error).message !== 'NoValidSessionId') {
-            console.error(`Error ${operationName} for params %O:`, loggableParams, error);
+            console.error('MCP operation failed:', {
+              ...operationLog,
+              error: getMCPErrorLogMetadata(error),
+            });
             bail(
               error instanceof TRPCError
                 ? error
@@ -202,7 +217,7 @@ export class MCPService {
     const args = safeParseJSON(argsStr);
 
     return this.withSessionRetry(clientParams, `calling tool "${toolName}"`, async (client) => {
-      log(`Calling tool "${toolName}" with args: %O`, args);
+      log('Calling MCP tool: %s', toolName);
 
       try {
         // Delegate the call to the MCPClient instance
@@ -214,7 +229,13 @@ export class MCPService {
           processContentBlocksFn,
         );
 
-        log(`Tool "${toolName}" called successfully, result: %O`, processedResult.state);
+        log('MCP tool call completed: %O', {
+          contentBlockCount: Array.isArray(processedResult.state.content)
+            ? processedResult.state.content.length
+            : 0,
+          isError: processedResult.state.isError === true,
+          toolName,
+        });
 
         return processedResult;
       } catch (error) {
@@ -244,12 +265,22 @@ export class MCPService {
 
   // Private method to get or initialize a client based on parameters
   private async getClient(params: MCPClientParams, skipCache = false): Promise<MCPClient> {
+    // Every server caller (including connector sync and agent tool execution)
+    // must enforce the same Desktop-only stdio boundary, even for cached clients.
+    if (params.type === 'stdio' && !isDesktop) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Stdio MCP type is not supported in web environment.',
+      });
+    }
+
     const key = this.serializeParams(params); // Use custom serialization
 
     if (!skipCache && this.clients.has(key)) {
       return this.clients.get(key)!;
     }
 
+    const connection = this.getConnectionLogMetadata(params);
     log(`No cached client found, Initializing new client.`);
     try {
       const client = new MCPClient(params);
@@ -259,10 +290,11 @@ export class MCPService {
         },
       }); // Initialization logic should be within MCPClient
       this.clients.set(key, client);
-      log(`New client initialized and cached for key: ${key.slice(0, 20)}`);
+      log('New MCP client initialized and cached: %O', connection);
       return client;
     } catch (error) {
-      console.error(`Failed to initialize MCP client:`, error);
+      const errorLog = getMCPErrorLogMetadata(error);
+      console.error('Failed to initialize MCP client:', { connection, error: errorLog });
 
       // Preserve complete error information, especially detailed stderr output
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -277,9 +309,8 @@ export class MCPService {
 
       // Log detailed error information for debugging
       log('Detailed initialization error: %O', {
-        error: errorMessage,
-        params: this.sanitizeForLogging(params),
-        stack: error instanceof Error ? error.stack : undefined,
+        connection,
+        error: errorLog,
       });
 
       throw new TRPCError({
@@ -397,10 +428,10 @@ export class MCPService {
     deploymentOptions: DeploymentOption[];
   }): Promise<CheckMcpInstallResult> {
     try {
-      const loggableInput = {
-        deploymentOptions: input.deploymentOptions.map((o) => this.sanitizeForLogging(o)),
-      };
-      log('Checking MCP plugin installation status: %O', loggableInput);
+      log(
+        'Checking MCP plugin installation status for %d option(s)',
+        input.deploymentOptions.length,
+      );
       const results = [];
 
       // Check each deployment option
@@ -417,7 +448,12 @@ export class MCPService {
       // Return the recommended result, or the first installable result, or the first result
       const bestResult = recommendedResult || firstInstallableResult || results[0];
 
-      log('Check completed, best result: %O', bestResult);
+      log('MCP plugin installation check completed: %O', {
+        allDependenciesMet: bestResult?.allDependenciesMet === true,
+        hasResult: Boolean(bestResult),
+        isRecommended: bestResult?.isRecommended === true,
+        needsConfig: bestResult?.needsConfig === true,
+      });
 
       // Construct return result, ensure configuration check information is included
       const checkResult: CheckMcpInstallResult = {
@@ -431,12 +467,12 @@ export class MCPService {
       if (bestResult?.needsConfig) {
         checkResult.needsConfig = true;
         checkResult.configSchema = bestResult.configSchema;
-        log('Configuration required for best deployment option: %O', bestResult.configSchema);
+        log('Configuration is required for the selected MCP deployment option');
       }
 
       return checkResult;
     } catch (error) {
-      log('Check failed: %O', error);
+      log('MCP plugin installation check failed: %O', getMCPErrorLogMetadata(error));
       return {
         error:
           error instanceof Error

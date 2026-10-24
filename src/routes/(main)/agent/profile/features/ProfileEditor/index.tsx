@@ -7,10 +7,8 @@ import {
   isServerDefaultHeterogeneousAgentType,
 } from '@lobechat/heterogeneous-agents';
 import type { HeterogeneousApiConfig, HeterogeneousAuthMode } from '@lobechat/types';
-import { Flexbox } from '@lobehub/ui';
-import type { TabsItem } from '@lobehub/ui/base-ui';
-import { Alert, Button, Tabs } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import type { TabsItem } from '@lobehub/ui';
+import { Alert, Button, createStaticStyles, cssVar, Flexbox, Tabs } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { ChevronDown, Wrench } from 'lucide-react';
 import React, { memo } from 'react';
@@ -140,7 +138,6 @@ const ProfileEditor = memo(() => {
   const localDesktopAvailable =
     isDesktop &&
     !!heterogeneousProvider &&
-    isHeterogeneousProviderBindingSupported(heterogeneousProvider.type) &&
     resolveExecutionTarget(effectiveAgencyConfig, {
       clientExecutionAvailable: true,
       isHetero: true,
@@ -152,7 +149,10 @@ const ProfileEditor = memo(() => {
   // `selectRuntimeType`'s personal-scope guard). The deployment-default API
   // source is not a user-provider binding, so it stays available whenever
   // local Desktop execution is available.
-  const apiModeAvailable = localDesktopAvailable && !isWorkspaceAgent;
+  const apiModeAvailable =
+    localDesktopAvailable &&
+    !isWorkspaceAgent &&
+    isHeterogeneousProviderBindingSupported(heterogeneousProvider.type);
   const useFetchServerDefaultCapability = useAgentStore(
     (s) => s.useFetchServerDefaultHeterogeneousCapability,
   );
@@ -163,23 +163,29 @@ const ProfileEditor = memo(() => {
       ? heterogeneousProvider.type
       : undefined;
   const serverCapabilityEnabled = localDesktopAvailable && !!serverDefaultAgentType;
-  const serverCapability = useFetchServerDefaultCapability(serverCapabilityEnabled);
+  const serverCapabilitySync = useFetchServerDefaultCapability(serverCapabilityEnabled);
+  // The last confirmed capability paints at once; the sync only confirms it, and
+  // a failed background refresh keeps it instead of turning into an error.
+  const serverCapability = useAgentStore(agentSelectors.heteroServerDefaultCapability);
+  const serverCapabilityError = !serverCapability && serverCapabilitySync.error;
+  const serverCapabilityLoading =
+    serverCapabilityEnabled && !serverCapability && !serverCapabilitySync.error;
   const serverDefaultModels =
-    serverCapability.data?.enabled === true && serverDefaultAgentType
-      ? resolveServerDefaultAgentModels(serverCapability.data.models, serverDefaultAgentType)
+    serverCapability?.enabled === true && serverDefaultAgentType
+      ? resolveServerDefaultAgentModels(serverCapability.models, serverDefaultAgentType)
       : [];
   const serverDefaultAvailable = serverCapabilityEnabled && serverDefaultModels.length > 0;
   const serverDefaultUnavailableReason = !localDesktopAvailable
     ? t('heterogeneousStatus.apiMode.localOnly')
-    : serverCapability.error
+    : serverCapabilityError
       ? t('heterogeneousStatus.apiMode.serverDefault.loadFailed')
-      : serverCapability.data?.enabled === false
+      : serverCapability?.enabled === false
         ? t(
-            serverCapability.data.reason === 'disabled'
+            serverCapability.reason === 'disabled'
               ? 'heterogeneousStatus.apiMode.serverDefault.disabled'
               : 'heterogeneousStatus.apiMode.serverDefault.invalidConfiguration',
           )
-        : serverCapabilityEnabled && !serverCapability.isLoading && !serverDefaultAvailable
+        : serverCapabilityEnabled && !serverCapabilityLoading && !serverDefaultAvailable
           ? t('heterogeneousStatus.apiMode.serverDefault.unsupported')
           : undefined;
   const heterogeneousTabItems: TabsItem[] = heterogeneousProvider
@@ -208,14 +214,14 @@ const ProfileEditor = memo(() => {
               apiModeWorkspaceBlocked={isWorkspaceAgent}
               provider={heterogeneousProvider}
               serverDefaultAvailable={serverDefaultAvailable}
-              serverDefaultLoading={serverCapabilityEnabled && serverCapability.isLoading}
+              serverDefaultLoading={serverCapabilityLoading}
               serverDefaultModels={serverDefaultModels}
               serverDefaultUnavailableReason={serverDefaultUnavailableReason}
               onApiConfigChange={updateHeterogeneousApiConfig}
               onAuthModeChange={updateHeterogeneousAuthMode}
               onCommandChange={updateHeterogeneousCommand}
               onServerDefaultRetry={() => {
-                void serverCapability.mutate();
+                void serverCapabilitySync.revalidate();
               }}
             />
           ),

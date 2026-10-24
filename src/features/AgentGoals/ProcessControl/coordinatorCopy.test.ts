@@ -1,4 +1,4 @@
-import { GOAL_MACHINE_GATE_TITLE } from '@lobechat/const/goal';
+import { GOAL_BATCH_RELEASE_TITLE, GOAL_MACHINE_GATE_TITLE } from '@lobechat/const/goal';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -21,6 +21,21 @@ describe('coordinatorGateKind', () => {
     expect(coordinatorGateKind(decision(['approve', 'reject']))).toBeUndefined();
     expect(coordinatorGateKind(undefined)).toBeUndefined();
   });
+
+  it('tells a held batch release from a batch break', () => {
+    expect(coordinatorGateKind(decision(['release', 'revise']))).toBe('batchRelease');
+    expect(coordinatorGateKind(decision(['revise', 'new_class']))).toBe('batchPatternBreak');
+    expect(gateOptionLabelKey({ id: 'release' }, 'batchRelease')).toBe(
+      'goalProcess.gate.option.releaseBatch',
+    );
+    // A sent-back release is rewritten by the main Agent, not re-probed.
+    expect(gateOptionLabelKey({ id: 'revise' }, 'batchRelease')).toBe(
+      'goalProcess.gate.option.sendBackBatch',
+    );
+    expect(gateOptionLabelKey({ id: 'revise' }, 'batchPatternBreak')).toBe(
+      'goalProcess.gate.option.reviseBatch',
+    );
+  });
 });
 
 describe('coordinatorNodeTitleKey', () => {
@@ -36,6 +51,9 @@ describe('coordinatorNodeTitleKey', () => {
         view({ kind: 'decision', title: 'x' }, decision(['retry', 'retire'])),
       ),
     ).toBe('goalProcess.gate.title.recoverTask');
+    expect(
+      coordinatorNodeTitleKey(view({ kind: 'decision', title: GOAL_BATCH_RELEASE_TITLE })),
+    ).toBe('goalProcess.gate.title.batchRelease');
     expect(coordinatorNodeTitleKey(view({ kind: 'task', title: '普通任务' }))).toBeUndefined();
   });
 });

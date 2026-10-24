@@ -20,6 +20,8 @@ export interface TopicData extends ReplicaPagedData<ChatTopic, number> {
    * dropping the loading-more row while `hasMore` remains true.
    */
   loadMoreError?: unknown;
+  /** Only the caller's own topics (workspace "only mine" filter; part of the query identity). */
+  onlyMine?: boolean;
   /**
    * Last fetched/used page size for this topic container.
    * Used to detect "pageSize expansion" (user increases pageSize) without being affected by SWR revalidation
@@ -69,6 +71,14 @@ export interface ChatTopicState {
   creatingTopicIds: string[];
   inSearchingMode?: boolean;
   isSearchingTopic: boolean;
+  /**
+   * The active topic, when the user archived it while on it. The sidebar keeps
+   * the active topic visible even when archived (so a search hit or direct URL
+   * still shows the selection), but one just archived must disappear at once.
+   * Cleared whenever `activeTopicId` changes, so reopening it later pins it
+   * again. Maintained by `subscribeJustArchivedTopic`.
+   */
+  justArchivedTopicId?: string;
   /**
    * Project working directory the *next* topic creation should bind to.
    *

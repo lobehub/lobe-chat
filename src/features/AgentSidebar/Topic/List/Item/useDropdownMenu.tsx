@@ -1,12 +1,10 @@
 import { AGENT_CHAT_TOPIC_URL } from '@lobechat/const';
 import type { ChatTopicStatus } from '@lobechat/types';
-import { type MenuProps } from '@lobehub/ui';
-import { copyToClipboard, Icon } from '@lobehub/ui';
-import { toast } from '@lobehub/ui/base-ui';
+import { type DropdownItem } from '@lobehub/ui';
+import { copyToClipboard, Icon, toast } from '@lobehub/ui';
 import {
   Archive,
   ArchiveRestore,
-  Download,
   ExternalLink,
   FolderInput,
   Forward,
@@ -17,6 +15,7 @@ import {
   PanelRight,
   PanelTop,
   PencilLine,
+  Share,
   Star,
   Stethoscope,
   Trash,
@@ -27,6 +26,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import { useActiveWorkspaceSlug } from '@/business/client/hooks/useActiveWorkspaceSlug';
+import { useTopicBugReportMenuItem } from '@/business/client/hooks/useTopicBugReportMenuItem';
 import { openRenameModal } from '@/components/RenameModal';
 import { isDesktop } from '@/const/version';
 import { createMoveTopicsModal } from '@/features/AgentTopicManager/MoveTopicsModal';
@@ -45,6 +45,8 @@ import { useAgentStore } from '@/store/agent';
 import { useChatStore } from '@/store/chat';
 import { useElectronStore } from '@/store/electron';
 import { useGlobalStore } from '@/store/global';
+import { useUserStore } from '@/store/user';
+import { labPreferSelectors } from '@/store/user/selectors';
 import { isForbiddenError } from '@/utils/forbiddenError';
 
 import { useScopedTopic, useScopedTopics } from '../../useScopedTopics';
@@ -83,6 +85,8 @@ export const useTopicItemDropdownMenu = ({
   const activeAgentId = scopedTopic?.agentId ?? fallbackAgentId;
   const addTab = useElectronStore((s) => s.addTab);
   const appOrigin = useAppOrigin();
+  const enableTopicBugReport = useUserStore(labPreferSelectors.enableTopicBugReport);
+  const bugReportItem = useTopicBugReportMenuItem({ agentId: activeAgentId, topicId: id });
 
   const [
     autoRenameTopicTitle,
@@ -179,16 +183,6 @@ export const useTopicItemDropdownMenu = ({
         sfSymbol: 'pencil',
       },
       {
-        disabled: !canEditTopic,
-        icon: <Icon icon={Stethoscope} />,
-        key: 'diagnose',
-        label: t('actions.diagnose'),
-        onClick: () => {
-          openTopicDoctorModal({ agentId: activeAgentId, topicId: id });
-        },
-        sfSymbol: 'stethoscope',
-      },
-      {
         type: 'divider' as const,
       },
       ...(isDesktop
@@ -247,7 +241,10 @@ export const useTopicItemDropdownMenu = ({
         label: t('actions.copyLink'),
         onClick: async () => {
           if (!activeAgentId) return;
-          const url = `${appOrigin}${AGENT_CHAT_TOPIC_URL(activeAgentId, id)}`;
+          const url = `${appOrigin}${buildWorkspaceAwarePath(
+            AGENT_CHAT_TOPIC_URL(activeAgentId, id),
+            activeWorkspaceSlug,
+          )}`;
           await copyToClipboard(url);
           toast.success(t('actions.copyLinkSuccess'));
         },
@@ -286,6 +283,14 @@ export const useTopicItemDropdownMenu = ({
         },
       },
       {
+        disabled: !canEditTopic,
+        icon: <Icon icon={Share} />,
+        key: 'share',
+        label: t('shareModal.title', { ns: 'chat' }),
+        onClick: handleOpenShareModal,
+        sfSymbol: 'square.and.arrow.up',
+      },
+      {
         disabled: !canCreateTopic || !activeAgentId,
         icon: <Icon icon={Forward} />,
         key: 'forwardToAgent',
@@ -309,12 +314,15 @@ export const useTopicItemDropdownMenu = ({
       },
       {
         disabled: !canEditTopic,
-        icon: <Icon icon={Download} />,
-        key: 'share',
-        label: t('shareModal.title', { ns: 'chat' }),
-        onClick: handleOpenShareModal,
-        sfSymbol: 'square.and.arrow.up',
+        icon: <Icon icon={Stethoscope} />,
+        key: 'diagnose',
+        label: t('actions.diagnose'),
+        onClick: () => {
+          openTopicDoctorModal({ agentId: activeAgentId, topicId: id });
+        },
+        sfSymbol: 'stethoscope',
       },
+      ...(enableTopicBugReport && bugReportItem ? [bugReportItem] : []),
       {
         type: 'divider' as const,
       },
@@ -346,7 +354,7 @@ export const useTopicItemDropdownMenu = ({
         },
         sfSymbol: 'trash',
       },
-    ].filter(Boolean) as MenuProps['items'];
+    ].filter(Boolean) as DropdownItem[];
   }, [
     routeTopicId,
     scope,
@@ -363,6 +371,8 @@ export const useTopicItemDropdownMenu = ({
     activeWorkspaceId,
     activeWorkspaceSlug,
     appOrigin,
+    bugReportItem,
+    enableTopicBugReport,
     autoRenameTopicTitle,
     duplicateTopic,
     favoriteTopic,

@@ -1,7 +1,6 @@
 'use client';
 
-import { Block, Flexbox } from '@lobehub/ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import { Block, createStaticStyles, cssVar, cx, Flexbox } from '@lobehub/ui';
 
 import { SkeletonBar } from '@/components/Skeleton';
 

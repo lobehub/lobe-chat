@@ -48,6 +48,7 @@ import {
   buildHeteroExecStdinPayload,
   buildHeterogeneousPrompt,
   HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV,
+  stripInheritedRunIdentity,
 } from '@lobechat/heterogeneous-agents/protocol';
 import {
   CLAUDE_CODE_QUOTA_FRESH_MS,
@@ -65,16 +66,13 @@ import {
 } from '@lobechat/heterogeneous-agents/rpc';
 import type {
   AgentStreamEvent,
-  DshAcpSessionHandle,
+  CodexAppServerClient,
   UsageData,
 } from '@lobechat/heterogeneous-agents/spawn';
 import {
   AcpRpcResponseError,
   AgentStreamPipeline,
   buildAgentInput,
-  buildCodexAppServerArgs,
-  buildCodexAppServerInput,
-  buildCodexAppServerThreadParams,
   buildCursorAcpArgs,
   buildCursorAcpPrompt,
   buildDevinAcpArgs,
@@ -86,8 +84,6 @@ import {
   buildTraeAcpArgs,
   buildTraeAcpPrompt,
   ClaudeAgentSdkSession,
-  CodexAppServerClient,
-  CodexThreadSession,
   createFileStoreImageUploader,
   CursorAcpSession,
   detectDshCommand,
@@ -95,16 +91,16 @@ import {
   DroidAcpSession,
   DSH_COMMAND,
   ensureClaudeCodeResumeTranscript,
+  findClaudeCodeTranscriptPath,
   getCodexAppServerUnsupportedArgs,
+  getHeterogeneousAgentPresetEnv,
   GrokAcpSession,
-  isCodexAppServerCompatibilityError,
   isCursorAcpSessionNotFoundError,
   isDevinAcpSessionNotFoundError,
   isDroidAcpSessionNotFoundError,
   normalizeImage,
   readClaudeCodeSessionCost,
   readCodexSessionModel,
-  resolveClaudeCodeTranscriptPath,
   resolveCliSpawnPlan,
   resolveCodexInitialModel,
   spawnDshAcpSession,
@@ -113,7 +109,6 @@ import {
 import {
   buildClaudeCodeReplayTurn,
   claudeCodeReplayTurnMatchesPrompt,
-  truncateTitle,
 } from '@lobechat/heterogeneous-agents/transcript';
 import {
   describeUnusableWorkingDirectory,
@@ -122,8 +117,6 @@ import {
 } from '@lobechat/heterogeneous-agents/workingDirectory';
 import type {
   HeterogeneousAgentModelCatalog,
-  HeterogeneousServerDefaultApiConfig,
-  HeteroSessionImportMessage,
   ListHeterogeneousAgentModelsParams,
 } from '@lobechat/types';
 import {
@@ -139,8 +132,8 @@ import semver from 'semver';
 import { HETERO_AGENT_FILES_DIR, HETERO_AGENT_TRACING_DIR } from '@/const/heteroAgent';
 import type { App } from '@/core/App';
 import { detectHeterogeneousCliCommand } from '@/modules/binaries';
-import { resolveCliScript } from '@/modules/cliEmbedding';
-import { getHeterogeneousAgentDriver } from '@/modules/heterogeneousAgent';
+import { resolveCliScript, withEmbeddedCliEnv } from '@/modules/cliEmbedding';
+import { getHeterogeneousAgentDriver, withCodexContextArgs } from '@/modules/heterogeneousAgent';
 import {
   consumeCodexRateLimitResetCredit as consumeCodexRateLimitResetCreditRequest,
   fetchCodexQuota,
@@ -160,6 +153,7 @@ import {
   gcHostedProviderBindingProfiles,
   prepareHostedProviderBinding,
   prepareHostedServerDefaultBinding,
+  resolveHostedBindingSession,
 } from '@/modules/heterogeneousAgent/providerBindingHost';
 import {
   beginServerDefaultOperation,
@@ -186,6 +180,9 @@ import {
 import { createLogger } from '@/utils/logger';
 
 import BrowserControlCtr from './BrowserControlCtr';
+import { sendPromptWithCodexAppServer } from './codexAppServer';
+import type { AgentSession, CliTraceSession, SendPromptParams } from './heterogeneousAgentSession';
+import { claudeProfileDirOf } from './heterogeneousAgentSession';
 import RemoteServerConfigCtr from './RemoteServerConfigCtr';
 
 const logger = createLogger('controllers:HeterogeneousAgentCtr');
@@ -205,14 +202,14 @@ const STRIPPED_INHERITED_ENV_KEYS = [
 ] as const;
 
 /**
- * Inherited `process.env` with the Anthropic auth vars removed. Keep this pure
- * and exported so the "never leak host Anthropic creds into the CLI" invariant
- * can be unit-tested directly.
+ * Inherited `process.env` without the Anthropic auth vars or an ancestor agent run's
+ * identity (a Desktop launched from an agent shell carries its JWT file, which the CLI
+ * prefers over any token). Pure and exported so the invariant is unit-tested directly.
  */
 export const buildInheritedSpawnEnv = (
   sourceEnv: NodeJS.ProcessEnv = process.env,
 ): NodeJS.ProcessEnv => {
-  const env = { ...sourceEnv };
+  const env = stripInheritedRunIdentity(sourceEnv);
   for (const key of STRIPPED_INHERITED_ENV_KEYS) delete env[key];
   return env;
 };
@@ -342,71 +339,6 @@ interface BrowserRunBinding {
   topicId?: string;
 }
 
-interface SendPromptParams {
-  /**
-   * Agent this run belongs to. Rides along to the renderer so it can tell
-   * whether revealing the browser panel would yank the user's view to a run
-   * they aren't watching.
-   */
-  agentId?: string;
-  /** Assistant row this run streams into — recorded so recovery can scope to its branch. */
-  assistantMessageId?: string;
-  /** Image attachments to include in the prompt (downloaded from url, cached by id) */
-  imageList?: HeterogeneousAgentImageAttachment[];
-  /**
-   * Renderer-side operation id stamped onto every emitted `AgentStreamEvent`.
-   * Required: producer-side conversion is the V3 contract — by the time events
-   * reach the renderer they must already carry the operation they belong to.
-   */
-  operationId: string;
-  prompt: string;
-  /**
-   * Do not spawn the CLI. Instead, read the last turn of the session's on-disk
-   * transcript (Claude Code only) and stream it through the same pipeline a
-   * live process feeds, so a turn that finished or died while the app was
-   * down lands in the topic exactly as it would have live. Resolves with the
-   * replay outcome so the caller knows whether a `--resume` continuation is
-   * still owed.
-   */
-  replayTranscript?: boolean;
-  /**
-   * Claude profile root the transcript was written under. Passed by restart
-   * recovery from its ledger: this turn's own account routing may resolve a
-   * different profile, but the file to read is the one the interrupted run
-   * actually produced.
-   */
-  replayTranscriptConfigDir?: string;
-  /**
-   * ISO spawn time of the interrupted run whose transcript is being replayed.
-   * Pins the replay to that run's own turn — see
-   * `claudeCodeReplayTurnMatchesPrompt`.
-   */
-  replayTranscriptStartedAt?: string;
-  /**
-   * Prior conversation turns used to rebuild a Claude Code transcript that the
-   * CLI garbage-collected (`cleanupPeriodDays`, default 30 days). Only consumed
-   * when resuming and the on-disk transcript is missing — see
-   * `ensureClaudeCodeResumeTranscript`. Without it, `--resume <staleId>` fails
-   * with "No conversation found with session ID".
-   */
-  resumeReplayMessages?: HeteroSessionImportMessage[];
-  sessionId: string;
-  /** Extra context injected before the user prompt without mutating the prompt text. */
-  systemContext?: string;
-  /**
-   * Topic this run belongs to. Binds the op to its in-app browser session
-   * (`topic:<topicId>`) so the browser MCP tools act on the right page.
-   *
-   * Not to be confused with `sessionId`, which is the CC/Codex agent session —
-   * a different namespace entirely.
-   */
-  topicId?: string;
-  /** User the run belongs to; recovery only releases runs of the signed-in one. */
-  userId?: string;
-  /** Workspace the run belongs to; recovery only releases runs of the active one. */
-  workspaceId?: string;
-}
-
 interface CancelSessionParams {
   sessionId: string;
 }
@@ -473,81 +405,7 @@ export interface SessionInfo {
 
 // ─── Internal session tracking ───
 
-interface AgentSession {
-  agentSessionId?: string;
-  agentType: HeterogeneousAgentType;
-  appServerSession?: CodexThreadSession;
-  args: string[];
-  /**
-   * True when *we* initiated the kill (cancelSession / stopSession / before-quit).
-   * The `exit` handler uses this to route signal-induced non-zero exits through
-   * the `complete` broadcast instead of surfacing them as runtime errors —
-   * SIGINT(130) / SIGTERM(143) / SIGKILL(137) from our own kill paths are
-   * intentional, not agent failures.
-   */
-  cancelledByUs?: boolean;
-  codexAppServerFallback?: boolean;
-  command: string;
-  cursorAcpSession?: CursorAcpSession;
-  cwd?: string;
-  devinAcpSession?: DevinAcpSession;
-  droidAcpSession?: DroidAcpSession;
-  dshSession?: DshAcpSessionHandle;
-  env?: Record<string, string>;
-  grokAcpSession?: GrokAcpSession;
-  hostedProviderBinding?: HostedProviderBinding;
-  model?: string;
-  modelSource?: string;
-  modelVerificationLastAttemptAt?: number;
-  modelVerificationLastAttemptSessionId?: string;
-  /** Active pi RPC run (per-run process; cleared when the run settles). */
-  piRpcSession?: PiRpcSession;
-  process?: ChildProcess;
-  processOwner?: { topicId?: string; agentId?: string };
-  /**
-   * Absolute CLI path resolved by spawn preflight detection. Used for spawn()
-   * when the configured command is bare: detection can find the CLI through
-   * the login-shell PATH or a well-known install location (e.g. an app-bundled
-   * Codex CLI) that plain spawn() with the inherited env can't resolve.
-   */
-  resolvedCommandPath?: string;
-  /**
-   * PATH the preflight detector used to resolve `resolvedCommandPath`, set only
-   * when it fell back to the login-shell PATH. Merged into the child PATH at
-   * spawn so a `#!/usr/bin/env node` shim still finds its interpreter — the
-   * shim resolving in preflight doesn't guarantee `node` is on the leaner
-   * inherited PATH (Finder-launched Electron).
-   */
-  resolvedCommandSearchPath?: string;
-  resumeSessionId?: string;
-  sdkSession?: ClaudeAgentSdkSession;
-  /** Present iff the session runs on the server-default (LobeHub) binding. */
-  serverDefaultApiConfig?: HeterogeneousServerDefaultApiConfig;
-  serverOperationToken?: string;
-  sessionId: string;
-  traeAcpSession?: TraeAcpSession;
-  /**
-   * Set when this turn had to rebuild a garbage-collected Claude Code
-   * transcript before resuming it. The rebuild is assembled from persisted
-   * chat rows, which never carried the session-scoped prompt context, so the
-   * resumed transcript has not seen it even though the session id survives.
-   */
-  transcriptRebuiltForResume?: boolean;
-  useClaudeCodeSdk?: boolean;
-  useCodexAppServer?: boolean;
-  verifiedModel?: string;
-  verifiedModelContextWindow?: number;
-  verifiedModelProvider?: string;
-  verifiedModelSessionId?: string;
-  verifiedModelSourceFile?: string;
-}
-
 type SessionErrorPayload = HeterogeneousAgentSessionError | string;
-
-interface CliTraceSession {
-  dir: string;
-  writeQueue: Promise<void>;
-}
 
 export type LhHeteroExecCancellationResult = HeterogeneousAgentCancellationResult;
 
@@ -778,7 +636,7 @@ export default class HeterogeneousAgentCtr {
   private builtinMcpServer?: LobeBuiltinMcpServer;
   private builtinMcpStartPromise?: Promise<LobeBuiltinMcpServer>;
   /** One lazy, long-lived native Codex app-server connection shared by thread sessions. */
-  private codexAppServerClient?: CodexAppServerClient;
+  private readonly codexAppServerState: { client?: CodexAppServerClient } = {};
   /** Cross-turn pi RPC process pool (reuse + idle reaping). */
   private readonly piRpcPool: PiRpcPool;
   private shuttingDown = false;
@@ -1219,11 +1077,9 @@ export default class HeterogeneousAgentCtr {
     // shim finds its interpreter. `session.env` still wins if it sets PATH.
     if (session.resolvedCommandSearchPath) inheritedEnv.PATH = session.resolvedCommandSearchPath;
     const env: NodeJS.ProcessEnv = {
-      ...inheritedEnv,
+      ...withEmbeddedCliEnv(inheritedEnv),
       ...proxyEnv,
-      ...(session.agentType === 'codebuddy'
-        ? { CODEBUDDY_CODE_DISABLE_BACKGROUND_TASKS: '1' }
-        : {}),
+      ...getHeterogeneousAgentPresetEnv(session.agentType),
       ...session.env,
       ...(includeProcessOwnership
         ? managedProcessEnvironment(
@@ -1719,9 +1575,7 @@ export default class HeterogeneousAgentCtr {
         sessionId,
       });
 
-      // Opportunistic sweep of long-unused binding profiles (provider deleted,
-      // endpoint changed, identity version bumped). The profile in use was just
-      // touched by prepare, so it is never a candidate. Never blocks the run.
+      // Sweep idle profiles without blocking; prepare just marked the current profile as active.
       gcHostedProviderBindingProfiles(this.app.appStoragePath)
         .then((removedProfiles) => {
           if (removedProfiles.length > 0)
@@ -1730,11 +1584,12 @@ export default class HeterogeneousAgentCtr {
         .catch((error) => logger.warn('Provider-binding profile GC failed:', error));
     } else if (driver && params.providerBinding?.kind === 'server-default') {
       const model = params.providerBinding.apiConfig.model;
-      // Codex and Pi describe the model to the CLI from its card. Best-effort:
-      // a model described without its card still runs (on default window and
-      // modalities), and the operation begin re-validates the model.
+      // Model-card lookup is best-effort; operation begin validates the selection.
       const modelDescriptor =
-        agentType === 'codex' || agentType === 'pi'
+        agentType === 'codex' ||
+        agentType === 'pi' ||
+        agentType === 'opencode' ||
+        agentType === 'droid'
           ? await describeServerDefaultModel(this.remoteServerAuth, { agentType, model }).catch(
               (error) => {
                 logger.warn('Server-default model description unavailable:', error);
@@ -1755,17 +1610,17 @@ export default class HeterogeneousAgentCtr {
       });
     }
 
-    const resumeSessionId =
-      !hostedProviderBinding ||
-      params.providerBinding?.resumeBindingKey === hostedProviderBinding.bindingKey
-        ? params.resumeSessionId
-        : undefined;
+    const { model, resumeSessionId } = resolveHostedBindingSession({
+      ...params,
+      agentType,
+      binding: hostedProviderBinding,
+      resumeBindingKey: params.providerBinding?.resumeBindingKey,
+    });
 
     this.sessions.set(sessionId, {
-      // If resuming, pre-set the agent session ID so sendPrompt adds --resume
       agentSessionId: resumeSessionId,
       agentType,
-      args: hostedProviderBinding?.args ?? params.args ?? [],
+      args: withCodexContextArgs(agentType, params.env, hostedProviderBinding?.args ?? params.args),
       command: params.command,
       cwd: params.cwd,
       env: hostedProviderBinding?.env ?? params.env,
@@ -1774,7 +1629,7 @@ export default class HeterogeneousAgentCtr {
         params.providerBinding?.kind === 'server-default'
           ? params.providerBinding.apiConfig
           : undefined,
-      model: agentType === 'trae' && hostedProviderBinding ? undefined : params.initialModel,
+      model,
       sessionId,
       resumeSessionId,
       useClaudeCodeSdk: params.useClaudeCodeSdk,
@@ -1882,7 +1737,7 @@ export default class HeterogeneousAgentCtr {
     ) {
       try {
         const ensured = await ensureClaudeCodeResumeTranscript({
-          configDir: session.hostedProviderBinding?.profileDir,
+          configDir: claudeProfileDirOf(session),
           cwd: session.cwd,
           messages: params.resumeReplayMessages,
           sessionId: session.agentSessionId,
@@ -2317,198 +2172,39 @@ export default class HeterogeneousAgentCtr {
     }
   }
 
-  private async sendPromptWithCodexAppServer(
+  /**
+   * Delegates the Codex transport while retaining controller-owned session services.
+   *
+   * Call stack:
+   *
+   * sendPrompt -> runtimeDispatchers -> {@link sendPromptWithCodexAppServer}
+   */
+  private sendPromptWithCodexAppServer(
     params: SendPromptParams,
     session: AgentSession,
   ): Promise<boolean> {
-    const cwd = session.cwd || electronApp.getPath('desktop');
-    // One app-server serves multiple topics; ownership belongs to each thread, not its process.
-    const spawnEnv = this.buildSessionSpawnEnv(session, false);
-    const commandPath = session.resolvedCommandPath ?? this.resolveSessionCommand(session);
-    const promptInput = buildHeterogeneousPrompt({
-      imageList: params.imageList,
-      isNewSession: this.needsSessionIntroduction(session),
-      prompt: params.prompt,
-      systemContext: params.systemContext,
-    });
-    let inputPlan;
-    try {
-      inputPlan = await buildAgentInput('codex', promptInput, { cacheDir: this.fileCacheDir });
-    } catch (error) {
-      logger.error('Failed to prepare Codex app-server input:', error);
-      throw new Error(
-        `Failed to attach image(s) to Codex app-server: ${this.getErrorMessage(error) || 'Unknown error'}`,
-        { cause: error },
-      );
-    }
-
-    const input = buildCodexAppServerInput(inputPlan);
-    const appServerArgs = buildCodexAppServerArgs(session.args);
-    const initialModel = await resolveCodexInitialModel({ args: session.args, env: spawnEnv });
-    if (initialModel?.model) {
-      session.model = initialModel.model;
-      session.modelSource = initialModel.source;
-    }
-    const initialCumulativeUsage = session.agentSessionId
-      ? (await readCodexSessionModel(session.agentSessionId, { env: spawnEnv }))?.cumulativeUsage
-      : undefined;
-    const inputPayload = `${JSON.stringify(input)}\n`;
-    const traceSession = await this.createCliTraceSession({
-      cliArgs: appServerArgs,
-      cwd,
-      imageList: params.imageList ?? [],
+    return sendPromptWithCodexAppServer(
+      {
+        clientState: this.codexAppServerState,
+        fileCacheDir: this.fileCacheDir,
+        appendCliTraceFile: this.appendCliTraceFile.bind(this),
+        broadcast: this.broadcast.bind(this),
+        buildSessionSpawnEnv: this.buildSessionSpawnEnv.bind(this),
+        completeCancelledSessionBeforeLaunch: this.completeCancelledSessionBeforeLaunch.bind(this),
+        createCliTraceSession: this.createCliTraceSession.bind(this),
+        flushCliTrace: this.flushCliTrace.bind(this),
+        getErrorMessage: this.getErrorMessage.bind(this),
+        getInflightRuns: this.getInflightRuns.bind(this),
+        getSessionErrorPayload: this.getSessionErrorPayload.bind(this),
+        needsSessionIntroduction: this.needsSessionIntroduction.bind(this),
+        recordInflightRun: this.recordInflightRun.bind(this),
+        resolveSessionCommand: this.resolveSessionCommand.bind(this),
+        writeCliTraceFile: this.writeCliTraceFile.bind(this),
+        writeCliTraceJson: this.writeCliTraceJson.bind(this),
+      },
+      params,
       session,
-      stdinPayload: inputPayload,
-    });
-    void this.writeCliTraceFile(traceSession, 'stdin.txt', inputPayload);
-
-    if (session.cancelledByUs) {
-      await this.completeCancelledSessionBeforeLaunch(session);
-      return true;
-    }
-
-    const clientOptions = {
-      args: appServerArgs.slice(0, -1),
-      clientVersion: electronApp.getVersion(),
-      commandPath,
-      cwd,
-      env: spawnEnv,
-    };
-    const existingClient = this.codexAppServerClient;
-    if (existingClient && !existingClient.canReuseFor(clientOptions)) {
-      if (!existingClient.hasConsumers) {
-        existingClient.close();
-        if (this.codexAppServerClient === existingClient) this.codexAppServerClient = undefined;
-      } else {
-        const message =
-          'The running Codex app-server uses a different binary, global configuration, or environment';
-        logger.error('Cannot reuse the native Codex app-server client:', {
-          sessionId: session.sessionId,
-        });
-        void this.writeCliTraceJson(traceSession, 'process-error.json', {
-          message,
-          transport: 'codex-app-server',
-        });
-        await this.flushCliTrace(traceSession);
-        this.broadcast('heteroAgentSessionError', {
-          error: message,
-          sessionId: session.sessionId,
-        });
-        throw new Error(message);
-      }
-    }
-
-    const client =
-      this.codexAppServerClient ??
-      (this.codexAppServerClient = new CodexAppServerClient(clientOptions));
-    const appServerSession =
-      session.appServerSession ??
-      new CodexThreadSession({
-        client,
-        initialCumulativeUsage,
-        initialModel: session.model,
-        initialThreadId: session.agentSessionId,
-        threadName: truncateTitle(params.prompt),
-        onEvents: async (events) => {
-          for (const event of events) {
-            this.broadcast('heteroAgentEvent', {
-              event,
-              sessionId: session.sessionId,
-            });
-          }
-        },
-        onModel: (model) => {
-          session.model = model;
-          session.modelSource = 'codex-app-server';
-        },
-        onRuntimeStatus: (status) => {
-          this.broadcast('heteroAgentRuntimeStatus', status);
-        },
-        onSessionId: (agentSessionId) => {
-          if (agentSessionId !== session.agentSessionId) session.agentSessionId = agentSessionId;
-        },
-        sessionId: session.sessionId,
-        threadParams: buildCodexAppServerThreadParams(session.args, cwd, session.model),
-      });
-    session.appServerSession = appServerSession;
-
-    logger.info('Starting Codex app-server session:', {
-      commandPath,
-      cwd,
-      sessionId: session.sessionId,
-    });
-
-    try {
-      await appServerSession.run({
-        input,
-        onRawMessage: (line) => this.appendCliTraceFile(traceSession, 'stdout.jsonl', line),
-        operationId: params.operationId,
-      });
-      void this.writeCliTraceJson(traceSession, 'exit.json', {
-        finishedAt: new Date().toISOString(),
-        transport: 'codex-app-server',
-      });
-      await this.flushCliTrace(traceSession);
-      this.broadcast('heteroAgentSessionComplete', { sessionId: session.sessionId });
-      return true;
-    } catch (error) {
-      if (appServerSession.canFallbackToExec && isCodexAppServerCompatibilityError(error)) {
-        session.codexAppServerFallback = true;
-        logger.warn('Falling back to codex exec because native app-server is unavailable:', {
-          message: this.getErrorMessage(error),
-          sessionId: session.sessionId,
-        });
-        void this.writeCliTraceJson(traceSession, 'fallback.json', {
-          message: this.getErrorMessage(error),
-          transport: 'codex-app-server',
-        });
-        await this.flushCliTrace(traceSession);
-        this.broadcast('heteroAgentEvent', {
-          event: {
-            data: {
-              message:
-                'Codex app-server is unavailable or incompatible. Upgrade Codex to use the Labs transport; continuing with codex exec.',
-            },
-            operationId: params.operationId,
-            stepIndex: 0,
-            timestamp: Date.now(),
-            type: 'stream_retry',
-          } satisfies AgentStreamEvent,
-          sessionId: session.sessionId,
-        });
-        appServerSession.close();
-        if (session.appServerSession === appServerSession) session.appServerSession = undefined;
-        if (!client.hasConsumers) {
-          client.close();
-          if (this.codexAppServerClient === client) this.codexAppServerClient = undefined;
-        }
-        return false;
-      }
-
-      logger.error('Codex app-server session error:', error);
-      appServerSession.close();
-      if (session.appServerSession === appServerSession) session.appServerSession = undefined;
-      void this.writeCliTraceJson(traceSession, 'process-error.json', {
-        message: error instanceof Error ? error.message : String(error),
-        name: error instanceof Error ? error.name : 'Error',
-        transport: 'codex-app-server',
-      });
-      await this.flushCliTrace(traceSession);
-
-      if (session.cancelledByUs) {
-        this.broadcast('heteroAgentSessionComplete', { sessionId: session.sessionId });
-        return true;
-      }
-
-      const sessionError = this.getSessionErrorPayload(error, session);
-      this.broadcast('heteroAgentSessionError', {
-        error: sessionError,
-        sessionId: session.sessionId,
-      });
-      throw new Error(typeof sessionError === 'string' ? sessionError : sessionError.message, {
-        cause: error,
-      });
-    }
+    );
   }
 
   private async sendPromptWithGrokAcp(
@@ -3692,7 +3388,7 @@ export default class HeterogeneousAgentCtr {
     notBefore?: string;
     sessionId: string;
   }): Promise<ReturnType<typeof buildClaudeCodeReplayTurn>> {
-    const filePath = await resolveClaudeCodeTranscriptPath(params);
+    const filePath = await findClaudeCodeTranscriptPath(params);
     if (!filePath) throw new Error(`Transcript replay rejected session id ${params.sessionId}`);
 
     let content: string;
@@ -3772,10 +3468,7 @@ export default class HeterogeneousAgentCtr {
     }
 
     const turn = (await this.readClaudeCodeReplayTurn({
-      configDir:
-        params.replayTranscriptConfigDir ??
-        session.env?.CLAUDE_CONFIG_DIR ??
-        session.hostedProviderBinding?.profileDir,
+      configDir: params.replayTranscriptConfigDir ?? claudeProfileDirOf(session),
       cwd: session.cwd,
       // The prompt this run was given — re-checked here, not just at probe time.
       expectedPrompt: params.prompt,
@@ -4333,8 +4026,8 @@ export default class HeterogeneousAgentCtr {
           this.killProcessTree(session.process, 'SIGTERM');
         }
       }
-      this.codexAppServerClient?.close();
-      this.codexAppServerClient = undefined;
+      this.codexAppServerState.client?.close();
+      this.codexAppServerState.client = undefined;
       // Pooled pi processes outlive their IPC sessions — reap them on quit.
       piClosing.push(this.piRpcPool.closeAll());
       this.sessions.clear();
@@ -4477,19 +4170,11 @@ export default class HeterogeneousAgentCtr {
       });
     }
 
-    // Never inherit the launcher's conversation identity for a dispatched run.
-    const childEnv = { ...process.env };
-    for (const key of [
-      'LOBEHUB_AGENT_ID',
-      'LOBEHUB_ASSISTANT_MESSAGE_ID',
-      'LOBEHUB_TASK_ID',
-      'LOBEHUB_WORKSPACE_ID',
-    ]) {
-      delete childEnv[key];
-    }
+    // Never inherit the launcher's run identity (or JWT file) for a dispatched run.
+    const childEnv = stripInheritedRunIdentity(process.env);
 
     const env = {
-      ...childEnv,
+      ...withEmbeddedCliEnv(childEnv),
       ...buildProxyEnv(this.app.storeManager.get('networkProxy')),
       ELECTRON_RUN_AS_NODE: '1',
       [HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV]: '1',

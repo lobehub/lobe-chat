@@ -27,7 +27,7 @@ describe('mainAreaMetaRoutes (Electron adapter)', () => {
   });
 
   it('uses the active resource category for the tab title and icon', () => {
-    const { static: staticMeta } = matchRouteMeta(mainAreaMetaRoutes, '/resource/images');
+    const { static: staticMeta } = matchRouteMeta(mainAreaMetaRoutes, '/resource/drive/images');
 
     expect(staticMeta.titleKey).toBe('navigation.resourceImages');
     expect(staticMeta.icon).toBe(ImageIcon);
@@ -57,5 +57,41 @@ describe('mainAreaMetaRoutes (Electron adapter)', () => {
 
     expect(staticMeta.titleKey).toBe('navigation.chat');
     expect(staticMeta.icon).toBeDefined();
+  });
+
+  it('resolves project conversation meta with a dynamic title runner', () => {
+    const matched = matchRouteMeta(mainAreaMetaRoutes, '/project/prj_1/conversation/tpc_1');
+
+    expect(matched.static.titleKey).toBe('project:topics.title');
+    expect(matched.static.icon).toBeDefined();
+    expect(matched.meta?.DynamicMeta).toBeDefined();
+    expect(matched.params.projectId).toBe('prj_1');
+    expect(matched.params.topicId).toBe('tpc_1');
+  });
+
+  // Regression: the project acceptance section reused `acceptanceRouteMeta`,
+  // whose DynamicMeta cannot read an `:acceptanceId` here, so every project
+  // acceptance tab was persisted with the generic fallback title.
+  it('resolves project acceptance meta with its own static title and no runner', () => {
+    const matched = matchRouteMeta(mainAreaMetaRoutes, '/project/prj_1/acceptance');
+
+    expect(matched.static.titleKey).toBe('project:sections.acceptance');
+    expect(matched.static.icon).toBeDefined();
+    expect(matched.meta?.DynamicMeta).toBeUndefined();
+  });
+
+  it('resolves a project acceptance record with the acceptance title runner', () => {
+    const matched = matchRouteMeta(mainAreaMetaRoutes, '/project/prj_1/acceptance/acc_1');
+
+    expect(matched.static.titleKey).toBe('verify:acceptance.titleFallback');
+    expect(matched.meta?.DynamicMeta).toBeDefined();
+    expect(matched.params.acceptanceId).toBe('acc_1');
+  });
+
+  it('resolves project meta for workspace-scoped tab urls', () => {
+    const matched = matchRouteMeta(mainAreaMetaRoutes, '/team-x/project/prj_1/conversation/tpc_1');
+
+    expect(matched.static.titleKey).toBe('project:topics.title');
+    expect(matched.params.projectId).toBe('prj_1');
   });
 });

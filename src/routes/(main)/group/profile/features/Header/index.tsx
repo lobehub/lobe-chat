@@ -1,16 +1,16 @@
 'use client';
 
-import { Flexbox, Icon, type MenuProps } from '@lobehub/ui';
-import { createStaticStyles } from 'antd-style';
+import { type DropdownItem, Flexbox, Icon } from '@lobehub/ui';
+import { createStaticStyles } from '@lobehub/ui';
 import { Crown, Sparkles, Users, UsersRound } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
 
+import AddGroupMemberModal from '@/features/AddAgentMemberModal';
 import ToggleLeftPanelButton from '@/features/NavPanel/ToggleLeftPanelButton';
 import { usePermission } from '@/hooks/usePermission';
 import { parseAsString, useQueryState } from '@/hooks/useQueryParam';
-import AddGroupMemberModal from '@/routes/(main)/group/_layout/Sidebar/AddGroupMemberModal';
 import { useAgentGroupStore } from '@/store/agentGroup';
 import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 import { useGlobalStore } from '@/store/global';
@@ -107,7 +107,7 @@ const Header = memo(() => {
     if (newAgentId) setSelectedTabId(newAgentId);
   };
 
-  const addMenuItems = useMemo<MenuProps['items']>(
+  const addMenuItems = useMemo<DropdownItem[]>(
     () => [
       {
         icon: <Icon icon={Sparkles} />,

@@ -20,6 +20,7 @@ import { AuvManifest } from '@lobechat/builtin-tool-auv';
 import { BriefManifest } from '@lobechat/builtin-tool-brief';
 import { BrowserManifest } from '@lobechat/builtin-tool-browser';
 import { CalculatorManifest } from '@lobechat/builtin-tool-calculator/manifest';
+import { CanvasManifest } from '@lobechat/builtin-tool-canvas';
 import { CloudSandboxManifest } from '@lobechat/builtin-tool-cloud-sandbox';
 import { CredsManifest } from '@lobechat/builtin-tool-creds';
 import { DashboardManifest } from '@lobechat/builtin-tool-dashboard';
@@ -50,7 +51,6 @@ import {
   SkillsManifest,
 } from '@lobechat/builtin-tool-skills';
 import { TaskManifest } from '@lobechat/builtin-tool-task';
-import { TopicReferenceManifest } from '@lobechat/builtin-tool-topic-reference';
 import { UserInteractionManifest } from '@lobechat/builtin-tool-user-interaction';
 import { VerifyToolManifest } from '@lobechat/builtin-tool-verify';
 import { VideoGenerationManifest } from '@lobechat/builtin-tool-video-generation';
@@ -74,10 +74,10 @@ export const defaultToolIds = [
   LocalSystemManifest.identifier,
   BrowserManifest.identifier,
   CloudSandboxManifest.identifier,
-  TopicReferenceManifest.identifier,
   AgentDocumentsManifest.identifier,
   TaskManifest.identifier,
   LobeAgentManifest.identifier,
+  CanvasManifest.identifier,
 ];
 
 /**
@@ -228,8 +228,7 @@ export const runtimeManagedToolIds = [
  * `lobe-skill-store`, `lobe-agent-builder`,
  * `lobe-group-agent-builder`, `lobe-group-management`, `agent-signal-review`,
  * `lobe-user-interaction`,
- * `lobe-local-system`, `lobe-browser`, `lobe-remote-device`,
- * `lobe-topic-reference`, and the hidden system-only self-iteration tools),
+ * `lobe-local-system`, `lobe-browser`, `lobe-remote-device`, and the hidden system-only self-iteration tools),
  * see the denied-builtins section of
  * `apps/server/src/services/aiAgent/shareGate/README.md`.
  */
@@ -523,13 +522,6 @@ const builtinToolRegistry: LobeBuiltinTool[] = [
   {
     discoverable: false,
     hidden: true,
-    identifier: TopicReferenceManifest.identifier,
-    manifest: TopicReferenceManifest,
-    type: 'builtin',
-  },
-  {
-    discoverable: false,
-    hidden: true,
     identifier: WebOnboardingManifest.identifier,
     manifest: WebOnboardingManifest,
     type: 'builtin',
@@ -565,6 +557,11 @@ const builtinToolRegistry: LobeBuiltinTool[] = [
   {
     identifier: TaskManifest.identifier,
     manifest: TaskManifest,
+    type: 'builtin',
+  },
+  {
+    identifier: CanvasManifest.identifier,
+    manifest: CanvasManifest,
     type: 'builtin',
   },
   {

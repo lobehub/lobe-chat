@@ -2,9 +2,7 @@
 
 import type { WorkSummaryItem } from '@lobechat/types';
 import { formatUsageValue } from '@lobechat/utils';
-import { Center, Flexbox, Icon as LobeIcon } from '@lobehub/ui';
-import { Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cx } from 'antd-style';
+import { Center, createStaticStyles, cx, Flexbox, Icon as LobeIcon, Text } from '@lobehub/ui';
 import { CircleDollarSignIcon, CoinsIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +11,7 @@ import { useChatStore } from '@/store/chat';
 import { getWorkVersionTotalTokens } from '@/utils/workCumulativeUsage';
 import { formatWorkVersionCost } from '@/utils/workVersionCost';
 
+import CanvasWorkCard from './CanvasWorkCard';
 import { getWorkTypeDescriptor, isSafeExternalUrl } from './descriptors';
 import { useResourceDeletedPrompt } from './useResourceDeletedPrompt';
 
@@ -134,6 +133,7 @@ interface WorkSummaryCardProps {
 const WorkSummaryCard = memo<WorkSummaryCardProps>(
   ({ className, item, onOpen, variant = 'card' }) => {
     const { t } = useTranslation('chat');
+    const openCanvas = useChatStore((s) => s.openCanvas);
     const openDocument = useChatStore((s) => s.openDocument);
     const openFilePreview = useChatStore((s) => s.openFilePreview);
     const openTaskDetail = useChatStore((s) => s.openTaskDetail);
@@ -184,6 +184,10 @@ const WorkSummaryCard = memo<WorkSummaryCardProps>(
       if (!openTarget) return;
 
       switch (openTarget.kind) {
+        case 'canvas': {
+          openCanvas(openTarget.canvasId, openTarget.version);
+          return;
+        }
         case 'document': {
           openDocument(openTarget.documentId, openTarget.agentDocumentId);
           return;
@@ -203,6 +207,16 @@ const WorkSummaryCard = memo<WorkSummaryCardProps>(
         }
       }
     };
+
+    if (item.type === 'canvas' && variant === 'card') {
+      return (
+        <CanvasWorkCard
+          className={className}
+          item={item}
+          onOpen={clickable ? handleOpen : undefined}
+        />
+      );
+    }
 
     if (variant === 'inline') {
       return (

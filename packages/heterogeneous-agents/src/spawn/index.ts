@@ -16,14 +16,17 @@ export {
   buildCodexAppServerArgs,
   buildCodexAppServerInput,
   buildCodexAppServerThreadParams,
+  type CodexAgentHandleOptions,
   CodexAppServerClient,
   type CodexAppServerClientOptions,
   CodexAppServerConnectionError,
   CodexAppServerRpcError,
   CodexThreadSession,
   type CodexThreadSessionOptions,
+  createCodexAgentHandle,
   getCodexAppServerUnsupportedArgs,
   isCodexAppServerCompatibilityError,
+  pickCodexRunProvenance,
 } from '../codex';
 export type { UsageData } from '../types';
 export {
@@ -74,6 +77,16 @@ export {
   readCodexSessionModel,
   resolveCodexInitialModel,
 } from './codexModel';
+export {
+  buildCodexLobeHubContextArgs,
+  buildCodexShellEnvSetArgs,
+  CODEX_LOBEHUB_CONTEXT_ENV_KEYS,
+  type CodexJwtFile,
+  createCodexJwtFile,
+  LOBEHUB_JWT_FILE_ENV,
+  refreshCodexJwtFiles,
+  toTomlBasicString,
+} from './codexShellEnv';
 export {
   buildCursorAcpArgs,
   buildCursorAcpPrompt,
@@ -167,8 +180,10 @@ export {
   ensureClaudeCodeResumeTranscript,
   type EnsureResumeTranscriptReason,
   type EnsureResumeTranscriptResult,
+  findClaudeCodeTranscriptPath,
   resolveClaudeCodeTranscriptPath,
 } from './ensureResumeTranscript';
+export { getHeterogeneousAgentPresetEnv } from './presetEnv';
 export {
   AMP_BASE_ARGS,
   buildQoderArgs,

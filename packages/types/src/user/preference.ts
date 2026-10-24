@@ -120,6 +120,11 @@ export interface WorkspaceUserPreference {
    *   ignored; nothing reads or writes this map.
    */
   sidebarPinnedOverrides?: Record<string /* itemId */, boolean>;
+  /**
+   * Topic sidebars list only the topics this member created, hiding the other
+   * members' topics under the same agent / group.
+   */
+  topicOnlyMine?: boolean;
 }
 
 export interface LobeUser {
@@ -134,6 +139,11 @@ export interface LobeUser {
 }
 
 export const UserGuideSchema = z.object({
+  /**
+   * Pages and Resources were merged into Docs; set once the notice is acknowledged
+   */
+  docsMerged: z.boolean().optional(),
+
   /**
    * Move the settings button to the avatar dropdown
    */
@@ -218,6 +228,11 @@ export const UserLabSchema = z.object({
   enableTaskVerify: z.boolean().optional(),
   /** Capture a conversation turn as an eval test case (developer-facing). */
   enableEvalCapture: z.boolean().optional(),
+  /**
+   * show "Report a problem" in the topic menu, which sends where the topic is
+   * (its ids and the client environment) to the support team
+   */
+  enableTopicBugReport: z.boolean().optional(),
   /**
    * enable Goals: hand the agent a goal it plans into tasks, tracks and delivers
    */
@@ -305,6 +320,12 @@ export interface UserPreference {
    */
   lastWorkspaceId?: string | null;
   /**
+   * How a project's topic sidebar groups its topics. Kept apart from
+   * `topicGroupMode` because a project spans agents and devices: it defaults to
+   * grouping by agent, and its choice must not leak into single-agent lists.
+   */
+  projectTopicGroupMode?: TopicGroupMode;
+  /**
    * Personal-mode counterpart of
    * {@link WorkspaceUserPreference.sidebarHiddenAgentIds}: agents/chat-groups
    * removed from the personal sidebar via the View All page.
@@ -391,11 +412,16 @@ export const UserPreferenceSchema = z
     integration: UserIntegrationPreferenceSchema.optional(),
     lab: UserLabSchema.optional(),
     lastWorkspaceId: z.string().nullish(),
+    projectTopicGroupMode: z
+      .enum(['byTime', 'byProject', 'flat', 'byStatus', 'byAgent', 'byDevice'])
+      .optional(),
     sidebarHiddenAgentIds: z.array(z.string()).optional(),
     sidebarHiddenGroupIds: z.array(z.string()).optional(),
     terminalFontFamily: z.string().optional(),
     telemetry: z.boolean().nullable(),
-    topicGroupMode: z.enum(['byTime', 'byProject', 'flat', 'byStatus', 'byAgent']).optional(),
+    topicGroupMode: z
+      .enum(['byTime', 'byProject', 'flat', 'byStatus', 'byAgent', 'byDevice'])
+      .optional(),
     topicIncludeCompleted: z.boolean().optional(),
     topicSortBy: z.enum(['createdAt', 'updatedAt']).optional(),
     useCmdEnterToSend: z.boolean().optional(),

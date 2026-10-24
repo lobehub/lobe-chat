@@ -1,13 +1,12 @@
 'use client';
 
-import { Flexbox } from '@lobehub/ui';
-import { createStaticStyles, cssVar } from 'antd-style';
-import debug from 'debug';
+import { createStaticStyles, cssVar, Flexbox } from '@lobehub/ui';
 import { memo, Suspense, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useBusinessConversationAnalytics } from '@/business/client/hooks/useBusinessConversationAnalytics';
 import AgentHome from '@/features/AgentHome';
+import { useSlugRouteSendGuard } from '@/features/AgentRoute/useSlugRouteSendGuard';
 import {
   TopicMigrationPlaceholder,
   useTopicMigrationPending,
@@ -27,6 +26,7 @@ import { mergeConversationHooks } from '@/features/Conversation/utils/mergeConve
 import { useGatewayReconnect } from '@/hooks/useGatewayReconnect';
 import { useOperationState } from '@/hooks/useOperationState';
 import { useScheduledRunWatch } from '@/hooks/useScheduledRunWatch';
+import { useTopicRunEvents } from '@/hooks/useTopicRunEvents';
 import { useAgentStore } from '@/store/agent';
 import { agentByIdSelectors, chatConfigByIdSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
@@ -40,8 +40,6 @@ import MainChatInput from './MainChatInput';
 import MessageFromUrl from './MainChatInput/MessageFromUrl';
 import ThreadHydration from './ThreadHydration';
 import { useActionsBarConfig } from './useActionsBarConfig';
-
-const log = debug('lobe-render:agent:ConversationArea');
 
 const styles = createStaticStyles(({ css }) => ({
   // When the chat column is wide enough for the header to float above the
@@ -72,10 +70,6 @@ const Conversation = memo(() => {
   // Get raw dbMessages from ChatStore for this context
   // ConversationStore will parse them internally to generate displayMessages
   const chatKey = messageMapKey(context);
-  const replaceMessages = useChatStore((s) => s.replaceMessages);
-  const messages = useChatStore((s) => s.dbMessagesMap[chatKey]);
-
-  log('contextKey %s: %o', chatKey, messages);
 
   // Get operation state from ChatStore for reactive updates
   const operationState = useOperationState(context);
@@ -101,6 +95,8 @@ const Conversation = memo(() => {
       : undefined,
   );
   useGatewayReconnect(context.topicId, runningOperation, context.agentId);
+  // A run started on another device pushes here, so it streams without a refetch.
+  useTopicRunEvents(context.topicId, context.agentId);
 
   // While the topic is parked as `scheduled`, pull the cron dispatch into the
   // store when `runAt` passes — nothing pushes it, and the reconnect above
@@ -115,6 +111,9 @@ const Conversation = memo(() => {
     topicId: context.topicId ?? undefined,
   });
   const businessAnalyticsHooks = useBusinessConversationAnalytics(context);
+  // First in the chain: a send on an unconfirmed `/agent/<slug>` must not reach
+  // the agent painted from the local copy before the server confirms it.
+  const slugRouteSendGuard = useSlugRouteSendGuard();
 
   // A topic still awaiting its transfer backfill shows a placeholder instead
   // of an empty (not-yet-migrated) history, and blocks sending — the server
@@ -126,21 +125,16 @@ const Conversation = memo(() => {
   );
 
   const hooks = useMemo(
-    () => mergeConversationHooks(businessAnalyticsHooks, chatFollowUpHooks),
-    [businessAnalyticsHooks, chatFollowUpHooks],
+    () => mergeConversationHooks(slugRouteSendGuard, businessAnalyticsHooks, chatFollowUpHooks),
+    [slugRouteSendGuard, businessAnalyticsHooks, chatFollowUpHooks],
   );
 
   return (
     <ConversationProvider
       actionsBar={actionsBarConfig}
       context={context}
-      hasInitMessages={!!messages}
       hooks={hooks}
-      messages={messages}
       operationState={operationState}
-      onMessagesChange={(messages, ctx, meta) => {
-        replaceMessages(messages, { context: ctx, source: meta?.source });
-      }}
     >
       <SplitDropZone>
         <Flexbox

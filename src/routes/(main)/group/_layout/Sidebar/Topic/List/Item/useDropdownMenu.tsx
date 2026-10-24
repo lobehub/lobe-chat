@@ -1,8 +1,7 @@
 import { GROUP_CHAT_TOPIC_URL } from '@lobechat/const';
 import type { ChatTopicStatus } from '@lobechat/types';
-import { type MenuProps } from '@lobehub/ui';
-import { Icon } from '@lobehub/ui';
-import { toast } from '@lobehub/ui/base-ui';
+import { type DropdownItem } from '@lobehub/ui';
+import { Icon, toast } from '@lobehub/ui';
 import {
   Archive,
   ArchiveRestore,
@@ -40,7 +39,7 @@ export const useTopicItemDropdownMenu = ({
   id,
   status,
   toggleEditing,
-}: TopicItemDropdownMenuProps): (() => MenuProps['items']) => {
+}: TopicItemDropdownMenuProps): (() => DropdownItem[]) => {
   const { t } = useTranslation(['topic', 'common']);
 
   const navigate = useWorkspaceAwareNavigate();
@@ -157,7 +156,10 @@ export const useTopicItemDropdownMenu = ({
         label: t('actions.copyLink'),
         onClick: () => {
           if (!activeGroupId) return;
-          const url = `${appOrigin}${GROUP_CHAT_TOPIC_URL(activeGroupId, id)}`;
+          const url = `${appOrigin}${buildWorkspaceAwarePath(
+            GROUP_CHAT_TOPIC_URL(activeGroupId, id),
+            activeWorkspaceSlug,
+          )}`;
           navigator.clipboard.writeText(url);
           toast.success(t('actions.copyLinkSuccess'));
         },
@@ -190,7 +192,7 @@ export const useTopicItemDropdownMenu = ({
         },
         sfSymbol: 'trash',
       },
-    ].filter(Boolean) as MenuProps['items'];
+    ].filter(Boolean) as DropdownItem[];
   }, [
     id,
     isCompleted,

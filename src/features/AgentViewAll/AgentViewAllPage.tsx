@@ -2,9 +2,23 @@
 
 import { DEFAULT_AVATAR } from '@lobechat/const';
 import { agentDisplayName, type SidebarAgentItem } from '@lobechat/types';
-import { Center, Empty, Flexbox, Icon, SearchBar, Tooltip } from '@lobehub/ui';
-import { Avatar, Button, DropdownMenu, Segmented, Text, toast } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import {
+  Avatar,
+  Button,
+  Center,
+  createStaticStyles,
+  cssVar,
+  cx,
+  DropdownMenu,
+  Empty,
+  Flexbox,
+  Icon,
+  SearchBar,
+  Segmented,
+  Text,
+  toast,
+  Tooltip,
+} from '@lobehub/ui';
 import dayjs from 'dayjs';
 import isEqual from 'fast-deep-equal';
 import { ChevronDownIcon, ChevronRightIcon, PlusIcon } from 'lucide-react';
@@ -521,7 +535,13 @@ const AgentViewAllPage = memo(() => {
           />
         }
       />
-      <WideScreenContainer gap={16} paddingBlock={16} wrapperStyle={{ flex: 1, overflowY: 'auto' }}>
+      <WideScreenContainer
+        fullWidth
+        gap={16}
+        paddingBlock={16}
+        paddingInline={16}
+        wrapperStyle={{ flex: 1, overflowY: 'auto' }}
+      >
         {!isInit && !keyword.trim() && <AgentViewAllSidebarSectionSkeleton />}
         {isInit && !keyword.trim() && sidebarItems.length > 0 && (
           <SidebarAgentsSection items={sidebarItems} onToggleSidebar={handleToggleSidebar} />

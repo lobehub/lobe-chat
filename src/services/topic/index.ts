@@ -24,6 +24,8 @@ import {
  */
 export interface TopicListItem extends ChatTopic {
   agentId?: string | null;
+  /** Owning chat group, for a group conversation (which has no `agentId`). */
+  groupId?: string | null;
   lastAssistantMessage?: string | null;
   /**
    * Visibility of the owning agent/group. `'private'` conversations stay out of
@@ -114,6 +116,7 @@ export class TopicService {
       groupId: params.groupId,
       includeTriggers: params.includeTriggers,
       isInbox: params.isInbox,
+      onlyMine: params.onlyMine,
       pageSize: params.pageSize,
       sortBy: params.sortBy,
       triggers: params.triggers,
@@ -166,11 +169,17 @@ export class TopicService {
     return result.data.hasFiles;
   };
 
-  searchTopics = (keywords: string, agentId?: string, groupId?: string): Promise<ChatTopic[]> => {
+  searchTopics = (
+    keywords: string,
+    agentId?: string,
+    groupId?: string,
+    onlyMine?: boolean,
+  ): Promise<ChatTopic[]> => {
     return lambdaClient.topic.searchTopics.query({
       agentId,
       groupId,
       keywords,
+      onlyMine: onlyMine || undefined,
     }) as any;
   };
 
@@ -181,7 +190,7 @@ export class TopicService {
   updateTopicModel = (
     id: string,
     value: {
-      metadata?: Pick<ChatTopicMetadata, 'heteroEffort' | 'reasoningConfig'>;
+      metadata?: Pick<ChatTopicMetadata, 'heteroEffort' | 'heteroSpeed' | 'reasoningConfig'>;
       model: string;
       provider: string;
     },
@@ -191,6 +200,11 @@ export class TopicService {
 
   updateTopicMetadata = (id: string, metadata: UpdateTopicMetadataInput) => {
     return lambdaClient.topic.updateTopicMetadata.mutate({ id, metadata });
+  };
+
+  /** `unread` → `active` only while the topic is still unread; `null` when it was not. */
+  markTopicRead = (id: string) => {
+    return lambdaClient.topic.markTopicRead.mutate({ id });
   };
 
   settleRunningOperation = (

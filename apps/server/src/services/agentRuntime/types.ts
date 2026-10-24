@@ -484,6 +484,8 @@ export interface OperationCreationParams {
      * callSubAgent child (which shares `isSubAgent: true`).
      */
     orchestrationRole?: 'supervisor' | 'member';
+    /** Project the run belongs to, stored on `state.origin.projectId`. */
+    projectId?: string;
     scope?: string | null;
     /** Conversation/session locator used to rebuild an authenticated Review route. */
     sessionId?: string;
@@ -568,6 +570,8 @@ export interface OperationCreationParams {
   /** Opt into runtime state snapshots on step_complete events. Defaults to false. */
   includeFinalState?: boolean;
   initialContext: AgentRuntimeContext;
+  /** Initial LLM-call count offset for resumed operations (accumulated from previous runs) */
+  initialLlmCalls?: number;
   initialMessages?: any[];
   /** Initial step count offset for resumed operations (accumulated from previous runs) */
   initialStepCount?: number;
@@ -585,7 +589,8 @@ export interface OperationCreationParams {
   /**
    * The client that started this run can execute relayed LLM attempts
    * (`llm_execute`). Stored on `state.host.llmExecutor`; a sub-agent run
-   * inherits its parent's when it declares none.
+   * inherits its parent's when it declares none, relaying on the parent's
+   * channel (`channelOperationId`).
    */
   llmExecutor?: AgentRunLlmExecutor;
   maxSteps?: number;

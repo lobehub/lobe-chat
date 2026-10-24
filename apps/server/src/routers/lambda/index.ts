@@ -35,6 +35,7 @@ import { agentQuotaRouter } from './agentQuota';
 import { agentShareRouter } from './agentShare';
 import { agentSignalRouter } from './agentSignal';
 import { agentSkillsRouter } from './agentSkills';
+import { agentSteerQueueRouter } from './agentSteerQueue';
 import { agentTraceRouter } from './agentTrace';
 import { aiAgentRouter } from './aiAgent';
 import { aiChatRouter } from './aiChat';
@@ -44,6 +45,7 @@ import { apiKeyRouter } from './apiKey';
 import { asrRouter } from './asr';
 import { botMessageRouter } from './botMessage';
 import { briefRouter } from './brief';
+import { canvasRouter } from './canvas';
 import { changelogRouter } from './changelog';
 import { chunkRouter } from './chunk';
 import { comfyuiRouter } from './comfyui';
@@ -56,6 +58,7 @@ import { deviceMetricRouter } from './deviceMetric';
 import { documentRouter } from './document';
 import { documentCommentRouter } from './documentComment';
 import { documentLikeRouter } from './documentLike';
+import { environmentRouter } from './environment';
 import { expertiseRouter } from './expertise';
 import { exporterRouter } from './exporter';
 import { fileRouter } from './file';
@@ -70,6 +73,7 @@ import { importerRouter } from './importer';
 import { klavisRouter } from './klavis';
 import { knowledgeRouter } from './knowledge';
 import { knowledgeBaseRouter } from './knowledgeBase';
+import { linearRouter } from './linear';
 import { llmGenerationTracingRouter } from './llmGenerationTracing';
 import { marketRouter } from './market';
 import { messageRouter } from './message';
@@ -99,11 +103,13 @@ import { threadRouter } from './thread';
 import { topicRouter } from './topic';
 import { topicCommentRouter } from './topicComment';
 import { trashRouter } from './trash';
+import { ttsRouter } from './tts';
 import { uploadRouter } from './upload';
 import { usageRouter } from './usage';
 import { userRouter } from './user';
 import { userMemoriesRouter } from './userMemories';
 import { userMemoryRouter } from './userMemory';
+import { userSkillRouter } from './userSkill';
 import { verifyRouter } from './verify';
 import { videoRouter } from './video';
 import { webBrowsingRouter } from './webBrowsing';
@@ -123,10 +129,13 @@ export const lambdaRouter = router({
   agentEvalExternal: agentEvalExternalRouter,
   agentLabel: agentLabelRouter,
   agentSkills: agentSkillsRouter,
+  environment: environmentRouter,
   sandboxStorage: sandboxStorageRouter,
   agentTrace: agentTraceRouter,
   expertise: expertiseRouter,
   agentSignal: agentSignalRouter,
+  agentSteerQueue: agentSteerQueueRouter,
+  canvas: canvasRouter,
   changelog: changelogRouter,
   brief: briefRouter,
   aiAgent: aiAgentRouter,
@@ -137,6 +146,7 @@ export const lambdaRouter = router({
   aiProvider: aiProviderRouter,
   apiKey: apiKeyRouter,
   asr: asrRouter,
+  tts: ttsRouter,
   chunk: chunkRouter,
   comfyui: comfyuiRouter,
   config: configRouter,
@@ -164,6 +174,7 @@ export const lambdaRouter = router({
   klavis: klavisRouter,
   knowledge: knowledgeRouter,
   knowledgeBase: knowledgeBaseRouter,
+  linear: linearRouter,
   llmGenerationTracing: llmGenerationTracingRouter,
   market: marketRouter,
   message: messageRouter,
@@ -197,6 +208,7 @@ export const lambdaRouter = router({
   user: userRouter,
   userMemories: userMemoriesRouter,
   userMemory: userMemoryRouter,
+  userSkill: userSkillRouter,
   verify: verifyRouter,
   video: videoRouter,
   webBrowsing: webBrowsingRouter,

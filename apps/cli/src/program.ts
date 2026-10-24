@@ -1,5 +1,7 @@
 import { Command } from 'commander';
 
+import { registerAcceptanceCommands } from './commands/acceptance';
+import { registerVerifyCommand } from './commands/acceptance/deprecatedVerify';
 import { registerAgentCommand } from './commands/agent';
 import { registerAgentGroupCommand } from './commands/agent-group';
 import { registerAgentSignalCommand } from './commands/agent-signal';
@@ -29,6 +31,7 @@ import { registerNotifyCommand } from './commands/notify';
 import { registerPluginCommand } from './commands/plugin';
 import { registerProjectCommand } from './commands/project';
 import { registerProviderCommand } from './commands/provider';
+import { registerReadCommand } from './commands/read';
 import { registerSearchCommand } from './commands/search';
 import { registerSessionGroupCommand } from './commands/session-group';
 import { registerSkillCommand } from './commands/skill';
@@ -39,8 +42,6 @@ import { registerTopicCommand } from './commands/topic';
 import { registerTraceCommand } from './commands/trace';
 import { registerUpdateCommand } from './commands/update';
 import { registerUserCommand } from './commands/user';
-import { registerVerifyCommand } from './commands/verify';
-import { registerAcceptanceCommands } from './commands/verifyAcceptance';
 import { registerWidgetCommand } from './commands/widget';
 import { registerWorkspaceCommand } from './commands/workspace';
 import { CLI_DISPLAY_NAME, CLI_PRIMARY_BIN, CLI_PRODUCT_NAME } from './constants/identity';
@@ -86,6 +87,7 @@ export function createProgram() {
   registerDoctorCommand(program);
   registerDocCommand(program);
   registerSearchCommand(program);
+  registerReadCommand(program);
   registerKbCommand(program);
   registerMemoryCommand(program);
   registerAgentCommand(program);

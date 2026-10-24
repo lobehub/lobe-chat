@@ -81,7 +81,7 @@ vi.mock('@/features/ChatInput/ControlBar/DirIcon', () => ({
 vi.mock('@/business/client/hooks/useActiveWorkspaceSlug', () => ({
   useActiveWorkspaceSlug: () => 'team',
 }));
-vi.mock('@/routes/(main)/agent/channel/const', () => ({
+vi.mock('@/features/AgentChannel/const', () => ({
   getPlatformIcon: () => null,
 }));
 vi.mock('@/store/agent', () => ({
@@ -463,6 +463,25 @@ describe('TopicItem active state', () => {
     });
 
     render(<TopicItem id="tpc_test" title="Topic" />);
+
+    expect(screen.getByTestId('topic-unread-dot')).toBeInTheDocument();
+  });
+
+  /** @example A project row is not in the chat store, so only its own status says unread. */
+  it('shows the unread dot for a project row whose own status is unread', () => {
+    scopedTopicMock.value = { agentId: 'other-agent', agentName: 'Other Agent' };
+    useTopicNavigationMock.mockReturnValue({
+      isInAgentSubRoute: false,
+      isInTopicContextRoute: false,
+      navigateToTopic: vi.fn(),
+      routeTopicId: undefined,
+    });
+
+    render(
+      <TopicListScopeContext value={{ projectId: 'project-1' }}>
+        <TopicItem id="project-topic" status="unread" title="Project work" />
+      </TopicListScopeContext>,
+    );
 
     expect(screen.getByTestId('topic-unread-dot')).toBeInTheDocument();
   });

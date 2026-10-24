@@ -5,6 +5,12 @@ export {
   GrokBuildAdapter,
   QoderAdapter,
 } from './adapters';
+export {
+  appendAttachedFilesToPrompt,
+  buildAttachedFilesPrompt,
+  collectHeteroAttachedFiles,
+  type HeteroAttachedFileRef,
+} from './attachedFiles';
 export type {
   HeterogeneousAgentCliError,
   HeterogeneousAgentDescriptor,
@@ -99,7 +105,6 @@ export type {
   ResolveHeterogeneousProviderBindingResult,
   ServerDefaultHeterogeneousAgentType,
   ServerDefaultHeterogeneousIngress,
-  ServerDefaultHeterogeneousModelPolicy,
   ServerDefaultHeterogeneousTokenHeader,
 } from './providerBinding';
 export {

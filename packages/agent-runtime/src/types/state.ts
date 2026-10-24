@@ -92,6 +92,8 @@ export interface AgentRunOrigin {
   groupId?: string;
   // --- Run tree ---
   lineage?: AgentRunLineage;
+  /** Project the conversation (or the run's task) belongs to. */
+  projectId?: string;
   scope?: string;
   sessionId?: string;
   /** Run-scoped Agent Signal marker for background self-iteration / memory runs. */
@@ -234,6 +236,13 @@ export interface AgentRunClientLlmWait {
 export interface AgentRunLlmExecutor {
   /** Relay protocol versions the client speaks, e.g. `llm_relay@1`. */
   capabilities: string[];
+  /**
+   * Operation whose gateway channel the client listens on, when it is not the
+   * run's own: a sub-agent inherits its parent's executor, but the tab only
+   * subscribed to the parent's run, so the sub-agent's `llm_execute` rides that
+   * channel. Set by the server, never by the client.
+   */
+  channelOperationId?: string;
   /** Stable id of the declaring client (tab / desktop window), preferred as the executor. */
   clientId: string;
   /** Provider ids this client confirmed it can reach directly. */
@@ -410,6 +419,14 @@ export interface AgentState {
   lastModified: string;
 
   /**
+   * User-facing count of LLM calls made by this operation.
+   *
+   * Kept in sync with `usage.llm.apiCalls` at every step boundary. Unlike
+   * {@link stepCount}, tool-only runtime iterations do not increase it.
+   */
+  llmCalls?: number;
+
+  /**
    * Optional maximum number of steps allowed.
    * If set, execution will stop with error when exceeded.
    */
@@ -461,7 +478,6 @@ export interface AgentState {
       provider: string;
     };
   };
-
   /**
    * Credentials this run listed once when it was created. A step renders
    * `{{CREDS_LIST}}` from here instead of asking the Market API again; absent
@@ -472,13 +488,13 @@ export interface AgentState {
   operationId: string;
   /** Operation-level tool set snapshot (immutable after creation) */
   operationToolSet?: OperationToolSet;
+
   // --- Origin ---
   /**
    * Where this run came from and where it sits in the run tree. Frozen when
    * the operation is created.
    */
   origin?: AgentRunOrigin;
-
   pendingApprovalBatch?: {
     assistantMessageId: string;
     id: string;
@@ -506,8 +522,8 @@ export interface AgentState {
    * Cleared once consumed.
    */
   pendingAssistantMessageId?: string;
-  pendingHumanPrompt?: { metadata?: Record<string, unknown>; prompt: string };
 
+  pendingHumanPrompt?: { metadata?: Record<string, unknown>; prompt: string };
   pendingHumanSelect?: {
     metadata?: Record<string, unknown>;
     multi?: boolean;
@@ -529,6 +545,7 @@ export interface AgentState {
   principal?: AgentRunPrincipal;
   /** @deprecated Use `principal.policy.securityBlacklist`. */
   securityBlacklist?: SecurityBlacklistConfig;
+
   // --- State Machine ---
   status:
     | 'idle'
@@ -544,6 +561,11 @@ export interface AgentState {
   /**
    * Number of execution steps in this session.
    * Incremented on each runtime.step() call.
+   *
+   * This is the scheduling/idempotency counter (QStash `stepIndex`, stale
+   * delivery guards, resume). It intentionally keeps its original meaning so
+   * workers from the previous build can keep scheduling during a rolling
+   * deploy.
    */
   stepCount: number;
 
