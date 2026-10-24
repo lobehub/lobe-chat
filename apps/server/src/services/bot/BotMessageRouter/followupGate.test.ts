@@ -1,0 +1,125 @@
+// @vitest-environment node
+import { createFollowupGate } from './followupGate';
+
+const mockDefer = vi.hoisted(() => vi.fn());
+vi.mock('../deferredMessages', () => ({ deferBotMessages: mockDefer }));
+
+const msg = (id: string) => ({ id, text: id }) as never;
+const base = (overrides: Record<string, unknown> = {}) => ({
+  entryPoint: 'onSubscribedMessage' as const,
+  merged: msg('m2'),
+  parked: [msg('m1'), msg('m2')],
+  thread: { id: 'discord:g:c1' },
+  threadSubscribed: true,
+  ...overrides,
+});
+
+const setup = (deps: { decision?: unknown; scheduler?: unknown } = {}) => {
+  const observe = vi.fn();
+  const judge = vi.fn(async () => deps.decision as never);
+  const gate = createFollowupGate({
+    applicationId: 'app',
+    observe,
+    platform: 'discord',
+    recorder: { judge },
+    scheduler: deps.scheduler as never,
+  });
+
+  return { gate, judge, observe };
+};
+
+describe('follow-up gate', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockDefer.mockResolvedValue(true);
+  });
+
+  it('proceeds when nothing enforces and there is no scheduler (the default)', async () => {
+    const { gate, observe } = setup();
+
+    expect(await gate(base())).toBe('proceed');
+    expect(observe).not.toHaveBeenCalled();
+    expect(mockDefer).not.toHaveBeenCalled();
+  });
+
+  it('stops and records when an enforcing policy denied', async () => {
+    const { gate, observe } = setup({
+      decision: { decidedBy: 'bot-wake:owner-rules', reason: 'channel-denied', verdict: 'deny' },
+    });
+
+    expect(await gate(base())).toBe('stop');
+    expect(observe).toHaveBeenCalledWith(
+      'onSubscribedMessage',
+      expect.anything(),
+      { id: 'discord:g:c1' },
+      'skip',
+      'policy-denied',
+      true,
+    );
+  });
+
+  it.each(['allow', 'abstain'] as const)('proceeds on an enforced %s', async (verdict) => {
+    const { gate } = setup({ decision: { records: [], verdict } });
+
+    expect(await gate(base())).toBe('proceed');
+  });
+
+  it('parks every message behind the batch when the scheduler holds it', async () => {
+    const scheduler = { submit: vi.fn(async () => 'hold') };
+    const { gate, observe } = setup({ scheduler });
+
+    expect(await gate(base())).toBe('stop');
+    expect(scheduler.submit).toHaveBeenCalledWith({
+      channelKey: 'discord:app:g:c1',
+      messages: [
+        { id: 'm1', threadId: 'discord:g:c1' },
+        { id: 'm2', threadId: 'discord:g:c1' },
+      ],
+    });
+    expect(mockDefer).toHaveBeenCalledWith('app', 'discord:g:c1', [msg('m1'), msg('m2')]);
+    expect(observe).toHaveBeenCalledWith(
+      'onSubscribedMessage',
+      expect.anything(),
+      expect.anything(),
+      'defer',
+      'scheduled',
+      true,
+    );
+  });
+
+  it('files a Discord thread message under its parent channel so one run covers both', async () => {
+    const scheduler = { submit: vi.fn(async () => 'hold') };
+    const { gate } = setup({ scheduler });
+    await gate(base({ thread: { id: 'discord:g:c1:t5' } }));
+
+    expect(scheduler.submit).toHaveBeenCalledWith(
+      expect.objectContaining({ channelKey: 'discord:app:g:c1' }),
+    );
+  });
+
+  it('lets the released batch through when it is replayed', async () => {
+    const { gate } = setup({ scheduler: { submit: vi.fn(async () => 'release') } });
+
+    expect(await gate(base())).toBe('proceed');
+    expect(mockDefer).not.toHaveBeenCalled();
+  });
+
+  it('fails open to the old behaviour when the scheduler or the parking store is unavailable', async () => {
+    expect(
+      await setup({ scheduler: { submit: vi.fn(async () => 'unavailable') } }).gate(base()),
+    ).toBe('proceed');
+
+    mockDefer.mockResolvedValue(false);
+    expect(await setup({ scheduler: { submit: vi.fn(async () => 'hold') } }).gate(base())).toBe(
+      'proceed',
+    );
+  });
+
+  it('checks the enforced policies before it touches the scheduler', async () => {
+    const scheduler = { submit: vi.fn() };
+    const { gate } = setup({ decision: { reason: 'x', verdict: 'deny' }, scheduler });
+
+    await gate(base());
+    expect(scheduler.submit).not.toHaveBeenCalled();
+  });
+});

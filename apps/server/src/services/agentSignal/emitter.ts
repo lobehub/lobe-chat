@@ -18,9 +18,11 @@ import type { LobeChatDatabase } from '@/database/type';
 import { assertAgentUsableBy } from '@/database/utils/agent-access';
 import { AgentSignalWorkflow } from '@/server/workflows/agentSignal';
 
-import { isAgentSignalEnabledForUser } from './featureGate';
 import type { GeneratedAgentSignalEmissionResult } from './orchestrator';
 import type { CreateDefaultAgentSignalPoliciesOptions } from './policies';
+import type { BotWakeConfig, CreateBotWakePolicyOptions } from './scenarios/botWake';
+import { getAgentSignalScenarioMeta, isAgentSignalScenarioEnabled } from './scenarios/meta';
+import type { AgentSignalScenarioId } from './scenarios/types';
 
 const log = debug('lobe-server:agent-signal:service');
 
@@ -51,12 +53,16 @@ export interface AgentSignalPolicyOptionOverrides extends Omit<
   Partial<CreateDefaultAgentSignalPoliciesOptions>,
   'skillManagement'
 > {
+  /** Bot-wake scenario policy wiring. */
+  botWake?: CreateBotWakePolicyOptions;
   skillManagement?: Partial<
     NonNullable<CreateDefaultAgentSignalPoliciesOptions['skillManagement']>
   >;
 }
 
 export interface AgentSignalEmitOptions {
+  /** Bot configuration the bot-wake scenario gate reads. Ignored by other scenarios. */
+  botWakeConfig?: BotWakeConfig | null;
   ignoreError?: boolean;
   policyOptions?: AgentSignalPolicyOptionOverrides;
 }
@@ -113,7 +119,10 @@ export const emitAgentSignalSourceEvent = async <TSourceType extends AgentSignal
   context: AgentSignalExecutionContext,
   options: AgentSignalEmitOptions = {},
 ): Promise<DedupedSourceEventResult | GeneratedAgentSignalEmissionResult | undefined> => {
-  const selfIterationEnabled = await isAgentSignalEnabledForUser(context.db, context.userId);
+  const selfIterationEnabled = await isAgentSignalScenarioEnabled('self-iteration', {
+    db: context.db,
+    userId: context.userId,
+  });
 
   if (!selfIterationEnabled) {
     return undefined;
@@ -159,7 +168,7 @@ export const enqueueAgentSignalSourceEvent = async <TSourceType extends AgentSig
     });
   }
 
-  if (!(await isAgentSignalEnabledForUser(db, context.userId))) {
+  if (!(await isAgentSignalScenarioEnabled('self-iteration', { db, userId: context.userId }))) {
     return {
       accepted: false,
       scopeKey: input.scopeKey ?? resolveSourceScopeKey(input.payload),
@@ -191,4 +200,45 @@ export const enqueueAgentSignalSourceEvent = async <TSourceType extends AgentSig
     scopeKey: sourceEvent.scopeKey,
     workflowRunId: trigger.workflowRunId,
   };
+};
+
+/**
+ * Runs one source event through a named scenario and awaits its orchestration result.
+ *
+ * Use when:
+ * - The caller needs the verdict in the same request, for example the bot-wake decision
+ * - The scenario is registered as `sync`; the event never goes through the Upstash workflow
+ *
+ * Expects:
+ * - `options.botWakeConfig` carries the bot configuration for the bot-wake gate
+ *
+ * Returns:
+ * - `undefined` when the scenario gate is closed, otherwise the same result as
+ *   {@link emitAgentSignalSourceEvent}
+ */
+export const emitAgentSignalScenarioEvent = async <TSourceType extends AgentSignalSourceType>(
+  scenarioId: AgentSignalScenarioId,
+  input: AgentSignalSourceEventInput<TSourceType>,
+  context: AgentSignalExecutionContext,
+  options: AgentSignalEmitOptions = {},
+): Promise<DedupedSourceEventResult | GeneratedAgentSignalEmissionResult | undefined> => {
+  const scenario = getAgentSignalScenarioMeta(scenarioId);
+
+  if (scenario.execution !== 'sync') {
+    throw new Error(
+      `[AgentSignal] Scenario "${scenarioId}" is async; enqueue it instead of awaiting it.`,
+    );
+  }
+
+  const enabled = await isAgentSignalScenarioEnabled(scenarioId, {
+    botWake: options.botWakeConfig,
+    db: context.db,
+    userId: context.userId,
+  });
+
+  if (!enabled) return undefined;
+
+  const { executeAgentSignalSourceEvent } = await import('./orchestrator');
+
+  return executeAgentSignalSourceEvent(input, context, { ...options, scenario: scenarioId });
 };
