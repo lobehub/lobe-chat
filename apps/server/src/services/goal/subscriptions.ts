@@ -20,7 +20,6 @@ import type { LobeChatDatabase } from '@/database/type';
 
 import { widgetRunLeaseMs } from '../widget/lease';
 import { WIDGET_SANDBOX_MAX_TIMEOUT_MS } from '../widget/sandbox/types';
-
 import { scheduleGoalAdvance } from './scheduler';
 import {
   freshObservation,
@@ -631,8 +630,9 @@ export class GoalSubscriptionService {
             .select({ manifest: widgetVersions.manifest })
             .from(widgetVersions)
             .where(eq(widgetVersions.id, run.versionId));
+          // Same lease the producer runs under; only a missing version falls back to the cap.
           const leaseMs = widgetRunLeaseMs(
-            version?.manifest ?? { timeoutMs: WIDGET_SANDBOX_MAX_TIMEOUT_MS },
+            version ? version.manifest : { timeoutMs: WIDGET_SANDBOX_MAX_TIMEOUT_MS },
           );
           if (now - run.startedAt.getTime() <= leaseMs) break;
           const completed = await WidgetModel.finishRun(db, run.id, {
