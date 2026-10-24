@@ -9,7 +9,7 @@ import type {
 } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import dayjs from 'dayjs';
-import { and, asc, eq, gt, inArray, isNull, max, or, sql } from 'drizzle-orm';
+import { and, asc, eq, gt, inArray, isNotNull, isNull, max, or, sql } from 'drizzle-orm';
 import type { PartialDeep } from 'type-fest';
 
 import { merge } from '@/utils/merge';
@@ -18,6 +18,7 @@ import { today } from '@/utils/time';
 import type { NewUser, UserItem, UserSettingsItem } from '../schemas';
 import {
   agents,
+  channels,
   chatGroups,
   goals,
   messages,
@@ -575,6 +576,17 @@ export class UserModel {
       await applyRemainingTimeout();
       // Purge share-visitor topics authored by this user under any creator.
       await tx.delete(topics).where(eq(topics.senderId, id));
+      await applyRemainingTimeout();
+      // Personal channels and direct conversations belong to this user alone. Workspace groups
+      // outlive their creator: the user cascade only clears the channel's and member's `user_id`.
+      await tx
+        .delete(channels)
+        .where(
+          and(
+            eq(channels.userId, id),
+            or(isNull(channels.workspaceId), isNotNull(channels.agentId)),
+          ),
+        );
       await applyRemainingTimeout();
       const result = await tx.delete(users).where(eq(users.id, id));
       if (deadline !== undefined && Date.now() >= deadline)

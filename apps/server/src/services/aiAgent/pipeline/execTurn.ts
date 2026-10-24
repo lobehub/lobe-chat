@@ -1,6 +1,7 @@
 import type { SandboxStorageClaim } from '@lobechat/builtin-tool-cloud-sandbox';
 import type { LobeChatDatabase } from '@lobechat/database';
 import type { AgentSenderMetadata, ExecAgentResult, UserInterventionConfig } from '@lobechat/types';
+import { agentShareFileAccessScope, ordinaryFileAccessScope } from '@lobechat/types';
 import { nanoid } from '@lobechat/utils';
 import debug from 'debug';
 
@@ -20,6 +21,7 @@ import type { AgentDocumentsService } from '@/server/services/agentDocuments';
 import type { AgentRuntimeService } from '@/server/services/agentRuntime';
 import { getAbortError, throwIfAborted } from '@/server/services/agentRuntime/abort';
 import type { ComposioService } from '@/server/services/composio';
+import { DocumentService } from '@/server/services/document';
 import type { MarketService } from '@/server/services/market';
 
 import { createRunFacts, type RunFacts } from '../runFacts';
@@ -462,8 +464,12 @@ export const execAgentTurn = async (
           }
         : appContext,
     assistantMessageId: turn.assistantMessageId,
+    botContext,
+    botPlatformContext,
     canUseDevice,
     deviceAccessReason,
+    disabledPluginIds,
+    discordContext,
     model,
     parentMessageId,
     persistAgentId,
@@ -574,13 +580,9 @@ export const execAgentTurn = async (
     approvalOwnerAssistantId,
     approvedToolEntries,
     attachedFileIds,
-    botContext,
-    botPlatformContext,
     disableLocalSystem,
     disableSelfFeedbackIntentTool: params.disableSelfFeedbackIntentTool,
     disableTools: params.disableTools,
-    disabledPluginIds,
-    discordContext,
     ephemeralUserMessage,
     exclusivePluginIds,
     files,
@@ -590,7 +592,6 @@ export const execAgentTurn = async (
     isFixedDeviceTarget: turn.isFixedDeviceTarget,
     localDeviceId,
     mentionedAgents,
-    operationId,
     parentMessageId,
     requestTrigger: requestTriggerMetadata.trigger,
     requestedDeviceId: turn.requestedDeviceId,
@@ -620,6 +621,13 @@ export const execAgentTurn = async (
         loadHistoryMessages,
         messageModel: deps.messageModel,
         pluginModel: deps.pluginModel,
+        readFileContent: async (fileId) =>
+          (
+            await new DocumentService(deps.db, deps.userId, deps.workspaceId).parseFile(
+              fileId,
+              shareGate ? agentShareFileAccessScope(shareGate) : ordinaryFileAccessScope,
+            )
+          ).content ?? undefined,
         throwIfExecutionAborted,
         topicModel: deps.topicModel,
         userId: deps.userId,
@@ -627,6 +635,7 @@ export const execAgentTurn = async (
       },
       runContext,
       initRequest,
+      operationId,
     ),
   );
 

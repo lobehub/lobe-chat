@@ -72,18 +72,19 @@ describe('ProjectHeader', () => {
     ];
   });
 
-  // A project without an image used to hand the switcher an undefined avatar, which
-  // rendered as an empty tile.
-  it('gives projects without an avatar the folder glyph in the switcher list', () => {
+  // A project without an image leaves the avatar empty so the row's Avatar generates
+  // one from the project name, instead of a shared folder glyph.
+  it('leaves projects without an avatar to the generated avatar in the switcher list', () => {
     render(<ProjectHeader />);
 
-    expect(captured.items.map((item) => item.avatar)).toEqual(['📁', '🤯']);
+    expect(captured.items.map((item) => item.avatar)).toEqual([undefined, '🤯']);
+    expect(captured.items.map((item) => item.title)).toEqual(['Foundry', 'LobeHub']);
   });
 
-  it('shows the same folder glyph on the trigger for an avatar-less project', () => {
+  it('leaves the trigger of an avatar-less project to the generated avatar too', () => {
     render(<ProjectHeader project={{ avatar: null, id: 'p1', name: 'Foundry' } as any} />);
 
-    expect(captured.triggerAvatar).toBe('📁');
+    expect(captured.triggerAvatar).toBeUndefined();
   });
 
   it('keeps the project avatar on the trigger when one is set', () => {

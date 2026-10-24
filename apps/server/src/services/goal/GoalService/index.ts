@@ -1,11 +1,11 @@
 import { GOAL_COORDINATOR_ACTOR_ID } from '@lobechat/const/goal';
 
 import { AgentModel } from '@/database/models/agent';
-import { GoalModel } from '@/database/models/goal';
 import { GoalGraphModel } from '@/database/models/goalGraph';
 import { TaskModel } from '@/database/models/task';
 import { TaskTopicModel } from '@/database/models/taskTopic';
 import { WorkModel } from '@/database/models/work';
+import { GoalRepository } from '@/database/repositories/goal';
 import type { LobeChatDatabase } from '@/database/type';
 
 import { TaskService } from '../../task';
@@ -121,7 +121,7 @@ export class GoalService {
   /** What the goal tells the person through the inbox: gates, sign-off, findings. */
   private readonly briefs: GoalBriefService;
   private readonly releaseReview: GoalReleaseReview;
-  private readonly goalModel: GoalModel;
+  private readonly goalModel: GoalRepository;
   /**
    * Graph writes attributed to the person who asked for them: seeding a goal,
    * adding a node or edge by hand, resolving a decision gate.
@@ -147,7 +147,7 @@ export class GoalService {
     this.acceptanceService = new AcceptanceService(db, userId, workspaceId);
     this.agentModel = new AgentModel(db, userId, workspaceId);
     this.briefs = new GoalBriefService(db, userId, workspaceId);
-    this.goalModel = new GoalModel(db, userId, workspaceId);
+    this.goalModel = new GoalRepository(db, userId, workspaceId);
     this.releaseReview = new GoalReleaseReview(db, userId, workspaceId, {
       briefs: this.briefs,
       decide: (...args) => this.decide(...args),

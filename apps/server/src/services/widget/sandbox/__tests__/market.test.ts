@@ -61,6 +61,29 @@ describe('MarketWidgetSandboxRunner', () => {
     );
   });
 
+  it('forwards credential injects to the egress proxy without putting secrets in env', async () => {
+    const { runner, sandbox } = setup(async () => result);
+    const inject = [
+      {
+        header: 'Authorization',
+        host: 'api.github.com',
+        prefix: 'Bearer ',
+        secretRef: { key: 'github' },
+      },
+    ];
+
+    await runner.run({
+      ...request,
+      env: { GITHUB_TOKEN: 'lh_ph_placeholder' },
+      network: { allow: ['api.github.com'], inject },
+    });
+
+    expect(sandbox.run.mock.calls[0][0]).toMatchObject({
+      egress: { allow: ['api.github.com'], inject },
+      env: { GITHUB_TOKEN: 'lh_ph_placeholder' },
+    });
+  });
+
   it('clamps the timeout and keeps non-zero exits and timeouts as results', async () => {
     const { runner, sandbox } = setup(async () => ({ ...result, exitCode: 124, timedOut: true }));
 

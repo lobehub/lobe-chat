@@ -2,7 +2,11 @@ import type { Command } from 'commander';
 import pc from 'picocolors';
 
 import { getTrpcClient } from '../api/client';
-import { resolveWorkspaceScope, type WorkspaceScope } from '../api/workspace';
+import {
+  PERSONAL_SCOPE_ENV_VALUE,
+  resolveWorkspaceScope,
+  type WorkspaceScope,
+} from '../api/workspace';
 import { resolveIdentityFingerprint } from '../auth/identity';
 import { CLI_PRIMARY_BIN } from '../constants/identity';
 import { type ActiveWorkspaceRecord, resolveServerUrl, saveActiveWorkspace } from '../settings';
@@ -31,7 +35,9 @@ const SCOPE_HINTS: Record<WorkspaceScope['source'], string> = {
 const describeScope = (scope: WorkspaceScope): string =>
   scope.workspaceId
     ? `workspace ${scope.workspaceId} ${pc.dim(`(from ${SCOPE_HINTS[scope.source]})`)}`
-    : pc.dim(SCOPE_HINTS[scope.source === 'stale' ? 'stale' : 'personal']);
+    : scope.source === 'env'
+      ? pc.dim(`personal (from LOBEHUB_WORKSPACE_ID=${PERSONAL_SCOPE_ENV_VALUE})`)
+      : pc.dim(SCOPE_HINTS[scope.source === 'stale' ? 'stale' : 'personal']);
 
 /**
  * Every workspace-scoped read goes through the workspace header, so a command
