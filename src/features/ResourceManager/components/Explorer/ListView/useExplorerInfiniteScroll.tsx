@@ -37,8 +37,11 @@ export const useExplorerInfiniteScroll = ({
   const loadNextPage = loadMore ?? loadMoreResources;
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-  const handleEndReached = useCallback(async () => {
-    if (!hasMore || isLoadingMore || loadMoreError) return;
+  // The loader itself, without the guards: a manual retry has to run while the
+  // recorded error is still set — the replica only clears it when the request
+  // starts, so guarding on it here would make the Retry action a no-op.
+  const runLoadMore = useCallback(async () => {
+    if (!hasMore || isLoadingMore) return;
 
     setIsLoadingMore(true);
     try {
@@ -46,11 +49,17 @@ export const useExplorerInfiniteScroll = ({
     } finally {
       setIsLoadingMore(false);
     }
-  }, [hasMore, isLoadingMore, loadMoreError, loadNextPage]);
+  }, [hasMore, isLoadingMore, loadNextPage]);
 
-  const retryLoadMore = useCallback(() => {
-    void handleEndReached();
-  }, [handleEndReached]);
+  const handleEndReached = useCallback(async () => {
+    // Auto-loading stops on a failed page so scrolling cannot hammer it; the
+    // footer's retry is the way back.
+    if (loadMoreError) return;
+
+    await runLoadMore();
+  }, [loadMoreError, runLoadMore]);
+
+  const retryLoadMore = useCallback(() => runLoadMore(), [runLoadMore]);
 
   const Footer = useCallback(() => {
     if (loadMoreError)
@@ -72,5 +81,6 @@ export const useExplorerInfiniteScroll = ({
   return {
     Footer,
     handleEndReached,
+    retryLoadMore,
   };
 };
