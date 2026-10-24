@@ -72,6 +72,11 @@ vi.mock('@/business/client/hooks/useDocumentTransferMenuItem', () => ({
   useDocumentTransferMenuItem: () => null,
 }));
 
+vi.mock('@/features/Favorites', () => ({
+  FavoriteButton: () => null,
+  useCurrentFavoritePath: () => '/favorite-path',
+  useFavoriteMenuItem: () => null,
+}));
 vi.mock('@/features/VisibilityConfirmContent', () => ({
   default: () => null,
 }));

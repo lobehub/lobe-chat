@@ -13,6 +13,7 @@ import { useAgentStore } from '@/store/agent';
 import { agentSelectors, chatConfigByIdSelectors } from '@/store/agent/selectors';
 import { useElectronStore } from '@/store/electron';
 
+import FavoriteToggle from './FavoriteToggle';
 import HeaderActions from './HeaderActions';
 import ShareButton from './ShareButton';
 import Tags from './Tags';
@@ -168,6 +169,7 @@ const Header = memo(() => {
               />
             )}
             <Tags />
+            <FavoriteToggle />
             <HeaderActions />
           </Flexbox>
         }

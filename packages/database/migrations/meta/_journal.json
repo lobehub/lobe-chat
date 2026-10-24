@@ -1288,6 +1288,13 @@
       "when": 1792606514901,
       "tag": "0183_project_order_and_agent_signals",
       "breakpoints": true
+    },
+    {
+      "idx": 184,
+      "version": "7",
+      "when": 1792832769172,
+      "tag": "0184_user_favorites",
+      "breakpoints": true
     }
   ],
   "version": "6"

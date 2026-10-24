@@ -41,6 +41,7 @@ const prefixes = {
   topicComments: 'tcm',
   topics: 'tpc',
   user: 'user',
+  userFavorites: 'fav',
   workspaceAuditLogs: 'wal',
   workspaceInvitations: 'wsi',
   workspaces: 'ws',

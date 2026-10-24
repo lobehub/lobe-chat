@@ -8,6 +8,7 @@ import NavHeader from '@/features/NavHeader';
 import WideScreenButton from '@/features/WideScreenContainer/WideScreenButton';
 import { useAgentGroupStore } from '@/store/agentGroup';
 
+import FavoriteToggle from './FavoriteToggle';
 import ShareButton from './ShareButton';
 
 const Header = memo(() => {
@@ -27,6 +28,7 @@ const Header = memo(() => {
           {/* Progress chip for a heavy group transfer/copy still filling in its
               conversations; renders nothing once the backfill finishes. */}
           {groupId && <AgentMigrationBadge groupId={groupId} />}
+          <FavoriteToggle />
           <WideScreenButton />
           <Suspense>
             <ShareButton />

@@ -48,10 +48,10 @@ describe('ProjectItem', () => {
     expect(container.querySelector('.nav-item-actions')).not.toBeNull();
   });
 
-  it('hides the actions menu from members without edit permission', () => {
+  it('keeps the actions menu for members without edit permission, who can still favorite', () => {
     permission.allowed = false;
     const { container } = render(<ProjectItem project={project} />);
 
-    expect(container.querySelector('.nav-item-actions')).toBeNull();
+    expect(container.querySelector('.nav-item-actions')).not.toBeNull();
   });
 });

@@ -24,6 +24,7 @@ import { useTranslation } from 'react-i18next';
 import ShareButton from '@/business/client/features/PageShare/ShareButton';
 import { DESKTOP_HEADER_ICON_SMALL_SIZE } from '@/const/layoutTokens';
 import { AutoSaveHint } from '@/features/EditorCanvas';
+import { FavoriteButton, useCurrentFavoritePath } from '@/features/Favorites';
 import NavHeader from '@/features/NavHeader';
 import ToggleRightPanelButton from '@/features/RightPanel/ToggleRightPanelButton';
 import { usePermission } from '@/hooks/usePermission';
@@ -55,6 +56,7 @@ const Header = memo(() => {
     s.onBack,
   ]);
   const rightPanelMode = usePageEditorStore(selectors.rightPanelMode);
+  const favoritePath = useCurrentFavoritePath();
   const isHtmlPage = useIsHtmlPage(documentId);
   const { allowed: hasEditPermission } = usePermission('edit_own_content');
   const { expand: showPageAgentPanel, toggle: togglePageAgentPanel } = usePageAgentPanelControl();
@@ -89,6 +91,15 @@ const Header = memo(() => {
                 {title || t('pageEditor.titlePlaceholder')}
               </Text>
             </>
+          )}
+          {documentId && (
+            <FavoriteButton
+              icon={emoji ?? null}
+              path={favoritePath}
+              targetId={documentId}
+              title={title || t('pageEditor.titlePlaceholder')}
+              type={'page'}
+            />
           )}
           {/* An artifact's body is never edited here, so a save status would only
               ever read "latest version"; name what the page is instead. */}
