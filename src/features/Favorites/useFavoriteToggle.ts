@@ -8,6 +8,9 @@ import { favoriteSelectors } from '@/store/home/selectors';
 
 import { useFetchFavorites } from './useFetchFavorites';
 
+/** Quiet period before a changed title or icon is written back to its favorite. */
+export const FAVORITE_SNAPSHOT_SYNC_DELAY = 800;
+
 export interface FavoriteTarget {
   /** Emoji or avatar URL of the target; omitted renders the type icon. */
   icon?: string | null;
@@ -29,9 +32,10 @@ export const useFavoriteToggle = (target: FavoriteTarget | undefined) => {
 
   const type = target?.type;
   const targetId = target?.targetId;
-  const isFavorite = useHomeStore((s) =>
-    type && targetId ? favoriteSelectors.isFavorite(type, targetId)(s) : false,
+  const favoriteId = useHomeStore((s) =>
+    type && targetId ? favoriteSelectors.getFavorite(type, targetId)(s)?.id : undefined,
   );
+  const isFavorite = !!favoriteId;
   const [toggleFavorite, syncFavoriteSnapshot] = useHomeStore((s) => [
     s.toggleFavorite,
     s.syncFavoriteSnapshot,
@@ -40,12 +44,18 @@ export const useFavoriteToggle = (target: FavoriteTarget | undefined) => {
   const title = target?.title;
   const icon = target?.icon;
   const path = target?.path;
+  // Titles change on every keystroke, so write once the target settles. The
+  // favorite id is a dependency too: a rename made while the add was pending is
+  // replayed once the confirmed row (and its real id) replaces the optimistic one.
   useEffect(() => {
-    if (!isFavorite || !type || !targetId || !title) return;
-    syncFavoriteSnapshot(type, targetId, { icon, path, title }).catch((error) => {
-      console.error('[favorite] failed to refresh the snapshot', error);
-    });
-  }, [isFavorite, type, targetId, title, icon, path, syncFavoriteSnapshot]);
+    if (!favoriteId || !type || !targetId || !title) return;
+    const timer = setTimeout(() => {
+      syncFavoriteSnapshot(type, targetId, { icon, path, title }).catch((error) => {
+        console.error('[favorite] failed to refresh the snapshot', error);
+      });
+    }, FAVORITE_SNAPSHOT_SYNC_DELAY);
+    return () => clearTimeout(timer);
+  }, [favoriteId, type, targetId, title, icon, path, syncFavoriteSnapshot]);
 
   const toggle = useCallback(async () => {
     if (!target) return;
