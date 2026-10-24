@@ -7,6 +7,7 @@ import { memo, type ReactNode } from 'react';
 import { useAuthorInfo } from '@/business/client/hooks/useAuthorInfo';
 import { useHasActiveWorkspace } from '@/business/client/hooks/useHasActiveWorkspace';
 import Avatar from '@/components/Avatar';
+import UserProfilePopup from '@/features/UserProfileCard/UserProfilePopup';
 
 /**
  * Prefer the bot-channel initiator over the account that owns the bot.
@@ -50,17 +51,24 @@ const TopicCreatorAvatar = memo<TopicCreatorAvatarProps>(
 
     if (!author) return null;
 
-    const avatar = (
-      <Tooltip title={author.fullName}>
-        <Avatar
-          avatar={author.avatar ?? undefined}
-          name={author.fullName ?? undefined}
-          shape={'circle'}
-          size={size}
-          style={{ flex: 'none' }}
-          title={author.fullName ?? undefined}
-        />
-      </Tooltip>
+    const avatarNode = (
+      <Avatar
+        avatar={author.avatar ?? undefined}
+        name={author.fullName ?? undefined}
+        shape={'circle'}
+        size={size}
+        style={{ flex: 'none' }}
+        title={author.fullName ?? undefined}
+      />
+    );
+
+    // A bot-channel initiator is not a workspace member, so it keeps the tooltip.
+    const avatar = botCreator ? (
+      <Tooltip title={author.fullName}>{avatarNode}</Tooltip>
+    ) : (
+      <UserProfilePopup fallbackTitle={author.fullName} userId={userId}>
+        {avatarNode}
+      </UserProfilePopup>
     );
 
     if (!corner) return avatar;

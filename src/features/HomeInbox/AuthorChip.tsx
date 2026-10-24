@@ -1,10 +1,11 @@
 import { DEFAULT_USER_AVATAR_URL } from '@lobechat/const';
-import { Avatar, createStaticStyles, cssVar, Flexbox, Icon, Text, Tooltip } from '@lobehub/ui';
+import { Avatar, createStaticStyles, cssVar, Flexbox, Icon, Text } from '@lobehub/ui';
 import { AlarmClockIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useWorkspaceMemberProfiles } from '@/business/client/hooks/useWorkspaceMemberProfiles';
+import UserProfilePopup from '@/features/UserProfileCard/UserProfilePopup';
 
 const AVATAR_SIZE = 16;
 
@@ -53,13 +54,13 @@ const AuthorChip = memo<AuthorChipProps>(({ userId, trigger }) => {
 
   return (
     <Flexbox horizontal align={'center'} className={styles.chip} gap={4}>
-      <Tooltip title={name}>
+      <UserProfilePopup fallbackTitle={name} userId={userId}>
         <Avatar
           avatar={profile.avatar || DEFAULT_USER_AVATAR_URL}
           shape={'circle'}
           size={AVATAR_SIZE}
         />
-      </Tooltip>
+      </UserProfilePopup>
       <Text ellipsis className={styles.label} style={{ maxWidth: 72 }}>
         {name}
       </Text>
