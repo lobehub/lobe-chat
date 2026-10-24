@@ -65,9 +65,9 @@ components:
         kind:
           enum:
             - mail
-            - phone
             - wallet
             - service
+            - phone
           type: string
         metadata:
           additionalProperties: true
@@ -2898,7 +2898,6 @@ paths:
             type: string
             enum:
               - mail
-              - phone
               - wallet
               - service
         - in: query
@@ -3026,7 +3025,6 @@ paths:
                       type: string
                       enum:
                         - mail
-                        - phone
                         - wallet
                         - service
                     metadata:

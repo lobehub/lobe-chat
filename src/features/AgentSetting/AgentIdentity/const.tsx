@@ -1,4 +1,4 @@
-import type { AgentAccountKind } from '@lobechat/types';
+import type { AgentAccountKind, AgentAccountPersistedKind } from '@lobechat/types';
 import type { LucideIcon } from 'lucide-react';
 import { KeyRound, Mail, Phone, Wallet } from 'lucide-react';
 
@@ -7,16 +7,16 @@ import { KeyRound, Mail, Phone, Wallet } from 'lucide-react';
  *
  * The pair (kind, provider) is what the control plane is asked for; the icon
  * and copy are presentation. `prefixable` marks the channels where the caller
- * may ask for a specific handle — mailbox local parts are choosable, carrier
- * numbers are operator inventory.
+ * may ask for a specific handle (a mailbox local part, for example); a channel
+ * whose handles the provider mints on its own leaves it off.
  */
 export interface IdentityChannel {
-  descKey: 'identity.mail.desc' | 'identity.phone.desc';
+  descKey: 'identity.mail.desc';
   icon: LucideIcon;
   kind: AgentAccountKind;
   prefixable: boolean;
   provider: string;
-  titleKey: 'identity.mail.title' | 'identity.phone.title';
+  titleKey: 'identity.mail.title';
 }
 
 export const IDENTITY_CHANNELS: IdentityChannel[] = [
@@ -28,14 +28,6 @@ export const IDENTITY_CHANNELS: IdentityChannel[] = [
     provider: 'agent-mail',
     titleKey: 'identity.mail.title',
   },
-  {
-    descKey: 'identity.phone.desc',
-    icon: Phone,
-    kind: 'phone',
-    prefixable: false,
-    provider: 'linq',
-    titleKey: 'identity.phone.title',
-  },
 ];
 
 /**
@@ -44,12 +36,18 @@ export const IDENTITY_CHANNELS: IdentityChannel[] = [
  * Agent Mail channel and must not hide its provisioning card.
  */
 export const isChannelAccount = (
-  account: { kind: AgentAccountKind; provider: string },
+  account: { kind: AgentAccountPersistedKind; provider: string },
   channel: Pick<IdentityChannel, 'kind' | 'provider'>,
 ): boolean => account.kind === channel.kind && account.provider === channel.provider;
 
-/** Icon for an account that belongs to no built-in channel (a mounted address). */
-export const KIND_ICONS: Record<AgentAccountKind, LucideIcon> = {
+/**
+ * Icon for an account that belongs to no built-in channel (a mounted address).
+ *
+ * Keyed by every *persisted* kind, not just the creatable ones: an unfiltered
+ * list still shows the retired `phone` accounts so they can be released, and a
+ * missing entry would hand `undefined` to `Icon`'s required prop.
+ */
+export const KIND_ICONS: Record<AgentAccountPersistedKind, LucideIcon> = {
   mail: Mail,
   phone: Phone,
   service: KeyRound,
@@ -58,6 +56,6 @@ export const KIND_ICONS: Record<AgentAccountKind, LucideIcon> = {
 
 /** Accounts no built-in channel claims — mounted ones, or providers this tab does not offer. */
 export const isUnchanneledAccount = (account: {
-  kind: AgentAccountKind;
+  kind: AgentAccountPersistedKind;
   provider: string;
 }): boolean => !IDENTITY_CHANNELS.some((channel) => isChannelAccount(account, channel));

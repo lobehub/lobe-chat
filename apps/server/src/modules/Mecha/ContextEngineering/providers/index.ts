@@ -6,6 +6,7 @@ import type { ContextFactProviders, ContextFactRequest } from '@lobechat/mecha';
 import {
   agentShareDocumentAccessScope,
   getActivePluginIds,
+  isLiveAgentAccount,
   ordinaryDocumentAccessScope,
 } from '@lobechat/types';
 
@@ -209,10 +210,15 @@ export const createServerContextFactProviders = ({
       });
       if (accounts.length === 0) return undefined;
 
+      // `liveOnly` already drops retired kinds in SQL; re-assert it here so the
+      // identity block can only ever name a kind the runtime has a provider for.
+      const liveAccounts = accounts.filter(isLiveAgentAccount);
+      if (liveAccounts.length === 0) return undefined;
+
       const summary = await AgentInboxService.summary(db, targetAgentId);
 
       return {
-        accounts: accounts.map((account) => ({
+        accounts: liveAccounts.map((account) => ({
           capabilities: account.capabilities,
           displayName: account.displayName,
           identifier: account.identifier,

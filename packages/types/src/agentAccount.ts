@@ -3,8 +3,8 @@ import type { AgentInboxSourceType, AgentMailAddress, AgentMailAttachment } from
 /**
  * Agent accounts — the identity assets an agent owns.
  *
- * An agent may hold several accounts: a `mail` address, a `phone` number, a
- * `wallet`, or a third-party `service` login. Each one is its own row, belongs
+ * An agent may hold several accounts: a `mail` address, a `wallet`, or a
+ * third-party `service` login. Each one is its own row, belongs
  * to the agent (not to a workspace integration), and may carry credentials.
  *
  * Kinds and statuses are growing domains, so they are plain unions here and the
@@ -12,9 +12,41 @@ import type { AgentInboxSourceType, AgentMailAddress, AgentMailAttachment } from
  * change with no migration.
  */
 
-/** The sorts of identity an agent can own. */
-export const AGENT_ACCOUNT_KINDS = ['mail', 'phone', 'wallet', 'service'] as const;
+/** The sorts of identity an agent can own today — what a caller may create. */
+export const AGENT_ACCOUNT_KINDS = ['mail', 'wallet', 'service'] as const;
 export type AgentAccountKind = (typeof AGENT_ACCOUNT_KINDS)[number];
+
+/**
+ * Every kind a persisted row — and therefore a read response — can still carry.
+ *
+ * `kind` is a plain text column, so a kind the product retired outlives the
+ * code that minted it: the agent-owned `phone` (now a messenger channel) keeps
+ * its rows. An unfiltered read deliberately leaves those rows visible so their
+ * owner can still revoke them, which means every read shape has to admit a
+ * value that the validators and the live-runtime filter never accept.
+ */
+export const AGENT_ACCOUNT_PERSISTED_KINDS = [...AGENT_ACCOUNT_KINDS, 'phone'] as const;
+export type AgentAccountPersistedKind = (typeof AGENT_ACCOUNT_PERSISTED_KINDS)[number];
+
+/**
+ * Whether a persisted kind is one the product still opens.
+ *
+ * Reads that must only see live identities use this as a type guard, so the
+ * runtime context cannot claim an account kind it has no provider for.
+ */
+export const isAgentAccountKind = (kind: AgentAccountPersistedKind): kind is AgentAccountKind =>
+  (AGENT_ACCOUNT_KINDS as readonly string[]).includes(kind);
+
+/**
+ * Narrow an account-shaped value to one whose kind is still open.
+ *
+ * Object-level, not kind-level, so it can be handed straight to
+ * `Array.prototype.filter` — a predicate on `.kind` alone leaves the element
+ * type untouched.
+ */
+export const isLiveAgentAccount = <T extends { kind: AgentAccountPersistedKind }>(
+  account: T,
+): account is T & { kind: AgentAccountKind } => isAgentAccountKind(account.kind);
 
 /** Lifecycle of one account. */
 export const AGENT_ACCOUNT_STATUSES = ['provisioning', 'active', 'suspended', 'revoked'] as const;
@@ -22,7 +54,7 @@ export type AgentAccountStatus = (typeof AGENT_ACCOUNT_STATUSES)[number];
 
 /**
  * What the account can do, declared by whoever provisions it rather than
- * inferred from its kind: a `service` account may be login-only, a `phone`
+ * inferred from its kind: a `service` account may be login-only, a `mail`
  * account may be receive-only during warm-up.
  */
 export interface AgentAccountCapabilities {
@@ -230,9 +262,13 @@ export interface AgentAccountRef {
   /** Decrypted credential, present only on trusted internal paths. */
   credential?: Record<string, string> | null;
   id: string;
-  /** The handle that routes to this account: address, number, login. */
+  /** The handle that routes to this account: address, login. */
   identifier: string;
-  kind: AgentAccountKind;
+  /**
+   * The kind the row was written with. Widened past {@link AgentAccountKind}
+   * because a legacy row is still readable — and must stay releasable.
+   */
+  kind: AgentAccountPersistedKind;
   /** Provider-side non-secret handles (inboxId, chatId, …). */
   metadata: Record<string, unknown>;
   provider: string;
@@ -245,8 +281,9 @@ export interface AgentAccountProvisionInput {
   displayName?: string;
   /**
    * Whether a live account already routes on `identifier` for this provider.
-   * Providers that bind from a finite operator inventory (Linq numbers) use it
-   * to pick a free unit instead of colliding on the routing key.
+   * An idempotent provider (Agent Mail keys inboxes by agent) can be handed back
+   * the resource a committed row already holds after a lost response; this
+   * tells it not to mint a second credential for that resource.
    */
   isIdentifierHeld?: (identifier: string) => Promise<boolean>;
   /**
@@ -325,7 +362,7 @@ export interface AgentAccountProvider<K extends AgentAccountKind = AgentAccountK
     ref: AgentAccountRef,
   ) => Promise<AgentAccountInboundMessage | null>;
 
-  /** Stable provider id (`agent-mail`, `linq`, …); the account's `provider` value. */
+  /** Stable provider id (`agent-mail`, …); the account's `provider` value. */
   readonly provider: string;
 
   /** Idempotent open. Runs before the account row exists. */

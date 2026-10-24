@@ -1,4 +1,4 @@
-import { AGENT_ACCOUNT_KINDS, AGENT_ACCOUNT_STATUSES } from '@lobechat/types';
+import { AGENT_ACCOUNT_PERSISTED_KINDS, AGENT_ACCOUNT_STATUSES } from '@lobechat/types';
 import { API_KEY_PREFIX } from '@lobechat/utils/apiKey';
 import { generateSpecs } from 'hono-openapi';
 
@@ -53,7 +53,10 @@ const agentAccountProperties = {
   hasCredential: { type: 'boolean' },
   id: { type: 'string' },
   identifier: { type: 'string' },
-  kind: { enum: AGENT_ACCOUNT_KINDS, type: 'string' },
+  // The persisted kinds, not just the creatable ones: an unfiltered read still
+  // returns retired-kind rows, and the response contract must not exclude a
+  // value the API actually returns.
+  kind: { enum: AGENT_ACCOUNT_PERSISTED_KINDS, type: 'string' },
   metadata: nullableObject,
   provider: { type: 'string' },
   revokedAt: { ...dateTime, type: ['string', 'null'] },
