@@ -14,6 +14,7 @@ import { userProfileSelectors } from '@/store/user/selectors';
 
 import { useAcceptanceScope } from '../AcceptanceScope';
 import { useAcceptanceBundle } from '../useAcceptanceBundle';
+import { needsCollaborationRequest } from '../visibility';
 import { openCollaborationRequestModal } from './CollaborationRequestModal';
 import { useAcceptanceComments } from './hooks';
 
@@ -70,7 +71,7 @@ const CollaborationRequestBanner = () => {
   const viewerId = useUserStore(userProfileSelectors.userId);
   const [withdrawing, setWithdrawing] = useState(false);
 
-  if (!data || !canComment || data.isOwner || data.canCollaborate) return null;
+  if (!data || !canComment || !needsCollaborationRequest(data)) return null;
   if (data.acceptance.subjectType === 'goal_gate') return null;
   if (data.acceptance.status === 'accepted' || data.acceptance.status === 'closed') return null;
 

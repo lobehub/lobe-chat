@@ -49,3 +49,15 @@ export const canCommentOnAcceptanceEvidence = (
   bundle: { isOwner: boolean } | null | undefined,
   canComment: boolean,
 ) => canComment && Boolean(bundle);
+
+/**
+ * Whether the viewer still has to ask a decider for edit-collaboration.
+ *
+ * Anyone who already decides this delivery — its creator, or an owner/admin of
+ * its workspace (`canReview`) — or who was granted collaboration has nothing to
+ * request. Keying off `isOwner` alone made a workspace owner/admin, who holds
+ * the full decision bar, be asked to petition the author for access they have.
+ */
+export const needsCollaborationRequest = (
+  bundle?: { canCollaborate?: boolean; canReview?: boolean; isOwner?: boolean } | null,
+) => Boolean(bundle) && !bundle!.isOwner && !bundle!.canReview && !bundle!.canCollaborate;
