@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getAppPainted, setAppPainted } from '@/spa/atoms/app';
@@ -8,9 +8,14 @@ import { writeUserDisplaySnapshot } from '@/store/user/displaySnapshot';
 import UserUpdater from './UserUpdater';
 
 const useSessionMock = vi.hoisted(() => vi.fn());
+const getAccountSuspensionNoticeMock = vi.hoisted(() => vi.fn());
 
 vi.mock('@/libs/better-auth/auth-client', () => ({
   useSession: useSessionMock,
+}));
+
+vi.mock('@/business/client/accountSuspension', () => ({
+  getAccountSuspensionNotice: getAccountSuspensionNoticeMock,
 }));
 
 const sampleSession = (overrides?: Record<string, unknown>) => ({
@@ -32,6 +37,8 @@ describe('UserUpdater', () => {
     setAppPainted(true);
     localStorage.clear();
     useSessionMock.mockReset();
+    getAccountSuspensionNoticeMock.mockReset();
+    getAccountSuspensionNoticeMock.mockResolvedValue(undefined);
     useUserStore.setState({ user: undefined, isSignedIn: false, isLoaded: false });
   });
 
@@ -392,5 +399,20 @@ describe('UserUpdater', () => {
     });
     expect(refetch).not.toHaveBeenCalled();
     unmount();
+  });
+
+  it('opens the suspension sign-in state when a revoked session notice survives get-session', async () => {
+    const openLogin = vi.spyOn(useUserStore.getState(), 'openLogin').mockResolvedValue();
+    getAccountSuspensionNoticeMock.mockResolvedValue({
+      reason: 'provider_content_moderation',
+      retryAt: '2026-10-31T10:00:00.000Z',
+    });
+    useUserStore.setState({ user: { id: 'u1' }, isSignedIn: true, isLoaded: true });
+    useSessionMock.mockReturnValue({ data: null, error: null, isPending: false });
+
+    render(<UserUpdater />);
+
+    await waitFor(() => expect(openLogin).toHaveBeenCalledWith('accountSuspended'));
+    expect(useUserStore.getState().isSignedIn).toBe(false);
   });
 });

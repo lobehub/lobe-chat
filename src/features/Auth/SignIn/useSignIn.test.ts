@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useSignIn } from './useSignIn';
@@ -12,6 +12,7 @@ const mockSignInOauth2 = vi.hoisted(() => vi.fn());
 const mockSignInEmail = vi.hoisted(() => vi.fn());
 const mockSignInMagicLink = vi.hoisted(() => vi.fn());
 const mockRequestPasswordReset = vi.hoisted(() => vi.fn());
+const mockGetAccountSuspensionNotice = vi.hoisted(() => vi.fn());
 const mockBusinessSignin = vi.hoisted(() => ({
   getAdditionalData: vi.fn(async () => ({})),
   preSocialSigninCheck: vi.fn(async () => true),
@@ -66,6 +67,10 @@ vi.mock('@/business/client/hooks/useBusinessSignin', () => ({
   }),
 }));
 
+vi.mock('@/business/client/accountSuspension', () => ({
+  getAccountSuspensionNotice: mockGetAccountSuspensionNotice,
+}));
+
 let mockEnableBusinessFeatures = false;
 let mockEnableMagicLink = false;
 vi.mock('@/features/AuthShell/AuthServerConfigProvider', () => ({
@@ -109,6 +114,7 @@ describe('useSignIn', () => {
     mockBusinessSignin.ssoProviders = [];
     mockBusinessSignin.getAdditionalData.mockResolvedValue({});
     mockBusinessSignin.preSocialSigninCheck.mockResolvedValue(true);
+    mockGetAccountSuspensionNotice.mockResolvedValue(undefined);
     Object.defineProperty(window, 'location', {
       configurable: true,
       value: { ...originalLocation, href: '', origin: originalLocation.origin },
@@ -135,6 +141,26 @@ describe('useSignIn', () => {
       expect(result.current.socialLoading).toBeNull();
       expect(result.current.isSocialOnly).toBe(false);
       expect(result.current.disableEmailPassword).toBe(false);
+    });
+
+    it('restores the account suspension notice after a forced logout', async () => {
+      mockSearchParamsGet.mockImplementation((key: string) =>
+        key === 'reason' ? 'accountSuspended' : null,
+      );
+      mockGetAccountSuspensionNotice.mockResolvedValue({
+        reason: 'provider_content_moderation',
+        retryAt: '2026-10-31T10:00:00.000Z',
+      });
+
+      const { result } = renderHook(() => useSignIn());
+
+      await waitFor(() =>
+        expect(result.current.accountSuspensionNotice).toEqual({
+          reason: 'provider_content_moderation',
+          retryAt: '2026-10-31T10:00:00.000Z',
+        }),
+      );
+      expect(result.current.accountSuspended).toBe(true);
     });
   });
 
@@ -336,6 +362,69 @@ describe('useSignIn', () => {
       expect(mockNavigate).toHaveBeenCalledWith(
         expect.stringContaining('/verify-email?email=user%40example.com'),
       );
+    });
+
+    it('should return a banned user to the email step with the suspension reason', async () => {
+      mockSignInEmail.mockImplementation(async (_data: any, opts: any) => {
+        opts.onError({ error: { code: 'BANNED_USER', status: 403 } });
+        return { error: { code: 'BANNED_USER', message: 'User is banned', status: 403 } };
+      });
+      mockGetAccountSuspensionNotice.mockResolvedValue({
+        reason: 'provider_content_moderation',
+        retryAt: '2026-10-31T10:00:00.000Z',
+      });
+      mockFetch.mockResolvedValueOnce({
+        json: async () => ({ exists: true, hasPassword: true }),
+        ok: true,
+      });
+
+      const { result } = renderHook(() => useSignIn());
+
+      await act(async () => {
+        await result.current.handleCheckUser({ email: 'user@example.com' });
+      });
+      await act(async () => {
+        await result.current.handleSignIn({ password: 'password' });
+      });
+
+      expect(result.current.step).toBe('email');
+      expect(result.current.accountSuspended).toBe(true);
+      expect(mockNavigate).toHaveBeenCalledWith(expect.stringContaining('reason=accountSuspended'));
+      expect(mockNavigate).not.toHaveBeenCalledWith(expect.stringContaining('/verify-email'));
+      expect(mockForm.setErrors).not.toHaveBeenCalled();
+    });
+
+    it('should retain a generic suspension message when a banned user has no public notice', async () => {
+      mockSignInEmail.mockImplementation(async (_data: any, opts: any) => {
+        opts.onError({ error: { code: 'BANNED_USER', status: 403 } });
+        return { error: { code: 'BANNED_USER', message: 'User is banned', status: 403 } };
+      });
+      mockGetAccountSuspensionNotice.mockResolvedValue(undefined);
+      mockFetch.mockResolvedValueOnce({
+        json: async () => ({ exists: true, hasPassword: true }),
+        ok: true,
+      });
+
+      const { rerender, result } = renderHook(() => useSignIn());
+
+      await act(async () => {
+        await result.current.handleCheckUser({ email: 'user@example.com' });
+      });
+      await act(async () => {
+        await result.current.handleSignIn({ password: 'password' });
+      });
+
+      expect(result.current.step).toBe('email');
+      expect(result.current.accountSuspended).toBe(true);
+      expect(result.current.accountSuspensionNotice).toBeUndefined();
+      expect(mockNavigate).not.toHaveBeenCalledWith(expect.stringContaining('/verify-email'));
+
+      mockSearchParamsGet.mockImplementation((key: string) =>
+        key === 'reason' ? 'accountSuspended' : null,
+      );
+      rerender();
+      await waitFor(() => expect(mockGetAccountSuspensionNotice).toHaveBeenCalledTimes(2));
+      expect(result.current.accountSuspended).toBe(true);
     });
   });
 

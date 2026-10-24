@@ -1,11 +1,15 @@
 import { toast } from '@lobehub/ui';
 import { useForm } from '@lobehub/ui/form';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router';
 
 import type { CheckUserResponseData } from '@/app/(backend)/api/auth/check-user/route';
 import type { ResolveUsernameResponseData } from '@/app/(backend)/api/auth/resolve-username/route';
+import {
+  type AccountSuspensionNotice,
+  getAccountSuspensionNotice,
+} from '@/business/client/accountSuspension';
 import { useBusinessSignin } from '@/business/client/hooks/useBusinessSignin';
 import { useAuthAgreement } from '@/features/AuthShell/AuthAgreement';
 import { useAuthServerConfigStore } from '@/features/AuthShell/AuthServerConfigProvider';
@@ -46,6 +50,7 @@ export const useSignIn = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const sessionExpired = searchParams.get('reason') === 'sessionExpired';
+  const accountSuspendedFromRedirect = searchParams.get('reason') === 'accountSuspended';
   const enableMagicLink = useAuthServerConfigStore((s) => s.serverConfig.enableMagicLink || false);
   const disableEmailPassword = useAuthServerConfigStore(
     (s) => s.serverConfig.disableEmailPassword || false,
@@ -67,6 +72,11 @@ export const useSignIn = () => {
     },
   });
   const [loading, setLoading] = useState(false);
+  const [accountSuspended, setAccountSuspended] = useState(false);
+  const confirmedSuspensionRef = useRef(false);
+  const [accountSuspensionNotice, setAccountSuspensionNotice] = useState<
+    AccountSuspensionNotice | undefined
+  >();
   // Locks the email-dispatch actions (magic link / password reset / resend) so a
   // slow network can't be double-clicked into multiple emails.
   const [sending, setSending] = useState(false);
@@ -94,6 +104,20 @@ export const useSignIn = () => {
     const emailParam = searchParams.get('email');
     if (emailParam) form.setValue('email', emailParam);
   }, [searchParams, form]);
+
+  useEffect(() => {
+    if (!accountSuspendedFromRedirect) {
+      confirmedSuspensionRef.current = false;
+      setAccountSuspended(false);
+      setAccountSuspensionNotice(undefined);
+      return;
+    }
+
+    void getAccountSuspensionNotice().then((notice) => {
+      setAccountSuspensionNotice(notice);
+      setAccountSuspended(Boolean(notice) || confirmedSuspensionRef.current);
+    });
+  }, [accountSuspendedFromRedirect]);
 
   const handleSendMagicLink = async (targetEmail?: string): Promise<boolean> => {
     if (sending) return false;
@@ -238,6 +262,24 @@ export const useSignIn = () => {
         {
           onError: (ctx) => {
             console.error('Sign in error:', ctx.error);
+            if (ctx.error.code === 'BANNED_USER') {
+              confirmedSuspensionRef.current = true;
+              setAccountSuspended(true);
+              setStep('email');
+              setEmail('');
+              form.reset({ ...form.getValues(), password: '' });
+              const params = new URLSearchParams({ callbackUrl });
+              params.set('reason', 'accountSuspended');
+              navigate(`/signin?${params.toString()}`);
+              void getAccountSuspensionNotice().then((notice) => {
+                setAccountSuspensionNotice(notice);
+                // Better Auth already confirmed this account is banned. A missing
+                // public notice means the ban is not one we can safely describe,
+                // so retain the generic suspension state instead of hiding it.
+                setAccountSuspended(true);
+              });
+              return;
+            }
             if (ctx.error.status === 403) {
               navigate(
                 `/verify-email?email=${encodeURIComponent(email)}&callbackUrl=${encodeURIComponent(callbackUrl)}`,
@@ -251,7 +293,7 @@ export const useSignIn = () => {
         },
       );
 
-      if (result.error && result.error.status !== 403) {
+      if (result.error && result.error.code !== 'BANNED_USER' && result.error.status !== 403) {
         // Wrong password is the most common sign-in failure. Keep the error
         // pinned inline on the field (persistent, with retry context) rather
         // than a toast that vanishes in 3s (ux Read §1.1 / Same-Page Error).
@@ -404,6 +446,8 @@ export const useSignIn = () => {
     : resolvedProviders;
 
   return {
+    accountSuspended,
+    accountSuspensionNotice,
     agreementChecked,
     continueWithAgreement,
     disableEmailPassword,
