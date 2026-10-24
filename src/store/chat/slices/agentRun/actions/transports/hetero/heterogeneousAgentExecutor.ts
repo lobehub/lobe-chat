@@ -103,6 +103,10 @@ import {
   shouldHydrateResumeReplay,
 } from './resumeReplay';
 import { buildLobeHubSessionEnv } from './sessionEnv';
+import {
+  createSubagentStoreDispatcher,
+  type SubagentStoreDispatcher,
+} from './subagentStoreDispatcher';
 
 /** Mirrors `idGenerator('threads', 16)` on the server so sync-allocated ids have the same shape. */
 const generateThreadId = () => `thd_${createNanoId(16)()}`;
@@ -372,36 +376,6 @@ const subscribeBroadcasts = (
     unsubscribeError();
   };
 };
-
-/**
- * Thread-scoped in-memory dispatcher for a single subagent run. The
- * caller binds it to a per-spawn sub-operation whose
- * `OperationContext.threadId` + `scope: 'thread'` cause
- * `internal_dispatchMessage` to route every create/update into the
- * Thread's `messagesMap` bucket through the SAME context-resolution
- * path the main agent uses — no special-cased threadId override on the
- * dispatch boundary.
- *
- * Subagent streaming mirrors the main agent's gateway-handler flow:
- * DB writes are authoritative (see `persistSubagent*Chunk` +
- * `persistToolBatch`) and these dispatches feed the UI the same content
- * as tokens arrive, so the Thread view streams with the same cadence as
- * the main bubble. `fetchAndReplaceMessages` (main-topic scoped) never
- * refreshes the thread bucket, so without these dispatches the Thread
- * would only show stale DB state until the user re-navigates.
- */
-interface SubagentStoreDispatcher {
-  /** Push a new message into the thread bucket (user / assistant / tool). */
-  create: (msg: UIChatMessage) => void;
-  /** Atomically replace pluginState and advance its optimistic watermark. */
-  replacePluginState: (
-    id: string,
-    pluginState: Record<string, unknown>,
-    metadata: NonNullable<UIChatMessage['metadata']>,
-  ) => void;
-  /** Update a message already in the thread bucket by id. */
-  update: (id: string, value: Partial<UIChatMessage>) => void;
-}
 
 const HETERO_TERMINAL_PERSIST_DRAIN_TIMEOUT_MS = 10_000;
 const HETERO_TERMINAL_EVENT_GRACE_TIMEOUT_MS = 3_000;
@@ -1215,25 +1189,8 @@ export const executeHeterogeneousAgent = async (
       parentOperationId: operationId,
       type: 'subagentThread',
     });
-    const dispatchCtx = { operationId: subOp.operationId };
     return {
-      stream: {
-        create(msg) {
-          createClientRow(msg.id, msg as any, dispatchCtx);
-        },
-        replacePluginState(id, pluginState, metadata) {
-          get().internal_dispatchMessage(
-            { id, metadata, type: 'replaceMessagePluginState', value: pluginState },
-            dispatchCtx,
-          );
-        },
-        update(id, value) {
-          get().internal_dispatchMessage(
-            { id, type: 'updateMessage', value: value as any },
-            dispatchCtx,
-          );
-        },
-      },
+      stream: createSubagentStoreDispatcher(get, { operationId: subOp.operationId }),
       subOperationId: subOp.operationId,
     };
   };
