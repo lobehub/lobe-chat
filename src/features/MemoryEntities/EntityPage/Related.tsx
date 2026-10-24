@@ -6,7 +6,7 @@ import Avatar from '@/components/Avatar';
 
 import KindIcon from '../components/KindIcon';
 import { useEntityDataContext } from '../context';
-import { KIND_META } from '../kinds';
+import { useEntityFormat } from '../format';
 import { type MemoryEntity } from '../types';
 import { useSelection } from '../useSelection';
 import Section from './Section';
@@ -76,6 +76,8 @@ interface RelatedProps {
 }
 
 const Related = memo<RelatedProps>(({ entity }) => {
+  const format = useEntityFormat();
+  const { t } = format;
   const { entities, links } = useEntityDataContext();
   const { open } = useSelection();
   const typeOf = new Map(entity.names.map((n) => [n.name.toLowerCase(), n.type]));
@@ -90,7 +92,7 @@ const Related = memo<RelatedProps>(({ entity }) => {
   return (
     <>
       {mentioned.length > 0 && (
-        <Section title={'提到的人和事物'}>
+        <Section title={t('entity.related.mentioned')}>
           <div {...stylex.props(styles.names)}>
             {mentioned.map(({ name, type }) => {
               const person = !!type && PERSON_TYPES.has(type.toLowerCase());
@@ -106,7 +108,7 @@ const Related = memo<RelatedProps>(({ entity }) => {
         </Section>
       )}
       {related.length > 0 && (
-        <Section extra={'提到了相同的人或事物'} title={'相关情境'}>
+        <Section extra={t('entity.related.contextsExtra')} title={t('entity.related.contexts')}>
           <div {...stylex.props(styles.grid)}>
             {related.map(({ names, target }) => (
               <button
@@ -117,9 +119,9 @@ const Related = memo<RelatedProps>(({ entity }) => {
               >
                 <KindIcon kind={target.kind} />
                 <span {...stylex.props(styles.text)}>
-                  <span {...stylex.props(styles.name)}>{target.title}</span>
+                  <span {...stylex.props(styles.name)}>{format.title(target)}</span>
                   <span {...stylex.props(styles.sub)}>
-                    {KIND_META[target.kind].label} · 都提到 {names.join('、')}
+                    {format.kind(target.kind)} · {t('entity.related.shared', { names: format.names(names) })}
                   </span>
                 </span>
               </button>

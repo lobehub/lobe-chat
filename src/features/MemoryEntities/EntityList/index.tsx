@@ -1,13 +1,15 @@
 import { Button, Empty, SearchBar } from '@lobehub/ui';
 import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
 import * as stylex from '@stylexjs/stylex';
+import { useDebounce } from 'ahooks';
 import { SearchXIcon } from 'lucide-react';
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 
 import { useEntityDataContext } from '../context';
-import { lastTouchedOf } from '../derive';
-import { CONTEXT_KINDS, KIND_META } from '../kinds';
-import { type MemoryEntity } from '../types';
+import { lastTouchedOf, searchMatches } from '../derive';
+import { useEntityFormat } from '../format';
+import { CONTEXT_KINDS } from '../kinds';
+import { useRemoteContextSearch } from '../useEntityData';
 import { useSelection } from '../useSelection';
 import ListItem from './ListItem';
 
@@ -58,26 +60,17 @@ const styles = stylex.create({
   more: { color: cssVar.colorTextSecondary, flexShrink: 0 },
 });
 
-const matches = (entity: MemoryEntity, keyword: string) =>
-  [entity.title, entity.description, entity.summary, ...entity.tags].some((text) =>
-    text.toLowerCase().includes(keyword),
-  );
-
 const EntityList = memo(() => {
   const [keyword, setKeyword] = useState('');
-  const { entities: contexts, hasMore, links, loadMore, searchRemote, total } =
-    useEntityDataContext();
+  const format = useEntityFormat();
+  const { t } = format;
+  const { entities: contexts, hasMore, links, loadMore, total } = useEntityDataContext();
   const [loadingMore, setLoadingMore] = useState(false);
 
   // With pages still unloaded, a keyword also asks the server so older contexts can be found.
   const needle = keyword.trim();
-  useEffect(() => {
-    if (!hasMore || !needle) return;
-    const timer = setTimeout(() => {
-      searchRemote(needle).catch(() => undefined);
-    }, 400);
-    return () => clearTimeout(timer);
-  }, [hasMore, needle, searchRemote]);
+  const debouncedNeedle = useDebounce(needle, { wait: 400 });
+  const { data: remoteMatches } = useRemoteContextSearch(debouncedNeedle, hasMore);
 
   const handleLoadMore = async () => {
     setLoadingMore(true);
@@ -90,8 +83,12 @@ const EntityList = memo(() => {
   const { select, selectedId } = useSelection();
 
   const groups = useMemo(() => {
-    const needle = keyword.trim().toLowerCase();
-    const visible = (needle ? contexts.filter((e) => matches(e, needle)) : contexts)
+    // Server hits stay in even when the match is in a field the list does not hold.
+    const visible = searchMatches(
+      contexts,
+      needle,
+      debouncedNeedle === needle ? remoteMatches : undefined,
+    )
       .map((entity) => ({
         entity,
         lastTouchedAt: lastTouchedOf(entity, links),
@@ -103,30 +100,30 @@ const EntityList = memo(() => {
       ...CONTEXT_KINDS.map((kind) => ({
         items: live.filter((item) => item.entity.kind === kind),
         key: kind,
-        label: KIND_META[kind].label,
+        label: format.kind(kind),
         muted: false,
       })),
       {
         items: visible.filter((item) => item.entity.status !== 'active'),
         key: 'quiet',
-        label: '搁置与已结束',
+        label: t('entity.list.quiet'),
         muted: true,
       },
     ].filter((group) => group.items.length > 0);
-  }, [contexts, links, keyword]);
+  }, [contexts, debouncedNeedle, format, links, needle, remoteMatches, t]);
 
   return (
-    <aside aria-label={'情境列表'} {...stylex.props(styles.root)}>
+    <aside aria-label={t('entity.list.title')} {...stylex.props(styles.root)}>
       <div {...stylex.props(styles.head)}>
         <div {...stylex.props(styles.heading)}>
-          <h1 {...stylex.props(styles.title)}>情境</h1>
+          <h1 {...stylex.props(styles.title)}>{t('entity.list.title')}</h1>
           <span {...stylex.props(styles.count)}>
-            {hasMore ? `${contexts.length} / ${total}` : contexts.length}
+            {hasMore ? t('entity.list.loadedOf', { loaded: contexts.length, total }) : contexts.length}
           </span>
         </div>
         <SearchBar
           allowClear
-          placeholder={'搜索名称、现状或标签'}
+          placeholder={t('entity.list.searchPlaceholder')}
           value={keyword}
           variant={'filled'}
           onInputChange={setKeyword}
@@ -136,10 +133,10 @@ const EntityList = memo(() => {
         {groups.length === 0 ? (
           <div {...stylex.props(styles.noMatch)}>
             <Empty
-              description={`没有找到和「${keyword.trim()}」有关的情境`}
+              description={t('entity.list.noMatch', { keyword: needle })}
               icon={SearchXIcon}
               action={
-                <Button onClick={() => setKeyword('')}>清除搜索</Button>
+                <Button onClick={() => setKeyword('')}>{t('entity.list.clearSearch')}</Button>
               }
             />
           </div>
@@ -171,7 +168,7 @@ const EntityList = memo(() => {
             {...stylex.props(styles.more)}
             onClick={handleLoadMore}
           >
-            加载更早的情境
+            {t('entity.list.loadMore')}
           </Button>
         )}
       </div>

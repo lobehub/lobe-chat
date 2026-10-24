@@ -3,7 +3,7 @@ import * as stylex from '@stylexjs/stylex';
 import { memo } from 'react';
 
 import KindIcon from '../components/KindIcon';
-import { formatAgo } from '../derive';
+import { useEntityFormat } from '../format';
 import { type MemoryEntity } from '../types';
 
 const styles = stylex.create({
@@ -71,7 +71,9 @@ interface ListItemProps {
  * One row answers "what is it and how is it going": kind, title, the first line of "now", and
  * one time on the right that always means the same thing — when it last moved.
  */
-const ListItem = memo<ListItemProps>(({ active, entity, lastTouchedAt, muted, onSelect }) => (
+const ListItem = memo<ListItemProps>(({ active, entity, lastTouchedAt, muted, onSelect }) => {
+  const format = useEntityFormat();
+  return (
   <button
     aria-current={active ? 'page' : undefined}
     type={'button'}
@@ -81,13 +83,14 @@ const ListItem = memo<ListItemProps>(({ active, entity, lastTouchedAt, muted, on
     <KindIcon kind={entity.kind} />
     <span {...stylex.props(styles.body)}>
       <span {...stylex.props(styles.titleLine)}>
-        <span {...stylex.props(styles.title)}>{entity.title}</span>
-        <span {...stylex.props(styles.meta)}>{formatAgo(lastTouchedAt)}</span>
+        <span {...stylex.props(styles.title)}>{format.title(entity)}</span>
+        <span {...stylex.props(styles.meta)}>{format.ago(lastTouchedAt)}</span>
       </span>
       <span {...stylex.props(styles.now)}>{entity.summary || entity.description}</span>
     </span>
   </button>
-));
+  );
+});
 
 ListItem.displayName = 'EntityListItem';
 

@@ -4,6 +4,7 @@ import * as stylex from '@stylexjs/stylex';
 import { memo, useState } from 'react';
 
 import { groupByMonth } from '../derive';
+import { useEntityFormat } from '../format';
 import { type MemoryActivity } from '../types';
 import Section from './Section';
 import TimelineEntry from './TimelineEntry';
@@ -39,6 +40,8 @@ interface TimelineProps {
  * this page mentions. The header says so, and each entry shows which name matched.
  */
 const Timeline = memo<TimelineProps>(({ entries }) => {
+  const format = useEntityFormat();
+  const { t } = format;
   const [expanded, setExpanded] = useState(false);
   const upcoming = entries.filter((e) => e.activity.planned);
   const past = entries.filter((e) => !e.activity.planned);
@@ -47,7 +50,7 @@ const Timeline = memo<TimelineProps>(({ entries }) => {
   return (
     <>
       {upcoming.length > 0 && (
-        <Section title={'接下来'}>
+        <Section title={t('entity.timeline.upcoming')}>
           <div {...stylex.props(styles.list)}>
             {upcoming.map(({ activity, names }) => (
               <TimelineEntry upcoming activity={activity} key={activity.id} matched={names} />
@@ -56,16 +59,16 @@ const Timeline = memo<TimelineProps>(({ entries }) => {
         </Section>
       )}
       <Section
-        extra={past.length > 0 ? `${past.length} 条 · 按提到的名字关联，可能不全` : undefined}
-        title={'经过'}
+        extra={past.length > 0 ? t('entity.timeline.pastExtra', { count: past.length }) : undefined}
+        title={t('entity.timeline.past')}
       >
         {past.length === 0 ? (
           <p {...stylex.props(styles.empty)}>
-            还没有活动提到这里的人和事物。活动和情境之间目前只能按名字关联，所以这里可能是空的。
+            {t('entity.timeline.empty')}
           </p>
         ) : (
           <div {...stylex.props(styles.list)}>
-            {groupByMonth(shown).map((group) => (
+            {groupByMonth(shown, format.month).map((group) => (
               <div key={group.label} {...stylex.props(styles.month)}>
                 <div {...stylex.props(styles.monthLabel)}>{group.label}</div>
                 {group.entries.map(({ activity, names }) => (
@@ -80,7 +83,7 @@ const Timeline = memo<TimelineProps>(({ entries }) => {
                 {...stylex.props(styles.more)}
                 onClick={() => setExpanded(true)}
               >
-                显示全部 {past.length} 条
+                {t('entity.timeline.showAll', { count: past.length })}
               </Button>
             )}
           </div>

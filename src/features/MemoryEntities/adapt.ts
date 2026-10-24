@@ -79,7 +79,8 @@ export const toEntity = ({ context, memory }: RawContextItem): MemoryEntity => (
   statusValue: context.currentStatus ?? undefined,
   summary: memory.summary?.trim() || '',
   tags: [...new Set([...(context.tags ?? []), ...(memory.tags ?? [])])],
-  title: context.title?.trim() || memory.title?.trim() || '未命名情境',
+  // Empty when neither row has one; the UI shows a translated placeholder.
+  title: context.title?.trim() || memory.title?.trim() || '',
   updatedAt: iso(context.updatedAt, memory.updatedAt, context.capturedAt),
 });
 

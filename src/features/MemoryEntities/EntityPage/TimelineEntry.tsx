@@ -2,8 +2,7 @@ import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
 import * as stylex from '@stylexjs/stylex';
 import { memo } from 'react';
 
-import { formatMonthDay, formatWeekday } from '../derive';
-import { statusLabelOf } from '../kinds';
+import { useEntityFormat } from '../format';
 import { type MemoryActivity } from '../types';
 
 const styles = stylex.create({
@@ -32,8 +31,10 @@ interface TimelineEntryProps {
 }
 
 const TimelineEntry = memo<TimelineEntryProps>(({ activity, matched, upcoming }) => {
-  const date = new Date(activity.when);
-  const status = upcoming ? undefined : statusLabelOf(activity.statusValue);
+  const format = useEntityFormat();
+  const { t } = format;
+  const status =
+    upcoming || activity.statusValue === 'completed' ? undefined : format.status(activity.statusValue);
 
   return (
     <div {...stylex.props(styles.row)}>
@@ -41,17 +42,17 @@ const TimelineEntry = memo<TimelineEntryProps>(({ activity, matched, upcoming })
         {upcoming ? (
           <>
             <span {...stylex.props(styles.day, styles.dayUpcoming)}>
-              {activity.whenIsExact ? formatMonthDay(activity.when) : '待定'}
+              {activity.whenIsExact ? format.monthDay(activity.when) : t('entity.timeline.undated')}
             </span>
-            <span {...stylex.props(styles.sub)}>计划中</span>
+            <span {...stylex.props(styles.sub)}>{t('entity.timeline.planned')}</span>
           </>
         ) : (
           <>
             <span {...stylex.props(styles.day, !activity.whenIsExact && styles.inexact)}>
-              {date.getDate()} 日
+              {format.day(activity.when)}
             </span>
             <span {...stylex.props(styles.sub)}>
-              {activity.whenIsExact ? formatWeekday(activity.when) : '记录于'}
+              {activity.whenIsExact ? format.weekday(activity.when) : t('entity.timeline.recorded')}
             </span>
           </>
         )}
@@ -59,8 +60,9 @@ const TimelineEntry = memo<TimelineEntryProps>(({ activity, matched, upcoming })
       <div {...stylex.props(styles.body)}>
         <p {...stylex.props(styles.narrative)}>{activity.narrative || activity.title}</p>
         <span {...stylex.props(styles.meta)}>
-          提到 <span {...stylex.props(styles.name)}>{matched.join('、')}</span>
-          {status && status !== '已完成' && ` · ${status}`}
+          {t('entity.timeline.mentions')}{' '}
+          <span {...stylex.props(styles.name)}>{format.names(matched)}</span>
+          {status && ` · ${status}`}
         </span>
       </div>
     </div>

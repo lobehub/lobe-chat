@@ -3,14 +3,15 @@
 import { Center, Empty } from '@lobehub/ui';
 import * as stylex from '@stylexjs/stylex';
 import { LayersIcon } from 'lucide-react';
-import { memo, useEffect, useMemo } from 'react';
+import { memo, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { EntityDataContext } from './context';
 import { lastTouchedOf } from './derive';
 import EntityList from './EntityList';
 import EntityPage from './EntityPage';
 import { ErrorState, FirstRunState, LoadingState } from './states';
-import { useEntityData } from './useEntityData';
+import { useEntityData, useLinkedContext } from './useEntityData';
 import { useSelection } from './useSelection';
 
 const styles = stylex.create({
@@ -22,24 +23,20 @@ const styles = stylex.create({
  * the same names form its timeline (the backend stores no direct link).
  */
 const MemoryEntities = memo(() => {
+  const { t } = useTranslation('memory');
   const data = useEntityData();
   const { selectedId } = useSelection();
-  const { ensureContext, entities, isLoading } = data;
-
-  // A deep link (e.g. "open in memory" from a chat) may point past the loaded pages.
-  useEffect(() => {
-    if (isLoading || !selectedId || entities.some((e) => e.id === selectedId)) return;
-    ensureContext(selectedId).catch(() => undefined);
-  }, [ensureContext, entities, isLoading, selectedId]);
+  const loaded = data.entities.find((e) => e.id === selectedId);
+  const { data: linked } = useLinkedContext(selectedId, !data.isLoading && !loaded);
 
   // Nothing picked yet (or the pick was deleted): open the page that moved most recently.
   const entity = useMemo(() => {
-    const picked = data.entities.find((e) => e.id === selectedId);
+    const picked = loaded ?? (linked?.id === selectedId ? linked : undefined);
     if (picked) return picked;
     return data.entities
       .filter((e) => e.status === 'active')
       .sort((a, b) => lastTouchedOf(b, data.links).localeCompare(lastTouchedOf(a, data.links)))[0];
-  }, [data.entities, data.links, selectedId]);
+  }, [data.entities, data.links, linked, loaded, selectedId]);
 
   let content;
   if (data.isLoading) content = <LoadingState />;
@@ -54,7 +51,7 @@ const MemoryEntities = memo(() => {
           <EntityPage entity={entity} />
         ) : (
           <Center flex={1}>
-            <Empty description={'从左侧选一个情境'} icon={LayersIcon} />
+            <Empty description={t('entity.list.pick')} icon={LayersIcon} />
           </Center>
         )}
       </>

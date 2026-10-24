@@ -65,6 +65,8 @@ export const useEntityData = () => {
     revalidateOnFocus: false,
   });
 
+  const hasMore = !!data && data.contextPages * PAGE_SIZE < data.contextTotal;
+
   const links = useMemo(
     () => (data ? linkByNames(data.entities, data.activities) : undefined),
     [data],
@@ -106,25 +108,6 @@ export const useEntityData = () => {
     });
   };
 
-  /** Server-side search, so a keyword also finds contexts outside the loaded pages. */
-  const searchRemote = useCallback(
-    async (q: string) => {
-      const result = await fetchPage(LayersEnum.Context, 1, q, SEARCH_SIZE);
-      await addEntities((result.items as unknown as RawContextItem[]).map(toEntity));
-    },
-    [addEntities],
-  );
-
-  /** A deep link may point past the loaded pages; fetch that one context by id. */
-  const ensureContext = useCallback(
-    async (id: string) => {
-      const detail = await userMemoryService.getMemoryDetail({ id, layer: LayersEnum.Context });
-      if (!detail || !('context' in detail)) return false;
-      await addEntities([toEntity(detail as unknown as RawContextItem)]);
-      return true;
-    },
-    [addEntities],
-  );
 
   const updateNow = async (id: string, description: string) => {
     await memoryCRUDService.updateContext(id, { description });
@@ -143,23 +126,22 @@ export const useEntityData = () => {
   const remove = async (id: string) => {
     await memoryCRUDService.deleteContext(id);
     await patchEntity(id, () => undefined);
+    // Offset pages shift once a row is gone; reload them so 「加载更早的情境」 does not skip one.
+    if (hasMore) await mutate();
   };
 
-  const loadedPagesCover = data ? data.contextPages * PAGE_SIZE : 0;
 
   return {
     activities: data?.activities ?? [],
-    ensureContext,
     entities: data?.entities ?? [],
     error,
     /** The unfiltered list has pages not loaded yet. */
-    hasMore: !!data && loadedPagesCover < data.contextTotal,
+    hasMore,
     isLoading,
     links,
     loadMore,
     remove,
     retry: () => mutate(),
-    searchRemote,
     setStatus,
     total: data?.contextTotal ?? 0,
     updateNow,
@@ -167,3 +149,28 @@ export const useEntityData = () => {
 };
 
 export type EntityDataApi = ReturnType<typeof useEntityData>;
+
+/**
+ * Server-side search for contexts outside the loaded pages. Its rows are shown as matches as
+ * they are: the server also searches fields the list does not hold (status, parent details).
+ */
+export const useRemoteContextSearch = (q: string, enabled: boolean) =>
+  useClientDataSWR<MemoryEntity[]>(
+    enabled && q ? ['memory-entity-pages-search', q] : null,
+    async () => {
+      const result = await fetchPage(LayersEnum.Context, 1, q, SEARCH_SIZE);
+      return uniqueById((result.items as unknown as RawContextItem[]).map(toEntity));
+    },
+    { revalidateOnFocus: false },
+  );
+
+/** A deep link (e.g. "open in memory" from a chat) may point past the loaded pages. */
+export const useLinkedContext = (id: string | undefined, enabled: boolean) =>
+  useClientDataSWR<MemoryEntity | null>(
+    enabled && id ? ['memory-entity-pages-context', id] : null,
+    async () => {
+      const detail = await userMemoryService.getMemoryDetail({ id: id!, layer: LayersEnum.Context });
+      return detail && 'context' in detail ? toEntity(detail as unknown as RawContextItem) : null;
+    },
+    { revalidateOnFocus: false },
+  );

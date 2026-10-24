@@ -12,7 +12,7 @@ import { memo } from 'react';
 
 import KindIcon from '../components/KindIcon';
 import { useEntityDataContext } from '../context';
-import { KIND_META, statusLabelOf } from '../kinds';
+import { useEntityFormat } from '../format';
 import { type MemoryEntity } from '../types';
 import { useSelection } from '../useSelection';
 
@@ -63,7 +63,9 @@ const Header = memo<HeaderProps>(({ entity }) => {
   const { back, ensureSelected, history, select } = useSelection();
   const backId = history.at(-1);
   const backTo = entities.find((e) => e.id === backId);
-  const statusLabel = statusLabelOf(entity.statusValue);
+  const format = useEntityFormat();
+  const { t } = format;
+  const statusLabel = format.status(entity.statusValue);
   // The free-text type is shown when it says more than the kind it was folded into.
   const typeNote =
     entity.rawType && entity.rawType.toLowerCase() !== entity.kind ? entity.rawType : undefined;
@@ -73,27 +75,27 @@ const Header = memo<HeaderProps>(({ entity }) => {
     try {
       await setStatus(entity.id, value, status);
     } catch {
-      toast.error({ title: '状态没有改成功，请重试' });
+      toast.error({ title: t('entity.header.statusFailed') });
     }
   };
 
   // The backend deletes for good, so this one asks first.
   const handleDelete = () =>
     confirmModal({
-      cancelText: '取消',
-      content: '删除后无法恢复。之后的对话里再提到它，可能会重新生成一页。',
+      cancelText: t('entity.delete.cancel'),
+      content: t('entity.delete.content'),
       okButtonProps: { danger: true },
-      okText: '删除',
+      okText: t('entity.delete.ok'),
       onOk: async () => {
         try {
           await remove(entity.id);
           select(entities.find((e) => e.id !== entity.id && e.status === 'active')?.id);
-          toast.success({ title: `已删除「${entity.title}」` });
+          toast.success({ title: t('entity.delete.success', { title: format.title(entity) }) });
         } catch {
-          toast.error({ title: '删除没有成功，请重试' });
+          toast.error({ title: t('entity.delete.failed') });
         }
       },
-      title: `删除「${entity.title}」？`,
+      title: t('entity.delete.title', { title: format.title(entity) }),
     });
 
   return (
@@ -101,7 +103,7 @@ const Header = memo<HeaderProps>(({ entity }) => {
       {backTo && (
         <button type={'button'} {...stylex.props(styles.back)} onClick={back}>
           <Icon icon={ArrowLeftIcon} size={14} />
-          返回「{backTo.title}」
+          {t('entity.header.back', { title: format.title(backTo) })}
         </button>
       )}
       <div {...stylex.props(styles.top)}>
@@ -109,12 +111,12 @@ const Header = memo<HeaderProps>(({ entity }) => {
         <div {...stylex.props(styles.titles)}>
           <div {...stylex.props(styles.eyebrow)}>
             <span>
-              {KIND_META[entity.kind].label}
+              {format.kind(entity.kind)}
               {typeNote && ` · ${typeNote}`}
             </span>
             {statusLabel && <Tag size={'small'}>{statusLabel}</Tag>}
           </div>
-          <h2 {...stylex.props(styles.title)}>{entity.title}</h2>
+          <h2 {...stylex.props(styles.title)}>{format.title(entity)}</h2>
           {entity.tags.length > 0 && (
             <span {...stylex.props(styles.tags)}>
               {entity.tags.map((tag) => `#${tag}`).join('  ')}
@@ -127,13 +129,13 @@ const Header = memo<HeaderProps>(({ entity }) => {
               ? {
                   icon: <Icon icon={RotateCcwIcon} />,
                   key: 'reopen',
-                  label: '标记为进行中',
+                  label: t('entity.header.reopen'),
                   onClick: () => handleStatus('ongoing', 'active'),
                 }
               : {
                   icon: <Icon icon={ArchiveIcon} />,
                   key: 'close',
-                  label: '标记为已完成',
+                  label: t('entity.header.markDone'),
                   onClick: () => handleStatus('completed', 'closed'),
                 },
             { type: 'divider' },
@@ -141,12 +143,16 @@ const Header = memo<HeaderProps>(({ entity }) => {
               danger: true,
               icon: <Icon icon={Trash2Icon} />,
               key: 'delete',
-              label: '删除…',
+              label: t('entity.header.delete'),
               onClick: handleDelete,
             },
           ]}
         >
-          <ActionIcon aria-label={'更多操作'} icon={MoreHorizontalIcon} title={'更多操作'} />
+          <ActionIcon
+            aria-label={t('entity.header.more')}
+            icon={MoreHorizontalIcon}
+            title={t('entity.header.more')}
+          />
         </DropdownMenu>
       </div>
       {entity.summary && entity.summary !== entity.description && (

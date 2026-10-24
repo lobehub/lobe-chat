@@ -3,11 +3,13 @@ import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
 import * as stylex from '@stylexjs/stylex';
 import { CloudOffIcon } from 'lucide-react';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import MemoryAnalysis from '@/routes/(main)/memory/features/MemoryAnalysis';
 
 import KindIcon from './components/KindIcon';
-import { CONTEXT_KINDS, KIND_META } from './kinds';
+import { useEntityFormat } from './format';
+import { CONTEXT_KINDS } from './kinds';
 
 const styles = stylex.create({
   center: {
@@ -71,21 +73,21 @@ const styles = stylex.create({
 });
 
 /** First run: say what this page will hold, with one example per kind, and how to fill it. */
-export const FirstRunState = memo(() => (
+export const FirstRunState = memo(() => {
+  const format = useEntityFormat();
+  return (
   <div {...stylex.props(styles.center)}>
     <div {...stylex.props(styles.intro)}>
-      <h2 {...stylex.props(styles.title)}>还没有情境</h2>
-      <p {...stylex.props(styles.desc)}>
-        你在对话里提到的项目、目标、关系和事件，会各自整理成一页：现在怎样、接下来做什么、一路发生了什么。
-      </p>
+      <h2 {...stylex.props(styles.title)}>{format.t('entity.firstRun.title')}</h2>
+      <p {...stylex.props(styles.desc)}>{format.t('entity.firstRun.desc')}</p>
     </div>
     <div {...stylex.props(styles.kinds)}>
       {CONTEXT_KINDS.map((kind) => (
         <div key={kind} {...stylex.props(styles.kind)}>
           <KindIcon kind={kind} />
           <span {...stylex.props(styles.kindText)}>
-            <span {...stylex.props(styles.kindLabel)}>{KIND_META[kind].label}</span>
-            <span {...stylex.props(styles.kindExample)}>{KIND_META[kind].example}</span>
+            <span {...stylex.props(styles.kindLabel)}>{format.kind(kind)}</span>
+            <span {...stylex.props(styles.kindExample)}>{format.kindExample(kind)}</span>
           </span>
         </div>
       ))}
@@ -94,24 +96,26 @@ export const FirstRunState = memo(() => (
       <MemoryAnalysis />
     </div>
   </div>
-));
+);
+});
 
 FirstRunState.displayName = 'FirstRunState';
 
-export const ErrorState = memo<{ onRetry: () => void }>(({ onRetry }) => (
+export const ErrorState = memo<{ onRetry: () => void }>(({ onRetry }) => {
+  const { t } = useTranslation('memory');
+  return (
   <div {...stylex.props(styles.center)}>
     <Empty
-      description={'网络或服务暂时不可用，你的记忆没有丢失。'}
+      description={t('entity.error.desc')}
       icon={CloudOffIcon}
-      title={'情境加载失败'}
+      title={t('entity.error.title')}
       action={
-        <Button type={'primary'} onClick={onRetry}>
-          重试
-        </Button>
+        <Button type={'primary'} onClick={onRetry}>{t('entity.error.retry')}</Button>
       }
     />
   </div>
-));
+);
+});
 
 ErrorState.displayName = 'ErrorState';
 

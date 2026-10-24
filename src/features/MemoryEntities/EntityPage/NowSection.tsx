@@ -5,7 +5,8 @@ import { PencilIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 
 import { useEntityDataContext } from '../context';
-import { formatAgo } from '../derive';
+import { resolveDraft, useDraftStore } from '../drafts';
+import { useEntityFormat } from '../format';
 import { type MemoryEntity } from '../types';
 import Section from './Section';
 
@@ -38,28 +39,32 @@ interface NowSectionProps {
  * the timeline below records.
  */
 const NowSection = memo<NowSectionProps>(({ entity }) => {
+  const format = useEntityFormat();
+  const { t } = format;
   const { updateNow } = useEntityDataContext();
-  const [draft, setDraft] = useState<string>();
+  const draft = useDraftStore((s) => s.drafts[entity.id]);
+  const setStoredDraft = useDraftStore((s) => s.setDraft);
+  const setDraft = (text?: string) => setStoredDraft(entity.id, text);
   const [saving, setSaving] = useState(false);
   const editing = draft !== undefined;
 
   const save = async () => {
-    const next = draft?.trim();
-    if (!next || next === entity.description) return setDraft(undefined);
+    const { save: changed, value: next } = resolveDraft(draft, entity.description);
+    if (!changed) return setDraft(undefined);
     setSaving(true);
     try {
       await updateNow(entity.id, next);
       setDraft(undefined);
     } catch {
       // Keep the draft so nothing typed is lost.
-      toast.error({ title: '没有保存成功，请重试' });
+      toast.error({ title: t('entity.now.saveFailed') });
     } finally {
       setSaving(false);
     }
   };
 
   return (
-    <Section title={'现在'}>
+    <Section title={t('entity.now.title')}>
       {editing ? (
         <>
           <TextArea
@@ -74,25 +79,25 @@ const NowSection = memo<NowSectionProps>(({ entity }) => {
           />
           <div {...stylex.props(styles.editActions)}>
             <Button size={'small'} onClick={() => setDraft(undefined)}>
-              取消
+              {t('entity.now.cancel')}
             </Button>
             <Button loading={saving} size={'small'} type={'primary'} onClick={save}>
-              保存
+              {t('entity.now.save')}
             </Button>
           </div>
         </>
       ) : (
         <>
           <p {...stylex.props(styles.text, !entity.description && styles.placeholder)}>
-            {entity.description || '还没有记下现在的情况。'}
+            {entity.description || t('entity.now.empty')}
           </p>
           <div {...stylex.props(styles.foot)}>
-            <span>更新于 {formatAgo(entity.updatedAt)}</span>
+            <span>{t('entity.now.updated', { ago: format.ago(entity.updatedAt) })}</span>
             <ActionIcon
-              aria-label={'修改现状'}
+              aria-label={t('entity.now.edit')}
               icon={PencilIcon}
               size={'small'}
-              title={'修改现状'}
+              title={t('entity.now.edit')}
               onClick={() => setDraft(entity.description)}
             />
           </div>

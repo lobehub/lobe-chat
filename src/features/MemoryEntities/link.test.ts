@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { kindOfType, statusLabelOf, statusOfValue } from './kinds';
+import { hasStatusLabel, kindOfType, statusOfValue } from './kinds';
 import { hubNamesOf, linkByNames, mentionsOf } from './link';
 import { type MemoryActivity, type MemoryEntity } from './types';
 
@@ -49,10 +49,10 @@ describe('statusOfValue', () => {
     expect(statusOfValue(undefined)).toBe('active');
   });
 
-  it('labels the legacy `active` value instead of showing it raw', () => {
-    expect(statusLabelOf('active')).toBe('进行中');
-    expect(statusLabelOf('on_hold')).toBe('搁置中');
-    expect(statusLabelOf('something-new')).toBe('something-new');
+  it('gives the legacy `active` value a translated label instead of showing it raw', () => {
+    expect(hasStatusLabel('active')).toBe(true);
+    expect(hasStatusLabel('on_hold')).toBe(true);
+    expect(hasStatusLabel('something-new')).toBe(false);
   });
 });
 

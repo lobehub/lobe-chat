@@ -12,21 +12,18 @@ import {
 import { type ContextKind, type EntityStatus } from './types';
 
 interface KindMeta {
-  /** One concrete example, used by the empty state to explain what goes where. */
-  example: string;
   icon: LucideIcon;
-  label: string;
 }
 
 /** List order: what the user is driving first, then who and what happens around it. */
 export const CONTEXT_KINDS: ContextKind[] = ['project', 'goal', 'relationship', 'event', 'other'];
 
 export const KIND_META: Record<ContextKind, KindMeta> = {
-  event: { example: '一次旅行、一场面试', icon: CalendarDaysIcon, label: '事件' },
-  goal: { example: '考到雅思 7 分、减重 5 公斤', icon: TargetIcon, label: '目标' },
-  other: { example: '其他持续关注的事', icon: ShapesIcon, label: '其他' },
-  project: { example: '知识库迁移、写一本书', icon: FolderKanbanIcon, label: '项目' },
-  relationship: { example: '和团队、家人的关系', icon: UsersRoundIcon, label: '关系' },
+  event: { icon: CalendarDaysIcon },
+  goal: { icon: TargetIcon },
+  other: { icon: ShapesIcon },
+  project: { icon: FolderKanbanIcon },
+  relationship: { icon: UsersRoundIcon },
 };
 
 /**
@@ -69,17 +66,24 @@ export const kindOfType = (type?: string | null): ContextKind => {
   return 'other';
 };
 
-/** Backend `currentStatus` values; anything else is shown as written. */
-export const STATUS_VALUE_LABEL: Record<string, string> = {
-  aborted: '已中止',
-  // Older rows (before the status enum) say `active`.
-  active: '进行中',
-  cancelled: '已取消',
-  completed: '已完成',
-  on_hold: '搁置中',
-  ongoing: '进行中',
-  planned: '计划中',
-};
+/**
+ * Backend `currentStatus` values with a translated label (`entity.status.*`); anything else is
+ * shown as written. Older rows (before the status enum) say `active`.
+ */
+const LABELLED_STATUS = [
+  'aborted',
+  'active',
+  'cancelled',
+  'completed',
+  'on_hold',
+  'ongoing',
+  'planned',
+] as const;
+
+export type LabelledStatus = (typeof LABELLED_STATUS)[number];
+
+export const hasStatusLabel = (value: string): value is LabelledStatus =>
+  (LABELLED_STATUS as readonly string[]).includes(value);
 
 export const statusOfValue = (value?: string | null): EntityStatus => {
   switch (value) {
@@ -96,9 +100,6 @@ export const statusOfValue = (value?: string | null): EntityStatus => {
     }
   }
 };
-
-export const statusLabelOf = (value?: string | null) =>
-  value ? (STATUS_VALUE_LABEL[value] ?? value) : undefined;
 
 /**
  * One hue per kind, used only on the kind icon. Everything else on the page stays neutral,
