@@ -1,5 +1,7 @@
 import { nanoid } from '@lobechat/utils';
+import { toast } from '@lobehub/ui';
 import debug from 'debug';
+import { t } from 'i18next';
 import { produce } from 'immer';
 
 import { topicService } from '@/services/topic';
@@ -563,6 +565,7 @@ export class OperationActionsImpl {
         if (!op || op.status !== 'cancelled' || op.metadata.cancelReason !== reason) return;
 
         op.status = 'running';
+        delete op.metadata.isAborting;
         delete op.metadata.cancelReason;
         delete op.metadata.duration;
         delete op.metadata.endTime;
@@ -640,13 +643,18 @@ export class OperationActionsImpl {
         matches = matches && isSameNullableContextValue(op.context.threadId, filter.threadId);
       }
       if (filter.groupId !== undefined) {
-        matches = matches && op.context.groupId === filter.groupId;
+        matches = matches && isSameNullableContextValue(op.context.groupId, filter.groupId);
       }
       if (filter.scope !== undefined) {
-        matches = matches && op.context.scope === filter.scope;
+        // Match message-map scope inference, while keeping explicit sub-agent
+        // scopes separate: sharing a display bucket does not authorize Stop.
+        const scope =
+          op.context.scope ??
+          (op.context.groupId ? 'group' : op.context.threadId ? 'thread' : 'main');
+        matches = matches && scope === filter.scope;
       }
       if (filter.isNew !== undefined) {
-        matches = matches && op.context.isNew === filter.isNew;
+        matches = matches && (op.context.isNew ?? false) === filter.isNew;
       }
 
       if (matches) {
@@ -655,9 +663,16 @@ export class OperationActionsImpl {
     });
 
     // Cancel all matched operations
-    matchedIds.forEach((id) => {
-      this.#get().cancelOperation(id, reason);
-    });
+    void Promise.all(matchedIds.map((id) => this.#get().cancelOperation(id, reason)))
+      .then((confirmations) => {
+        if (confirmations.some((confirmed) => !confirmed)) {
+          toast.error(t('backgroundActivity.stopFailed', { ns: 'chat' }));
+        }
+      })
+      .catch((error: unknown) => {
+        log('[cancelOperations] cancellation error: %O', error);
+        toast.error(t('backgroundActivity.stopFailed', { ns: 'chat' }));
+      });
 
     return matchedIds;
   };
