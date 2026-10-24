@@ -122,7 +122,7 @@ export const SignInEmailStep = ({
   const retryAt = accountSuspensionNotice?.retryAt
     ? formatSuspensionRetryAt(
         accountSuspensionNotice.retryAt,
-        i18n.language || i18n.resolvedLanguage,
+        i18n.language || i18n.resolvedLanguage || 'en-US',
       )
     : undefined;
 
