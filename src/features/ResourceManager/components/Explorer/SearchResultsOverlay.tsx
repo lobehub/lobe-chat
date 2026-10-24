@@ -120,19 +120,23 @@ const SearchResultsOverlay = memo(() => {
           </Flexbox>
         </Center>
       ) : viewMode === 'list' ? (
-        <Flexbox height={'100%'}>
-          <div style={{ flex: 1, overflow: 'auto hidden' }}>
-            <ListViewHeader
-              columnWidths={columnWidths}
-              data={data}
-              hasMore={hasMore}
-              showUploader={showUploader}
-              total={total}
-            />
+        // Size the list to the overlay's remaining height (below the header and
+        // select-all hint): a library hero sits above the overlay, so a
+        // viewport-derived height would push the last rows below the clip.
+        <Flexbox height={'100%'} style={{ overflow: 'auto hidden' }}>
+          <ListViewHeader
+            columnWidths={columnWidths}
+            data={data}
+            hasMore={hasMore}
+            showUploader={showUploader}
+            total={total}
+          />
+          <div style={{ flex: 1, minHeight: 0 }}>
             <VirtualizedFileList
               columnWidths={columnWidths}
               data={data}
               hasMore={hasMore}
+              height={'100%'}
               loadMore={loadMore}
               showUploader={showUploader}
               virtuosoRef={virtuosoRef}

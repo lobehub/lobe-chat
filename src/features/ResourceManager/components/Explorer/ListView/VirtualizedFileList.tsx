@@ -20,6 +20,11 @@ interface VirtualizedFileListProps {
   };
   data: FileListItem[];
   hasMore: boolean;
+  /**
+   * Viewport height. Defaults to the folder list's viewport-derived height; a
+   * consumer inside a sized flex container passes `'100%'` to fill it.
+   */
+  height?: string;
   /** Next-page loader; defaults to the folder list's. */
   loadMore?: () => Promise<void>;
   showUploader?: boolean;
@@ -30,6 +35,7 @@ const VirtualizedFileList = ({
   columnWidths,
   data,
   hasMore,
+  height = 'calc(100vh - 100px)',
   loadMore,
   showUploader = true,
   virtuosoRef,
@@ -105,7 +111,7 @@ const VirtualizedFileList = ({
       initialItemCount={30}
       overscan={48 * 5}
       ref={virtuosoRef}
-      style={{ height: 'calc(100vh - 100px)' }}
+      style={{ height }}
       itemContent={useCallback(
         (index: number, item: FileListItem) => {
           if (!item) return null;
