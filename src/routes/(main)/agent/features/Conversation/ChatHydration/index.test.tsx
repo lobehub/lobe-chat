@@ -214,15 +214,15 @@ describe('ChatHydration', () => {
     useParamsMock.mockReturnValue({ projectId: 'prj_1' });
     useLocationMock.mockReturnValue({
       hash: '',
-      pathname: '/project/prj_1/conversation',
+      pathname: '/project/prj_1/topic',
       search: '',
     });
     useSearchParamsMock.mockReturnValue([new URLSearchParams(''), setSearchParamsMock]);
 
     render(
       <ChatHydration
-        getConversationPath={() => '/project/prj_1/conversation'}
-        getTopicPath={(_agentId, topicId) => `/project/prj_1/conversation/${topicId}`}
+        getConversationPath={() => '/project/prj_1/topic'}
+        getTopicPath={(_agentId, topicId) => `/project/prj_1/topic/${topicId}`}
       />,
     );
 
@@ -231,7 +231,7 @@ describe('ChatHydration', () => {
     });
 
     await waitFor(() => {
-      expect(navigateMock).toHaveBeenCalledWith('/project/prj_1/conversation/tpc_project', {
+      expect(navigateMock).toHaveBeenCalledWith('/project/prj_1/topic/tpc_project', {
         replace: true,
       });
     });

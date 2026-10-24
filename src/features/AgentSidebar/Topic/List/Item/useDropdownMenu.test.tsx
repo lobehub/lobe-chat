@@ -7,7 +7,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { buildTopicPrompt } from './buildTopicPrompt';
 import { useTopicItemDropdownMenu } from './useDropdownMenu';
 
-const locationFixture = vi.hoisted(() => ({ pathname: '/project/project-1/conversation/topic-1' }));
+const locationFixture = vi.hoisted(() => ({ pathname: '/project/project-1/topic/topic-1' }));
 const removeMock = vi.hoisted(() => vi.fn());
 const confirmDeleteMock = vi.hoisted(() => vi.fn());
 vi.mock('@/features/DeleteTopicConfirm', () => ({ confirmRemoveTopic: confirmDeleteMock }));
@@ -208,8 +208,8 @@ describe('useTopicItemDropdownMenu', () => {
   });
 
   it.each([
-    ['/team/project/project-1/conversation/topic-1', true],
-    ['/project/project-1/conversation/topic-other', false],
+    ['/team/project/project-1/topic/topic-1', true],
+    ['/project/project-1/topic/topic-other', false],
     ['/project/project-1/settings', false],
   ])(
     'after deleting a Project row at %s, navigates home only for the current Topic',
@@ -293,7 +293,7 @@ describe('useTopicItemDropdownMenu', () => {
     await item.onClick?.({} as never);
     expect(cloneMock).toHaveBeenCalled();
     expect(refreshProjectMock).toHaveBeenCalledOnce();
-    expect(navigateMock).toHaveBeenCalledWith('/project/project-1/conversation/topic-copy');
+    expect(navigateMock).toHaveBeenCalledWith('/project/project-1/topic/topic-copy');
   });
 
   it('keeps project association out of the individual topic menu', () => {

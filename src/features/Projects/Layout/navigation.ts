@@ -2,8 +2,8 @@ export const getProjectAgentPath = (agentId: string) => `/agent/${agentId}`;
 
 export const getProjectHomePath = (projectId: string) => `/project/${projectId}`;
 
-export const getProjectConversationPath = (projectId: string, topicId?: string) =>
-  topicId ? `/project/${projectId}/conversation/${topicId}` : `/project/${projectId}/conversation`;
+export const getProjectTopicPath = (projectId: string, topicId?: string) =>
+  topicId ? `/project/${projectId}/topic/${topicId}` : `/project/${projectId}/topic`;
 
 /**
  * A blank project conversation a sidebar "+" opened for one agent on one
@@ -11,7 +11,7 @@ export const getProjectConversationPath = (projectId: string, topicId?: string) 
  * survives a reload); nothing is created until its first message.
  */
 export const getProjectDraftPath = (projectId: string, agentId: string, directoryId: string) =>
-  `${getProjectConversationPath(projectId)}?${new URLSearchParams({ agent: agentId, dir: directoryId })}`;
+  `${getProjectTopicPath(projectId)}?${new URLSearchParams({ agent: agentId, dir: directoryId })}`;
 
 export const getProjectLibraryPath = (projectId: string, libraryId: string) =>
   `/project/${projectId}/library/${libraryId}`;

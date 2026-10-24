@@ -37,7 +37,7 @@ import DirIcon from '@/features/ChatInput/ControlBar/DirIcon';
 import { useHasDraft } from '@/features/ChatInput/draftStorage';
 import { startTopicDrag } from '@/features/ChatInput/InputEditor/ReferTopic/topicDragData';
 import NavItem from '@/features/NavPanel/components/NavItem';
-import { getProjectConversationPath } from '@/features/Projects/Layout/navigation';
+import { getProjectTopicPath } from '@/features/Projects/Layout/navigation';
 import TopicCreatorAvatar, { useTopicCreator } from '@/features/TopicCreatorAvatar';
 import { buildWorkspaceAwarePath } from '@/features/Workspace/workspaceAwarePath';
 import { getWorkingDirectoryName } from '@/helpers/workingDirectoryPath';
@@ -301,9 +301,7 @@ const TopicItemRow = memo<TopicItemRowProps>(
     const href = useMemo(() => {
       if (!activeAgentId || !id) return undefined;
       return buildWorkspaceAwarePath(
-        scope
-          ? getProjectConversationPath(scope.projectId, id)
-          : AGENT_CHAT_TOPIC_URL(activeAgentId, id),
+        scope ? getProjectTopicPath(scope.projectId, id) : AGENT_CHAT_TOPIC_URL(activeAgentId, id),
         activeWorkspaceSlug,
       );
     }, [activeAgentId, activeWorkspaceSlug, id, scope]);
