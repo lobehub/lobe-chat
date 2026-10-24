@@ -75,7 +75,7 @@ import { workspaceSettingsContentRoute } from '@/spa/router/workspaceSettingsRou
 import { SettingsTabs } from '@/store/global/initialState';
 import { dynamicElement, dynamicLayout, ErrorBoundary, redirectElement } from '@/utils/router';
 
-import { collaborationRoutes } from './collaborationRoutes';
+import { collaborationRoutes, groupChannelRoutes } from './collaborationRoutes';
 
 export { ResourceCategorySkeleton };
 
@@ -381,6 +381,7 @@ export const sharedMainAreaChildren: RouteObject[] = [
             handle: { meta: groupPermissionRouteMeta },
             path: 'permission',
           },
+          ...groupChannelRoutes,
           {
             element: groupChatElement,
             handle: { meta: groupRouteMeta },

@@ -69,36 +69,26 @@ export const collaborationRoutes: RouteObject[] = [
     errorElement: <ErrorBoundary resetPath=".." />,
     path: 'dashboard',
   },
+];
 
+/** Channels sit under an Agent group's Channel tab; a thread opens beside its channel via `?thread=`. */
+export const groupChannelRoutes: RouteObject[] = [
   {
-    path: 'channels',
-    errorElement: <ErrorBoundary resetPath=".." />,
-    children: [
-      {
-        index: true,
-        element: dynamicElement(() => import('@/routes/(main)/channels'), 'Desktop > Channels', {
-          preloadId: 'channels',
-        }),
-        handle: { meta: channelsRouteMeta },
-      },
-      {
-        path: ':channelId',
-        element: dynamicElement(
-          () => import('@/routes/(main)/channels/[channelId]'),
-          'Desktop > Channel',
-          { preloadId: 'channels' },
-        ),
-        handle: { meta: channelRouteMeta },
-      },
-      {
-        path: ':channelId/threads/:threadId',
-        element: dynamicElement(
-          () => import('@/routes/(main)/channels/[channelId]'),
-          'Desktop > Channel Thread',
-          { preloadId: 'channels' },
-        ),
-        handle: { meta: channelRouteMeta },
-      },
-    ],
+    element: dynamicElement(
+      () => import('@/routes/(main)/group/channel'),
+      'Desktop > Agent Group > Channels',
+      { preloadId: 'group' },
+    ),
+    handle: { meta: channelsRouteMeta },
+    path: 'channel',
+  },
+  {
+    element: dynamicElement(
+      () => import('@/routes/(main)/group/channel/[channelId]'),
+      'Desktop > Agent Group > Channel',
+      { preloadId: 'group' },
+    ),
+    handle: { meta: channelRouteMeta },
+    path: 'channel/:channelId',
   },
 ];

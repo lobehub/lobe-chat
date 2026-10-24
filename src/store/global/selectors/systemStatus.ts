@@ -194,7 +194,6 @@ const sidebarExpandedKeys =
 export const SIDEBAR_SPACER_ID = '__spacer__';
 
 export const DEFAULT_SIDEBAR_ITEMS: string[] = [
-  'channels',
   'tasks',
   'goals',
   'dashboard',

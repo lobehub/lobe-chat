@@ -1,5 +1,8 @@
 import { AccordionRoot, Flexbox } from '@lobehub/ui';
 
+import ChannelList from '@/features/Channels/Sidebar/ChannelList';
+import { useGroupSidebarTab } from '@/features/Channels/Sidebar/useGroupSidebarTab';
+
 import Members from './Members';
 import Topic from './Topic';
 
@@ -9,6 +12,9 @@ export enum ChatSidebarKey {
 }
 
 const Body = () => {
+  const tab = useGroupSidebarTab();
+  if (tab === 'channel') return <ChannelList />;
+
   return (
     <Flexbox paddingInline={4}>
       <AccordionRoot

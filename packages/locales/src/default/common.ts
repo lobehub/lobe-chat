@@ -599,7 +599,6 @@ export default {
   'tab.files': 'Files',
   'tab.generation': 'Generation',
   'tab.goals': 'Goals',
-  'tab.channels': 'Channels',
   'tab.home': 'Home',
   'tab.knowledgeBase': 'Library',
   'tab.marketplace': 'Marketplace',

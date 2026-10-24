@@ -1,4 +1,8 @@
-import { channelService, type ChannelViewParams } from '@/services/channel';
+import {
+  type ChannelAgentSelection,
+  channelService,
+  type ChannelViewParams,
+} from '@/services/channel';
 
 import { ChannelPrivateAction } from './privateAction';
 import { initialState, useChannelStore } from './store';
@@ -15,6 +19,15 @@ class ChannelActionImpl {
     const result = await channelService.create(input);
     await this.refreshList();
     return result.data.channel.id;
+  };
+  /** Members join one at a time: each add takes the Channel row lock. */
+  addAgents = async (channelId: string, agents: ChannelAgentSelection[]) => {
+    try {
+      for (const agent of agents) await channelService.addAgent(channelId, agent);
+    } finally {
+      // A partial failure still shows the members that did join.
+      await this.refreshDetail({ channelId });
+    }
   };
   send = async (input: Parameters<typeof channelService.send>[0]) => {
     await channelService.send(input);

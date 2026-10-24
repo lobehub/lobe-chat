@@ -10,9 +10,12 @@ import { useAgentStore } from '@/store/agent';
 import { useDeviceList } from '@/store/device/useDeviceList';
 
 export const AgentSelection = ({
+  exclude = [],
   value,
   onChange,
 }: {
+  /** Agents already in the Channel. */
+  exclude?: string[];
   onChange: (value: ChannelAgentSelection[]) => void;
   value: ChannelAgentSelection[];
 }) => {
@@ -37,7 +40,7 @@ export const AgentSelection = ({
           placeholder={t('selectAgents')}
           value={value.map((agent) => agent.agentId)}
           options={(agents ?? [])
-            .filter((agent) => !agent.isInbox)
+            .filter((agent) => !agent.isInbox && !exclude.includes(agent.id))
             .map((agent) => ({
               label: agentDisplayName(agent, t('unnamedAgent')),
               value: agent.id,
