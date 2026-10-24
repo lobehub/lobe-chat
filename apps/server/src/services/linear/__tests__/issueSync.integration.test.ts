@@ -264,4 +264,29 @@ describe('LinearIssueSyncService (real PostgreSQL)', () => {
     const second = await service.syncByFilter(TOKEN, options);
     expect(second).toMatchObject({ created: 60, truncated: false, unchanged: 100 });
   }, 60_000);
+
+  it('keeps a LobeHub edit made after the batch was loaded', async () => {
+    serve([issue({ id: '1' })]);
+    const service = new LinearIssueSyncService(db, userId);
+    await service.importIssues(TOKEN, ['1']);
+    const task = await linkedTask('1');
+
+    // The edit lands while the sync is already running: after the batch read
+    // the task, before it writes Linear's new title.
+    const findByIds = TaskModel.prototype.findByIds;
+    const spy = vi.spyOn(TaskModel.prototype, 'findByIds').mockImplementation(async function (
+      this: TaskModel,
+      ids: string[],
+    ) {
+      const rows = await findByIds.call(this, ids);
+      await new TaskModel(db, userId).update(task!.id, { name: 'Edited mid-sync' });
+      return rows;
+    });
+    serve([issue({ id: '1', title: 'Renamed in Linear' })]);
+    const result = await service.importIssues(TOKEN, ['1']);
+    spy.mockRestore();
+
+    expect(result).toMatchObject({ keptLocalEdits: 1, updated: 0 });
+    expect((await linkedTask('1'))?.name).toBe('Edited mid-sync');
+  });
 });

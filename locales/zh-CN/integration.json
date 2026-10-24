@@ -111,6 +111,7 @@
   "linear.sync.state.started": "进行中",
   "linear.sync.state.triage": "待分拣",
   "linear.sync.state.unstarted": "待办",
+  "linear.sync.viewerDisabled": "查看者不能把 Issue 导入为任务",
   "linear.tagline": "将你的 Linear 工作区连接到 LobeHub",
   "overview.all": "全部集成",
   "overview.comingSoon": "即将支持",

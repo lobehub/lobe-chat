@@ -135,13 +135,17 @@ const parentsFirst = (issues: LinearIssue[]): LinearIssue[] => {
  * - a task is never reopened, deleted or recreated by a sync.
  */
 export class LinearIssueSyncService {
+  private readonly db: LobeChatDatabase;
   private readonly linkModel: TaskExternalLinkModel;
   private readonly taskModel: TaskModel;
   private readonly taskService: TaskService;
   private readonly userId: string;
+  private readonly workspaceId?: string;
 
   constructor(db: LobeChatDatabase, userId: string, workspaceId?: string) {
+    this.db = db;
     this.userId = userId;
+    this.workspaceId = workspaceId;
     this.linkModel = new TaskExternalLinkModel(db, userId, workspaceId);
     this.taskModel = new TaskModel(db, userId, workspaceId);
     this.taskService = new TaskService(db, userId, workspaceId);
@@ -379,11 +383,14 @@ export class LinearIssueSyncService {
         result.keptLocalEdits += 1;
         counted = true;
       } else if (nextHash !== link.syncedHash) {
-        await this.taskService.updateTaskWithAssigneeLock(task.id, fields, {
-          userId: this.userId,
-        });
-        syncedHash = nextHash;
-        result.updated += 1;
+        const applied = await this.applyLinearFields(task.id, link, fields, nextHash);
+        if (applied === 'updated') {
+          syncedHash = nextHash;
+          result.updated += 1;
+        } else {
+          // Edited (or removed) since the batch was loaded.
+          result.keptLocalEdits += 1;
+        }
         counted = true;
       }
     }
@@ -416,6 +423,32 @@ export class LinearIssueSyncService {
       externalUrl: issue.url,
       metadata: linkMetadata(issue),
       syncedHash,
+    });
+  }
+
+  /**
+   * Write Linear's fields only if the task still holds what the last sync
+   * wrote, recording the new hash in the same transaction. Rechecking under
+   * the row lock keeps a LobeHub edit made during the run; writing both rows
+   * together means a failure never leaves our own write looking like an edit.
+   */
+  private async applyLinearFields(
+    taskId: string,
+    link: TaskExternalLinkWithTask,
+    fields: SyncedFields,
+    nextHash: string,
+  ): Promise<'kept' | 'updated'> {
+    return this.db.transaction(async (tx) => {
+      const tasks = new TaskModel(tx, this.userId, this.workspaceId);
+      await tasks.lockForUpdate(taskId);
+      const current = await tasks.findById(taskId);
+      if (!current || hashTask(current) !== link.syncedHash) return 'kept';
+
+      await tasks.updateWithLog(taskId, fields, { userId: this.userId });
+      await new TaskExternalLinkModel(tx, this.userId, this.workspaceId).update(link.id, {
+        syncedHash: nextHash,
+      });
+      return 'updated';
     });
   }
 

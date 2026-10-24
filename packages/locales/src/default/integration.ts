@@ -136,6 +136,7 @@ export default {
   'linear.sync.state.started': 'In progress',
   'linear.sync.state.triage': 'Triage',
   'linear.sync.state.unstarted': 'Todo',
+  'linear.sync.viewerDisabled': 'Viewers cannot import issues into tasks',
   'linear.tagline': 'Connect your Linear workspace to LobeHub',
   'overview.all': 'All integrations',
   'overview.comingSoon': 'Coming soon',

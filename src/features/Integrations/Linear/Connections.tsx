@@ -17,6 +17,7 @@ import { ChevronDownIcon, DownloadIcon, PlusIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useIsWorkspaceViewer } from '@/business/client/hooks/useIsWorkspaceViewer';
 import { linearService } from '@/services/linear';
 
 import { openLinearIssueImportModal } from './IssueSync';
@@ -82,6 +83,8 @@ interface ConnectionsProps {
 const Connections = memo<ConnectionsProps>(
   ({ configured, connections, installHref, onChanged, onSynced, scope }) => {
     const { t } = useTranslation('integration');
+    // Viewers can see connections but cannot create tasks from them.
+    const isViewer = useIsWorkspaceViewer();
 
     const disconnect = (connection: LinearConnectionView) => {
       confirmModal({
@@ -149,8 +152,10 @@ const Connections = memo<ConnectionsProps>(
                     </Text>
                   </Flexbox>
                   <Button
+                    disabled={isViewer}
                     icon={<Icon icon={DownloadIcon} />}
                     size="small"
+                    title={isViewer ? t('linear.sync.viewerDisabled') : undefined}
                     onClick={() => openLinearIssueImportModal({ connection, onSynced })}
                   >
                     {t('linear.sync.importIssues')}
