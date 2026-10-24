@@ -18,6 +18,7 @@ import {
 const logger = createLogger('core:WindowThemeManager');
 
 const MACOS_VIBRANCY = 'sidebar';
+const MACOS_TRANSPARENT_BACKGROUND = '#00000000';
 
 interface WindowsThemeConfig {
   backgroundColor: string;
@@ -160,21 +161,45 @@ export class WindowThemeManager {
     }, THEME_CHANGE_DELAY);
   }
 
-  /**
-   * Disable macOS vibrancy while fullscreen so the window remains opaque.
-   */
   handleFullscreenChange(isFullScreen: boolean): void {
     if (!isMac || !this.browserWindow || this.browserWindow.isDestroyed()) return;
 
-    logger.debug(
-      `[${this.identifier}] Updating macOS vibrancy for fullscreen state: ${isFullScreen}`,
-    );
+    logger.debug(`[${this.identifier}] Updating macOS fullscreen background: ${isFullScreen}`);
 
     try {
-      this.browserWindow.setVibrancy(isFullScreen ? null : MACOS_VIBRANCY);
+      this.applyMacFullscreenChrome(isFullScreen);
     } catch (error) {
-      logger.error(`[${this.identifier}] Failed to update macOS fullscreen vibrancy:`, error);
+      logger.error(`[${this.identifier}] Failed to update macOS fullscreen background:`, error);
     }
+  }
+
+  private opaqueBackground(): string {
+    return this.resolveIsDarkMode() ? BACKGROUND_DARK : BACKGROUND_LIGHT;
+  }
+
+  /**
+   * Electron does not re-evaluate the macOS NSVisualEffectView when the theme changes at
+   * runtime, so the vibrancy keeps the previous appearance (dark sidebar over a light UI)
+   * until the window is recreated. Toggling it forces AppKit to rebuild the effect view.
+   */
+  private refreshMacVibrancy(): void {
+    if (!this.browserWindow) return;
+
+    this.browserWindow.setVibrancy(null);
+    this.browserWindow.setVibrancy(MACOS_VIBRANCY);
+  }
+
+  private applyMacFullscreenChrome(isFullScreen: boolean): void {
+    if (!this.browserWindow) return;
+
+    if (isFullScreen) {
+      this.browserWindow.setBackgroundColor(this.opaqueBackground());
+      this.browserWindow.setVibrancy(null);
+      return;
+    }
+
+    this.browserWindow.setVibrancy(MACOS_VIBRANCY);
+    this.browserWindow.setBackgroundColor(MACOS_TRANSPARENT_BACKGROUND);
   }
 
   // ==================== Visual Effects ====================
@@ -204,6 +229,14 @@ export class WindowThemeManager {
         this.applyWindowsVisualEffects(isDarkMode);
       } else if (isLinux) {
         this.applyLinuxVisualEffects();
+      } else if (isMac) {
+        // macOS keeps the native vibrancy (and the traffic-light/title bar area) on the
+        // appearance it was created with, so it has to be rebuilt on every theme change.
+        if (this.browserWindow.isFullScreen()) {
+          this.applyMacFullscreenChrome(true);
+        } else {
+          this.refreshMacVibrancy();
+        }
       }
     } catch (error) {
       logger.error(`[${this.identifier}] Failed to apply visual effects:`, error);

@@ -18,6 +18,7 @@ const mockGetServerDB = vi.hoisted(() => vi.fn());
 const mockFinalizeAbandoned = vi.hoisted(() => vi.fn());
 const mockSettleStaleRunning = vi.hoisted(() => vi.fn());
 const mockResumeAbandonedParent = vi.hoisted(() => vi.fn());
+const mockScheduleOpportunisticStaleSweep = vi.hoisted(() => vi.fn());
 // Lets a test force the step-boundary flush to report a timeout; undefined
 // means use the real implementation.
 const flushOverride = vi.hoisted(() => ({ settled: undefined as boolean | undefined }));
@@ -58,6 +59,7 @@ vi.mock('@/server/services/agentRuntime', () => ({
   AbandonOperationService: vi.fn().mockImplementation(function () {
     return { finalizeAbandoned: mockFinalizeAbandoned };
   }),
+  scheduleOpportunisticStaleSweep: mockScheduleOpportunisticStaleSweep,
 }));
 
 vi.mock('@/database/core/db-adaptor', () => ({
@@ -354,6 +356,21 @@ describe('runStep handler', () => {
     expect(deadlineSeen).toBeLessThanOrEqual(Date.now() + 600_000);
   });
 
+  it('kicks the opportunistic stale-operation sweep on a valid delivery', async () => {
+    mockGetOperationMetadata.mockResolvedValue({ userId: 'user-1' });
+    mockExecuteStep.mockResolvedValue({
+      nextStepScheduled: false,
+      state: { cost: { total: 0 }, status: 'done', stepCount: 1 },
+      success: true,
+    });
+
+    const { ctx } = buildContext({ body: validBody });
+    const res = await runStep(ctx);
+
+    expect(res.status).toBe(200);
+    expect(mockScheduleOpportunisticStaleSweep).toHaveBeenCalledTimes(1);
+  });
+
   it('opts the AiAgentService into visitor rows when metadata carries streamOwnerUserId', async () => {
     // A shared-agent visitor run: the op executes as the creator `userId`
     // (`user-owner`) but the visitor (`visitor-1`) owns the stream. The step
@@ -488,6 +505,7 @@ describe('runStep handler', () => {
         pendingHumanSelect: undefined,
         pendingToolsCalling: ['t1'],
         status: 'waiting_for_human',
+        llmCalls: 5,
         stepCount: 5,
       },
       success: true,

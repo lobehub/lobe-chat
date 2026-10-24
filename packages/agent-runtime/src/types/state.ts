@@ -13,6 +13,7 @@ import type {
   UserMemoryConfig,
 } from '@lobechat/context-engine';
 import type {
+  AgentRunInitRequest,
   AgentShareVisitorContext,
   AgentSignalOperationMarker,
   ChatToolPayload,
@@ -92,6 +93,8 @@ export interface AgentRunOrigin {
   groupId?: string;
   // --- Run tree ---
   lineage?: AgentRunLineage;
+  /** Project the conversation (or the run's task) belongs to. */
+  projectId?: string;
   scope?: string;
   sessionId?: string;
   /** Run-scoped Agent Signal marker for background self-iteration / memory runs. */
@@ -169,6 +172,13 @@ export interface AgentRunPlan {
  */
 export interface AgentRunHostEnvelope {
   /**
+   * The client that started this run renders `file` Works, so the pushed
+   * `uiMessages` snapshots and `message_patch` revisions may carry them.
+   * Declared by the client, like `clientProtocol`; absent keeps them out, which
+   * is what a released desktop build without the `file` descriptor needs.
+   */
+  acceptsFileWorks?: boolean;
+  /**
    * Wire protocol the client that started this run asked for. `2` means that
    * client reconciles its message list from `message_patch` revisions, so the
    * host may stop pushing whole `uiMessages` snapshots with the step and
@@ -227,6 +237,13 @@ export interface AgentRunClientLlmWait {
 export interface AgentRunLlmExecutor {
   /** Relay protocol versions the client speaks, e.g. `llm_relay@1`. */
   capabilities: string[];
+  /**
+   * Operation whose gateway channel the client listens on, when it is not the
+   * run's own: a sub-agent inherits its parent's executor, but the tab only
+   * subscribed to the parent's run, so the sub-agent's `llm_execute` rides that
+   * channel. Set by the server, never by the client.
+   */
+  channelOperationId?: string;
   /** Stable id of the declaring client (tab / desktop window), preferred as the executor. */
   clientId: string;
   /** Provider ids this client confirmed it can reach directly. */
@@ -403,6 +420,14 @@ export interface AgentState {
   lastModified: string;
 
   /**
+   * User-facing count of LLM calls made by this operation.
+   *
+   * Kept in sync with `usage.llm.apiCalls` at every step boundary. Unlike
+   * {@link stepCount}, tool-only runtime iterations do not increase it.
+   */
+  llmCalls?: number;
+
+  /**
    * Optional maximum number of steps allowed.
    * If set, execution will stop with error when exceeded.
    */
@@ -454,7 +479,6 @@ export interface AgentState {
       provider: string;
     };
   };
-
   /**
    * Credentials this run listed once when it was created. A step renders
    * `{{CREDS_LIST}}` from here instead of asking the Market API again; absent
@@ -465,13 +489,13 @@ export interface AgentState {
   operationId: string;
   /** Operation-level tool set snapshot (immutable after creation) */
   operationToolSet?: OperationToolSet;
+
   // --- Origin ---
   /**
    * Where this run came from and where it sits in the run tree. Frozen when
    * the operation is created.
    */
   origin?: AgentRunOrigin;
-
   pendingApprovalBatch?: {
     assistantMessageId: string;
     id: string;
@@ -499,8 +523,8 @@ export interface AgentState {
    * Cleared once consumed.
    */
   pendingAssistantMessageId?: string;
-  pendingHumanPrompt?: { metadata?: Record<string, unknown>; prompt: string };
 
+  pendingHumanPrompt?: { metadata?: Record<string, unknown>; prompt: string };
   pendingHumanSelect?: {
     metadata?: Record<string, unknown>;
     multi?: boolean;
@@ -520,8 +544,23 @@ export interface AgentState {
   // --- Principal ---
   /** Under whose authority the run acts and what it may do. Frozen at creation. */
   principal?: AgentRunPrincipal;
+  /**
+   * The turn's raw ask, kept ONLY while the run still owes its init.
+   *
+   * A run can be created before tool discovery and the context assembly have
+   * happened; the step-0 worker does them and clears this in the same write that
+   * saves what they produced. Its presence is therefore the signal:
+   * a state carrying a request has not been initialized yet.
+   *
+   * Everything else the init needs is already on the other slots (`world.agent`,
+   * `world.channel`, `principal.policy`, `host.hooks`, `modelRuntimeConfig` …) —
+   * this is the residue those slots have no claim on.
+   */
+  request?: AgentRunInitRequest;
+
   /** @deprecated Use `principal.policy.securityBlacklist`. */
   securityBlacklist?: SecurityBlacklistConfig;
+
   // --- State Machine ---
   status:
     | 'idle'
@@ -537,6 +576,11 @@ export interface AgentState {
   /**
    * Number of execution steps in this session.
    * Incremented on each runtime.step() call.
+   *
+   * This is the scheduling/idempotency counter (QStash `stepIndex`, stale
+   * delivery guards, resume). It intentionally keeps its original meaning so
+   * workers from the previous build can keep scheduling during a rolling
+   * deploy.
    */
   stepCount: number;
 

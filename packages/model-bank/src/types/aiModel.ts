@@ -21,6 +21,7 @@ export const AiModelTypeSchema = z.enum([
   'video',
   'text2music',
   'realtime',
+  'decision',
 ] as const);
 
 export type AiModelType = z.infer<typeof AiModelTypeSchema>;
@@ -198,6 +199,14 @@ export interface FixedPricingUnit extends PricingUnitBase {
 }
 
 export interface TieredPricingUnit extends PricingUnitBase {
+  /**
+   * How tiers apply to a quantity:
+   * - `volume` (default): the whole quantity is billed at the rate of the tier it falls into
+   *   (e.g. Google's long-context pricing)
+   * - `graduated`: each tier bills only the part of the quantity inside it, so a zero-rate first
+   *   tier expresses a free allowance (e.g. fal's 4,096 free reference tokens per request)
+   */
+  mode?: 'graduated' | 'volume';
   strategy: 'tiered';
   tiers: Array<{
     /**
@@ -666,6 +675,16 @@ export interface AITTSModelCard extends AIBaseModelCard {
 export interface AIASRModelCard extends AIBaseModelCard {
   pricing?: Pricing;
   type: 'asr';
+}
+
+/**
+ * Decision models answer caller-defined typed questions with calibrated probabilities
+ * instead of generating text, and are called through `decide` rather than `chat`.
+ * @see https://openrouter.ai/docs/guides/community/jev
+ */
+export interface AIDecisionModelCard extends AIBaseModelCard {
+  pricing?: Pricing;
+  type: 'decision';
 }
 
 export interface AIRealtimeModelCard extends AIBaseModelCard {

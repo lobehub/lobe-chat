@@ -1,5 +1,6 @@
 import type {
   SSOProvider,
+  SystemAgentItem,
   UserGeneralConfig,
   UserGuide,
   UserKeyVaults,
@@ -430,6 +431,29 @@ export class UserModel {
       .onConflictDoUpdate({
         set: {
           tool: sql`coalesce(${userSettings.tool}, '{}'::jsonb) || ${JSON.stringify(patch)}::jsonb`,
+        },
+        target: userSettings.id,
+      });
+  };
+
+  /**
+   * Atomically merge a partial config into ONE `systemAgent` entry, leaving the
+   * entry's other fields and every sibling entry untouched. Same rationale as
+   * `replaceToolChannelsSetting`: the generic settings write replaces the whole
+   * column from a possibly-stale tab snapshot. Callers must restrict `key` to
+   * an allowlist; it is bound as a parameter, never interpolated.
+   */
+  mergeSystemAgentItemSetting = async (key: string, value: Partial<SystemAgentItem>) => {
+    const patch = JSON.stringify(value);
+    // A legacy scalar under the same key cannot be merged into — replace it.
+    const currentItem = sql`case when jsonb_typeof(${userSettings.systemAgent} -> ${key}::text) = 'object' then ${userSettings.systemAgent} -> ${key}::text else '{}'::jsonb end`;
+
+    return this.db
+      .insert(userSettings)
+      .values({ id: this.userId, systemAgent: { [key]: value } })
+      .onConflictDoUpdate({
+        set: {
+          systemAgent: sql`coalesce(${userSettings.systemAgent}, '{}'::jsonb) || jsonb_build_object(${key}::text, ${currentItem} || ${patch}::jsonb)`,
         },
         target: userSettings.id,
       });

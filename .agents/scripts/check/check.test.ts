@@ -7,6 +7,8 @@ import { describe, expect, it } from 'vitest';
 import { findNewComponentTestAdvisories } from './advisories';
 import { alintScopeArgs, keepSelectedFiles, parseAlintJson } from './alint';
 import { diffStat, renderDiffsForStdout } from './autofix';
+import { parseRenames } from './base';
+import { checkFileSizes, countLines } from './fileSize';
 import { lobehubPipelines } from './pipelines';
 import {
   findVitestConfigDir,
@@ -14,6 +16,7 @@ import {
   pipelineFor,
   relatedTestCandidates,
   resolveMount,
+  scenarioTestLookup,
   stylelintApplies,
 } from './routing';
 import type { RepoMount } from './types';
@@ -127,6 +130,21 @@ describe('relatedTestCandidates', () => {
     ]);
   });
 
+  it('matches scenario suites split from the source test', () => {
+    const lookup = scenarioTestLookup('src/Foo/index.tsx');
+    expect(lookup?.dirs).toEqual(['src/Foo', 'src/Foo/__tests__']);
+    expect(
+      [
+        'index.cta.test.ts',
+        'index.render.test.tsx',
+        'index.test.ts',
+        'indexer.cta.test.ts',
+        'index.a.b.test.ts',
+      ].filter((name) => lookup?.matches(name)),
+    ).toEqual(['index.cta.test.ts', 'index.render.test.tsx']);
+    expect(scenarioTestLookup('src/Foo/index.test.ts')).toBeNull();
+  });
+
   it('returns nothing for non-source files', () => {
     expect(relatedTestCandidates('AGENTS.md')).toEqual([]);
     expect(relatedTestCandidates('image.png')).toEqual([]);
@@ -155,6 +173,85 @@ describe('findNewComponentTestAdvisories', () => {
     await expect(
       findNewComponentTestAdvisories(['src/New.test.tsx'], async () => undefined),
     ).resolves.toEqual([]);
+  });
+});
+
+describe('parseRenames', () => {
+  it('maps each renamed path to its source path', () => {
+    expect(parseRenames('R098\0src/Foo.tsx\0src/Foo/index.tsx\0R100\0a.ts\0b/a.ts\0')).toEqual(
+      new Map([
+        ['src/Foo/index.tsx', 'src/Foo.tsx'],
+        ['b/a.ts', 'a.ts'],
+      ]),
+    );
+    expect(parseRenames('')).toEqual(new Map());
+  });
+});
+
+describe('countLines', () => {
+  it.each([
+    ['', 0],
+    ['a\n', 1],
+    ['a\nb', 2],
+    ['a\nb\n', 2],
+  ])('counts %j as %i lines', (content, expected) => {
+    expect(countLines(content)).toBe(expected);
+  });
+});
+
+describe('checkFileSizes', () => {
+  const current: Record<string, number> = {
+    'src/Big.ts': 1201,
+    'src/Crossed.ts': 1300,
+    'src/Grown.tsx': 1600,
+    'src/Shrunk.ts': 1400,
+    'src/Small.ts': 1200,
+    'packages/locales/src/default/setting.ts': 5000,
+    'packages/locales/src/create.ts': 1300,
+    'src/types.d.ts': 2000,
+    'packages/sdk/src/generated/types.gen.ts': 12000,
+    'packages/sdk/src/generated/core/client.ts': 1300,
+    'README.md': 5000,
+  };
+  const base: Record<string, number | null> = {
+    'src/Big.ts': null,
+    'packages/locales/src/create.ts': null,
+    'packages/locales/src/default/setting.ts': 4000,
+    'src/types.d.ts': 1000,
+    'packages/sdk/src/generated/types.gen.ts': null,
+    'packages/sdk/src/generated/core/client.ts': null,
+    'src/Crossed.ts': 1190,
+    'src/Grown.tsx': 1500,
+    'src/Shrunk.ts': 1500,
+  };
+  const run = (files: string[]) =>
+    checkFileSizes(
+      files,
+      async (file) => current[file],
+      async (file) => ({ baseRef: 'origin/canary', lines: base[file] }),
+    );
+
+  it('fails new and newly oversized files and only advises on grown legacy files', async () => {
+    const findings = await run(Object.keys(current));
+
+    expect(findings.errors).toEqual([
+      expect.stringContaining('src/Big.ts: new file has 1201 lines'),
+      expect.stringContaining('src/Crossed.ts: grew from 1190 to 1300 lines'),
+      expect.stringContaining('packages/locales/src/create.ts: new file has 1300 lines'),
+    ]);
+    expect(findings.advisories).toEqual([
+      expect.stringContaining('src/Grown.tsx: already over 1200 lines and grew from 1500 to 1600'),
+    ]);
+  });
+
+  it('skips oversized files when the base cannot be inspected', async () => {
+    await expect(
+      checkFileSizes(
+        ['src/Big.ts'],
+        async () => 1201,
+        async () => undefined,
+      ),
+    ).resolves.toEqual({ advisories: [], errors: [] });
   });
 });
 

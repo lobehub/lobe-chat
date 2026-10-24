@@ -1,12 +1,18 @@
 import { type TopicGroupMode } from '@/types/topic';
 
 import type {
+  AgentDocumentSort,
+  DocsPageSectionKey,
+  DocsPageSectionView,
   GlobalState,
   ModelDetailPanelExpandedKey,
+  ProjectListSortBy,
+  ProjectTopicSubGroupMode,
   SystemStatus,
   WorkspaceOverridableField,
 } from '../initialState';
 import {
+  DEFAULT_DOCS_PAGE_SECTION_VIEW,
   DEFAULT_HOME_SIDEBAR_EXPANDED_KEYS,
   INITIAL_STATUS,
   MODEL_DETAIL_PANEL_EXPANDABLE_KEYS,
@@ -90,12 +96,35 @@ const collapsedTopicGroupKeys =
   (s: GlobalState): string[] | undefined =>
     s.status.collapsedTopicGroupKeysByMode?.[mode];
 
+const docsPageSectionView =
+  (section: DocsPageSectionKey) =>
+  (s: GlobalState): DocsPageSectionView => {
+    const stored = s.status.docsPageSectionViews?.[section];
+    return stored
+      ? { ...DEFAULT_DOCS_PAGE_SECTION_VIEW, ...stored }
+      : DEFAULT_DOCS_PAGE_SECTION_VIEW;
+  };
+
+const projectTopicSubGroupMode =
+  (groupId: string) =>
+  (s: GlobalState): ProjectTopicSubGroupMode =>
+    s.status.projectTopicSubGroupModeByGroup?.[groupId] ?? 'none';
+
 const agentSidebarSections =
   (agentId: string | undefined) =>
   (s: GlobalState): Record<string, boolean> | undefined =>
     agentId ? s.status.expandAgentSidebarSectionsByAgent?.[agentId] : undefined;
 
-const topicPageSize = (s: GlobalState): number => s.status.topicPageSize || 20;
+/** Upper bound of `topic.getTopics`'s `pageSize` input on the server. */
+export const MAX_TOPIC_PAGE_SIZE = 100;
+
+/**
+ * Clamped to the server's cap: the project sidebar's "load more" used to grow
+ * the persisted value past 100, after which every topic list request failed
+ * validation. Clamping on read recovers users who already persisted it.
+ */
+const topicPageSize = (s: GlobalState): number =>
+  Math.min(s.status.topicPageSize || 20, MAX_TOPIC_PAGE_SIZE);
 
 const agentPageSize = (s: GlobalState): number => s.status.agentPageSize || 5;
 
@@ -178,6 +207,8 @@ export const SIDEBAR_SPACER_ID = '__spacer__';
 
 export const DEFAULT_SIDEBAR_ITEMS: string[] = [
   'tasks',
+  'goals',
+  'dashboard',
   'resource',
   'recents',
   'project',
@@ -186,7 +217,6 @@ export const DEFAULT_SIDEBAR_ITEMS: string[] = [
   SIDEBAR_SPACER_ID,
   'image',
   'community',
-  'pages',
   'memory',
 ];
 
@@ -388,6 +418,8 @@ const homeGoalsCollapsed = (s: GlobalState): boolean => s.status.homeGoalsCollap
 const homeRecentsCount = (s: GlobalState): number => s.status.homeRecentsCount ?? 8;
 const homeTaskCount = (s: GlobalState): number => s.status.homeTaskCount ?? 8;
 const showRightPanel = (s: GlobalState) => s.status.showRightPanel;
+const showWorkingOverview = (s: GlobalState) =>
+  s.status.showWorkingOverview ?? !s.status.showRightPanel;
 const showLeftPanel = (s: GlobalState) => s.status.showLeftPanel;
 const showPageAgentPanel = (s: GlobalState) => s.status.showPageAgentPanel;
 const showTaskAgentPanel = (s: GlobalState) => s.status.showTaskAgentPanel;
@@ -421,6 +453,15 @@ const filePanelWidth = (s: GlobalState) => s.status.filePanelWidth;
 const groupAgentBuilderPanelWidth = (s: GlobalState) => s.status.groupAgentBuilderPanelWidth || 360;
 const imagePanelWidth = (s: GlobalState) => s.status.imagePanelWidth;
 const agentListViewMode = (s: GlobalState) => s.status.agentListViewMode || 'list';
+const DEFAULT_AGENT_DOCUMENT_SORT: AgentDocumentSort = {
+  by: 'name',
+  foldersFirst: true,
+  order: 'asc',
+};
+const projectListSortBy = (s: GlobalState): ProjectListSortBy =>
+  s.status.projectListSortBy ?? 'manual';
+const agentDocumentSort = (s: GlobalState): AgentDocumentSort =>
+  s.status.agentDocumentSort ?? DEFAULT_AGENT_DOCUMENT_SORT;
 const agentListViewOptions = (s: GlobalState) => s.status.agentListViewOptions;
 const agentListExpandedGroupKeys = (s: GlobalState) => s.status.agentListExpandedGroupKeys ?? [];
 const agentListSidebarSectionCollapsed = (s: GlobalState) =>
@@ -469,6 +510,8 @@ const homeSelectedAgentId = (s: GlobalState) => s.status.homeSelectedAgentId;
 
 export const systemStatusSelectors = {
   agentBuilderPanelWidth,
+  agentDocumentSort,
+  projectListSortBy,
   agentListExpandedGroupKeys,
   agentListSidebarSectionCollapsed,
   agentListViewMode,
@@ -478,6 +521,7 @@ export const systemStatusSelectors = {
   disabledModelProvidersSortType,
   disabledModelsSortType,
   expandInputActionbar,
+  docsPageSectionView,
   filePanelWidth,
   getAgentSystemRoleExpanded,
   groupAgentBuilderPanelWidth,
@@ -528,6 +572,7 @@ export const systemStatusSelectors = {
   showRightPanel,
   showSystemRole,
   showTaskAgentPanel,
+  showWorkingOverview,
   showTerminalPanel,
   showVerifyReportPanel,
   showVideoPanel,
@@ -537,6 +582,7 @@ export const systemStatusSelectors = {
   verifyReportPanelWidth,
   tokenDisplayFormatShort,
   collapsedTopicGroupKeys,
+  projectTopicSubGroupMode,
   topicPageSize,
   videoPanelWidth,
   videoTopicViewMode,

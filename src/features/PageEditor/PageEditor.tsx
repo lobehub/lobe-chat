@@ -1,8 +1,7 @@
 'use client';
 
 import { DEFAULT_BLOCK_ANCHOR_PADDING, EditorProvider } from '@lobehub/editor/react';
-import { Flexbox } from '@lobehub/ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { createStaticStyles, cssVar, Flexbox } from '@lobehub/ui';
 import type { CSSProperties, FC, ReactNode, UIEvent } from 'react';
 import { memo, useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 
@@ -15,7 +14,7 @@ import { useRegisterFilesHotkeys } from '@/hooks/useHotkeys';
 import { usePermission } from '@/hooks/usePermission';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
-import { usePageStore } from '@/store/page';
+import { pageActions } from '@/store/page';
 import { StyleSheet } from '@/utils/styles';
 
 import DocumentComments from './DocumentComments';
@@ -27,12 +26,14 @@ import DocumentLikes from './DocumentLikes';
 import EditorCanvas from './EditorCanvas';
 import { recallEditorScrollTop, rememberEditorScrollTop } from './editorScrollMemory';
 import Header from './Header';
+import HtmlPageBody, { useIsHtmlPage } from './HtmlPageBody';
 import LockedAlert from './LockedAlert';
 import LockStatusBanner from './LockStatusBanner';
 import { PageAgentProvider } from './PageAgentProvider';
 import { PageEditorProvider } from './PageEditorProvider';
 import RightPanel from './RightPanel';
 import { usePageEditorStore } from './store';
+import TableOfContents from './TableOfContents';
 import TitleSection from './TitleSection';
 import { usePageEditable } from './usePageEditable';
 
@@ -69,6 +70,11 @@ const shouldRestoreEditorScroll = ({
   !isUserInteractingWithEditor;
 
 const styles = StyleSheet.create({
+  artifactContent: {
+    minWidth: 0,
+    paddingBlock: 24,
+    paddingInline: 24,
+  },
   contentWrapper: {
     containerType: 'inline-size',
     display: 'flex',
@@ -160,6 +166,7 @@ const PageEditorCanvas = memo<PageEditorCanvasProps>((props) => {
   const editable = usePageEditable();
   const editor = usePageEditorStore((s) => s.editor);
   const documentId = usePageEditorStore((s) => s.documentId);
+  const isHtmlPage = useIsHtmlPage(documentId);
   const wideScreen = useGlobalStore(systemStatusSelectors.wideScreen);
   const tableBleedInline = wideScreen
     ? `${TABLE_BASE_BLEED}px`
@@ -376,37 +383,53 @@ const PageEditorCanvas = memo<PageEditorCanvasProps>((props) => {
         width={'100%'}
         onScroll={handleEditorScroll}
       >
-        <WideScreenContainer
-          wrapperStyle={{ cursor: editable ? 'text' : 'default' }}
-          onChange={notifyEditorLayoutChange}
-          onClick={() => {
-            if (!editable) return;
-
-            editor?.focus();
-          }}
-        >
-          <Flexbox
-            className={overrideStyles.editorContent}
-            flex={1}
-            ref={editorContentRef}
-            style={editorContentStyle}
-            {...{ [GUTTER_COLUMN_ATTRIBUTE]: true }}
-          >
-            <TitleSection />
-            <PageMetaBar />
-            {/* Surfaces local heartbeat health (unstable/lost) for the holder.
-                Suppressed when LockedAlert is showing — see LockStatusBanner. */}
-            <LockStatusBanner />
-            {/* Prominent in-body notice when another member holds the lock; the
-                compact status badge lives in the Header (EditingIndicator). */}
-            <LockedAlert />
-            <EditorCanvas askCopilotTarget={askCopilotTarget} />
-            <BlockCommentMarker hostRef={editorContentRef} />
-            {documentId && <DocumentLikes documentId={documentId} key={documentId} />}
-            <DocumentComments />
+        {isHtmlPage ? (
+          // An artifact is a finished, self-styled page: it gets the pane's full
+          // width instead of the reading column, and no editable title above it
+          // (the header carries the title; the HTML has its own heading).
+          <Flexbox flex={1} gap={24} ref={editorContentRef} style={styles.artifactContent}>
+            <HtmlPageBody />
+            <WideScreenContainer>
+              {documentId && <DocumentLikes documentId={documentId} key={documentId} />}
+              <DocumentComments />
+            </WideScreenContainer>
           </Flexbox>
-        </WideScreenContainer>
+        ) : (
+          <WideScreenContainer
+            wrapperStyle={{ cursor: editable ? 'text' : 'default' }}
+            onChange={notifyEditorLayoutChange}
+            onClick={() => {
+              if (!editable) return;
+
+              editor?.focus();
+            }}
+          >
+            <Flexbox
+              className={overrideStyles.editorContent}
+              flex={1}
+              ref={editorContentRef}
+              style={editorContentStyle}
+              {...{ [GUTTER_COLUMN_ATTRIBUTE]: true }}
+            >
+              <TitleSection />
+              <PageMetaBar />
+              {/* Surfaces local heartbeat health (unstable/lost) for the holder.
+                  Suppressed when LockedAlert is showing — see LockStatusBanner. */}
+              <LockStatusBanner />
+              {/* Prominent in-body notice when another member holds the lock; the
+                  compact status badge lives in the Header (EditingIndicator). */}
+              <LockedAlert />
+              <EditorCanvas askCopilotTarget={askCopilotTarget} />
+              <BlockCommentMarker hostRef={editorContentRef} />
+              {documentId && <DocumentLikes documentId={documentId} key={documentId} />}
+              <DocumentComments />
+            </Flexbox>
+          </WideScreenContainer>
+        )}
       </Flexbox>
+      {!isHtmlPage && (
+        <TableOfContents contentRef={editorContentRef} scrollRef={contentWrapperRef} />
+      )}
       {documentId && <DiffAllToolbar documentId={documentId} editor={editor} />}
     </Flexbox>
   );
@@ -474,7 +497,6 @@ export const PageEditor: FC<PageEditorProps> = ({
   syncPageAgentActiveState,
 }) => {
   const { allowed: canEdit } = usePermission('edit_own_content');
-  const deletePage = usePageStore((s) => s.deletePage);
 
   return (
     <PageAgentProvider pageId={pageId} syncActiveAgent={syncPageAgentActiveState}>
@@ -490,7 +512,7 @@ export const PageEditor: FC<PageEditorProps> = ({
           onDelete={() => {
             if (!canEdit) return;
 
-            deletePage(pageId || '');
+            pageActions.deletePage(pageId || '');
           }}
           onEmojiChange={(emoji) => {
             if (!canEdit) return;

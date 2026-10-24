@@ -89,6 +89,9 @@ Each feature should:
    - Where to put it: on the route's `routeMeta` (feature `routeMeta.ts` or inline in `desktopRouter.shared.tsx`). A whole subtree sharing one shape can register once on the parent/layout route's `handle` — children with their own `Skeleton` still override.
    - When changing a page's layout, update its registered skeleton in the same PR — a stale skeleton that no longer matches the page is a regression.
    - Skeleton-only parent handles are safe for titles: title/icon resolution also walks deepest-first, and leaf metas keep winning.
+   - The same deepest skeleton renders at every pending boundary of the chain (layout chunk, page chunk, then the page's own data wait). Make the page's in-component loading state the registered skeleton, or a body that continues it; a different shape there reads as a second, unrelated skeleton.
+   - Route skeletons are always static imports: a fallback has to paint on its first render, and a `lazy()` skeleton (preloaded or not) renders blank until its chunk lands. That puts the skeleton's whole import graph in the entry chunk, so it may only reach UI primitives, other skeletons, constants and `import type`. Keep stores, services, feature components and value imports from barrels (`@/types/*` re-exports zod schemas) out of it; move the minimal piece next to the skeleton instead (see `ResourceHome/Skeleton` and `Explorer/viewMode.ts`).
+   - A custom fallback (`fallback:` option, in-page `Suspense`, or an early `return <XSkeleton />`) keeps the handover continuous only through `delayed()` / `DelayedFallback` or `RouteLoading`, which register the skeleton as visible (`retainSkeleton`). Rendering a skeleton any other way lets the next boundary wait out its 200ms delay on a blank pane.
 
 ---
 
@@ -100,7 +103,7 @@ Each feature should:
 | `desktopRouter.config.tsx`         | Thin Web adapter: mounts the common content tree at `/` and adds Web-only routes.                               |
 | `desktopRouter.config.desktop.tsx` | Thin Electron adapter: injects per-tab Home behavior, TabHost root stubs, and Electron-only onboarding.         |
 
-Add or remove common routes only in `desktopRouter.shared.tsx`. Keep `desktopRouter.sync.test.tsx` passing so path behavior, lazy boundaries, preload ownership, and the intentional platform differences remain verified.
+Add or remove common routes only in `desktopRouter.shared.tsx`, or in a subtree module it imports (`taskWorkspaceRoutes.tsx`, `workspaceSettingsRoutes.tsx` for the padded `/:slug/settings/*` tabs) — the shared file is over the 1200-line limit, so large subtrees move out instead of growing it. Add any new subtree module to `readRouterSources` in `desktopRouter.sync.test.tsx`. Keep `desktopRouter.sync.test.tsx` passing so path behavior, lazy boundaries, preload ownership, and the intentional platform differences remain verified.
 
 ---
 

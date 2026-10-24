@@ -4,7 +4,6 @@ import debug from 'debug';
 
 import { UserModel } from '@/database/models/user';
 import { FileService } from '@/server/services/file';
-import { MarketService } from '@/server/services/market';
 import { createSandboxService, resolveSandboxSessionConfig } from '@/server/services/sandbox';
 import {
   isDirectLhInvocation,
@@ -14,6 +13,7 @@ import {
 } from '@/server/services/toolExecution/preprocessLhCommand';
 
 import { resolveContentWorkspaceId } from './resolveWorkspaceScope';
+import { createSandboxMarketService } from './sandboxMarket';
 import { type ServerRuntimeRegistration } from './types';
 
 const log = debug('lobe-server:cloud-sandbox');
@@ -41,6 +41,8 @@ const SHELL_TOOL_NAMES = new Set(['execScript', 'runCommand']);
 const withLhPreprocessing = (
   service: ISandboxService,
   resolve: {
+    /** This run's operation, so an `lh agent run` from here is attributed to its agent. */
+    operationId: string | undefined;
     userId: string;
     /** Raw context workspace id, log-only — cheap to read, unlike {@link resolveContentWorkspaceId}. */
     workspaceIdHint: string | undefined;
@@ -86,6 +88,7 @@ const withLhPreprocessing = (
       resolve.userId,
       workspaceId,
       resolve.isShareVisitor,
+      resolve.operationId,
     );
 
     if (result.error) {
@@ -148,19 +151,24 @@ export const cloudSandboxRuntime: ServerRuntimeRegistration = {
       workspaceId,
     });
 
-    const marketService = new MarketService({
+    const marketService = createSandboxMarketService(
+      context,
       accessToken,
-      userInfo: {
-        sandboxStorage: sandbox.claim,
-        userId: context.userId,
-        workspaceId,
-      },
-    });
+      workspaceId,
+      sandbox.claim,
+    );
     const fileService = new FileService(context.serverDB, context.userId, workspaceId);
     const sandboxService = createSandboxService({
+      agentShareVisitor: context.agentShareVisitor
+        ? {
+            shareId: context.agentShareVisitor.shareId,
+            visitorUserId: context.agentShareVisitor.visitorUserId,
+          }
+        : undefined,
       fileService,
       marketService,
       sandboxCwd: sandbox.cwd,
+      sandboxInitialization: sandbox.initialization,
       sandboxInstanceId: sandbox.environment,
       sandboxSpecification: sandbox.specification,
       sandboxWorkingDir: sandbox.workingDir,
@@ -173,6 +181,7 @@ export const cloudSandboxRuntime: ServerRuntimeRegistration = {
     return new CloudSandboxExecutionRuntime(
       withLhPreprocessing(sandboxService, {
         isShareVisitor: Boolean(context.agentShareVisitor),
+        operationId: context.operationId,
         userId: context.userId,
         workspaceId: async () => workspaceId,
         workspaceIdHint: workspaceId,

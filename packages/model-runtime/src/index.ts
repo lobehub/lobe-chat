@@ -4,6 +4,7 @@ export { mergeModelRuntimeHooks } from './core/mergeHooks';
 export type { ModelRuntimeHooks } from './core/ModelRuntime';
 export { ModelRuntime } from './core/ModelRuntime';
 export { createOpenAICompatibleRuntime } from './core/openaiCompatibleFactory';
+export { StructuredOutputError } from './core/openaiCompatibleFactory/structuredOutput';
 export * from './core/RouterRuntime';
 export { createCallbacksTransformer } from './core/streams/protocol';
 export * from './core/usageConverters';
@@ -78,6 +79,7 @@ export { LobeStraicoAI } from './providers/straico';
 export { LobeStreamLakeAI } from './providers/streamlake';
 export { LobeSuperGrokAI } from './providers/superGrok';
 export { LobeTogetherAI } from './providers/togetherai';
+export { LobeTypeSafeAI } from './providers/typesafe';
 export { LobeVolcengineAI } from './providers/volcengine';
 export { LobeVolcengineCodingPlanAI } from './providers/volcengineCodingPlan';
 export { LobeXiaomiMiMoAI } from './providers/xiaomimimo';
@@ -89,7 +91,7 @@ export * from './types/error';
 export { consumeStreamUntilDone } from './utils/consumeStream';
 export { AgentRuntimeError } from './utils/createError';
 export { getModelPropertyWithFallback } from './utils/getFallbackModelProperty';
-export { getModelPricing } from './utils/getModelPricing';
+export { getModelParameters, getModelPricing } from './utils/getModelPricing';
 export {
   applyModelExtendParams,
   type ApplyModelExtendParamsContext,

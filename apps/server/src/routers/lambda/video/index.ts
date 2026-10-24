@@ -46,6 +46,7 @@ import { initModelRuntimeFromDB } from '@/server/modules/ModelRuntime';
 import { FileService } from '@/server/services/file';
 import { getVideoAvgLatencies, getVideoLatencyKey } from '@/server/services/generation/latency';
 import { processBackgroundVideoPolling } from '@/server/services/generation/videoBackgroundPolling';
+import { fillVideoPricingDefaults } from '@/server/services/generation/videoPricingDefaults';
 import { after } from '@/server/utils/scheduleAfterResponse';
 import { AsyncTaskStatus, AsyncTaskType } from '@/types/asyncTask';
 
@@ -147,9 +148,15 @@ export const videoRouter = router({
     .mutation(async ({ input, ctx }) => {
       const { userId, serverDB, asyncTaskModel, fileService, generationTopicModel } = ctx;
       const wsId = ctx.workspaceId ?? undefined;
-      const { generationTopicId, previousGenerationId, provider, model, params } = input;
+      const { generationTopicId, previousGenerationId, provider, model } = input;
 
       const { resolvedModelId } = await resolveBusinessModelMapping(provider, model);
+      // Everything downstream (billing, stored config, provider request) sees the same params
+      const params = await fillVideoPricingDefaults({
+        model: resolvedModelId,
+        params: input.params,
+        provider,
+      });
 
       // Reject lobehub model ids that are no longer in the model bank so callers get a
       // clear error instead of an opaque downstream failure when the resolved channel
@@ -324,6 +331,7 @@ export const videoRouter = router({
         model,
         params,
         provider,
+        providerParams: generationParams,
         spendOrigin: ctx.spendOrigin,
         userId,
         workspaceId: wsId,

@@ -5,53 +5,16 @@ import { eslint } from '@lobehub/lint';
 import { restrictedImports } from '@lobehub/ui/eslint';
 import { flat as mdxFlat } from 'eslint-plugin-mdx';
 
+import {
+  browserBundleRestrictedImportPaths,
+  performanceRestrictedImportPaths,
+  performanceRestrictedImportPatterns,
+} from './eslint.bundleBoundaries.mjs';
+import { stylexMigrationConfig } from './scripts/stylexMigration/eslint.mjs';
+
 const tsconfigRootDir = fileURLToPath(new URL('.', import.meta.url));
 
 const baseRestrictedImportOptions = restrictedImports.rules['no-restricted-imports'][1];
-
-// Shared by every src/** no-restricted-imports block: flat config replaces a
-// rule per file instead of merging it, so a scoped override would otherwise
-// drop these.
-const performanceRestrictedImportPaths = [
-  {
-    allowTypeImports: true,
-    importNames: ['ModelIcon', 'ModelTag', 'ProviderCombine', 'ProviderIcon'],
-    message:
-      'These features statically import every brand icon (~3 MB). Import them from "@/components/LobeIcons", which mounts them through lazy().',
-    name: '@lobehub/icons',
-  },
-  {
-    allowTypeImports: true,
-    message:
-      'Import ProviderIcon / ProviderCombine from "@/components/LobeIcons", which mounts them through lazy().',
-    name: '@/libs/providerIcon',
-  },
-  {
-    allowTypeImports: true,
-    importNames: ['EmojiPicker'],
-    message:
-      'EmojiPicker carries the emoji-mart dataset. Use "@/components/EmojiPicker", which mounts it through lazy().',
-    name: '@lobehub/ui',
-  },
-  {
-    message:
-      'Import the imperative facade from "@/features/ShareModal" so the modal implementation stays outside initial chunks.',
-    name: '@/features/ShareModal/Modal',
-  },
-  {
-    allowTypeImports: true,
-    importNames: ['motion', 'm'],
-    message:
-      'The app runs under <LazyMotion features={domMax}>; `motion` bundles every feature again and `m` from the barrel drags it along. Use `import * as m from "motion/react-m"`.',
-    name: 'motion/react',
-  },
-  {
-    allowTypeImports: true,
-    message:
-      'Do not import the model-bank root barrel; it re-exports the full aiModels catalog (1.4 MB raw). Use a subpath such as "model-bank/aiModel", "model-bank/modelProvider", "model-bank/standardParameters" or "model-bank/utils".',
-    name: 'model-bank',
-  },
-];
 
 // On desktop the shell — every NavPanelPortal sidebar, the titlebar, the command
 // menu — renders as a sibling of TabHost, so React context binds these hooks to
@@ -158,6 +121,119 @@ const browserRuntimeRestrictedImportPatterns = [
   },
 ];
 
+// Business code uses domain methods in services/redis. The client lib is infrastructure.
+// Existing consumers are migration debt; this list only shrinks.
+const redisAccessRestrictedImportPaths = [
+  {
+    message:
+      'Redis service connections are internal. Use domain methods from @/server/services/redis.',
+    name: '@/server/services/redis/client',
+  },
+  {
+    allowTypeImports: true,
+    message:
+      'Redis client access belongs inside services/redis. Use a domain method or add one there.',
+    name: '@/server/modules/Redis',
+  },
+  {
+    allowTypeImports: true,
+    message:
+      'Server code must not open its own ioredis client. Use domain methods in "@/server/services/redis"; add missing business capabilities there.',
+    name: 'ioredis',
+  },
+  {
+    message:
+      'The raw agent-runtime Redis client is legacy. New code uses domain methods in "@/server/services/redis".',
+    name: '@/server/modules/AgentRuntime/redis',
+  },
+];
+const redisAccessRestrictedSyntax = [
+  {
+    message:
+      'Server code must not open its own ioredis client, not even lazily. Use "@/server/services/redis".',
+    selector: "ImportExpression > Literal[value='ioredis']",
+  },
+  {
+    message: 'Redis client access belongs inside services/redis.',
+    selector: 'ImportExpression > Literal[value=/^@\\/server\\/modules\\/Redis(?:\\/|$)/]',
+  },
+];
+// Server output is source English. Translation catalogs and runtimes stay with the clients.
+const serverI18nMessage =
+  'Server code renders source English and must not load translation catalogs or i18n runtimes.';
+const serverI18nRestrictedImportPaths = [
+  { message: serverI18nMessage, name: 'i18next' },
+  { message: serverI18nMessage, name: 'react-i18next' },
+];
+const serverI18nRestrictedImportPatterns = [
+  {
+    group: [
+      '@/locales/*',
+      '!@/locales/resources',
+      '@lobechat/locales',
+      '@lobechat/locales/*',
+      '!@lobechat/locales/resources',
+      '@/libs/i18n',
+      '@/libs/i18n/*',
+      '**/locales/*/*.json',
+    ],
+    message: serverI18nMessage,
+  },
+];
+
+const legacyRawRedisClientConsumers = [
+  'apps/server/src/services/home/index.ts',
+  'apps/server/src/services/agent/index.ts',
+  'apps/server/src/services/file/impls/s3.ts',
+  'apps/server/src/services/generation/latency.ts',
+  'apps/server/src/workflows/runGuard/store.ts',
+  'apps/server/src/runtimeConfig/providers/RedisRuntimeConfigProvider.ts',
+  'apps/server/src/router-hono/workflows/memory-user-memory/workflows/runGuard.ts',
+  'apps/server/src/modules/AgentRuntime/redis.ts',
+  'apps/server/src/modules/AgentRuntime/AgentStateManager.ts',
+  'apps/server/src/modules/AgentRuntime/StreamEventManager.ts',
+  'apps/server/src/modules/AgentRuntime/adapters/ServerLLMTransport.ts',
+  'apps/server/src/modules/AgentRuntime/dispatchClientTool.ts',
+  'apps/server/src/modules/AgentRuntime/factory.ts',
+  'apps/server/src/router-hono/agent/handlers/gatewayCron.ts',
+  'apps/server/src/router-hono/agent/handlers/llmRelay.ts',
+  'apps/server/src/router-hono/agent/handlers/toolResult.ts',
+  'apps/server/src/router-hono/webhooks/handlers/github.ts',
+  'apps/server/src/routers/lambda/messenger/wechat.ts',
+  'apps/server/src/services/agentRuntime/opportunisticSweep.ts',
+  'apps/server/src/services/agentSignal/store/adapters/redis/shared.ts',
+  'apps/server/src/services/bot/BotCallbackService.ts',
+  'apps/server/src/services/bot/BotMessageRouter/index.ts',
+  'apps/server/src/services/bot/deferredMessages.ts',
+  'apps/server/src/services/bot/platforms/discord/chatComposition.ts',
+  'apps/server/src/services/bot/platforms/feishu/chatComposition.ts',
+  'apps/server/src/services/bot/platforms/feishu/reactionTracker.ts',
+  'apps/server/src/services/bot/platforms/telegram/guestSession.ts',
+  'apps/server/src/services/bot/platforms/wechat/service.ts',
+  'apps/server/src/services/bot/reactionState.ts',
+  'apps/server/src/services/connector/stateStore.ts',
+  'apps/server/src/services/editLock/index.ts',
+  'apps/server/src/services/gateway/GatewayManager.ts',
+  'apps/server/src/services/gateway/botConnectQueue.ts',
+  'apps/server/src/services/gateway/runtimeStatus.ts',
+  'apps/server/src/services/messenger/MessengerRouter/index.ts',
+  'apps/server/src/services/messenger/installations/wechat.ts',
+  'apps/server/src/services/messenger/linkTokenStore.ts',
+  'apps/server/src/services/messenger/oauth/stateStore.ts',
+  'apps/server/src/services/messenger/platforms/linq/webhook.ts',
+  'apps/server/src/services/messenger/platforms/wechat/binder.ts',
+  'apps/server/src/services/messenger/wechatPush.ts',
+  'apps/server/src/services/messenger/wechatQrSessionStore.ts',
+  'apps/server/src/services/onboardingProgress/index.ts',
+  'apps/server/src/services/resourceEvents/index.ts',
+  'apps/server/src/services/scm/ScmControlService.ts',
+  'apps/server/src/services/scm/oauth/stateStore.ts',
+  'apps/server/src/services/taskResultBridge/redisStore.ts',
+  'apps/server/src/services/toolExecution/serverRuntimes/lobeAgent.ts',
+  'apps/server/src/services/toolExecution/serverRuntimes/message/index.ts',
+  'apps/server/src/services/understanding/sourceStore.ts',
+];
+
 const createRestrictedImportRule = ({ paths = [], patterns, serverSide = false } = {}) => [
   'error',
   {
@@ -166,11 +242,13 @@ const createRestrictedImportRule = ({ paths = [], patterns, serverSide = false }
       ...(baseRestrictedImportOptions.paths ?? []),
       ...performanceRestrictedImportPaths,
       ...(serverSide ? [] : browserRuntimeRestrictedImportPaths),
+      ...(serverSide ? [] : browserBundleRestrictedImportPaths),
       ...paths,
     ],
     patterns: [
       ...(baseRestrictedImportOptions.patterns ?? []),
       ...runtimeRestrictedImportPatterns,
+      ...performanceRestrictedImportPatterns,
       ...(serverSide ? [] : browserRuntimeRestrictedImportPatterns),
       ...(patterns ?? []),
     ],
@@ -221,10 +299,14 @@ const electronIpcRemoveListenerRestrictedSyntax = {
 export default eslint(
   {
     ignores: [
-      // Generated skill release; maintained in lobehub/acceptance.
-      '.agents/skills/acceptance/**',
+      // Vendored skill releases; maintained in lobehub/acceptance and lobehub/lobe-design-skill.
+      '.agents/skills/{acceptance,lobe-design}/**',
       // Generated by `bun run shell:vendor` in apps/desktop.
       'apps/desktop/shell/rescue/electron-updater.cjs',
+      // Vendored unchanged from the Agent Secret Channel reference implementation.
+      'packages/secret-channel/src/asc/**',
+      'packages/secret-channel/test/vectors/**',
+      'packages/secret-channel/test/vectors.test.ts',
       // dependencies
       'node_modules',
       // ci
@@ -281,7 +363,7 @@ export default eslint(
   // Performance import boundaries. These restrictions preserve real import()
   // seams instead of relying on component-level conditional rendering.
   {
-    files: ['src/**/*.{ts,tsx}'],
+    files: ['src/**/*.{ts,tsx}', 'apps/share/src/**/*.{ts,tsx}'],
     rules: {
       'no-restricted-imports': createRestrictedImportRule(),
     },
@@ -610,6 +692,62 @@ export default eslint(
     },
   },
   {
+    files: ['apps/server/src/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          ...baseRestrictedImportOptions,
+          paths: [...(baseRestrictedImportOptions.paths ?? []), ...serverI18nRestrictedImportPaths],
+          patterns: [
+            ...(baseRestrictedImportOptions.patterns ?? []),
+            ...serverI18nRestrictedImportPatterns,
+          ],
+        },
+      ],
+    },
+  },
+  {
+    // Redis access boundary for server code (see `redisAccessRestrictedImportPaths`).
+    files: ['apps/server/src/**/*.{ts,tsx}'],
+    // Tests of the legacy consumers import the raw module to mock or seed it;
+    // the boundary is about production code paths.
+    ignores: [
+      ...legacyRawRedisClientConsumers,
+      'apps/server/src/services/redis/**',
+      'apps/server/src/modules/Redis/**',
+      '**/*.test.{ts,tsx}',
+      '**/__tests__/**',
+    ],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          ...baseRestrictedImportOptions,
+          paths: [
+            ...(baseRestrictedImportOptions.paths ?? []),
+            ...serverI18nRestrictedImportPaths,
+            ...redisAccessRestrictedImportPaths,
+          ],
+          patterns: [
+            ...(baseRestrictedImportOptions.patterns ?? []),
+            ...serverI18nRestrictedImportPatterns,
+            {
+              group: ['@/server/modules/Redis/*'],
+              message: 'Use domain methods in services/redis.',
+            },
+          ],
+        },
+      ],
+      'no-restricted-syntax': [
+        'error',
+        ...useRefLazyInitRestrictedSyntax,
+        ...uppercaseRestrictedSyntax,
+        ...redisAccessRestrictedSyntax,
+      ],
+    },
+  },
+  {
     files: [
       'apps/desktop/src/overlay/**/*.{ts,tsx}',
       'packages/electron-client-ipc/src/**/*.{ts,tsx}',
@@ -678,23 +816,13 @@ export default eslint(
       'no-console': 0,
     },
   },
-  // agent-tracing CLI - console output is the primary interface
+  // CLIs and debug utilities - console output is the primary interface
   {
-    files: ['packages/agent-tracing/**/*'],
-    rules: {
-      'no-console': 0,
-    },
-  },
-  // lobehub-cli - console output is the primary interface
-  {
-    files: ['apps/cli/**/*'],
-    rules: {
-      'no-console': 0,
-    },
-  },
-  // model-runtime debug utilities - console output is the primary interface
-  {
-    files: ['packages/model-runtime/src/utils/debugStream.ts'],
+    files: [
+      'packages/agent-tracing/**/*',
+      'apps/cli/**/*',
+      'packages/model-runtime/src/utils/debugStream.ts',
+    ],
     rules: {
       'no-console': 0,
     },
@@ -714,6 +842,7 @@ export default eslint(
       '@eslint-react/no-unnecessary-use-prefix': 0,
     },
   },
+  ...stylexMigrationConfig,
   // CommonJS files rely on `require()` by design
   {
     files: ['**/*.cjs', 'apps/desktop/shell/**/*.js'],

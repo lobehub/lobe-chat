@@ -141,7 +141,11 @@ export class AcceptanceModel {
         return and(eq(acceptances.subjectType, 'task'), not(goalStep));
       }
       case 'goal': {
-        return and(eq(acceptances.subjectType, 'task'), goalStep);
+        // A Goal's step deliveries, and the release reviews its batches are held on.
+        return or(
+          and(eq(acceptances.subjectType, 'task'), goalStep),
+          eq(acceptances.subjectType, 'goal_gate'),
+        );
       }
       case 'standalone': {
         return inArray(acceptances.subjectType, ['standalone', 'document']);
@@ -445,6 +449,20 @@ export class AcceptanceModel {
     };
   };
 
+  /**
+   * File an ungrouped acceptance under a project. Never moves one already
+   * grouped: the `project_id IS NULL` guard lets a filing that landed in the
+   * meantime — by hand, or by another round — win. Resolves whether it wrote.
+   */
+  fillProject = async (id: string, projectId: string): Promise<boolean> => {
+    const rows = await this.db
+      .update(acceptances)
+      .set({ projectId })
+      .where(and(eq(acceptances.id, id), isNull(acceptances.projectId), this.ownership()))
+      .returning({ id: acceptances.id });
+    return rows.length > 0;
+  };
+
   update = async (
     id: string,
     value: Partial<
@@ -532,5 +550,30 @@ export class AcceptanceModel {
 
   delete = async (id: string) => {
     return this.db.delete(acceptances).where(and(eq(acceptances.id, id), this.ownership()));
+  };
+
+  /**
+   * Delete every acceptance attached to the given subjects in the caller's
+   * user/workspace scope. Used when the subjects themselves are deleted (see
+   * `TaskSubtreeRepository.deleteSubtree`).
+   */
+  deleteBySubjects = async (
+    subjectType: AcceptanceSubjectType,
+    subjectIds: string[],
+  ): Promise<void> => {
+    if (subjectIds.length === 0) return;
+
+    await this.db
+      .delete(acceptances)
+      .where(
+        and(
+          eq(acceptances.subjectType, subjectType),
+          inArray(acceptances.subjectId, subjectIds),
+          buildWorkspaceWhere(
+            { userId: this.userId, workspaceId: this.workspaceId },
+            { userId: acceptances.userId, workspaceId: acceptances.workspaceId },
+          ),
+        ),
+      );
   };
 }

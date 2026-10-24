@@ -1,6 +1,4 @@
-import { Block, Icon } from '@lobehub/ui';
-import { Avatar, Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { Avatar, Block, createStaticStyles, cssVar, Icon, Text } from '@lobehub/ui';
 import { CheckIcon } from 'lucide-react';
 import { memo } from 'react';
 
@@ -44,7 +42,13 @@ const SwitcherRow = memo<SwitcherRowProps>(({ active, item, onSelect, privateLab
     variant={'borderless'}
     onClick={() => onSelect(item.id)}
   >
-    <Avatar avatar={item.avatar} background={item.background} shape={'square'} size={28} />
+    <Avatar
+      avatar={item.avatar}
+      background={item.background}
+      shape={'square'}
+      size={24}
+      title={item.title}
+    />
     <Text
       ellipsis
       color={active ? cssVar.colorText : cssVar.colorTextSecondary}

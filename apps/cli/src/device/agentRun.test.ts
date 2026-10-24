@@ -67,6 +67,21 @@ describe('spawnHeteroAgentRun', () => {
     vi.unstubAllEnvs();
   });
 
+  it('does not hand the dispatched run an ancestor agent run identity or JWT file', () => {
+    // `lh connect` running inside a Codex shell: the CLI prefers LOBEHUB_JWT_FILE over
+    // LOBEHUB_JWT, so an inherited file would replace this dispatch's fresh token.
+    vi.stubEnv('LOBEHUB_JWT_FILE', '/tmp/ancestor/jwt');
+    vi.stubEnv('LOBEHUB_TASK_ID', 'ancestor-task');
+    spawnMock.mockReturnValue(makeFakeChild());
+
+    void spawnHeteroAgentRun({ ...baseParams, jwt: 'fresh-token' });
+
+    const { env } = spawnMock.mock.calls[0][2];
+    expect(env.LOBEHUB_JWT).toBe('fresh-token');
+    expect(env).not.toHaveProperty('LOBEHUB_JWT_FILE');
+    expect(env).not.toHaveProperty('LOBEHUB_TASK_ID');
+  });
+
   it('spawns `lh hetero exec` in server-ingest mode via the current CLI entry', async () => {
     const child = makeFakeChild();
     spawnMock.mockReturnValue(child);
@@ -128,23 +143,27 @@ describe('spawnHeteroAgentRun', () => {
     expect(child.stdin.end).toHaveBeenCalledTimes(1);
   });
 
-  it('replaces the launcher conversation context with the dispatched run', async () => {
-    for (const key of ['AGENT', 'TASK', 'OPERATION', 'TOPIC', 'WORKSPACE', 'ASSISTANT_MESSAGE']) {
-      vi.stubEnv(`LOBEHUB_${key}_ID`, `launcher-${key}`);
-    }
-    const child = makeFakeChild();
-    spawnMock.mockReturnValue(child);
+  it.each([undefined, 'agt_dispatched'])(
+    'replaces the launcher conversation context with dispatched agent %s',
+    async (agentId) => {
+      for (const key of ['AGENT', 'TASK', 'OPERATION', 'TOPIC', 'WORKSPACE', 'ASSISTANT_MESSAGE']) {
+        vi.stubEnv(`LOBEHUB_${key}_ID`, `launcher-${key}`);
+      }
+      const child = makeFakeChild();
+      spawnMock.mockReturnValue(child);
 
-    const ack = spawnHeteroAgentRun({ ...baseParams, assistantMessageId: undefined });
-    const env = spawnMock.mock.calls[0][2].env;
-    expect(env.LOBEHUB_OPERATION_ID).toBe('op');
-    expect(env.LOBEHUB_TOPIC_ID).toBe('tpc');
-    for (const key of ['AGENT', 'TASK', 'WORKSPACE', 'ASSISTANT_MESSAGE']) {
-      expect(env).not.toHaveProperty(`LOBEHUB_${key}_ID`);
-    }
-    child.emit('spawn');
-    await expect(ack).resolves.toEqual({ status: 'accepted' });
-  });
+      const ack = spawnHeteroAgentRun({ ...baseParams, agentId, assistantMessageId: undefined });
+      const env = spawnMock.mock.calls[0][2].env;
+      expect(env.LOBEHUB_OPERATION_ID).toBe('op');
+      expect(env.LOBEHUB_TOPIC_ID).toBe('tpc');
+      expect(env.LOBEHUB_AGENT_ID).toBe(agentId);
+      for (const key of ['TASK', 'WORKSPACE', 'ASSISTANT_MESSAGE']) {
+        expect(env).not.toHaveProperty(`LOBEHUB_${key}_ID`);
+      }
+      child.emit('spawn');
+      await expect(ack).resolves.toEqual({ status: 'accepted' });
+    },
+  );
 
   it('starts the wrapper from home so its inner preflight can report a missing cwd', async () => {
     const missingCwd = '/missing';

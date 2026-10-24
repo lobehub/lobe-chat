@@ -1,12 +1,13 @@
-import { Flexbox } from '@lobehub/ui';
 import {
   ActionIcon,
+  Button,
+  Flexbox,
   Pagination,
   TabsIndicator,
   TabsList,
   TabsRoot,
   TabsTab,
-} from '@lobehub/ui/base-ui';
+} from '@lobehub/ui';
 import { Plus } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -25,6 +26,7 @@ import type { TaskViewMode } from '@/store/global/initialState';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { useTaskStore } from '@/store/task';
 import { taskListSelectors } from '@/store/task/selectors';
+import { TASK_COLLECTION_PAGE_SIZE } from '@/store/task/slices/list/action';
 
 import { createTaskModal } from '../CreateTaskModal';
 import Breadcrumb from '../shared/Breadcrumb';
@@ -83,6 +85,21 @@ export const getTaskPageHeaderVisibility = ({
   };
 };
 
+/**
+ * Whether the header treats the page as empty (hiding the view options). A list
+ * that is empty only because its tasks are archived is not: the view options
+ * carry "Show archived", the one way back to those tasks.
+ */
+export const resolveHeaderEmptyHero = ({
+  hasOnlyArchivedTasks,
+  isEmptyHero,
+  isOrdinaryCollection,
+}: {
+  hasOnlyArchivedTasks: boolean;
+  isEmptyHero: boolean;
+  isOrdinaryCollection: boolean;
+}) => isOrdinaryCollection && isEmptyHero && !hasOnlyArchivedTasks;
+
 interface AgentTasksPageProps {
   /**
    * When provided, the page is scoped to a single agent's tasks; otherwise it
@@ -96,7 +113,7 @@ interface AgentTasksPageProps {
 export type TaskCollection = 'mine' | 'scheduled' | 'tasks';
 /** "My tasks" sub-view: assigned to me as a member, or created by me. */
 export type MyTaskScope = 'assigned' | 'created';
-const COLLECTION_PAGE_SIZE = 50;
+const COLLECTION_PAGE_SIZE = TASK_COLLECTION_PAGE_SIZE;
 
 export const resolveTaskCollection = (
   searchParams: URLSearchParams,
@@ -195,6 +212,8 @@ const AgentTasksPage = memo<AgentTasksPageProps>(({ agentId, projectId }) => {
   // gated off while it is up.
   const isBoardView = resolveTaskCollectionView(collection, viewMode) === 'board';
   const isMineBoard = isMineCollection && isBoardView;
+  const rawViewOptions = useGlobalStore(systemStatusSelectors.taskListViewOptions);
+  const viewOptions = useMemo(() => normalizeTaskListViewOptions(rawViewOptions), [rawViewOptions]);
   const useFetchTaskList = useTaskStore((s) => s.useFetchTaskList);
   // Keep the sync handle for `error` + `mutate` (the error/Retry state) and the
   // `queryKey` the rows are read by. Every scope splits automated work out of the ordinary tab — it is the
@@ -206,24 +225,18 @@ const AgentTasksPage = memo<AgentTasksPageProps>(({ agentId, projectId }) => {
   // gated to the ordinary tab; and the kanban view fetches its own server
   // groups, so there only the single page behind the empty-hero decision runs.
   const isListView = !isBoardView;
-  const { error, isLoading, mutate, queryKey } = useFetchTaskList(
-    projectId
-      ? {
-          automated: false,
-          complete: isListView,
-          enabled: isOrdinaryCollection,
-          projectId,
-          visibility: 'all',
-        }
-      : agentId
-        ? { agentId, automated: false, complete: isListView, enabled: isOrdinaryCollection }
-        : {
-            allAgents: true,
-            automated: false,
-            complete: isListView,
-            enabled: isOrdinaryCollection,
-          },
-  );
+  const listScope = projectId
+    ? { projectId, visibility: 'all' as const }
+    : agentId
+      ? { agentId }
+      : { allAgents: true };
+  const { error, isLoading, mutate, queryKey } = useFetchTaskList({
+    ...listScope,
+    automated: false,
+    complete: isListView,
+    enabled: isOrdinaryCollection,
+    includeArchived: viewOptions.showArchived,
+  });
   // Drive the loading/empty boundary off the store entry of this exact query:
   // each scope / visibility is its own entry, so the settled signal and the
   // rows always describe the same list (a persisted entry paints at once).
@@ -235,6 +248,20 @@ const AgentTasksPage = memo<AgentTasksPageProps>(({ agentId, projectId }) => {
     return () => setActiveTaskListKey(undefined);
   }, [queryKey, setActiveTaskListKey]);
   const isEmptyHero = useTaskStore(taskListSelectors.isListEmpty(queryKey));
+  // The empty hero hides the view options, and with them "Show archived". When
+  // only archived tasks remain, keep the options reachable so they can come back.
+  const { queryKey: archivedProbeKey } = useFetchTaskList({
+    ...listScope,
+    automated: false,
+    enabled: isOrdinaryCollection && isEmptyHero && !viewOptions.showArchived,
+    includeArchived: true,
+  });
+  const hasOnlyArchivedTasks = useTaskStore(
+    (s) =>
+      !!archivedProbeKey &&
+      taskListSelectors.isTaskListInit(archivedProbeKey)(s) &&
+      !taskListSelectors.isListEmpty(archivedProbeKey)(s),
+  );
   const useFetchScheduledTaskList = useTaskStore((s) => s.useFetchScheduledTaskList);
   const scheduledSWR = useFetchScheduledTaskList({
     agentId,
@@ -243,13 +270,12 @@ const AgentTasksPage = memo<AgentTasksPageProps>(({ agentId, projectId }) => {
     offset: (collectionPage - 1) * COLLECTION_PAGE_SIZE,
     projectId,
   });
-  const rawViewOptions = useGlobalStore(systemStatusSelectors.taskListViewOptions);
-  const viewOptions = useMemo(() => normalizeTaskListViewOptions(rawViewOptions), [rawViewOptions]);
   const useFetchMyTaskList = useTaskStore((s) => s.useFetchMyTaskList);
   const mineSWR = useFetchMyTaskList({
     enabled: isMineCollection && !isMineBoard,
     limit: COLLECTION_PAGE_SIZE,
     offset: (collectionPage - 1) * COLLECTION_PAGE_SIZE,
+    includeArchived: viewOptions.showArchived,
     scope: myTaskScope,
     statuses: getVisibleTaskStatuses(viewOptions),
   });
@@ -260,6 +286,10 @@ const AgentTasksPage = memo<AgentTasksPageProps>(({ agentId, projectId }) => {
   const collectionTasks = collectionSWR.data?.data ?? [];
   const collectionTasksTotal = collectionSWR.data?.total ?? 0;
   const isCollectionListInit = collectionSWR.data !== undefined;
+  // An empty Scheduled tab offers creation from its empty state; the header
+  // button would only duplicate it.
+  const showScheduledEmptyCreate =
+    isScheduledCollection && canCreateTask && isCollectionListInit && collectionTasksTotal === 0;
   const scheduledViewOptions = useMemo(
     () => getScheduledTaskViewOptions(viewOptions),
     [viewOptions],
@@ -316,6 +346,21 @@ const AgentTasksPage = memo<AgentTasksPageProps>(({ agentId, projectId }) => {
     });
   }, [agentId, canCreateTask, createActionBehavior.mode, navigate, projectId, updateSystemStatus]);
 
+  const handleCreateScheduledTask = useCallback(() => {
+    if (!canCreateTask) return;
+    createTaskModal({
+      agentId,
+      lockAssignee: !!agentId,
+      projectId,
+      schedule: true,
+      // The scheduled tab has no inline entry to dock into.
+      showInlineToggle: false,
+      onCreated: (task) => {
+        navigate(taskDetailPath(task.identifier, agentId ? task.agentId : undefined, task.name));
+      },
+    });
+  }, [agentId, canCreateTask, navigate, projectId]);
+
   const handleShowHiddenCompleted = useCallback(() => {
     setViewOptions((prev) => ({ ...prev, hideCompleted: false }));
   }, [setViewOptions]);
@@ -352,7 +397,11 @@ const AgentTasksPage = memo<AgentTasksPageProps>(({ agentId, projectId }) => {
 
   const headerVisibility = getTaskPageHeaderVisibility({
     agentId,
-    isEmptyHero: isOrdinaryCollection ? isEmptyHero : false,
+    isEmptyHero: resolveHeaderEmptyHero({
+      hasOnlyArchivedTasks,
+      isEmptyHero,
+      isOrdinaryCollection,
+    }),
     isMobile,
     projectId,
   });
@@ -394,6 +443,15 @@ const AgentTasksPage = memo<AgentTasksPageProps>(({ agentId, projectId }) => {
                 size={DESKTOP_HEADER_ICON_SMALL_SIZE}
                 title={createActionBehavior.disabled ? reason : undefined}
                 onClick={handleCreateTask}
+              />
+            )}
+            {isScheduledCollection && !showScheduledEmptyCreate && (
+              <ActionIcon
+                disabled={!canCreateTask}
+                icon={Plus}
+                size={DESKTOP_HEADER_ICON_SMALL_SIZE}
+                title={canCreateTask ? t('createTask.submitScheduled') : reason}
+                onClick={handleCreateScheduledTask}
               />
             )}
             {!isScheduledCollection && headerVisibility.showViewOptions && (
@@ -447,6 +505,13 @@ const AgentTasksPage = memo<AgentTasksPageProps>(({ agentId, projectId }) => {
             items={collectionTasks}
             options={isMineCollection ? myTaskViewOptions : scheduledViewOptions}
             routeScope={routeScope}
+            emptyAction={
+              showScheduledEmptyCreate ? (
+                <Button icon={Plus} onClick={handleCreateScheduledTask}>
+                  {t('createTask.submitScheduled')}
+                </Button>
+              ) : undefined
+            }
             emptyDescription={
               isMineCollection
                 ? t(

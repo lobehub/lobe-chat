@@ -1,6 +1,14 @@
-import { Center, ContextMenuTrigger, Flexbox, Tooltip } from '@lobehub/ui';
-import { Avatar, Checkbox } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import {
+  Avatar,
+  Center,
+  Checkbox,
+  ContextMenuTrigger,
+  createStaticStyles,
+  cssVar,
+  cx,
+  Flexbox,
+  Tooltip,
+} from '@lobehub/ui';
 import { isEqual } from 'es-toolkit';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -146,6 +154,7 @@ const FileListItem = ({
   finishEmbedding,
   id,
   index,
+  knowledgeBaseIds,
   metadata,
   name,
   onSelectedChange,
@@ -337,6 +346,7 @@ const FileListItem = ({
             isPage={isPage}
             isPrivate={isPrivate}
             isRenaming={isRenaming}
+            knowledgeBaseIds={resourceManagerState.libraryId ? undefined : knowledgeBaseIds}
             name={name}
             privateTooltip={t('resources.visibility.privateTooltip', { ns: 'chat' })}
             renamingValue={renamingValue}

@@ -2,9 +2,13 @@ import type { AgentStreamClientFeature } from '@lobechat/agent-gateway-client';
 import { CLIENT_PROTOCOL_VERSION } from '@lobechat/agent-gateway-client';
 import type {
   ClientLlmWaitItem,
+  ComposerUserMessage,
+  ContextSelection,
   ExecAgentAppContext,
+  ExecAgentClientIds,
   ExecAgentLlmExecutor,
   ExecAgentResult,
+  PageSelection,
   ResumeClientLlmWaitResult,
   RuntimeMentionedAgent,
   ScheduleAgentRunParams,
@@ -19,7 +23,7 @@ import { buildLlmExecutorDeclaration } from '@/services/llmRelay';
 export type { ExecAgentResult, ScheduleAgentRunParams, ScheduleAgentRunResult };
 
 /** Gateway stream features every run started from this client handles. */
-const STREAM_FEATURES: AgentStreamClientFeature[] = ['member_runtime_end'];
+const STREAM_FEATURES: AgentStreamClientFeature[] = ['file_works', 'member_runtime_end'];
 
 /** An older server's strict input schema rejected the `streamFeatures` key. */
 const isUnknownStreamFeaturesError = (error: unknown): boolean => {
@@ -138,13 +142,15 @@ export interface ExecAgentTaskParams {
    * `newTopic.id` / `newUserMessage.id` / `newAssistantMessage.id`. Fresh
    * sends only; resume / regeneration must not replay them.
    */
-  clientIds?: { assistantMessageId?: string; topicId?: string; userMessageId?: string };
+  clientIds?: ExecAgentClientIds;
   /**
    * Server runs the composer tracked on this conversation at send time. The
    * server records them only when this send has to stop a run the client left
    * live, to tell whether the client never saw it or its stop never landed.
    */
   clientOperations?: ClientOperationSnapshot[];
+  /** @deprecated Mirror of `userMessage.metadata.contextSelections` for servers that predate it. */
+  contextSelections?: ContextSelection[];
   deviceId?: string;
   existingMessageIds?: string[];
   /** File IDs of already-uploaded attachments to attach to the new user message */
@@ -156,6 +162,8 @@ export interface ExecAgentTaskParams {
    * context so the supervisor run delegates to them instead of answering itself.
    */
   mentionedAgents?: RuntimeMentionedAgent[];
+  /** @deprecated Mirror of `userMessage.metadata.pageSelections` for servers that predate it. */
+  pageSelections?: PageSelection[];
   /** Parent message ID for regeneration/continue (skip user message creation, branch from this message) */
   parentMessageId?: string;
   prompt: string;
@@ -171,6 +179,8 @@ export interface ExecAgentTaskParams {
   resumeApprovals?: ResumeApprovalParam[];
   /** Resume a previous op paused on a human-intervention tool by carrying the human answer as the tool result. */
   resumeToolResult?: ResumeToolResultParam;
+  /** Skill identifiers the user selected in this message; the server injects their bodies. */
+  selectedSkillIds?: string[];
   /** Tool identifiers the user @-mentioned in this message; the server enables them for this run. */
   selectedToolIds?: string[];
   slug?: string;
@@ -183,6 +193,31 @@ export interface ExecAgentTaskParams {
    */
   trigger?: string;
   userInterventionConfig?: UserInterventionConfig;
+  /** The composer-authored part of the new user message; see `ExecAgentParams.userMessage`. */
+  userMessage?: ComposerUserMessage;
+}
+
+/**
+ * A composer send queued behind the running turn on the server: the
+ * fresh-send part of {@link ExecAgentTaskParams}.
+ */
+export type QueuedFollowUpRequest = Omit<
+  ExecAgentTaskParams,
+  | 'autoStart'
+  | 'clientIds'
+  | 'clientOperations'
+  | 'existingMessageIds'
+  | 'parentMessageId'
+  | 'replacesOperationId'
+  | 'resumeApproval'
+  | 'resumeApprovals'
+  | 'resumeToolResult'
+  | 'steer'
+>;
+
+export interface QueuedFollowUpSurface {
+  threadId?: string | null;
+  topicId: string;
 }
 
 /**
@@ -194,6 +229,10 @@ export interface ExecSubAgentTaskParams {
   /** Optional for Single Agent mode, required for Group mode */
   groupId?: string;
   instruction: string;
+  /** This tab runs the sub-agent's device-only LLM calls (with {@link llmRelayChannel}). */
+  llmExecutor?: ExecAgentLlmExecutor;
+  /** The one-shot relay channel this tab stands by on for the sub-agent's LLM calls. */
+  llmRelayChannel?: string;
   parentMessageId: string;
   /** Parent operation ID for dispatching callAgent hooks */
   parentOperationId?: string;
@@ -257,6 +296,7 @@ export interface UpdateClientTaskThreadStatusParams {
   error?: string;
   metadata?: {
     totalCost?: number;
+    totalLlmCalls?: number;
     totalMessages?: number;
     totalSteps?: number;
     totalTokens?: number;
@@ -302,6 +342,43 @@ class AiAgentService {
   }
 
   /**
+   * Queue a follow-up behind the surface's running turn on the server. It
+   * carries the same run declarations as {@link execAgentTask}, so the run can
+   * tell whether the follow-up can join it. `queued: false` means nothing was
+   * stored and this client must send it itself.
+   */
+  async appendQueuedFollowUp(params: {
+    /** Composer state to keep with it, so a reloaded page can show and resend it as typed. */
+    composer?: { editorData?: Record<string, any>; filesPreview?: Record<string, any>[] };
+    id: string;
+    request: QueuedFollowUpRequest;
+  }) {
+    const clientProtocol = canUseGatewayProtocolV2() ? CLIENT_PROTOCOL_VERSION : undefined;
+    const llmExecutor = buildLlmExecutorDeclaration();
+
+    return await lambdaClient.agentSteerQueue.append.mutate({
+      ...(params.composer && { composer: params.composer }),
+      id: params.id,
+      request: {
+        clientProtocol,
+        ...(llmExecutor && { llmExecutor }),
+        ...params.request,
+        streamFeatures: STREAM_FEATURES,
+      },
+    });
+  }
+
+  /** This user's follow-ups still waiting on the server, oldest first. */
+  async listQueuedFollowUps(surface: QueuedFollowUpSurface) {
+    return await lambdaClient.agentSteerQueue.list.query(surface);
+  }
+
+  /** `removed: false` means the follow-up already left the queue to be delivered. */
+  async removeQueuedFollowUp(params: QueuedFollowUpSurface & { id: string }) {
+    return await lambdaClient.agentSteerQueue.remove.mutate(params);
+  }
+
+  /**
    * Defer an agent run to a future time. Creates an empty `scheduled` topic that
    * the backend cron fires once `runAt` passes; nothing runs now.
    */
@@ -335,12 +412,33 @@ class AiAgentService {
     return await lambdaClient.aiAgent.execSubAgentTask.mutate(params);
   }
 
+  /** This tab stopped standing by on the relay channel it named in `execSubAgentTask`. */
+  async releaseSubAgentLlmRelay(params: { channel: string }) {
+    return await lambdaClient.aiAgent.releaseSubAgentLlmRelay.mutate(params);
+  }
+
   /**
    * Get SubAgent task status by threadId
    * Works for both Group and Single Agent mode tasks
    */
   async getSubAgentTaskStatus(params: GetSubAgentTaskStatusParams) {
     return await lambdaClient.aiAgent.getSubAgentTaskStatus.query(params);
+  }
+
+  /**
+   * Authoritative terminal outcome of a server run, by its operation id.
+   *
+   * The leaked-run sweep needs it to tell a run that COMPLETED from one that
+   * failed / was interrupted: only a completion may drain the follow-up the user
+   * queued behind it (a failed run keeps its queue, like every terminal path).
+   * The terminal frame that would have carried this outcome is exactly what the
+   * leak lost.
+   *
+   * Resolves `null` when the server no longer holds the run (its state expired).
+   * Callers must treat that as UNKNOWN, never as a completion.
+   */
+  async getOperationStatus(params: { operationId: string }) {
+    return await lambdaClient.aiAgent.getOperationStatus.query(params);
   }
 
   /**

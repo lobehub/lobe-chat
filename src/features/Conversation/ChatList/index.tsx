@@ -16,9 +16,8 @@ import {
   hasPendingInterventions,
   INTERVENTION_REFRESH_INTERVAL,
 } from '@/store/chat/utils/interventionSync';
-import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
-import { authSelectors, settingsSelectors } from '@/store/user/selectors';
+import { authSelectors, labPreferSelectors, settingsSelectors } from '@/store/user/selectors';
 
 import WideScreenContainer from '../../WideScreenContainer';
 import SkeletonList from '../components/SkeletonList';
@@ -36,10 +35,15 @@ import AgentSignalReceiptList from './components/AgentSignalReceiptList';
 import { RefreshError } from './components/RefreshError';
 import VirtualizedList from './components/VirtualizedList';
 import { useAgentSignalReceipts } from './hooks/useAgentSignalReceipts';
+import { useDeepLinkBranchActivation } from './hooks/useDeepLinkBranchActivation';
+import { useDeepLinkHistoryBackfill } from './hooks/useDeepLinkHistoryBackfill';
+import { useForwardPagingFallback } from './hooks/useForwardPagingFallback';
 import { useInitialRevalidation } from './hooks/useInitialRevalidation';
 import { useMessageRefreshError } from './hooks/useMessageRefreshError';
+import { type InitialScrollPosition } from './hooks/useTopicScrollPersist';
 import { resolveMessageListFeedback } from './resolveMessageListFeedback';
 import { buildChatRows } from './utils/chatRows';
+import { hoistCompressedGroups } from './utils/compressedGroupOrder';
 import type { MessageDeepLink } from './utils/messageDeepLink';
 import { resolveMessageDeepLink } from './utils/messageDeepLink';
 import { resolveRefreshingRowId } from './utils/refreshingRow';
@@ -94,11 +98,22 @@ export interface ChatListProps {
    */
   hideBackgroundRunHint?: boolean;
   /**
+   * Where the conversation opens: the saved position or the end (`bottom`,
+   * default), or always the first message (`top`, e.g. in share page).
+   */
+  initialScrollPosition?: InitialScrollPosition;
+  /**
    * Custom item renderer. If not provided, uses default ChatItem.
    */
   itemContent?: (index: number, id: string) => ReactNode;
   /** Message hash target to locate after the virtual list has rendered. */
   messageDeepLink?: MessageDeepLink;
+  /**
+   * The conversation reads forward (`messageReadMode: 'forward'`) but the
+   * server cannot page forward. The owner of the context should switch it back
+   * to the newest-first read.
+   */
+  onForwardPagingUnsupported?: () => void;
   /**
    * Force showing welcome component even when messages exist
    */
@@ -121,18 +136,19 @@ const ChatList = memo<ChatListProps>(
     footerSlot,
     headerSlot,
     hideBackgroundRunHint,
+    initialScrollPosition,
     welcome,
     itemContent,
     messageDeepLink,
+    onForwardPagingUnsupported,
     showWelcome,
   }) => {
-    // Fetch messages (SWR key is null when skipFetch is true)
+    // The chat store owns the transcript; this view keeps its sync mounted.
     const context = useConversationStore((s) => s.context);
+    const paging = context.messageReadMode === 'forward' ? 'forward' : 'backward';
     const enableUserMemories = useUserStore(settingsSelectors.memoryEnabled);
-    const [skipFetch, useFetchMessages] = useConversationStore((s) => [
-      dataSelectors.skipFetch(s),
-      s.useFetchMessages,
-    ]);
+    const skipFetch = useConversationStore(dataSelectors.skipFetch);
+    const useFetchMessages = useChatStore((s) => s.useFetchMessages);
     const activeAgentId = useChatStore((s) => s.activeAgentId);
     // Pending cards still refresh during streaming; the data slice merges only
     // intervention changes so lagging DB snapshots cannot replace live text.
@@ -146,16 +162,22 @@ const ChatList = memo<ChatListProps>(
     const isCreatingTopic = useChatStore(
       (s) => !!context.topicId && s.creatingTopicIds.includes(context.topicId),
     );
-    const { enableAgentSelfIteration } = useServerConfigStore(featureFlagsSelectors);
+    const enableSelfLearning = useUserStore(labPreferSelectors.enableSelfLearning);
     const messagesSWR = useFetchMessages(context, {
       refreshInterval: hasPendingApproval ? INTERVENTION_REFRESH_INTERVAL : 0,
       revalidateOnFocus: hasPendingApproval || !isStreaming,
       skipFetch: skipFetch || isCreatingTopic,
       syncInterventions: true,
     });
+    const laterMessagesError = useConversationStore((s) => s.laterMessagesError);
+    const isFallingBack = useForwardPagingFallback({
+      errors: [messagesSWR.error, laterMessagesError],
+      onUnsupported: onForwardPagingUnsupported,
+      paging,
+    });
     const messageListIdentity = getMessageListCacheIdentity(context);
     const refreshError = useMessageRefreshError({
-      error: messagesSWR.error,
+      error: isFallingBack ? undefined : messagesSWR.error,
       identity: messageListIdentity,
       isValidating: messagesSWR.isValidating,
       mutate: messagesSWR.mutate,
@@ -167,9 +189,16 @@ const ChatList = memo<ChatListProps>(
       isValidating: messagesSWR.isValidating,
     });
     const allDisplayMessages = useConversationStore(dataSelectors.displayMessages);
+    // A compression group summarises the history before the turn that triggered
+    // it, so it belongs above that turn's question rather than between the
+    // question and its answer.
+    const orderedMessages = useMemo(
+      () => hoistCompressedGroups(allDisplayMessages),
+      [allDisplayMessages],
+    );
     const displayMessages = useMemo(
-      () => (filterItem ? allDisplayMessages.filter(filterItem) : allDisplayMessages),
-      [allDisplayMessages, filterItem],
+      () => (filterItem ? orderedMessages.filter(filterItem) : orderedMessages),
+      [orderedMessages, filterItem],
     );
     const displayMessageIds = useMemo(() => displayMessages.map((m) => m.id), [displayMessages]);
     // Steered follow-up turns fold into the turn they interrupted. Custom item
@@ -194,7 +223,7 @@ const ChatList = memo<ChatListProps>(
     // anonymous, and agent-share visitors are not the owner these APIs scope to.
     const isSharePage = !!context.topicShareId || !!context.agentShareId;
     // TODO: Migrate Agent Signal receipts behind a dedicated user-visible receipt capability.
-    const canShowAgentSignalReceipts = enableAgentSelfIteration === true && !isSharePage;
+    const canShowAgentSignalReceipts = enableSelfLearning && !isSharePage;
     const { receiptsByAnchor } = useAgentSignalReceipts({
       agentId: canShowAgentSignalReceipts ? activeAgentId : undefined,
       displayMessages,
@@ -261,6 +290,22 @@ const ChatList = memo<ChatListProps>(
       [rowIds.length, rowById, defaultWorkflowExpandLevel, receiptsByAnchor],
     );
     const messagesInit = useConversationStore(dataSelectors.messagesInit);
+    const dbMessages = useConversationStore(dataSelectors.dbMessages);
+    const loadEarlierMessages = useConversationStore((s) => s.loadEarlierMessages);
+    const switchMessageBranch = useConversationStore((s) => s.switchMessageBranch);
+    const deepLinkTargetLoaded = useDeepLinkBranchActivation({
+      deepLink: messageDeepLink,
+      messages: dbMessages,
+      resolved: !!resolvedMessageDeepLink,
+      switchMessageBranch,
+    });
+    useDeepLinkHistoryBackfill({
+      deepLinkKey: messageDeepLink?.navigationKey,
+      loadedCount: dbMessages.length,
+      loadEarlierMessages,
+      ready: messagesInit && paging === 'backward',
+      resolved: !!resolvedMessageDeepLink || deepLinkTargetLoaded,
+    });
 
     // When topicId is null (new conversation), show welcome directly without waiting for fetch
     // because there's no server data to fetch - only local optimistic updates exist
@@ -334,8 +379,10 @@ const ChatList = memo<ChatListProps>(
               dataSource={rowIds}
               footerSlot={footerSlot}
               headerSlot={headerSlot}
+              initialScrollPosition={initialScrollPosition}
               itemContent={itemContent ?? defaultItemContent}
               messageDeepLink={resolvedMessageDeepLink}
+              paging={paging}
             />
           </BackgroundRunHintContext>
         </MessageActionProvider>

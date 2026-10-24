@@ -6,7 +6,7 @@
   - `--status`: pending, running, paused, completed, failed, canceled
   - `--root`: Only root tasks (no parent)
   - `--tree`: Display as tree structure
-- `lh task view <id>` - View task details (instruction, workspace, activities)
+- `lh task view <id>` - View task details (instruction, documents, activities)
 - `lh task create -i <instruction> [-n <name>] [--agent <id>] [--parent <id>] [--priority <0-4>]` - Create task
   - Priority: 0=none, 1=urgent, 2=high, 3=normal, 4=low
 - `lh task edit <id> [-n <name>] [-i <instruction>] [--status <status>] [--priority <0-4>] [--agent <id>]` - Update task
@@ -64,7 +64,7 @@
 - `lh task topic cancel <topicId>` - Cancel running topic and pause task
 - `lh task topic delete <topicId> [--yes]` - Delete topic and messages
 
-## Document Commands (Workspace)
+## Document Commands
 
 - `lh task doc create <id> -t <title> [-b <content>] [--parent <docId>] [--folder]` - Create and pin document
 - `lh task doc pin <id> <documentId>` - Pin existing document
@@ -77,4 +77,4 @@
 - Task identifiers use format like TASK-1, TASK-2, etc.
 - Use `lh task tree` to visualize full task hierarchy before planning work
 - Use `lh task comment` to log progress — comments appear in task activities
-- Documents in workspace are accessible to the agent during execution
+- Documents pinned to the task are accessible to the agent during execution

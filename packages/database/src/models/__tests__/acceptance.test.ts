@@ -142,6 +142,25 @@ describe('AcceptanceModel', () => {
     expect((await model.findById(acceptance.id))?.projectId).toBeNull();
   });
 
+  it('fills a project only on an ungrouped acceptance it owns', async () => {
+    const projectModel = new ProjectModel(serverDB, userId);
+    const first = await projectModel.create({ identifier: 'FILA', name: 'First' });
+    const second = await projectModel.create({ identifier: 'FILB', name: 'Second' });
+    const model = new AcceptanceModel(serverDB, userId);
+    const acceptance = await model.ensureForSubject('topic', topicId);
+
+    // Another user's model cannot file it.
+    expect(
+      await new AcceptanceModel(serverDB, otherUserId).fillProject(acceptance.id, first.id),
+    ).toBe(false);
+    expect((await model.findById(acceptance.id))?.projectId).toBeNull();
+
+    expect(await model.fillProject(acceptance.id, first.id)).toBe(true);
+    // Once grouped, a later fill leaves it where it is.
+    expect(await model.fillProject(acceptance.id, second.id)).toBe(false);
+    expect((await model.findById(acceptance.id))?.projectId).toBe(first.id);
+  });
+
   it('keeps the first standalone display title and backfills one when initially absent', async () => {
     const model = new AcceptanceModel(serverDB, userId);
     const subjectId = 'standalone-external-delivery';
@@ -308,15 +327,16 @@ describe('AcceptanceModel', () => {
     await model.create({ subjectId: topicId, subjectType: 'topic' });
     await model.create({ subjectId: 'cli-run', subjectType: 'standalone' });
     await model.create({ subjectId: 'doc-1', subjectType: 'document' });
+    await model.create({ subjectId: 'release-node', subjectType: 'goal_gate' });
 
     const subjectsFor = async (source: 'goal' | 'standalone' | 'task' | 'topic') =>
       (await model.queryPage({ source })).items.map((row) => row.subjectId).sort();
 
-    expect(await subjectsFor('goal')).toEqual(['goal-step-task']);
+    expect(await subjectsFor('goal')).toEqual(['goal-step-task', 'release-node']);
     expect(await subjectsFor('task')).toEqual(['plain-task']);
     expect(await subjectsFor('topic')).toEqual([topicId]);
     expect(await subjectsFor('standalone')).toEqual(['cli-run', 'doc-1']);
-    expect(await model.query({ source: 'all' })).toHaveLength(5);
+    expect(await model.query({ source: 'all' })).toHaveLength(6);
   });
 
   describe('scope', () => {

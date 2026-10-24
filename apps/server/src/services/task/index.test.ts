@@ -6,6 +6,7 @@ import { BriefModel } from '@/database/models/brief';
 import { RbacModel } from '@/database/models/rbac';
 import { TaskModel } from '@/database/models/task';
 import { TaskTopicModel } from '@/database/models/taskTopic';
+import { TopicModel } from '@/database/models/topic';
 import { UserModel } from '@/database/models/user';
 import { WorkspaceMemberModel } from '@/database/models/workspaceMember';
 import type { LobeChatDatabase } from '@/database/type';
@@ -43,6 +44,10 @@ vi.mock('@/database/models/taskTopic', () => ({
   TaskTopicModel: vi.fn(),
 }));
 
+vi.mock('@/database/models/topic', () => ({
+  TopicModel: vi.fn(),
+}));
+
 vi.mock('@/database/models/brief', () => ({
   BriefModel: vi.fn(),
 }));
@@ -63,7 +68,7 @@ const { resolveTaskAcceptance } = vi.hoisted(() => ({
   resolveTaskAcceptance: vi.fn(),
 }));
 
-vi.mock('@/server/services/verify/taskAcceptance', () => ({ resolveTaskAcceptance }));
+vi.mock('@/server/services/verify/taskAcceptanceResolution', () => ({ resolveTaskAcceptance }));
 
 // AiAgentService pulls in ~14 sub-dependencies in its constructor; mock it so
 // the running-status branch in updateStatus doesn't drag them in.
@@ -141,6 +146,10 @@ describe('TaskService', () => {
     timeoutRunning: vi.fn(),
   };
 
+  const mockTopicModel = {
+    batchDeleteIncludingTrashed: vi.fn().mockResolvedValue(undefined),
+  };
+
   const mockBriefModel = {
     findByTaskId: vi.fn(),
   };
@@ -161,6 +170,7 @@ describe('TaskService', () => {
     resolveTaskAcceptance.mockResolvedValue(undefined);
     mockTaskTopicModel.findRunningByTaskIds.mockResolvedValue([]);
     mockTaskModel.getActivities.mockResolvedValue([]);
+    mockTopicModel.batchDeleteIncludingTrashed.mockResolvedValue(undefined);
     (AgentModel as any).mockImplementation(function () {
       return mockAgentModel;
     });
@@ -169,6 +179,9 @@ describe('TaskService', () => {
     });
     (TaskTopicModel as any).mockImplementation(function () {
       return mockTaskTopicModel;
+    });
+    (TopicModel as any).mockImplementation(function () {
+      return mockTopicModel;
     });
     (BriefModel as any).mockImplementation(function () {
       return mockBriefModel;
@@ -179,6 +192,82 @@ describe('TaskService', () => {
     (WorkspaceMemberModel as any).mockImplementation(function () {
       return mockWorkspaceMemberModel;
     });
+  });
+
+  describe('createTask native model snapshots', () => {
+    beforeEach(() => {
+      mockAgentModel.getAgentSnapshotForTaskCreate.mockResolvedValueOnce({
+        modelOverrideProvider: 'codex',
+        snapshot: { model: 'codex', provider: 'openai' },
+        visibility: 'private',
+      });
+      mockTaskModel.create.mockImplementation(async (data: Parameters<TaskModel['create']>[0]) => ({
+        ...data,
+        id: 'task-native-model',
+        identifier: 'T-1',
+        seq: 1,
+      }));
+    });
+
+    it('keeps a model-only native override effective after task creation', async () => {
+      const task = await new TaskService(db, userId).createTask({
+        assigneeAgentId: 'agent-codex',
+        config: { model: 'gpt-5.6-terra' },
+        instruction: 'Use the requested native model',
+      });
+      expect(task.config).toEqual({ model: 'gpt-5.6-terra', provider: 'codex' });
+    });
+
+    it('keeps inherited runtime snapshots unchanged', async () => {
+      const task = await new TaskService(db, userId).createTask({
+        assigneeAgentId: 'agent-codex',
+        instruction: 'Use Agent defaults',
+      });
+      expect(task.config).toEqual({ model: 'codex', provider: 'openai' });
+    });
+
+    it('keeps explicit runtime-ID snapshots unchanged', async () => {
+      const task = await new TaskService(db, userId).createTask({
+        assigneeAgentId: 'agent-codex',
+        config: { model: 'codex' },
+        instruction: 'Use the Codex runtime',
+      });
+      expect(task.config).toEqual({ model: 'codex', provider: 'openai' });
+    });
+
+    it('preserves explicit provider choices', async () => {
+      const task = await new TaskService(db, userId).createTask({
+        assigneeAgentId: 'agent-codex',
+        config: { model: 'gpt-4o', provider: 'openai' },
+        instruction: 'Keep the explicit provider',
+      });
+      expect(task.config).toEqual({ model: 'gpt-4o', provider: 'openai' });
+    });
+  });
+
+  // ROOT CAUSE:
+  // A model-only API Task used the wrapper provider from the Agent row instead
+  // of the binding provider, which changed credentials during later resolution.
+  /** @example Task creation preserves the personal API provider with an explicit model. */
+  it('creates an API model-only Task with its binding provider', async () => {
+    mockAgentModel.getAgentSnapshotForTaskCreate.mockResolvedValueOnce({
+      modelOverrideProvider: 'personal-provider',
+      snapshot: { model: 'codex', provider: 'openai' },
+      visibility: 'private',
+    });
+    mockTaskModel.create.mockImplementation(async (data: Parameters<TaskModel['create']>[0]) => ({
+      ...data,
+      id: 'task-api-model',
+      identifier: 'T-1',
+      seq: 1,
+    }));
+    const task = await new TaskService(db, userId).createTask({
+      assigneeAgentId: 'agent-codex',
+      config: { model: 'gpt-5.4-mini' },
+      instruction: 'Use the requested model with the same provider',
+    });
+    /** @example The persisted provider is the API binding ID, not codex/openai. */
+    expect(task.config).toEqual({ model: 'gpt-5.4-mini', provider: 'personal-provider' });
   });
 
   describe('assertAssigneeUserAssignable', () => {
@@ -1483,6 +1572,48 @@ describe('TaskService', () => {
     });
   });
 
+  describe('completion requested by the task own run', () => {
+    it('defers instead of interrupting the calling operation', async () => {
+      const task = { automationMode: 'schedule', id: 'task-self', status: 'running' };
+      mockTaskModel.resolve.mockResolvedValue(task);
+      mockTaskTopicModel.findByTaskId.mockResolvedValue([
+        { topicId: 'topic-self', operationId: 'op-self', status: 'running' },
+      ]);
+
+      const result = await new TaskService(db, userId).updateStatus({
+        id: 'task-self',
+        operationId: 'op-self',
+        status: 'completed',
+      });
+
+      expect(result).toMatchObject({ completionDeferred: true, task });
+      expect(mockTaskModel.updateContext).toHaveBeenCalledWith('task-self', {
+        completion: { requestedByOperationId: 'op-self' },
+      });
+      expect(interruptTaskMock).not.toHaveBeenCalled();
+      expect(mockTaskTopicModel.cancelIfRunning).not.toHaveBeenCalled();
+      expect(mockTaskModel.updateStatus).not.toHaveBeenCalled();
+    });
+
+    it('still interrupts when the operation is not one of the task runs', async () => {
+      mockTaskModel.resolve.mockResolvedValue({ id: 'task-live', status: 'running' });
+      mockTaskTopicModel.findByTaskId.mockResolvedValue([
+        { topicId: 'topic-live', operationId: 'op-live', status: 'running' },
+      ]);
+      interruptTaskMock.mockResolvedValueOnce({ success: false });
+
+      await expect(
+        new TaskService(db, userId).updateStatus({
+          id: 'task-live',
+          operationId: 'op-other',
+          status: 'completed',
+        }),
+      ).rejects.toThrow('Task interruption was not confirmed');
+      expect(interruptTaskMock).toHaveBeenCalledWith({ operationId: 'op-live' });
+      expect(mockTaskModel.updateContext).not.toHaveBeenCalled();
+    });
+  });
+
   describe('confirmed execution stop', () => {
     it.each([{ success: true, deviceCancellationConfirmed: false }, { success: false }])(
       'keeps a live Task and topic unchanged when cancellation is unconfirmed: %j',
@@ -1506,6 +1637,7 @@ describe('TaskService', () => {
       (db as any).transaction = async (fn: (tx: unknown) => Promise<unknown>) => fn(db);
       mockTaskModel.lockForUpdate.mockResolvedValue(true);
       mockTaskModel.deleteIfStatus.mockResolvedValue(true);
+      mockTaskTopicModel.findByTaskId.mockResolvedValue([]);
     });
 
     it('interrupts a running execution before deleting the task row', async () => {
@@ -1645,6 +1777,90 @@ describe('TaskService', () => {
 
       expect(interruptTaskMock).not.toHaveBeenCalled();
       expect(mockTaskModel.deleteIfStatus).toHaveBeenCalledWith('task-self', 'running');
+    });
+
+    it('cascades the underlying topic rows when the task row is deleted', async () => {
+      mockTaskModel.resolve.mockResolvedValue({
+        id: 'task-topics',
+        identifier: 'T-9',
+        status: 'backlog',
+      });
+      mockTaskTopicModel.findByTaskId.mockResolvedValue([
+        { status: 'completed', taskId: 'task-topics', topicId: 'topic-1' },
+        { status: 'completed', taskId: 'task-topics', topicId: 'topic-2' },
+      ]);
+
+      await new TaskService(db, userId).deleteTask('T-9');
+
+      // Topic ids are snapshotted before the task row goes, then removed in
+      // the same transaction — `task_topics` links alone cascade via FK, the
+      // topic rows would otherwise survive as sidebar orphans.
+      expect(mockTopicModel.batchDeleteIncludingTrashed).toHaveBeenCalledWith([
+        'topic-1',
+        'topic-2',
+      ]);
+    });
+
+    it('spares the kept operation topic when a task deletes itself mid-run', async () => {
+      mockTaskModel.resolve.mockResolvedValue({
+        id: 'task-self-topics',
+        identifier: 'T-12',
+        status: 'running',
+      });
+      mockTaskTopicModel.findRunningByTaskIds.mockResolvedValue([
+        {
+          operationId: 'op-self',
+          status: 'running',
+          taskId: 'task-self-topics',
+          topicId: 'topic-live',
+        },
+      ]);
+      mockTaskTopicModel.findByTaskId.mockResolvedValue([
+        {
+          operationId: 'op-self',
+          status: 'running',
+          taskId: 'task-self-topics',
+          topicId: 'topic-live',
+        },
+        { status: 'completed', taskId: 'task-self-topics', topicId: 'topic-old' },
+      ]);
+
+      await new TaskService(db, userId).deleteTask('T-12', { keepOperationId: 'op-self' });
+
+      // The live run's topic must survive with its operation — messages
+      // cascade off the topic row, so deleting it would rip the conversation
+      // out from under the still-running tool call.
+      expect(mockTopicModel.batchDeleteIncludingTrashed).toHaveBeenCalledWith(['topic-old']);
+    });
+
+    it('deletes no topic rows when the task has none', async () => {
+      mockTaskModel.resolve.mockResolvedValue({
+        id: 'task-bare',
+        identifier: 'T-10',
+        status: 'backlog',
+      });
+      mockTaskTopicModel.findByTaskId.mockResolvedValue([]);
+
+      await new TaskService(db, userId).deleteTask('T-10');
+
+      expect(mockTopicModel.batchDeleteIncludingTrashed).not.toHaveBeenCalled();
+    });
+
+    it('leaves topic rows alone when the delete loses the race', async () => {
+      mockTaskModel.resolve.mockResolvedValue({
+        id: 'task-race-topics',
+        identifier: 'T-11',
+        status: 'backlog',
+      });
+      mockTaskTopicModel.findByTaskId.mockResolvedValue([
+        { status: 'completed', taskId: 'task-race-topics', topicId: 'topic-race' },
+      ]);
+      mockTaskModel.deleteIfStatus.mockResolvedValueOnce(false);
+
+      await expect(new TaskService(db, userId).deleteTask('T-11')).rejects.toMatchObject({
+        code: 'CONFLICT',
+      });
+      expect(mockTopicModel.batchDeleteIncludingTrashed).not.toHaveBeenCalled();
     });
   });
 
@@ -2206,6 +2422,129 @@ describe('TaskService', () => {
         'task_001',
         { assigneeAgentId: 'agt_new' },
         { agentId: 'agt_actor', userId: 'user_actor' },
+        {},
+      );
+    });
+
+    it('arms the run-count window on a column-only schedule write (T-634)', async () => {
+      // Column-only write: schedule columns move without a status, the row
+      // keeps `backlog` — exactly the path that used to leave `armedAt = null`
+      // and let a grace-window occurrence burn a one-shot maxExecutions quota.
+      (db as any).transaction = async (fn: (tx: unknown) => Promise<unknown>) => fn(db);
+      mockTaskModel.findById.mockResolvedValue({
+        automationMode: 'heartbeat',
+        context: { origin: { topicId: 'tpc_1' } },
+        id: 'task_001',
+        schedulePattern: null,
+        status: 'backlog',
+      });
+      mockTaskModel.updateWithLog.mockResolvedValue({ id: 'task_001' });
+
+      await new TaskService(db, userId, 'ws-1').updateTaskWithAssigneeLock(
+        'task_001',
+        { automationMode: 'schedule', schedulePattern: '0 9 * * *' },
+        { userId },
+      );
+
+      // The stamp rides in the SAME updateWithLog write as the schedule
+      // columns, decided under the row lock — no separate unlocked
+      // read/merge/write may follow (P2: atomicity).
+      expect(mockTaskModel.updateContext).not.toHaveBeenCalled();
+      const [, written] = mockTaskModel.updateWithLog.mock.calls[0]!;
+      expect((written as any).automationMode).toBe('schedule');
+      expect((written as any).schedulePattern).toBe('0 9 * * *');
+      expect((written as any).context).toMatchObject({
+        origin: { topicId: 'tpc_1' },
+        scheduler: { scheduleStartedAt: expect.any(String) },
+      });
+    });
+
+    it('does not arm a column-only write when the resulting task is not dispatchable', async () => {
+      // Heartbeat tasks are armed through the lifecycle re-arm path, not the
+      // cron window; a schedule write that leaves no pattern is inert too.
+      (db as any).transaction = async (fn: (tx: unknown) => Promise<unknown>) => fn(db);
+      mockTaskModel.findById.mockResolvedValue({
+        automationMode: 'schedule',
+        context: null,
+        id: 'task_001',
+        schedulePattern: '0 9 * * *',
+        status: 'backlog',
+      });
+      mockTaskModel.updateWithLog.mockResolvedValue({ id: 'task_001' });
+
+      const service = new TaskService(db, userId, 'ws-1');
+
+      await service.updateTaskWithAssigneeLock(
+        'task_001',
+        { automationMode: 'heartbeat', schedulePattern: null },
+        { userId },
+      );
+      expect(mockTaskModel.updateWithLog).toHaveBeenLastCalledWith(
+        'task_001',
+        expect.not.objectContaining({ context: expect.anything() }),
+        { userId },
+        {},
+      );
+
+      // No schedule columns in the patch: the arming probe must not even lock.
+      const locksBefore = mockTaskModel.lockForUpdate.mock.calls.length;
+      await service.updateTaskWithAssigneeLock('task_001', { priority: 3 }, { userId });
+      expect(mockTaskModel.lockForUpdate.mock.calls.length).toBe(locksBefore);
+    });
+
+    it('does not stamp a window when the write explicitly clears automationMode (P2)', async () => {
+      // Explicit `null` clears the mode. Under the old `??` derivation the
+      // probe saw the locked row's `schedule` and stamped a window for a row
+      // this very write disables; a later re-enable would preserve that stale
+      // stamp and replay an occurrence from the disabled interval.
+      (db as any).transaction = async (fn: (tx: unknown) => Promise<unknown>) => fn(db);
+      mockTaskModel.findById.mockResolvedValue({
+        automationMode: 'schedule',
+        context: null,
+        id: 'task_001',
+        schedulePattern: '0 9 * * *',
+        status: 'backlog',
+      });
+      mockTaskModel.updateWithLog.mockResolvedValue({ id: 'task_001' });
+
+      await new TaskService(db, userId, 'ws-1').updateTaskWithAssigneeLock(
+        'task_001',
+        { automationMode: null },
+        { userId },
+      );
+
+      expect(mockTaskModel.updateWithLog).toHaveBeenLastCalledWith(
+        'task_001',
+        expect.not.objectContaining({ context: expect.anything() }),
+        { userId },
+        {},
+      );
+    });
+
+    it('does not stamp a window when the write explicitly clears schedulePattern (P2)', async () => {
+      // Pattern-only clear on an unstamped row: the resulting row has no cron
+      // pattern, so it is inert and must stay unstamped — the probe must not
+      // resurrect the locked row's old pattern.
+      (db as any).transaction = async (fn: (tx: unknown) => Promise<unknown>) => fn(db);
+      mockTaskModel.findById.mockResolvedValue({
+        automationMode: 'schedule',
+        context: null,
+        id: 'task_001',
+        schedulePattern: '0 9 * * *',
+        status: 'backlog',
+      });
+      mockTaskModel.updateWithLog.mockResolvedValue({ id: 'task_001' });
+
+      await new TaskService(db, userId, 'ws-1').updateTaskWithAssigneeLock(
+        'task_001',
+        { schedulePattern: null },
+        { userId },
+      );
+
+      expect(mockTaskModel.updateWithLog).toHaveBeenLastCalledWith(
+        'task_001',
+        expect.not.objectContaining({ context: expect.anything() }),
+        { userId },
         {},
       );
     });

@@ -4,10 +4,11 @@ import debug from 'debug';
 
 import { UserModel } from '@/database/models/user';
 import { WorkspaceMemberModel } from '@/database/models/workspaceMember';
-import { MarketService } from '@/server/services/market';
+import type { MarketService } from '@/server/services/market';
 import { resolveSandboxSessionConfig } from '@/server/services/sandbox';
 
 import { resolveContentWorkspaceId } from './resolveWorkspaceScope';
+import { createSandboxMarketService } from './sandboxMarket';
 import { type ServerRuntimeRegistration } from './types';
 
 const log = debug('lobe-server:creds-runtime');
@@ -171,22 +172,6 @@ export class ServerCredsService implements ICredsService {
 
     return result as any;
   }
-
-  async saveKVCred(params: {
-    description?: string;
-    key: string;
-    name: string;
-    type: 'kv-env' | 'kv-header';
-    values: Record<string, string>;
-  }): Promise<{ id: number }> {
-    log('saveKVCred: key=%s, name=%s, type=%s', params.key, params.name, params.type);
-
-    const result = await this.credsAccessor().createKV(params);
-
-    log('saveKVCred success: id=%d', result.id);
-
-    return result;
-  }
 }
 
 /**
@@ -250,14 +235,12 @@ export const credsRuntime: ServerRuntimeRegistration = {
       workspaceId,
     });
 
-    const marketService = new MarketService({
+    const marketService = createSandboxMarketService(
+      context,
       accessToken,
-      userInfo: {
-        sandboxStorage: sandbox.claim,
-        userId: context.userId,
-        workspaceId,
-      },
-    });
+      workspaceId,
+      sandbox.claim,
+    );
 
     const credsService = new ServerCredsService(
       marketService,

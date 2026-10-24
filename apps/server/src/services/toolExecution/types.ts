@@ -111,6 +111,14 @@ export interface ServerAgentMemberRunParams {
 
 export interface ServerAgentMemberRunResult {
   /**
+   * Per-member start failure reasons, parallel to the members that failed to
+   * fork. Surfaced to the supervisor's tool result so a speak/broadcast/
+   * delegate/executeAgentTask dispatch failure is diagnosable (e.g. "The model
+   * provider returned an empty completion.") instead of an opaque "failed to
+   * start" — mirrors `ServerSubAgentRunResult.error` (issue #16257).
+   */
+  errors?: string[];
+  /**
    * Whether at least one member op was forked. `false` means every member
    * failed to start — no completion bridge will fire, so the caller must
    * surface an inline tool error instead of parking the parent.
@@ -296,6 +304,8 @@ export interface ToolExecutionContext {
   onWorkRegistration?: (intent: WorkRegistrationIntent) => void;
   /** Agent runtime operation ID for structured tool outcome identity. */
   operationId?: string;
+  /** Project the run belongs to; scopes project knowledge and created tasks. */
+  projectId?: string;
   /**
    * Filesystem skills (name + absolute SKILL.md path) discovered on the
    * execution device. Used by the Skills runtime to load them on demand via the

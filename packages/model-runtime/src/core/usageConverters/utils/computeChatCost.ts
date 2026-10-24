@@ -1,4 +1,4 @@
-import { CREDITS_PER_DOLLAR, USD_TO_CNY } from '@lobechat/const/currency';
+import { CREDITS_PER_DOLLAR, USD_TO_CNY } from '../../../const/currency';
 import type { ModelTokensUsage } from '@lobechat/types';
 import debug from 'debug';
 import type {
@@ -9,6 +9,8 @@ import type {
   PricingUnitName,
   TieredPricingUnit,
 } from 'model-bank';
+
+import { DEFAULT_CACHE_TTL } from '../../anthropicCompatibleFactory/resolveCacheTTL';
 
 const log = debug('lobe-cost:computeChatPricing');
 
@@ -311,7 +313,11 @@ const resolveLookupKey = (
 
   const missingParams: string[] = [];
   const params = unit.lookup.pricingParams.map((param) => {
-    const source = options?.lookupParams?.[param];
+    // Paths that never resolve a TTL (e.g. OpenAI-compatible providers falling back to an
+    // Anthropic card) still write to the cache, which the API does for its default 5 minutes.
+    const source =
+      options?.lookupParams?.[param] ??
+      (param === 'ttl' && DEFAULT_CACHE_TTL in unit.lookup.prices ? DEFAULT_CACHE_TTL : undefined);
     if (source === undefined || source === null) {
       missingParams.push(param);
       return 'undefined';

@@ -9,12 +9,13 @@ import {
 import {
   type ChatTopicMetadata,
   type HeterogeneousReasoningEffort,
+  type HeterogeneousSpeedMode,
   type MessageMapScope,
   RequestTrigger,
   type UIChatMessage,
   type UpdateTopicMetadataInput,
 } from '@lobechat/types';
-import { toast } from '@lobehub/ui/base-ui';
+import { toast } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
 import type { AiModelReasoningConfig } from 'model-bank';
@@ -28,20 +29,19 @@ import {
   recordLens,
   type ReplicaPageResult,
   type ReplicaSyncResult,
-  singleEntity,
 } from '@/libs/replica';
-import { mutate, useClientDataSWRWithSync } from '@/libs/swr';
-import { cronKeys, deviceKeys, topicKeys } from '@/libs/swr/keys';
+import { subscribeCacheScope } from '@/libs/replica/cacheScopeEvents';
+import { mutate } from '@/libs/swr';
+import { cronKeys, topicKeys } from '@/libs/swr/keys';
 import { getCacheScope } from '@/libs/swr/useCacheScope';
 import { aiChatService } from '@/services/aiChat';
-import { type GitLinkedPRSummary, gitService } from '@/services/git';
+import { type GitLinkedPRSummary } from '@/services/git';
 import { messageService } from '@/services/message';
 import type { TopicBatchDeleteScope } from '@/services/topic';
 import { topicService } from '@/services/topic';
 import { getAiInfraStoreState } from '@/store/aiInfra';
 import { aiModelSelectors } from '@/store/aiInfra/slices/aiModel/selectors';
 import { type ChatStore } from '@/store/chat';
-import { evictMessageCache } from '@/store/chat/utils/evictMessageCache';
 import { snapshotAgentModel, snapshotAgentReasoning } from '@/store/chat/utils/snapshotAgentModel';
 import { topicMapKey, type TopicMapScope } from '@/store/chat/utils/topicMapKey';
 import {
@@ -70,17 +70,23 @@ import { setNamespace } from '@/utils/storeDebug';
 
 import { displayMessageSelectors } from '../message/selectors';
 import { type TopicData } from './initialState';
+import { type PendingTopicStatusSource, PendingTopicStatusWrites } from './pendingStatusWrites';
 import {
   applyTopicDispatchToBucket,
   normalizeTopicListParams,
   type TopicAgentViewParams,
   topicAgentViewResource,
-  topicDetailResource,
   type TopicListParams,
   topicListResource,
+  topicListViewFields,
 } from './projection';
 import { type ChatTopicDispatch } from './reducer';
 import { topicSelectors } from './selectors';
+import { createTopicDetailSlice, RUN_WATCH_INTERVAL } from './topicDetail';
+import {
+  type TopicLinkedPullRequestRefreshParams,
+  useTopicLinkedPullRequestSync,
+} from './topicLinkedPullRequest';
 
 const n = setNamespace('t');
 
@@ -123,8 +129,6 @@ type TopicPatchScope = {
   groupId?: string;
   scope?: TopicMapScope;
 };
-
-type PendingTopicStatusSource = 'cache' | 'server';
 
 /**
  * Options for switchTopic action
@@ -190,14 +194,6 @@ export interface RemoveUnstarredTopicOptions {
 
 type Setter = StoreSetter<ChatStore>;
 
-interface TopicLinkedPullRequestRefreshParams {
-  branch: string;
-  deviceId?: string;
-  path: string;
-  pullRequestNumber?: number;
-  topicId: string;
-}
-
 export const chatTopic = (set: Setter, get: () => ChatStore, _api?: unknown) =>
   new ChatTopicActionImpl(set, get, _api);
 
@@ -248,13 +244,7 @@ export class ChatTopicActionImpl {
       stateKey: 'topicListReplica',
       toPersisted,
       view: recordLens<ChatStore, TopicData>('topicDataMap'),
-      viewFields: ({ excludeStatuses, excludeTriggers, isInbox, sortBy, withDetails }) => ({
-        excludeStatuses,
-        excludeTriggers,
-        isInbox: Boolean(isInbox),
-        sortBy,
-        withDetails,
-      }),
+      viewFields: topicListViewFields,
     });
     this.#topicAgentView = createReplicaSlice(topicAgentViewResource, {
       actionPrefix: n('topicAgentView'),
@@ -267,22 +257,21 @@ export class ChatTopicActionImpl {
       view: recordLens<ChatStore, TopicData>('agentTopicsViewMap'),
       viewFields: ({ withDetails }) => ({ withDetails }),
     });
-    this.#topicDetail = createReplicaSlice(topicDetailResource, {
-      actionPrefix: n('topicDetail'),
-      entity: singleEntity<ChatTopic>((topic) => topic.id),
-      fetcher: (topicId) => topicService.getTopicDetail(topicId),
+    this.#topicDetail = createTopicDetailSlice({
       get,
-      // A missing topic keeps whatever is cached (the list may still hold it).
-      merge: (topic, confirmed) => (!topic || isEqual(topic, confirmed) ? undefined : topic),
+      onRunningOperation: (fresh) =>
+        this.#topicEntity.update(fresh.id, (topic) => ({
+          ...topic,
+          metadata: { ...topic.metadata, runningOperation: fresh.metadata!.runningOperation },
+        })),
       set,
-      stateKey: 'topicDetailReplica',
-      view: recordLens<ChatStore, ChatTopic>('topicDetailMap'),
     });
     this.#topicEntity = linkReplicaEntity<ChatTopic>([
       this.#topicList,
       this.#topicAgentView,
       this.#topicDetail,
     ]);
+    subscribeCacheScope((scope) => this.#topicList.ensureScope(scope));
   }
 
   #resolveTopicLinkedPullRequestRefreshParams = (
@@ -316,8 +305,28 @@ export class ChatTopicActionImpl {
     this.#set({ allTopicsDrawerOpen: true }, false, n('openAllTopicsDrawer'));
   };
 
+  /**
+   * Stage (or clear) the project working directory the next topic creation
+   * binds to.
+   *
+   * `+` on a project group opens a blank conversation *without* creating a row;
+   * this records which directory that blank conversation belongs to, and
+   * `internal_createTopic` applies it when the first message creates the topic.
+   * Without it the deferred row would be born with only a path — outside the
+   * project list, the sidebar's project grouping and its execution routing.
+   */
+  setPendingNewTopicDirectory = (value?: {
+    agentId: string;
+    projectWorkingDirectoryId: string;
+  }): void => {
+    this.#set({ pendingNewTopicDirectory: value }, false, n('setPendingNewTopicDirectory'));
+  };
+
   openNewTopicOrSaveTopic = async (): Promise<void> => {
     const { switchTopic, saveToTopic, refreshMessages, activeTopicId } = this.#get();
+    // An explicit new topic supersedes whatever a group "+" staged — the user
+    // asked for a plain conversation, not one inside that project directory.
+    this.#get().setPendingNewTopicDirectory();
     const hasTopic = !!activeTopicId;
 
     if (hasTopic) switchTopic(null);
@@ -403,6 +412,39 @@ export class ChatTopicActionImpl {
     await switchTopic(newTopicId);
   };
 
+  /**
+   * Fork the active topic from one of its messages: copy the conversation
+   * prefix (first message → `messageId`) into a separate new topic, then switch
+   * to it. The source topic keeps its full history untouched.
+   */
+  forkTopic = async (messageId: string): Promise<string | undefined> => {
+    const { activeTopicId, refreshTopic, switchTopic } = this.#get();
+    if (!activeTopicId) return;
+
+    const topic = topicSelectors.getTopicById(activeTopicId)(this.#get());
+
+    const loadingToast = toast.loading(t('forkLoading', { ns: 'topic' }));
+
+    try {
+      const newTopicId = await topicService.forkTopic({
+        id: activeTopicId,
+        messageId,
+        newTitle: t('forkTitle', { ns: 'topic', title: topic?.title ?? '' }),
+      });
+
+      await refreshTopic();
+      await switchTopic(newTopicId);
+      toast.success(t('forkSuccess', { ns: 'topic' }));
+
+      return newTopicId;
+    } catch (error) {
+      console.error('[forkTopic] Failed to fork topic:', error);
+      toast.error(t('forkFailed', { ns: 'topic' }));
+    } finally {
+      loadingToast.close();
+    }
+  };
+
   importTopic = async (data: string): Promise<string | undefined> => {
     const { activeAgentId, activeGroupId, refreshTopic, switchTopic } = this.#get();
 
@@ -434,7 +476,9 @@ export class ChatTopicActionImpl {
 
   summaryTopicTitle = async (topicId: string, messages: UIChatMessage[]): Promise<void> => {
     const { internal_updateTopicTitleInSummary } = this.#get();
-    const topic = topicSelectors.getTopicById(topicId)(this.#get());
+    const topic =
+      topicSelectors.getTopicById(topicId)(this.#get()) ??
+      (await topicService.getTopicDetail(topicId));
     if (!topic) return;
 
     const messagesForTitle = normalizeTopicTitleMessages(messages);
@@ -621,12 +665,12 @@ export class ChatTopicActionImpl {
    * Model + pin land in one server write (`topic.updateTopicModel`) so a run or
    * a concurrent switch can never see the new model with the old model's pin.
    * Optimistically mirrors the server merge: `reasoningConfig` is replaced,
-   * `heteroEffort` only when given.
+   * `heteroEffort` and `heteroSpeed` only when given.
    */
   #writeTopicModelPin = async (
     id: string,
     value: {
-      metadata?: Pick<ChatTopicMetadata, 'heteroEffort' | 'reasoningConfig'>;
+      metadata?: Pick<ChatTopicMetadata, 'heteroEffort' | 'heteroSpeed' | 'reasoningConfig'>;
       model: string;
       provider: string;
     },
@@ -718,10 +762,10 @@ export class ChatTopicActionImpl {
   };
 
   /**
-   * Apply a heterogeneous (Claude Code / Codex) model + effort selection to one
-   * topic. When the selector pairs a model switch with an effort reset (the new
-   * model does not support the current effort) both land in the same write, so
-   * the topic never carries a model with an effort it cannot run.
+   * Apply a heterogeneous (Claude Code / Codex) model, effort and speed
+   * selection to one topic. When the selector pairs a model switch with an
+   * effort or speed reset (the new model does not support it) everything lands
+   * in the same write, so the topic never carries a model with a pin it cannot run.
    */
   updateTopicHeteroPin = async (
     id: string,
@@ -729,19 +773,30 @@ export class ChatTopicActionImpl {
       effort,
       model,
       provider,
-    }: { effort?: HeterogeneousReasoningEffort; model?: string; provider: string },
+      speed,
+    }: {
+      effort?: HeterogeneousReasoningEffort;
+      model?: string;
+      provider: string;
+      speed?: HeterogeneousSpeedMode;
+    },
   ): Promise<void> => {
-    if (model === undefined) {
-      if (effort !== undefined) await this.#get().updateTopicHeteroEffort(id, effort);
-      return;
-    }
-    /** Model resets and later effort selections must share one persistence order. */
+    const metadata: Pick<ChatTopicMetadata, 'heteroEffort' | 'heteroSpeed'> = {
+      ...(effort === undefined ? {} : { heteroEffort: effort }),
+      ...(speed === undefined ? {} : { heteroSpeed: speed }),
+    };
+    const hasMetadata = Object.keys(metadata).length > 0;
+    if (model === undefined && !hasMetadata) return;
+
+    /** Model resets and later effort/speed selections must share one persistence order. */
     await this.#enqueueTopicEffortWrite(id, () =>
-      this.#writeTopicModelPin(id, {
-        metadata: effort === undefined ? undefined : { heteroEffort: effort },
-        model,
-        provider,
-      }),
+      model === undefined
+        ? this.#writeTopicEffortPin(id, metadata)
+        : this.#writeTopicModelPin(id, {
+            metadata: hasMetadata ? metadata : undefined,
+            model,
+            provider,
+          }),
     );
   };
 
@@ -784,7 +839,7 @@ export class ChatTopicActionImpl {
    */
   #writeTopicEffortPin = async (
     id: string,
-    metadata: Pick<ChatTopicMetadata, 'heteroEffort' | 'reasoningConfig'>,
+    metadata: Pick<ChatTopicMetadata, 'heteroEffort' | 'heteroSpeed' | 'reasoningConfig'>,
   ): Promise<void> => {
     const { activeAgentId, activeGroupId } = this.#get();
     const containerKey =
@@ -828,72 +883,15 @@ export class ChatTopicActionImpl {
     throw error;
   };
 
-  /**
-   * Optimistic `updateTopicStatus` writes that a topic-list refetch must not
-   * clobber. A refetch whose server query ran BEFORE a status write can land
-   * AFTER the optimistic dispatch and revert the row — e.g. a run-end 'unread'
-   * reverting to 'running', leaving the sidebar spinning forever on a finished
-   * topic. Fetched rows are reconciled against this map: a row still carrying
-   * the pre-write status gets the pending status re-applied; a row already
-   * reflecting it confirms propagation and drops the pin. TTL-bounded so a
-   * failed persist or a legit cross-device status change can't be suppressed
-   * indefinitely.
-   */
-  #pendingTopicStatusWrites = new Map<string, { expiresAt: number; status: ChatTopicStatus }>();
-
-  /**
-   * Reconcile ONE server-sourced row against the pending optimistic writes.
-   *
-   * Every path that brings a topic row back from the server must go through
-   * here before the row reaches the store — list fetches, search, and the
-   * single-topic pull in {@link syncScheduledTopicRun} alike. A path that
-   * bypasses it silently reverts whatever the user just did, and the reader
-   * that trips it is usually the one the optimistic write itself woke up.
-   *
-   * Returns the row to trust: the fetched one, or the fetched one with the
-   * pending status re-applied when it predates the write.
-   */
-  #applyPendingStatusWrite = (item: ChatTopic, source: PendingTopicStatusSource): ChatTopic => {
-    const pending = this.#pendingTopicStatusWrites.get(item.id);
-    if (!pending) return item;
-    if (pending.expiresAt <= Date.now()) {
-      this.#pendingTopicStatusWrites.delete(item.id);
-      return item;
-    }
-    if (item.status === pending.status) {
-      if (source === 'server') this.#pendingTopicStatusWrites.delete(item.id);
-      return item;
-    }
-    return { ...item, status: pending.status };
-  };
-
-  /**
-   * Apply pending terminal statuses before a fetched topic list enters SWR.
-   *
-   * Reconciling only in `onData` keeps Zustand correct but is too late for the
-   * persisted cache: SWR has already accepted the older raw response and can
-   * flush `running` to IndexedDB. After the 15-second pin expires, remounting
-   * the sidebar restores that stale spinner. This step deliberately
-   * handles statuses only; client-only optimistic rows are still added later by
-   * {@link #reconcileFetchedTopics} and never enter the persisted response.
-   * Persisting the pin also means a failed write can survive until the next
-   * successful revalidation; that bounded, self-healing window is preferable to
-   * reintroducing an older response after a confirmed local terminal event.
-   */
-  #applyPendingStatusWrites = (
-    items: ChatTopic[],
-    source: PendingTopicStatusSource,
-  ): ChatTopic[] => {
-    if (this.#pendingTopicStatusWrites.size === 0) return items;
-    return items.map((item) => this.#applyPendingStatusWrite(item, source));
-  };
+  /** Optimistic status writes a refetch must not clobber — see {@link PendingTopicStatusWrites}. */
+  #pendingTopicStatusWrites = new PendingTopicStatusWrites();
 
   #reconcileFetchedTopics = (
     items: ChatTopic[],
     currentItems: ChatTopic[] | undefined,
     source: PendingTopicStatusSource,
   ): ChatTopic[] => {
-    let next = this.#applyPendingStatusWrites(items, source);
+    let next = this.#pendingTopicStatusWrites.applyAll(items, source);
 
     // In-flight first-send optimistic rows are client-only, so any refetch
     // landing mid-send (e.g. the fire-and-forget refreshTopic after a previous
@@ -1009,7 +1007,7 @@ export class ChatTopicActionImpl {
     await topicService.updateTopic(topicId, patch).catch((err) => {
       console.error('[updateTopicStatus] persist failed:', err);
       // The DB never got the write — stop pinning it over fetched rows.
-      this.#pendingTopicStatusWrites.delete(topicId);
+      this.#pendingTopicStatusWrites.drop(topicId);
     });
   };
 
@@ -1053,7 +1051,7 @@ export class ChatTopicActionImpl {
     const patch: Partial<ChatTopic> =
       status === 'completed' ? { completedAt: new Date(), status } : { status };
 
-    this.#pendingTopicStatusWrites.set(topicId, { expiresAt: Date.now() + 15_000, status });
+    this.#pendingTopicStatusWrites.pin(topicId, status);
 
     // Scope on the payload routes the write to the owning bucket inside
     // `internal_dispatchTopic`. A no-op if the bucket isn't loaded; the pin
@@ -1065,6 +1063,34 @@ export class ChatTopicActionImpl {
       agentId,
       groupId,
       scope,
+    });
+  };
+
+  /**
+   * Local mirror of a server-confirmed `unread → active` clear (`markTopicRead`).
+   * Unlike {@link internal_pinTopicStatus} it never pins: the clear's response
+   * may already be stale when it lands (a run started meanwhile, here or on
+   * another device), so a newer pending write wins and the next fetch stays
+   * authoritative. Only a loaded row that is still unread follows.
+   */
+  internal_settleTopicRead = (params: { agentId?: string; groupId?: string; topicId: string }) => {
+    const { agentId, groupId, topicId } = params;
+    if (!this.#pendingTopicStatusWrites.settle(topicId, 'unread')) return;
+
+    const state = this.#get();
+    const key = topicMapKey({
+      agentId: agentId ?? state.activeAgentId,
+      groupId: groupId ?? state.activeGroupId,
+    });
+    const topic = state.topicDataMap[key]?.items?.find((t) => t.id === topicId);
+    if (topic?.status !== 'unread') return;
+
+    state.internal_dispatchTopic({
+      type: 'updateTopic',
+      id: topicId,
+      value: { status: 'active' },
+      agentId,
+      groupId,
     });
   };
 
@@ -1159,6 +1185,19 @@ export class ChatTopicActionImpl {
         }),
       );
 
+      // Mirror sweep: a run the SERVER has already retired can still leave this
+      // tab holding a `running` local op — its terminal frame never landed (a
+      // lost socket, a hibernated DO buffer, or an intervention continuation
+      // dispatched on a new operation). Such a topic is idle on the server, so it
+      // never appears in the `statuses: ['running']` query above; derive the
+      // candidates from the local op map instead. Fire-and-forget: the sidebar
+      // should not wait on a per-topic server read.
+      void this.#get()
+        .settleAllUnbackedTopicRuns()
+        .catch((err) =>
+          console.error('[cleanupStaleRunningTopics] unbacked local run sweep failed:', err),
+        );
+
       const cleanedCount = cleanedResults.filter(Boolean).length;
 
       if (cleanedCount > 0) {
@@ -1207,7 +1246,7 @@ export class ChatTopicActionImpl {
     // (the button reading as a no-op until pressed a second time). The pin is
     // dropped when the persist fails, so a write that never reached the DB
     // still reverts here.
-    const fresh = this.#applyPendingStatusWrite(fetched, 'server');
+    const fresh = this.#pendingTopicStatusWrites.apply(fetched, 'server');
     if (fresh.status !== fetched.status) return false;
 
     // Server still parked — nothing to fold in.
@@ -1234,52 +1273,16 @@ export class ChatTopicActionImpl {
     return true;
   };
 
-  useFetchTopicLinkedPullRequest = (
-    topicId?: string,
-    metadata?: ChatTopicMetadata,
-  ): SWRResponse<GitLinkedPRSummary | undefined> => {
-    const params = topicId
-      ? this.#resolveTopicLinkedPullRequestRefreshParams(topicId, metadata)
-      : undefined;
-
-    return useClientDataSWRWithSync<GitLinkedPRSummary | undefined>(
-      params
-        ? deviceKeys.gitLinkedPR(
-            params.deviceId ?? 'local',
-            params.path,
-            params.branch,
-            params.pullRequestNumber,
-          )
-        : null,
-      params
-        ? () =>
-            gitService.getLinkedPullRequest({
-              branch: params.branch,
-              deviceId: params.deviceId,
-              path: params.path,
-              pullRequestNumber: params.pullRequestNumber,
-            })
-        : null,
-      {
-        dedupingInterval: 60 * 1000,
-        focusThrottleInterval: 60 * 1000,
-        onData: (prData) => {
-          if (!params) return;
-
-          void this.#get()
-            .internal_updateTopicLinkedPullRequest(params, prData)
-            .catch((error) => {
-              console.error('[useFetchTopicLinkedPullRequest] sync failed:', error);
-            });
-        },
-        revalidateOnFocus: true,
-        shouldRetryOnError: false,
-      },
+  /** Keep a topic's recorded PR state current (see `useTopicLinkedPullRequestSync`). */
+  useFetchTopicLinkedPullRequest = (topicId?: string, metadata?: ChatTopicMetadata) =>
+    useTopicLinkedPullRequestSync(
+      topicId ? this.#resolveTopicLinkedPullRequestRefreshParams(topicId, metadata) : undefined,
+      (params, pr) => this.#get().internal_updateTopicLinkedPullRequest(params, pr),
     );
-  };
 
-  autoRenameTopicTitle = async (id: string): Promise<void> => {
-    const { activeAgentId: agentId, summaryTopicTitle } = this.#get();
+  autoRenameTopicTitle = async (id: string, topicAgentId?: string): Promise<void> => {
+    const { activeAgentId, summaryTopicTitle } = this.#get();
+    const agentId = topicAgentId ?? activeAgentId;
 
     const messages = await messageService.getMessages({ agentId, topicId: id });
 
@@ -1317,7 +1320,7 @@ export class ChatTopicActionImpl {
         pageSize,
         ...query,
       });
-      const items = this.#applyPendingStatusWrites(result.items, 'server');
+      const items = this.#pendingTopicStatusWrites.applyAll(result.items, 'server');
       if (isHead)
         this.#prefetchUnreadTopicMessages(items, this.#get().topicDataMap[containerKey]?.items, {
           agentId,
@@ -1341,7 +1344,7 @@ export class ChatTopicActionImpl {
       withDetails,
     });
     return {
-      items: this.#applyPendingStatusWrites(result.items, 'server'),
+      items: this.#pendingTopicStatusWrites.applyAll(result.items, 'server'),
       total: result.total,
     };
   };
@@ -1351,9 +1354,8 @@ export class ChatTopicActionImpl {
    * projection, then revalidates; results land in `topicDataMap` — read them
    * through `topicSelectors`, never from this hook.
    */
-  useFetchTopics = (enable: boolean, params: Partial<TopicListParams> = {}): ReplicaSyncResult => {
-    return this.#topicList.useSync(normalizeTopicListParams(params), { enabled: enable });
-  };
+  useFetchTopics = (enable: boolean, params: Partial<TopicListParams> = {}): ReplicaSyncResult =>
+    this.#topicList.useSync(normalizeTopicListParams(params), { enabled: enable });
 
   /**
    * Seed the sidebar's persisted page for a session before its first paint.
@@ -1375,16 +1377,15 @@ export class ChatTopicActionImpl {
     return this.#topicList.hydrate(normalized, scope);
   };
 
-  /**
-   * By-id topic detail fetch, used as a fallback when a topic the UI is
-   * anchored on is missing from the loaded list bucket — e.g. an archived
-   * (`completed`) topic that the sidebar fetch excludes via `excludeStatuses`,
-   * or a topic deep-linked from the Topics management page. The result lands
-   * in `topicDetailMap`, which `currentActiveTopic` / `getTopicById` read as
-   * a fallback. Pass `undefined` to disable the fetch.
-   */
-  useFetchTopicDetail = (topicId?: string | null): ReplicaSyncResult =>
-    this.#topicDetail.useSync(topicId || null);
+  /** By-id details and background run discovery. An absent id disables the read. */
+  useFetchTopicDetail = (topicId?: string | null, watchRuns = false): ReplicaSyncResult =>
+    this.#topicDetail.useSync(topicId || null, {
+      dedupingInterval: 1000,
+      focusThrottleInterval: 5000,
+      refreshInterval: watchRuns ? RUN_WATCH_INTERVAL : 0,
+      refreshWhenHidden: false,
+      refreshWhenOffline: false,
+    });
 
   /**
    * Topic fetch dedicated to the Agent Topics management page. Its own
@@ -1444,6 +1445,7 @@ export class ChatTopicActionImpl {
       excludeTriggers: currentData?.excludeTriggers,
       groupId: activeGroupId,
       isInbox: currentData?.isInbox,
+      onlyMine: currentData?.onlyMine,
       pageSize: currentData?.pageSize || useGlobalStore.getState().status.topicPageSize || 20,
       sortBy: currentData?.sortBy,
       withDetails: currentData?.withDetails,
@@ -1455,15 +1457,16 @@ export class ChatTopicActionImpl {
     {
       agentId,
       groupId,
+      onlyMine,
     }: {
       agentId?: string;
       groupId?: string;
+      onlyMine?: boolean;
     } = {},
-  ): SWRResponse<ChatTopic[]> => {
-    return useSWR<ChatTopic[]>(
-      keywords ? topicKeys.search(keywords, agentId, groupId) : null,
-      ([, keywords, agentId, groupId]: [string, string, string | undefined, string | undefined]) =>
-        topicService.searchTopics(keywords, agentId, groupId),
+  ): SWRResponse<ChatTopic[]> =>
+    useSWR<ChatTopic[]>(
+      keywords ? topicKeys.search(keywords, agentId, groupId, onlyMine || undefined) : null,
+      () => topicService.searchTopics(keywords ?? '', agentId, groupId, onlyMine),
       {
         onSuccess: (data) => {
           // Search rows render the same status icon as the sidebar — pin
@@ -1480,7 +1483,6 @@ export class ChatTopicActionImpl {
         },
       },
     );
-  };
 
   switchTopic = async (id?: string | null, options?: SwitchTopicOptions): Promise<void> => {
     const opts = options ?? {};
@@ -1554,6 +1556,12 @@ export class ChatTopicActionImpl {
       return;
 
     const epoch = ++this.#switchTopicEpoch;
+    // A staged project directory only describes the blank conversation it was
+    // opened from; moving to a real topic ends that window. Cleared here (after
+    // the guards) so a switch the guards dropped does not discard it.
+    if (id) {
+      this.#set({ pendingNewTopicDirectory: undefined }, false, n('clearPendingNewTopicDirectory'));
+    }
 
     this.#set(
       { activeTopicId: id || (null as any), activeThreadId: undefined },
@@ -1562,7 +1570,7 @@ export class ChatTopicActionImpl {
     );
 
     if (activeAgentId) {
-      this.#get().markTopicRead({ agentId: activeAgentId, topicId: id ?? null });
+      void this.#get().markTopicRead({ agentId: activeAgentId, topicId: id ?? null });
     }
 
     if (opts.skipRefreshMessage) return;
@@ -1588,7 +1596,7 @@ export class ChatTopicActionImpl {
     this.#removeTopicDetails((topic) => topic.sessionId === activeAgentId);
     await refreshTopic();
     // drop every deleted topic's message cache (all belong to this agent)
-    void evictMessageCache((ctx) => ctx.agentId === activeAgentId);
+    void this.#get().evictConversationMessages((ctx) => ctx.agentId === activeAgentId);
 
     // switch to default topic
     switchTopic(null);
@@ -1606,7 +1614,7 @@ export class ChatTopicActionImpl {
     this.#removeTopicDetails(() => true);
     await refreshTopic();
     // drop every deleted topic's message cache (all belong to this group)
-    void evictMessageCache((ctx) => ctx.groupId === groupId);
+    void this.#get().evictConversationMessages((ctx) => ctx.groupId === groupId);
 
     // switch to default topic
     switchTopic(null);
@@ -1618,8 +1626,8 @@ export class ChatTopicActionImpl {
     await topicService.removeAllTopic();
     this.#removeTopicDetails(() => true);
     await refreshTopic();
-    // every topic is gone — wipe all cached message lists
-    void evictMessageCache(() => true);
+    // every topic is gone — wipe every persisted transcript
+    void this.#get().evictConversationMessages();
   };
 
   removeTopic = async (id: string, removeFiles?: boolean): Promise<void> => {
@@ -1632,7 +1640,7 @@ export class ChatTopicActionImpl {
     this.#get().internal_dispatchTopic({ type: 'deleteTopic', id }, 'removeTopic');
     await refreshTopic();
     // drop the deleted topic's message cache so it doesn't orphan in IndexedDB
-    void evictMessageCache((ctx) => ctx.topicId === id);
+    void this.#get().evictConversationMessages((ctx) => ctx.topicId === id);
 
     // switch back to default topic
     if (activeTopicId === id) switchTopic(null);
@@ -1653,7 +1661,7 @@ export class ChatTopicActionImpl {
     await refreshTopic();
     // drop the deleted topics' message caches
     const removed = new Set(topicIds);
-    void evictMessageCache((ctx) => !!ctx.topicId && removed.has(ctx.topicId));
+    void this.#get().evictConversationMessages((ctx) => !!ctx.topicId && removed.has(ctx.topicId));
 
     // Switch to default topic
     switchTopic(null);
@@ -1675,7 +1683,7 @@ export class ChatTopicActionImpl {
     // the moved topics' message cache is keyed by the old agent — drop it so the
     // next view under the target agent refetches instead of reading a stale key
     const moved = new Set(topicIds);
-    void evictMessageCache((ctx) => !!ctx.topicId && moved.has(ctx.topicId));
+    void this.#get().evictConversationMessages((ctx) => !!ctx.topicId && moved.has(ctx.topicId));
 
     // If the active topic was moved away, fall back to the default topic.
     if (activeTopicId && topicIds.includes(activeTopicId)) switchTopic(null);
@@ -1706,6 +1714,10 @@ export class ChatTopicActionImpl {
       agentViewKey !== null && this.#topicAgentView.revalidate(agentViewKey),
     ]);
   };
+
+  /** Re-read one topic's by-id detail; `fetch` also reads it when no view has it mounted. */
+  refreshTopicDetail = (id: string, fetch?: boolean): Promise<unknown> =>
+    fetch ? this.#topicDetail.fetch(id, { fresh: true }) : this.#topicDetail.revalidate(id);
 
   internal_replaceTopicId = (params: {
     agentId?: string;
@@ -1824,13 +1836,28 @@ export class ChatTopicActionImpl {
   };
 
   internal_createTopic = async (params: CreateTopicParams): Promise<string> => {
+    // A blank conversation opened from a project group's "+" carries the
+    // directory it belongs to — fold it into the create call so the row is born
+    // inside that project. Only for the agent it was staged on: a pending
+    // directory must never land on another agent's topic.
+    const pending = this.#get().pendingNewTopicDirectory;
+    const targetSessionId = params.sessionId ?? this.#get().activeAgentId;
+    const pendingDirectoryId =
+      pending && pending.agentId === targetSessionId
+        ? pending.projectWorkingDirectoryId
+        : undefined;
+    const createParams: CreateTopicParams = pendingDirectoryId
+      ? { ...params, projectWorkingDirectoryId: pendingDirectoryId }
+      : params;
+
     const tmpId = Date.now().toString();
     this.#get().internal_dispatchTopic(
-      { type: 'addTopic', value: { ...params, id: tmpId } },
+      { type: 'addTopic', value: { ...createParams, id: tmpId } },
       'internal_createTopic',
     );
 
-    const topicId = await topicService.createTopic(params);
+    const topicId = await topicService.createTopic(createParams);
+    if (pendingDirectoryId) this.#get().setPendingNewTopicDirectory();
     await this.#get().refreshTopic();
 
     return topicId;
@@ -1967,6 +1994,7 @@ export class ChatTopicActionImpl {
           isExpandingPageSize: false,
           isLoadingMore: false,
           items: nextItems,
+          onlyMine: currentData?.onlyMine,
           pageSize,
           sortBy: currentData?.sortBy,
           total,
