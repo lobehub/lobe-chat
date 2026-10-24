@@ -8,7 +8,7 @@ import type { Command } from 'commander';
 import pc from 'picocolors';
 
 import { getTrpcClient } from '../../../api/client';
-import { resolveWorkspaceId } from '../../../api/workspace';
+import { PERSONAL_SCOPE_ENV_VALUE, resolveWorkspaceId } from '../../../api/workspace';
 import { resolveServerUrl } from '../../../settings';
 import { ensureAcceptanceDirIgnoredFor } from '../../../utils/acceptanceDir';
 import { outputJson } from '../../../utils/format';
@@ -325,7 +325,7 @@ export async function ingestReportAction(
       const target = targetWorkspaceId ? `workspace "${targetWorkspaceId}"` : 'personal space';
       const hint = targetWorkspaceId
         ? `Set LOBEHUB_WORKSPACE_ID=${targetWorkspaceId} for this command and retry.`
-        : "Unset LOBEHUB_WORKSPACE_ID and run 'lh workspace use --personal', then retry.";
+        : `Set LOBEHUB_WORKSPACE_ID=${PERSONAL_SCOPE_ENV_VALUE} for this command and retry.`;
       throw new Error(
         `Acceptance "${acceptance.id}" belongs to ${target}, but the CLI is using ${current}. ${hint} No run was created.`,
       );
