@@ -1195,7 +1195,7 @@
   "goalProcess.signOff.requestChanges": "提出修改",
   "goalProcess.signOff.requestChangesEffect": "退回给 Agent 重做，在补充说明里写要改什么",
   "goalProcess.signOff.sentBack": "已退回修改",
-  "goalProcess.stalled.description": "已 {{duration}} 没有心跳。下一次推进会重开这次尝试，不计失败次数。",
+  "goalProcess.stalled.description": "上次心跳在 {{duration}}。下一次推进会重开这次尝试，不计失败次数。",
   "goalProcess.start": "启动",
   "goalProcess.summary.done": "完成 · {{count}} 次尝试",
   "goalProcess.summary.gateOpen": "等你决定",

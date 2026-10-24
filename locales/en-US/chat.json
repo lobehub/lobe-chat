@@ -1195,7 +1195,7 @@
   "goalProcess.signOff.requestChanges": "Request changes",
   "goalProcess.signOff.requestChangesEffect": "Send it back to the Agent. Say what to change in the notes.",
   "goalProcess.signOff.sentBack": "Sent back for changes",
-  "goalProcess.stalled.description": "No heartbeat for {{duration}}. The next advance restarts this attempt — it does not count as a failure.",
+  "goalProcess.stalled.description": "Last heartbeat {{duration}}. The next advance restarts this attempt — it does not count as a failure.",
   "goalProcess.start": "Start",
   "goalProcess.summary.done": "Done · {{count}} attempts",
   "goalProcess.summary.gateOpen": "Waiting for your decision",

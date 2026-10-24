@@ -2658,7 +2658,7 @@ export default {
   'goalProcess.attempts.retired': 'Retired',
   'goalProcess.attempts.running': 'Running',
   'goalProcess.stalled.description':
-    'No heartbeat for {{duration}}. The next advance restarts this attempt — it does not count as a failure.',
+    'Last heartbeat {{duration}}. The next advance restarts this attempt — it does not count as a failure.',
   'goalProcess.quota.resumeAt': 'Resumes {{time}}',
   'goalProcess.quota.resumeSoon': 'Resuming soon',
   'goalProcess.quota.tooltip':
