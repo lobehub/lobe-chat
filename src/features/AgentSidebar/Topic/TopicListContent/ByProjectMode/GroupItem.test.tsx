@@ -28,6 +28,9 @@ const directoryRows = vi.hoisted(
       deviceId?: string;
       deviceName?: string;
       path?: string;
+      environmentId?: string;
+      instanceId?: string;
+      permission?: string;
     }>,
 );
 const subGroupModeMock = vi.hoisted(() => ({ value: 'none' as string }));
@@ -772,7 +775,7 @@ it('opens the plain new-topic composer when a merged project group spans multipl
   // ROOT CAUSE: the first fix opened a chooser modal here, but the expected
   // habit is the plain new-topic composer — the user picks the machine in the
   // composer control bar, so no modal may pop and no directory default may be
-  // pre-committed for a multi-machine merged group.
+  // committed to the agent for a multi-machine merged group.
   directoryRows.length = 0;
   openProjectTopicModalMock.mockClear();
   commitAgentDefaultMock.mockClear();
@@ -786,6 +789,10 @@ it('opens the plain new-topic composer when a merged project group spans multipl
       projectSlug: 'multi-project',
       projectId: 'prj-multi',
       projectAvatar: '📦',
+      deviceId: 'device-2',
+      environmentId: 'env-a',
+      instanceId: 'inst-a',
+      permission: 'readWrite',
     },
     {
       id: 'binding-multi-b',
@@ -793,6 +800,10 @@ it('opens the plain new-topic composer when a merged project group spans multipl
       projectSlug: 'multi-project',
       projectId: 'prj-multi',
       projectAvatar: '📦',
+      deviceId: 'device-1',
+      environmentId: 'env-b',
+      instanceId: 'inst-b',
+      permission: 'readWrite',
     },
   );
   render(
@@ -831,9 +842,13 @@ it('opens the plain new-topic composer when a merged project group spans multipl
   expect(commitAgentDefaultMock).not.toHaveBeenCalled();
   expect(switchTopicMock).toHaveBeenCalledWith(null, { skipRefreshMessage: true });
   expect(routerPushMock).toHaveBeenCalledWith('/agent/agent-1');
-  // A multi-directory group has no single directory to stage — the user picks
-  // the machine in the composer.
-  expect(setPendingNewTopicDirectoryMock).not.toHaveBeenCalled();
+  // ROOT CAUSE of the detached topic: nothing was staged, so the first send
+  // created a path-only conversation outside the project. The agent's current
+  // device (device-1) wins; the composer's device switcher can move it.
+  expect(setPendingNewTopicDirectoryMock).toHaveBeenCalledWith({
+    agentId: 'agent-1',
+    projectWorkingDirectoryId: 'binding-multi-b',
+  });
 });
 
 it('keeps the legacy directory start when a project group has a single directory', async () => {
