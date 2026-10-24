@@ -8,7 +8,9 @@ import type { LobeChatDatabase } from '@/database/type';
 import {
   ForbiddenWidgetCredentialsError,
   MissingWidgetEnvError,
+  type ResolvedWidgetEnv,
   resolveWidgetEnv,
+  type ResolveWidgetEnvOptions,
   type WidgetCredentialScope,
 } from './credentials';
 import { recordWidgetMetrics } from './metrics';
@@ -25,7 +27,8 @@ export type ResolveWidgetEnv = (
   db: LobeChatDatabase,
   scope: WidgetCredentialScope,
   requirements: NonNullable<WidgetVersionRow['manifest']>['env'],
-) => Promise<Record<string, string>>;
+  options: Pick<ResolveWidgetEnvOptions, 'networkAllow'>,
+) => Promise<ResolvedWidgetEnv>;
 
 export interface ExecuteWidgetRunDeps {
   resolveEnv?: ResolveWidgetEnv;
@@ -66,13 +69,15 @@ const runInSandbox = async (
 ): Promise<RunOutcome> => {
   const manifest = version.manifest ?? undefined;
   const resolveEnv = deps.resolveEnv ?? resolveWidgetEnv;
+  const allow = manifest?.network?.allow ?? [];
 
   let env: Record<string, string>;
+  let inject: ResolvedWidgetEnv['inject'];
   try {
     // Secrets go to whoever wrote the script: the publisher of a live
     // version, the author of a draft.
     const authorUserId = version.publishedByUserId ?? version.userId;
-    env = await resolveEnv(
+    ({ env, inject } = await resolveEnv(
       db,
       {
         agentId: widget.agentId,
@@ -82,7 +87,8 @@ const runInSandbox = async (
         workspaceId: widget.workspaceId,
       },
       manifest?.env,
-    );
+      { networkAllow: allow },
+    ));
   } catch (error) {
     if (error instanceof MissingWidgetEnvError) {
       return { env: {}, error: { code: 'MISSING_ENV', message: error.message }, status: 'failed' };
@@ -109,7 +115,7 @@ const runInSandbox = async (
       // The widget's owner (or its workspace) pays for and is rate limited on the run.
       actor: { userId: widget.userId, workspaceId: widget.workspaceId },
       env,
-      network: { allow: manifest?.network?.allow ?? [] },
+      network: { allow, ...(inject.length > 0 ? { inject } : {}) },
       runtime: version.runtime,
       script: version.script,
       subject: { id: widget.id, kind: 'widget' },
@@ -165,7 +171,8 @@ const runInSandbox = async (
  *    script's author may not read with `CREDENTIALS_FORBIDDEN`, both before
  *    any sandbox call;
  * 2. execute the version's script on the sandbox with the manifest's network
- *    allowlist;
+ *    allowlist, plus the credential headers the egress proxy adds for LobeHub
+ *    Market connectors (whose env variables only hold placeholders);
  * 3. redact injected secrets (and well-known token shapes) from stdout / stderr
  *    before anything is parsed or persisted, then truncate the streams;
  * 4. judge the result — timeout → `timeout`; non-zero exit → `NON_ZERO_EXIT`;
