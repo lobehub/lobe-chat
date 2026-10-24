@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
-import { createElement, type ReactNode } from 'react';
+import { Activity, createElement, type ReactNode } from 'react';
 import { MemoryRouter, useNavigate } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -56,5 +56,24 @@ describe('useCloseOnNavigate', () => {
     rerender({ open: true });
 
     expect(close).not.toHaveBeenCalled();
+  });
+
+  it('closes and rekeys an open host when it is hidden instead of re-rendered', () => {
+    const close = vi.fn();
+    let mode: 'hidden' | 'visible' = 'visible';
+    const activityWrapper = ({ children }: { children: ReactNode }) =>
+      wrapper({ children: createElement(Activity, { mode }, children) });
+    const { rerender, result } = renderHook(() => useCloseOnNavigate(true, close), {
+      wrapper: activityWrapper,
+    });
+    expect(result.current).toBe(0);
+
+    mode = 'hidden';
+    rerender();
+    mode = 'visible';
+    rerender();
+
+    expect(close).toHaveBeenCalledTimes(1);
+    expect(result.current).toBe(1);
   });
 });

@@ -12,10 +12,11 @@ const SwitchPanel = memo<PropsWithChildren>(({ children }) => {
   const navigate = useWorkspaceAwareNavigate();
   const [open, setOpen] = useState(false);
   // Agent rows are links; leaving for another agent should dismiss the switcher.
-  useCloseOnNavigate(open, () => setOpen(false));
+  const popoverKey = useCloseOnNavigate(open, () => setOpen(false));
 
   return (
     <Popover
+      key={popoverKey}
       open={open}
       placement="bottomLeft"
       trigger="click"

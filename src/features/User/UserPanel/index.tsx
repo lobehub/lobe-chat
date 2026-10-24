@@ -29,13 +29,14 @@ const UserPanel = memo<PropsWithChildren>(({ children }) => {
   const hasNewVersion = useNewVersion();
   const [open, setOpen] = useState(false);
   // Panel entries, including business slots, may navigate without a close callback.
-  useCloseOnNavigate(open, () => setOpen(false));
+  const popoverKey = useCloseOnNavigate(open, () => setOpen(false));
 
   return (
     <Suspense fallback={children}>
       <UpgradeBadge showBadge={hasNewVersion}>
         <Popover
           arrow={false}
+          key={popoverKey}
           open={open}
           placement="topLeft"
           trigger="click"

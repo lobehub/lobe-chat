@@ -76,7 +76,7 @@ Split a component only to establish a real state, reuse, render-update, or mount
 
 An action inside popover content that leaves the popover must close it, or the popover stays over the destination (for example, a plan badge in the user panel navigating to `/settings/plans`).
 
-- Navigation: a host whose content links or navigates keeps `open` state and calls `useCloseOnNavigate(open, () => setOpen(false))` from `@/hooks/useCloseOnNavigate`. This covers links added later, including links from other files.
+- Navigation: a host whose content links or navigates keeps `open` state, calls `useCloseOnNavigate(open, () => setOpen(false))` from `@/hooks/useCloseOnNavigate`, and passes the returned key to its `Popover`. This covers links added later, including links from other files. The key matters when navigation hides the host in an `<Activity>` (the home sidebar): a hidden tree sets up no new effects, so the base-ui popup never finishes its exit animation and stays on screen until a remount removes it.
 - Modal handoff or a final pick: call `usePopoverContext().close()` (or the host's setter) before opening the modal or after the pick, as `NavPanel/switcher/SwitcherMenu.tsx` does. Content rendered outside a popover cannot use the context, because its default `close` throws in development.
 - A confirm step whose result appears in the same popover, such as the share-link privacy confirm, keeps it open.
 
