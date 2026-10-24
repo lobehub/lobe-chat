@@ -14,14 +14,11 @@ import UserAvatar from './UserAvatar';
 export interface UserInfoProps extends FlexboxProps {
   avatarProps?: Partial<UserAvatarProps>;
   onClick?: () => void;
-  /**
-   * Called after an in-panel link (such as the Cloud plan badge) navigates away,
-   * so a host popover can close itself.
-   */
+  /** Called after an in-panel link navigates away, so a host popover can close itself. */
   onNavigate?: () => void;
 }
 
-// `onNavigate` is only used by the Cloud override; pull it out so it is not spread onto the DOM.
+// This variant has no in-panel links; pull `onNavigate` out so it is not spread onto the DOM.
 const UserInfo = memo<UserInfoProps>(({ avatarProps, onClick, onNavigate: _, ...rest }) => {
   const isSignedIn = useUserStore(authSelectors.isLogin);
   const [nickname, username] = useUserStore((s) => [
