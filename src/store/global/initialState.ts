@@ -163,6 +163,27 @@ export interface AgentDocumentSort {
   order: 'asc' | 'desc';
 }
 
+/** Which Docs sidebar page section a view setting belongs to. */
+export type DocsPageSectionKey = 'mine' | 'shared';
+
+/** How a Docs sidebar page section (My docs / Shared docs) lists its pages. */
+export interface DocsPageSectionView {
+  /** `byTime` buckets rows by the sorted date; `byType` puts artifacts apart from pages. */
+  groupBy: 'byTime' | 'byType' | 'none';
+  /** Rows the section loads and shows; the rest are one click away in the full list. */
+  pageSize: number;
+  sortBy: 'createdAt' | 'title' | 'updatedAt';
+  /** `artifact` keeps HTML pages only, `page` keeps rich-text pages only. */
+  type: 'all' | 'artifact' | 'page';
+}
+
+export const DEFAULT_DOCS_PAGE_SECTION_VIEW: DocsPageSectionView = {
+  groupBy: 'none',
+  pageSize: 20,
+  sortBy: 'updatedAt',
+  type: 'all',
+};
+
 /** How the sidebar project list is ordered; `manual` follows the shared drag order. */
 export type ProjectListSortBy = 'manual' | 'createdAt' | 'updatedAt';
 
@@ -225,6 +246,11 @@ export interface SystemStatus {
    * in the Home inbox. Append-only and capped, see `appendDismissedIslandKey`.
    */
   dismissedIslandItemKeys?: string[];
+  /**
+   * List options of each Docs sidebar page section, kept apart so narrowing
+   * Shared docs never changes what My docs shows.
+   */
+  docsPageSectionViews?: Partial<Record<DocsPageSectionKey, Partial<DocsPageSectionView>>>;
   /**
    * Per-agent expanded state of the agent sidebar's top-level sections
    * (Tasks / Topic), keyed by agentId. Lets each agent remember its own

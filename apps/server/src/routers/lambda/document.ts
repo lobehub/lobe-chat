@@ -507,6 +507,7 @@ export const documentRouter = router({
           current: z.number().optional(),
           fileTypes: z.array(z.string()).optional(),
           pageSize: z.number().max(100).optional(),
+          sortBy: z.enum(['createdAt', 'title', 'updatedAt']).optional(),
           sourceTypes: z.array(z.string()).optional(),
           standaloneOnly: z.boolean().optional(),
         })

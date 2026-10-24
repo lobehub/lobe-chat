@@ -2,6 +2,8 @@ import { type TopicGroupMode } from '@/types/topic';
 
 import type {
   AgentDocumentSort,
+  DocsPageSectionKey,
+  DocsPageSectionView,
   GlobalState,
   ModelDetailPanelExpandedKey,
   ProjectListSortBy,
@@ -10,6 +12,7 @@ import type {
   WorkspaceOverridableField,
 } from '../initialState';
 import {
+  DEFAULT_DOCS_PAGE_SECTION_VIEW,
   DEFAULT_HOME_SIDEBAR_EXPANDED_KEYS,
   INITIAL_STATUS,
   MODEL_DETAIL_PANEL_EXPANDABLE_KEYS,
@@ -92,6 +95,15 @@ const collapsedTopicGroupKeys =
   (mode: TopicGroupMode) =>
   (s: GlobalState): string[] | undefined =>
     s.status.collapsedTopicGroupKeysByMode?.[mode];
+
+const docsPageSectionView =
+  (section: DocsPageSectionKey) =>
+  (s: GlobalState): DocsPageSectionView => {
+    const stored = s.status.docsPageSectionViews?.[section];
+    return stored
+      ? { ...DEFAULT_DOCS_PAGE_SECTION_VIEW, ...stored }
+      : DEFAULT_DOCS_PAGE_SECTION_VIEW;
+  };
 
 const projectTopicSubGroupMode =
   (groupId: string) =>
@@ -509,6 +521,7 @@ export const systemStatusSelectors = {
   disabledModelProvidersSortType,
   disabledModelsSortType,
   expandInputActionbar,
+  docsPageSectionView,
   filePanelWidth,
   getAgentSystemRoleExpanded,
   groupAgentBuilderPanelWidth,
