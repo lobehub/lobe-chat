@@ -185,7 +185,8 @@ export const linearRouter = router({
     .input(z.object({ ruleId: z.string().uuid() }))
     .mutation(async ({ ctx, input }) => {
       const rule = await requireSyncRule(ctx, input.ruleId);
-      await requireWritableConnection(ctx, rule.connectionId);
+      // A rule stays removable after its connection is disconnected.
+      await requireWritableScope(ctx);
       await LinearSyncRuleModel.delete(ctx.serverDB, rule.id, ctx.scope);
       return { ok: true };
     }),
@@ -195,7 +196,9 @@ export const linearRouter = router({
     .input(z.object({ ruleId: z.string().uuid() }))
     .mutation(async ({ ctx, input }) => {
       const rule = await requireSyncRule(ctx, input.ruleId);
-      await requireWritableConnection(ctx, rule.connectionId);
+      // The rule is in the caller's scope, and so is the connection it was
+      // created with; a disconnected one fails below as "reconnect".
+      await requireWritableScope(ctx);
       // A target project the caller can no longer see (deleting it nulls the
       // column) leaves new tasks outside any project.
       const targetProjectId = (await findTargetProject(ctx, rule.targetProjectId))
@@ -264,11 +267,15 @@ const requireTargetProject = async (ctx: LinearContext, projectId?: string | nul
  */
 const requireWritableConnection = async (ctx: LinearContext, connectionId: string) => {
   const connection = await requireConnection(ctx, connectionId);
+  await requireWritableScope(ctx);
+  return connection;
+};
 
+/** In a workspace, only members who can edit may change its Linear setup. */
+const requireWritableScope = async (ctx: LinearContext) => {
   if (!(await canWriteScmScope(ctx.serverDB, ctx.userId, ctx.scope.workspaceId))) {
     throw new TRPCError({ code: 'FORBIDDEN', message: 'workspace member role required' });
   }
-  return connection;
 };
 
 export type LinearRouter = typeof linearRouter;

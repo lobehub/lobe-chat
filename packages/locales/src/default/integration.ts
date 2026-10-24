@@ -124,6 +124,7 @@ export default {
   'linear.sync.rules.description':
     'Saved filters you can sync again. Tasks closed in Linear are closed here too, except tasks that are running.',
   'linear.sync.rules.lastRun': 'Last synced {{time}} · {{result}}',
+  'linear.sync.rules.loadFailed': 'Could not load sync rules',
   'linear.sync.rules.neverRun': 'Not synced yet',
   'linear.sync.rules.run': 'Sync now',
   'linear.sync.rules.target': '→ {{project}}',

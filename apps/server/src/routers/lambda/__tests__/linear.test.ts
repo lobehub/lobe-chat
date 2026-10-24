@@ -246,5 +246,27 @@ describe('linearRouter', () => {
         }),
       ).rejects.toMatchObject({ code: 'NOT_FOUND' });
     });
+
+    it('keeps a rule removable after its connection is disconnected, and asks to reconnect on run', async () => {
+      const connection = await connect({ userId });
+      const rule = await caller({ userId }).createSyncRule({
+        connectionId: connection.id,
+        stateTypes: ['backlog'],
+        teamId: 'team-1',
+        teamName: 'Engineering',
+      });
+      await LinearConnectionModel.revoke(serverDB, connection.id);
+      const { LinearReconnectRequiredError } = await import('@/server/services/linear/token');
+      mocks.getToken.mockRejectedValue(new LinearReconnectRequiredError());
+
+      await expect(caller({ userId }).runSyncRule({ ruleId: rule.id })).rejects.toMatchObject({
+        code: 'PRECONDITION_FAILED',
+        message: 'LINEAR_RECONNECT_REQUIRED',
+      });
+      await expect(caller({ userId }).deleteSyncRule({ ruleId: rule.id })).resolves.toEqual({
+        ok: true,
+      });
+      expect(await caller({ userId }).listSyncRules()).toEqual([]);
+    });
   });
 });

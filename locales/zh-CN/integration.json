@@ -99,6 +99,7 @@
   "linear.sync.rules.deleteTitle": "删除这条同步规则？",
   "linear.sync.rules.description": "保存的筛选条件可随时再次同步。在 Linear 中关闭的 Issue，对应任务也会关闭；正在运行的任务除外。",
   "linear.sync.rules.lastRun": "上次同步 {{time}} · {{result}}",
+  "linear.sync.rules.loadFailed": "同步规则加载失败",
   "linear.sync.rules.neverRun": "尚未同步",
   "linear.sync.rules.run": "立即同步",
   "linear.sync.rules.target": "→ {{project}}",

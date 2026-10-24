@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
+import AsyncError from '@/components/AsyncError';
 import { linearService } from '@/services/linear';
 import { useCurrentProjectList } from '@/store/project';
 
@@ -26,11 +27,22 @@ interface SyncRulesProps {
 /** Saved sync rules: re-run one with a click, or remove it. Running never writes to Linear. */
 const SyncRules = memo<SyncRulesProps>(({ connections }) => {
   const { t } = useTranslation('integration');
-  const { data, mutate } = useLinearSyncRules();
+  const { data, error, isValidating, mutate } = useLinearSyncRules();
   const rules = data ?? [];
   const projects = useCurrentProjectList();
   const [running, setRunning] = useState<string | null>(null);
 
+  if (error && !data) {
+    return (
+      <AsyncError
+        error={error}
+        retrying={isValidating}
+        title={t('linear.sync.rules.loadFailed')}
+        variant={'block'}
+        onRetry={() => void mutate()}
+      />
+    );
+  }
   if (rules.length === 0) return null;
 
   const organizationOf = (rule: LinearSyncRuleView) =>
