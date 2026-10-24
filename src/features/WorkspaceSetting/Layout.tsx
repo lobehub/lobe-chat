@@ -39,6 +39,7 @@ const COMPACT_HEADER_TABS = new Set<string>([
   WorkspaceSettingsTabs.ServiceModel,
   WorkspaceSettingsTabs.Stats,
   WorkspaceSettingsTabs.Storage,
+  WorkspaceSettingsTabs.SubscriptionAccounts,
   WorkspaceSettingsTabs.Teams,
   WorkspaceSettingsTabs.Usage,
 ]);
