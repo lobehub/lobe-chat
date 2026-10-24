@@ -36,7 +36,7 @@ const ImportIssuesContent = memo<LinearIssueImportModalOptions>(({ connection, o
   // A rule saved by a sync that then failed; retrying runs it instead of saving another.
   const [savedRuleId, setSavedRuleId] = useState<string>();
   // Shares the Filters request: without the project list, "All projects" may be a mistake.
-  const { error: projectsError } = useSWR(
+  const { error: projectsError, isLoading: projectsLoading } = useSWR(
     filter.teamId ? linearKeys.projects(connection.id, filter.teamId) : null,
   );
 
@@ -139,9 +139,11 @@ const ImportIssuesContent = memo<LinearIssueImportModalOptions>(({ connection, o
       )}
       <Flexbox horizontal align={'center'} gap={8} justify={'space-between'}>
         <Button
-          disabled={!filter.teamId || !!projectsError || (busy && pending !== 'rule')}
           loading={pending === 'rule'}
           title={t('linear.sync.modal.saveRuleHint')}
+          disabled={
+            !filter.teamId || projectsLoading || !!projectsError || (busy && pending !== 'rule')
+          }
           onClick={saveRule}
         >
           {t('linear.sync.modal.saveRule')}

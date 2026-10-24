@@ -355,7 +355,7 @@ export class LinearIssueSyncService {
     }
 
     let current = task;
-    if (closed) current = await this.close(task, issue.state.type);
+    if (closed) current = (await this.close(task, issue.state.type)) ?? task;
     result.created += 1;
     return { link: { ...linkRow, taskIdentifier: task.identifier }, task: current };
   }
@@ -396,12 +396,11 @@ export class LinearIssueSyncService {
     }
 
     if (CLOSED_STATE_TYPES.has(issue.state.type) && !CLOSED_TASK_STATUSES.has(task.status)) {
-      if (task.status === 'running') {
-        skip(result, issue.identifier, 'running');
-      } else {
-        await this.close(task, issue.state.type);
-        result.closed += 1;
-      }
+      // Rechecked under the row lock: the task may have started since the batch was read.
+      const closed =
+        task.status !== 'running' && (await this.close(task, issue.state.type)) !== undefined;
+      if (closed) result.closed += 1;
+      else skip(result, issue.identifier, 'running');
       counted = true;
     }
 
@@ -452,12 +451,20 @@ export class LinearIssueSyncService {
     });
   }
 
-  private async close(task: TaskItem, stateType: LinearIssueStateType): Promise<TaskItem> {
-    const { task: updated } = await this.taskService.updateStatus(
-      { id: task.id, status: stateType === 'completed' ? 'completed' : 'canceled' },
+  /** Close the task like its issue; undefined when it is running and was left alone. */
+  private async close(
+    task: TaskItem,
+    stateType: LinearIssueStateType,
+  ): Promise<TaskItem | undefined> {
+    const { skippedRunning, task: updated } = await this.taskService.updateStatus(
+      {
+        id: task.id,
+        skipIfRunning: true,
+        status: stateType === 'completed' ? 'completed' : 'canceled',
+      },
       { userId: this.userId },
     );
-    return updated;
+    return skippedRunning ? undefined : updated;
   }
 
   /** Links in this scope whose task the caller can still see. */

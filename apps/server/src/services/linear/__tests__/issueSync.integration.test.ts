@@ -289,4 +289,28 @@ describe('LinearIssueSyncService (real PostgreSQL)', () => {
     expect(result).toMatchObject({ keptLocalEdits: 1, updated: 0 });
     expect((await linkedTask('1'))?.name).toBe('Edited mid-sync');
   });
+
+  it('does not close a task that started running after the batch was loaded', async () => {
+    serve([issue({ id: '1' })]);
+    const service = new LinearIssueSyncService(db, userId);
+    await service.importIssues(TOKEN, ['1']);
+    const task = await linkedTask('1');
+
+    const findByIds = TaskModel.prototype.findByIds;
+    const spy = vi.spyOn(TaskModel.prototype, 'findByIds').mockImplementation(async function (
+      this: TaskModel,
+      ids: string[],
+    ) {
+      const rows = await findByIds.call(this, ids);
+      await db.update(tasks).set({ status: 'running' }).where(eq(tasks.id, task!.id));
+      return rows;
+    });
+    serve([issue({ id: '1', state: { name: 'Done', type: 'completed' } })]);
+    const result = await service.importIssues(TOKEN, ['1']);
+    spy.mockRestore();
+
+    expect(result).toMatchObject({ closed: 0 });
+    expect(result.skipped).toEqual([{ identifier: 'ENG-1', reason: 'running' }]);
+    expect((await linkedTask('1'))?.status).toBe('running');
+  });
 });

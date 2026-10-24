@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
+import { useIsWorkspaceViewer } from '@/business/client/hooks/useIsWorkspaceViewer';
 import AsyncError from '@/components/AsyncError';
 import { linearService } from '@/services/linear';
 import { useCurrentProjectList } from '@/store/project';
@@ -30,6 +31,9 @@ const SyncRules = memo<SyncRulesProps>(({ connections }) => {
   const { data, error, isValidating, mutate } = useLinearSyncRules();
   const rules = data ?? [];
   const projects = useCurrentProjectList();
+  // Viewers can see the rules but not run or remove them.
+  const isViewer = useIsWorkspaceViewer();
+  const viewerHint = isViewer ? t('linear.sync.viewerDisabled') : undefined;
   const [running, setRunning] = useState<string | null>(null);
 
   if (error && !data) {
@@ -120,19 +124,20 @@ const SyncRules = memo<SyncRulesProps>(({ connections }) => {
               </Text>
             </Flexbox>
             <Button
-              disabled={running !== null && running !== rule.id}
+              disabled={isViewer || (running !== null && running !== rule.id)}
               icon={<RefreshCwIcon size={14} />}
               loading={running === rule.id}
               size={'small'}
+              title={viewerHint}
               onClick={() => runRule(rule)}
             >
               {t('linear.sync.rules.run')}
             </Button>
             <ActionIcon
-              disabled={running === rule.id}
+              disabled={isViewer || running === rule.id}
               icon={Trash2Icon}
               size={'small'}
-              title={t('linear.sync.rules.delete')}
+              title={viewerHint ?? t('linear.sync.rules.delete')}
               onClick={() => deleteRule(rule)}
             />
           </Flexbox>
