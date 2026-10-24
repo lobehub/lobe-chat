@@ -4606,7 +4606,7 @@ When I am ___, I need ___
   'subscriptionAccounts.actions.viewDetails': 'Details',
   'subscriptionAccounts.activeRuns.empty': 'No agent is using this account right now.',
   'subscriptionAccounts.activeRuns.loadFailed': "Couldn't load the agents using this account.",
-  'subscriptionAccounts.activeRuns.running': 'Running · last turn {{time}}',
+  'subscriptionAccounts.activeRuns.running': 'Running',
   'subscriptionAccounts.activeRuns.title': 'Agents using it now',
   'subscriptionAccounts.activeRuns.untitledAgent': 'Untitled agent',
   'subscriptionAccounts.activeRuns.untitledTopic': 'Untitled topic',

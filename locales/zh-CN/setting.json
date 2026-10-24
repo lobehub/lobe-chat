@@ -1772,7 +1772,7 @@
   "subscriptionAccounts.actions.viewDetails": "查看详情",
   "subscriptionAccounts.activeRuns.empty": "当前没有助理在使用这个账号",
   "subscriptionAccounts.activeRuns.loadFailed": "正在使用的助理加载失败",
-  "subscriptionAccounts.activeRuns.running": "执行中 · {{time}}有新回合",
+  "subscriptionAccounts.activeRuns.running": "执行中",
   "subscriptionAccounts.activeRuns.title": "正在使用的助理",
   "subscriptionAccounts.activeRuns.untitledAgent": "未命名助理",
   "subscriptionAccounts.activeRuns.untitledTopic": "未命名话题",

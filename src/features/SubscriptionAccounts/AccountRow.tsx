@@ -7,7 +7,6 @@ import {
   Flexbox,
   Icon,
   Input,
-  Progress,
   Switch,
   Text,
   toast,
@@ -20,11 +19,9 @@ import { CheckIcon, MoreHorizontalIcon, PanelRightOpenIcon, PencilIcon, XIcon } 
 import { type CSSProperties, type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import {
-  formatPercent,
-  type UsageLevel,
-  usageLevel,
-} from '@/features/DeviceManager/DeviceHealth/format';
+import { formatPercent, usageLevel } from '@/features/DeviceManager/DeviceHealth/format';
+import { usageTextColor } from '@/features/DeviceManager/DeviceHealth/shared';
+import { UsageBar } from '@/features/DeviceManager/DeviceHealth/UsageMeter';
 import { type QuotaAccount, useAgentQuotaStore } from '@/store/agentQuota';
 
 import { type AccountStatus, deriveAccountView, type SubscriptionProvider } from './accountView';
@@ -34,8 +31,9 @@ export const COLUMN_WIDTH = {
   account: 140,
   actions: 28,
   plan: 72,
-  quota: 200,
-  rotation: 64,
+  quota: 190,
+  // Wider than the switch so it sits centered with clear space after the quota bars.
+  rotation: 88,
   status: 120,
 } as const;
 
@@ -97,16 +95,10 @@ const STATUS_COLOR: Record<AccountStatus, string> = {
   noData: cssVar.colorTextQuaternary,
 };
 
-const LEVEL_COLOR: Record<UsageLevel, string> = {
-  critical: cssVar.colorError,
-  high: cssVar.colorWarning,
-  normal: cssVar.colorSuccess,
-};
-
 export const accountDisplayName = (account: QuotaAccount) =>
   account.label || account.email || account.externalAccountId || account.id;
 
-/** One window's usage: its label, a thin bar and the percentage, `—` before any reading. */
+/** One window's usage: its label, the device page's segmented bar and the percentage, `—` before any reading. */
 const WindowMeter = ({ label, value }: { label: string; value?: number }) => {
   const level = usageLevel(value);
   return (
@@ -118,17 +110,19 @@ const WindowMeter = ({ label, value }: { label: string; value?: number }) => {
       >
         {label}
       </Text>
-      <Progress
-        percent={value ?? 0}
-        showInfo={false}
-        size={'small'}
-        strokeColor={level ? LEVEL_COLOR[level] : undefined}
-        style={{ flex: 1, marginBottom: 0, minWidth: 0 }}
-      />
+      <Flexbox flex={1} style={{ minWidth: 0 }}>
+        <UsageBar height={8} value={value} />
+      </Flexbox>
       <Text
         fontSize={12}
-        style={{ flex: 'none', textAlign: 'end', whiteSpace: 'nowrap', width: 36 }}
-        type={'secondary'}
+        type={level ? undefined : 'secondary'}
+        style={{
+          color: usageTextColor(level),
+          flex: 'none',
+          textAlign: 'end',
+          whiteSpace: 'nowrap',
+          width: 36,
+        }}
       >
         {formatPercent(value)}
       </Text>
@@ -157,6 +151,7 @@ export const AccountListHeader = () => {
       {label(t('subscriptionAccounts.columns.quota'), { flex: 'none', width: COLUMN_WIDTH.quota })}
       {label(t('subscriptionAccounts.columns.rotation'), {
         flex: 'none',
+        textAlign: 'center',
         width: COLUMN_WIDTH.rotation,
       })}
       <span style={{ flex: 'none', width: COLUMN_WIDTH.actions }} />
@@ -340,7 +335,12 @@ const AccountRow = ({ account, active, onOpen }: AccountRowProps) => {
         />
       </Flexbox>
 
-      <Flexbox horizontal style={{ flex: 'none', width: COLUMN_WIDTH.rotation }} {...stop}>
+      <Flexbox
+        horizontal
+        justify={'center'}
+        style={{ flex: 'none', width: COLUMN_WIDTH.rotation }}
+        {...stop}
+      >
         <Tooltip title={t('subscriptionAccounts.rotationTooltip')}>
           <Switch
             aria-label={t('subscriptionAccounts.rotationTooltip')}

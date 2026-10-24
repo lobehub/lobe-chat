@@ -4,12 +4,12 @@ import { DEFAULT_AVATAR } from '@lobechat/const';
 import { ActionIcon, Avatar, Empty, Flexbox, Text } from '@lobehub/ui';
 import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
 import * as stylex from '@stylexjs/stylex';
-import dayjs from 'dayjs';
 import { XIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import SkeletonBar from '@/components/Skeleton/Bar';
 import QuotaCalendar from '@/features/AgentQuotaCalendar/QuotaCalendarModal';
+import RunningGlyph from '@/features/Home/components/RunningGlyph';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useClientDataSWR } from '@/libs/swr';
 import { agentQuotaService } from '@/services/agentQuota';
@@ -22,6 +22,16 @@ import type { SubscriptionProvider } from './accountView';
 const ACTIVE_RUNS_REFRESH_MS = 15_000;
 
 const styles = stylex.create({
+  avatar: { position: 'relative', display: 'flex', flex: 'none' },
+  runningBadge: {
+    position: 'absolute',
+    insetInlineEnd: '-3px',
+    insetBlockEnd: '-3px',
+    display: 'flex',
+    padding: '1px',
+    borderRadius: '50%',
+    backgroundColor: cssVar.colorBgContainer,
+  },
   // Sits beside the list and squeezes it rather than covering it, and stays in
   // view while the list scrolls under the settings header.
   panel: {
@@ -93,11 +103,24 @@ const ActiveRuns = ({ accountId }: { accountId: string }) => {
             navigate(run.topicId ? `/agent/${run.agentId}/${run.topicId}` : `/agent/${run.agentId}`)
           }
         >
-          <Avatar
-            avatar={run.agentAvatar || DEFAULT_AVATAR}
-            background={run.agentBackgroundColor ?? undefined}
-            size={24}
-          />
+          {/* A run that is executing carries the shared running ring on its
+              avatar; a waiting one says so in text on the right. */}
+          <span {...stylex.props(styles.avatar)}>
+            <Avatar
+              avatar={run.agentAvatar || DEFAULT_AVATAR}
+              background={run.agentBackgroundColor ?? undefined}
+              size={24}
+            />
+            {run.status === 'running' && (
+              <span
+                aria-label={t('subscriptionAccounts.activeRuns.running')}
+                role={'img'}
+                {...stylex.props(styles.runningBadge)}
+              >
+                <RunningGlyph size={10} />
+              </span>
+            )}
+          </span>
           {/* One line, agent · topic: the pair is what identifies a run. */}
           <Flexbox horizontal align={'baseline'} flex={1} gap={6} style={{ minWidth: 0 }}>
             <Text ellipsis style={{ flex: 'none', maxWidth: '50%' }} weight={500}>
@@ -110,13 +133,11 @@ const ActiveRuns = ({ accountId }: { accountId: string }) => {
               {run.topicTitle || t('subscriptionAccounts.activeRuns.untitledTopic')}
             </Text>
           </Flexbox>
-          <Text fontSize={12} style={{ flex: 'none' }} type={'secondary'}>
-            {run.status === 'running'
-              ? t('subscriptionAccounts.activeRuns.running', {
-                  time: dayjs(run.lastTurnAt).fromNow(),
-                })
-              : t('subscriptionAccounts.activeRuns.waiting')}
-          </Text>
+          {run.status !== 'running' && (
+            <Text fontSize={12} style={{ flex: 'none' }} type={'secondary'}>
+              {t('subscriptionAccounts.activeRuns.waiting')}
+            </Text>
+          )}
         </Flexbox>
       ))}
     </Flexbox>
