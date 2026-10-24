@@ -31,3 +31,12 @@ describe('labPreferSelectors.enableGoals', () => {
     expect(labPreferSelectors.enableGoals(stateWithLab({ enableGoals: true }))).toBe(true);
   });
 });
+
+describe('labPreferSelectors.enableChannels', () => {
+  it('requires an explicit opt-in, including for existing users without lab settings', () => {
+    expect(labPreferSelectors.enableChannels({ preference: {} } as UserState)).toBe(false);
+    expect(labPreferSelectors.enableChannels(stateWithLab({}))).toBe(false);
+    expect(labPreferSelectors.enableChannels(stateWithLab({ enableChannels: true }))).toBe(true);
+    expect(labPreferSelectors.enableChannels(stateWithLab({ enableChannels: false }))).toBe(false);
+  });
+});

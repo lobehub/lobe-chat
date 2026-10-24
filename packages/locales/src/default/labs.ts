@@ -1,4 +1,7 @@
 export default {
+  'features.channels.title': 'Multi-agent Channels',
+  'features.channels.desc':
+    'Collaborate with multiple agents in shared channels, exchange messages, and continue threaded discussions. Enable to show Channels in the sidebar.',
   'description':
     "These features are experimental. We might remove them, and they might have bugs. We'd love your feedback while using them.",
   'features.agentGraphConfig.desc':

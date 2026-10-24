@@ -26,6 +26,8 @@ import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwar
 import { buildWorkspaceAwarePath } from '@/features/Workspace/workspaceAwarePath';
 import { useActiveLocation } from '@/hooks/useActiveLocation';
 import { channelActions, channelSelectors, useChannelStore } from '@/store/channel';
+import { useUserStore } from '@/store/user';
+import { labPreferSelectors, preferenceSelectors } from '@/store/user/selectors';
 
 import { openCreateChannel } from './CreateChannel';
 import { channelPath, matchChannel } from './paths';
@@ -77,7 +79,7 @@ const ChannelThreads = ({
 };
 
 /** Channels beside Agents in the home sidebar, with the open Channel's threads nested under it. */
-const ChannelList = () => {
+const EnabledChannelList = () => {
   const { t } = useTranslation('channel');
   const { pathname, search } = useActiveLocation();
   const navigate = useWorkspaceAwareNavigate();
@@ -181,6 +183,13 @@ const ChannelList = () => {
       </AccordionItem>
     </AccordionRoot>
   );
+};
+
+const ChannelList = () => {
+  const enabled = useUserStore(
+    (s) => preferenceSelectors.isPreferenceInit(s) && labPreferSelectors.enableChannels(s),
+  );
+  return enabled ? <EnabledChannelList /> : null;
 };
 
 export default ChannelList;

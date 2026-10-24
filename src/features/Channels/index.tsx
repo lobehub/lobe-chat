@@ -1,4 +1,4 @@
-import { Flexbox, Text } from '@lobehub/ui';
+import { Center, Flexbox, Spin, Text } from '@lobehub/ui';
 import * as stylex from '@stylexjs/stylex';
 import { useSize } from 'ahooks';
 import { Hash } from 'lucide-react';
@@ -6,8 +6,11 @@ import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useSearchParams } from 'react-router';
 
+import NotFound from '@/components/404';
 import NavHeader from '@/features/NavHeader';
 import { channelActions, channelSelectors, useChannelStore } from '@/store/channel';
+import { useUserStore } from '@/store/user';
+import { labPreferSelectors, preferenceSelectors } from '@/store/user/selectors';
 
 import { visibleChannelDetail } from './channelAccess';
 import { ChannelConversation } from './ChannelConversation';
@@ -16,7 +19,7 @@ import { styles } from './styles';
 import { THREAD_FLOAT_BREAKPOINT, ThreadPanel } from './ThreadPanel';
 
 /** One Channel: the main conversation, with a thread beside it. */
-export default function ChannelPage() {
+function EnabledChannelPage() {
   const { t } = useTranslation('channel');
   const { channelId } = useParams<{ channelId: string }>();
   const [params, setParams] = useSearchParams();
@@ -69,4 +72,19 @@ export default function ChannelPage() {
       </Flexbox>
     </Flexbox>
   );
+}
+
+/** Do not mount subscriptions or conversations until the user opts into Labs. */
+export default function ChannelPage() {
+  const [ready, enabled] = useUserStore((s) => [
+    preferenceSelectors.isPreferenceInit(s),
+    labPreferSelectors.enableChannels(s),
+  ]);
+  if (!ready)
+    return (
+      <Center height="100%">
+        <Spin />
+      </Center>
+    );
+  return enabled ? <EnabledChannelPage /> : <NotFound />;
 }
