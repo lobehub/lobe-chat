@@ -41,8 +41,9 @@ const describeMarketError = (error: MarketAPIError) => {
 /**
  * Widget sandbox behind Market's one-shot run endpoint (`sdk.sandbox.run`).
  * Market authenticates the trusted-client token for the run's actor, rate
- * limits that account, and signs the request to the widget sandbox Worker,
- * which enforces the egress allowlist per run.
+ * limits that account, resolves `egress.inject` secret references against that
+ * account's credentials, and signs the request to the widget sandbox Worker,
+ * which enforces the egress allowlist and sets the injected headers per run.
  *
  * Market answers 200 for every script that ran — including non-zero exits and
  * timeouts; the SDK throws `MarketAPIError` when the script did not run.
@@ -68,7 +69,10 @@ export class MarketWidgetSandboxRunner implements WidgetSandboxRunner {
     try {
       const result = await this.sandboxFor(request.actor).run(
         {
-          egress: { allow: request.network.allow },
+          egress: {
+            allow: request.network.allow,
+            ...(request.network.inject?.length ? { inject: request.network.inject } : {}),
+          },
           env: request.env,
           runtime: request.runtime,
           script: request.script,
