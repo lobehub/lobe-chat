@@ -2542,10 +2542,14 @@ export default {
   'goalProcess.gate.reason.verifyInternalError':
     'Verification could not run (internal error); this delivery was not evaluated',
   'goalProcess.gate.reason.verifyFailed': 'Task {{id}} did not pass verification',
+  'goalProcess.gate.reason.verifyStalled':
+    'Task {{id}} failed verification the same way {{count}} times in a row, so it was not retried again',
   'goalProcess.gate.reason.goalAcceptanceFailed': 'Goal-level acceptance did not pass',
   'goalProcess.gate.reason.attemptBudgetExhausted': 'The attempt budget for this work is used up',
   'goalProcess.gate.reason.costBudgetExhausted': 'The goal cost budget is used up',
   'goalProcess.gate.reason.recoveryFailed': 'Automatic recovery could not start the next attempt',
+  'goalProcess.gate.reason.recoveryFailedWithError':
+    'Automatic recovery could not start the next attempt: {{error}}',
   'goalProcess.gate.reason.batchReleaseProbes':
     'The v{{revision}} experiments finished; start batch execution with wave {{wave}} ({{count}} units)',
   'goalProcess.gate.reason.batchReleaseRevised':
