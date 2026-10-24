@@ -579,7 +579,7 @@ export const acceptanceCommentRouter = router({
           message: 'A goal gate cannot hand out reject access',
         });
       // The owner already holds everything a grant hands out. A workspace
-      // admin who may decide still cannot talk to the owner's agent, so they
+      // member who may decide still cannot talk to the owner's agent, so they
       // may ask like anyone else.
       if (access.isOwner)
         throw new TRPCError({
@@ -653,7 +653,7 @@ export const acceptanceCommentRouter = router({
       if (!(await canManageAcceptance(ctx, access.acceptance)))
         throw new TRPCError({
           code: 'FORBIDDEN',
-          message: 'Only the creator, a workspace owner or a workspace admin can answer this',
+          message: 'Only the creator or a workspace member with edit access can answer this',
         });
 
       const transition = ACCESS_TRANSITIONS[input.decision];

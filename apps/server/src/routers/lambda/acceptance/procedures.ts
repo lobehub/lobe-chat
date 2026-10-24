@@ -18,7 +18,7 @@ import { AcceptanceService } from '@/server/services/verify';
 import { canManageAcceptance } from '../_helpers/acceptanceWriteScope';
 
 export const ACCEPTANCE_DECISION_FORBIDDEN =
-  'Only the creator, a workspace owner or a workspace admin can change this acceptance';
+  'Only the creator or a workspace member with edit access can change this acceptance';
 
 /** Reads addressed purely by acceptance id — visibility is checked in the handler. */
 export const publicAcceptanceProcedure = publicProcedure.use(serverDatabase);
