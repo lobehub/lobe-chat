@@ -1,12 +1,26 @@
 'use client';
 
-import { Flexbox, Tag, Text } from '@lobehub/ui';
+import { Flexbox, Icon, Text } from '@lobehub/ui';
 import { cssVar as vars } from '@lobehub/ui/stylex/cssVar.stylex';
 import * as stylex from '@stylexjs/stylex';
+import {
+  Archive,
+  Check,
+  CircleX,
+  GitBranch,
+  type LucideIcon,
+  RotateCcw,
+  Sparkles,
+} from 'lucide-react';
 import { memo, type ReactNode, useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { connectorPath, type DecisionEffect, type DecisionGraphModel } from './decisionGraphModel';
+import {
+  connectorPath,
+  type DecisionEffect,
+  type DecisionGraphModel,
+  type Point,
+} from './decisionGraphModel';
 
 /**
  * One decision drawn as a graph, left to right: what raised it → the options it
@@ -25,36 +39,47 @@ const styles = stylex.create({
     borderRadius: vars.borderRadius,
     borderStyle: 'solid',
     borderWidth: 1,
-    paddingBlock: 8,
+    paddingBlock: 10,
     paddingInline: 12,
     position: 'relative',
     zIndex: 1,
   },
   cardChosen: {
-    borderColor: vars.colorPrimary,
+    backgroundColor: vars.colorSuccessBg,
+    borderColor: vars.colorSuccessBorder,
   },
   cardDim: {
-    opacity: 0.55,
+    opacity: 0.5,
   },
   cardResult: {
-    backgroundColor: vars.colorFillQuaternary,
+    boxShadow: vars.boxShadowTertiary,
   },
-  index: {
+  cardRoot: {
+    backgroundColor: vars.colorBgContainerSecondary,
+  },
+  chip: {
     alignItems: 'center',
     backgroundColor: vars.colorFillTertiary,
     borderRadius: vars.borderRadiusSM,
     color: vars.colorTextSecondary,
     display: 'flex',
     flexShrink: 0,
-    fontSize: 12,
-    height: 20,
+    height: 24,
     justifyContent: 'center',
-    width: 20,
+    width: 24,
+  },
+  chipError: {
+    backgroundColor: vars.colorErrorBg,
+    color: vars.colorError,
+  },
+  chipInfo: {
+    backgroundColor: vars.colorInfoBg,
+    color: vars.colorInfo,
   },
   link: {
     backgroundColor: 'transparent',
     borderWidth: 0,
-    color: vars.colorTextSecondary,
+    color: vars.colorText,
     cursor: 'pointer',
     padding: 0,
     textAlign: 'start',
@@ -72,8 +97,37 @@ const styles = stylex.create({
     top: 0,
     width: '100%',
   },
+  marker: {
+    alignItems: 'center',
+    borderColor: vars.colorBorder,
+    borderRadius: '50%',
+    borderStyle: 'solid',
+    borderWidth: 1.5,
+    boxSizing: 'border-box',
+    display: 'flex',
+    flexShrink: 0,
+    height: 16,
+    justifyContent: 'center',
+    marginBlockStart: 2,
+    width: 16,
+  },
+  markerChosen: {
+    backgroundColor: vars.colorSuccess,
+    borderColor: vars.colorSuccess,
+    color: vars.colorTextLightSolid,
+  },
+  srOnly: {
+    borderWidth: 0,
+    height: 1,
+    margin: -1,
+    overflow: 'hidden',
+    padding: 0,
+    position: 'absolute',
+    whiteSpace: 'nowrap',
+    width: 1,
+  },
   wrap: {
-    columnGap: 56,
+    columnGap: 48,
     display: 'flex',
     marginBlockStart: 4,
     paddingBlock: 4,
@@ -81,10 +135,18 @@ const styles = stylex.create({
   },
 });
 
+const EFFECT_ICON: Record<DecisionEffect, LucideIcon> = {
+  fail: CircleX,
+  retire: Archive,
+  retry: RotateCcw,
+};
+
 interface Line {
   active: boolean;
   d: string;
+  from: Point;
   key: string;
+  to: Point;
 }
 
 export interface DecisionGraphRoot {
@@ -137,17 +199,24 @@ const DecisionGraph = memo<DecisionGraphProps>(({ model, result, root }) => {
     model.options.forEach((option, index) => {
       const el = optionRefs.current[index];
       if (!el) return;
+      const from = right(rootEl);
+      const to = left(el);
       next.push({
         active: option.state === 'chosen',
-        d: connectorPath(right(rootEl), left(el)),
+        d: connectorPath(from, to),
+        from,
         key: `root-${option.id}`,
+        to,
       });
     });
     const resultEl = resultRef.current;
     if (model.result && resultEl) {
       const source = model.result.from === 'option' ? optionRefs.current[chosenIndex] : rootEl;
-      if (source)
-        next.push({ active: true, d: connectorPath(right(source), left(resultEl)), key: 'result' });
+      if (source) {
+        const from = right(source);
+        const to = left(resultEl);
+        next.push({ active: true, d: connectorPath(from, to), from, key: 'result', to });
+      }
     }
     setLines(next);
   }, [chosenIndex, model]);
@@ -166,113 +235,153 @@ const DecisionGraph = memo<DecisionGraphProps>(({ model, result, root }) => {
   return (
     <div ref={wrapRef} {...stylex.props(styles.wrap)}>
       <svg aria-hidden {...stylex.props(styles.lines)}>
-        {lines.map((line) => (
-          <path
-            d={line.d}
-            fill={'none'}
-            key={line.key}
-            strokeWidth={line.active ? 1.5 : 1}
-            style={{
-              stroke: line.active ? 'var(--lobe-color-primary)' : 'var(--lobe-color-border)',
-            }}
-          />
-        ))}
+        {/* Passed-over routes first, so the picked path always draws on top. */}
+        {[...lines]
+          .sort((x, y) => Number(x.active) - Number(y.active))
+          .map((line) => (
+            <g key={line.key}>
+              <path
+                d={line.d}
+                fill={'none'}
+                strokeDasharray={line.active ? undefined : '3 4'}
+                strokeLinecap={'round'}
+                strokeWidth={line.active ? 1.5 : 1}
+                style={{
+                  stroke: line.active ? 'var(--lobe-color-success)' : 'var(--lobe-color-border)',
+                }}
+              />
+              {line.active &&
+                [line.from, line.to].map((point, index) => (
+                  <circle
+                    cx={point.x}
+                    cy={point.y}
+                    key={index}
+                    r={3}
+                    style={{ fill: 'var(--lobe-color-success)' }}
+                  />
+                ))}
+            </g>
+          ))}
       </svg>
 
       <Flexbox flex={'0 1 26%'} justify={'center'} style={{ minWidth: 140 }}>
-        <div ref={rootRef} {...stylex.props(styles.card)}>
-          <Flexbox gap={4}>
-            {hasContext ? (
-              <>
-                {root.context && (
-                  <Flexbox gap={2}>
-                    <Text fontSize={12} type={'secondary'}>
-                      {t('goalProcess.decisions.raisedBy')}
-                    </Text>
-                    {root.context.onOpen ? (
-                      <button
-                        type={'button'}
-                        {...stylex.props(styles.link)}
-                        onClick={root.context.onOpen}
-                      >
+        <div ref={rootRef} {...stylex.props(styles.card, styles.cardRoot)}>
+          <Flexbox horizontal align={'flex-start'} gap={10}>
+            <span {...stylex.props(styles.chip)}>
+              <Icon icon={GitBranch} size={14} />
+            </span>
+            <Flexbox flex={1} gap={4} style={{ minWidth: 0 }}>
+              {hasContext ? (
+                <>
+                  {root.context && (
+                    <Flexbox gap={2}>
+                      <Text fontSize={12} style={{ color: 'var(--lobe-color-text-tertiary)' }}>
+                        {t('goalProcess.decisions.raisedBy')}
+                      </Text>
+                      {root.context.onOpen ? (
+                        <button
+                          type={'button'}
+                          {...stylex.props(styles.link)}
+                          onClick={root.context.onOpen}
+                        >
+                          <Text style={{ wordBreak: 'break-word' }} weight={500}>
+                            {root.context.title}
+                          </Text>
+                        </button>
+                      ) : (
                         <Text style={{ wordBreak: 'break-word' }} weight={500}>
                           {root.context.title}
                         </Text>
-                      </button>
-                    ) : (
-                      <Text style={{ wordBreak: 'break-word' }} weight={500}>
-                        {root.context.title}
-                      </Text>
-                    )}
-                  </Flexbox>
-                )}
-                {root.detail && (
-                  <Text fontSize={13} style={{ wordBreak: 'break-word' }} type={'secondary'}>
-                    {root.detail}
-                  </Text>
-                )}
-              </>
-            ) : (
-              <Text style={{ wordBreak: 'break-word' }} weight={500}>
-                {root.question}
-              </Text>
-            )}
+                      )}
+                    </Flexbox>
+                  )}
+                  {root.detail && (
+                    <Text fontSize={13} style={{ wordBreak: 'break-word' }} type={'secondary'}>
+                      {root.detail}
+                    </Text>
+                  )}
+                </>
+              ) : (
+                <Text style={{ wordBreak: 'break-word' }} weight={500}>
+                  {root.question}
+                </Text>
+              )}
+            </Flexbox>
           </Flexbox>
         </div>
       </Flexbox>
 
-      <Flexbox flex={1} gap={10} justify={'center'} style={{ minWidth: 0 }}>
-        {model.options.map((option, index) => (
-          <div
-            key={option.id}
-            ref={(el) => {
-              optionRefs.current[index] = el;
-            }}
-            {...stylex.props(
-              styles.card,
-              option.state === 'chosen' && styles.cardChosen,
-              option.state === 'dim' && styles.cardDim,
-            )}
-          >
-            <Flexbox horizontal align={'flex-start'} gap={8}>
-              <span {...stylex.props(styles.index)}>{index + 1}</span>
-              <Flexbox flex={1} gap={2} style={{ minWidth: 0 }}>
-                <Flexbox horizontal align={'center'} gap={6} wrap={'wrap'}>
-                  <Text
-                    style={{ wordBreak: 'break-word' }}
-                    weight={option.state === 'chosen' ? 600 : 500}
-                  >
-                    {option.label}
-                  </Text>
-                  {option.recommended && (
-                    <Tag size={'small'}>{t('goalProcess.decisions.recommended')}</Tag>
-                  )}
-                  {option.state === 'chosen' && (
-                    <Tag color={'success'} size={'small'}>
-                      {t('goalProcess.decisions.chosen')}
-                    </Tag>
+      <Flexbox flex={1} gap={8} justify={'center'} style={{ minWidth: 0 }}>
+        {model.options.map((option, index) => {
+          const chosen = option.state === 'chosen';
+          return (
+            <div
+              key={option.id}
+              ref={(el) => {
+                optionRefs.current[index] = el;
+              }}
+              {...stylex.props(
+                styles.card,
+                chosen && styles.cardChosen,
+                option.state === 'dim' && styles.cardDim,
+              )}
+            >
+              <Flexbox horizontal align={'flex-start'} gap={10}>
+                {/* A radio that fills in when picked: the state reads before the label does. */}
+                <span {...stylex.props(styles.marker, chosen && styles.markerChosen)}>
+                  {chosen && <Icon icon={Check} size={10} style={{ strokeWidth: 3 }} />}
+                </span>
+                <Flexbox flex={1} gap={2} style={{ minWidth: 0 }}>
+                  <Flexbox horizontal align={'center'} gap={8} style={{ rowGap: 2 }} wrap={'wrap'}>
+                    <Text style={{ wordBreak: 'break-word' }} weight={chosen ? 600 : 500}>
+                      {option.label}
+                    </Text>
+                    {option.recommended && (
+                      <Flexbox horizontal align={'center'} gap={3} style={{ flex: 'none' }}>
+                        <Icon color={vars.colorTextTertiary} icon={Sparkles} size={12} />
+                        <Text fontSize={12} style={{ color: 'var(--lobe-color-text-tertiary)' }}>
+                          {t('goalProcess.decisions.recommended')}
+                        </Text>
+                      </Flexbox>
+                    )}
+                    {chosen && (
+                      <span {...stylex.props(styles.srOnly)}>
+                        {t('goalProcess.decisions.chosen')}
+                      </span>
+                    )}
+                  </Flexbox>
+                  {option.description && (
+                    <Text fontSize={13} style={{ wordBreak: 'break-word' }} type={'secondary'}>
+                      {option.description}
+                    </Text>
                   )}
                 </Flexbox>
-                {option.description && (
-                  <Text fontSize={13} style={{ wordBreak: 'break-word' }} type={'secondary'}>
-                    {option.description}
-                  </Text>
-                )}
               </Flexbox>
-            </Flexbox>
-          </div>
-        ))}
+            </div>
+          );
+        })}
       </Flexbox>
 
       {model.result && result && (
         <Flexbox flex={'0 1 26%'} justify={'center'} style={{ minWidth: 140 }}>
           <div ref={resultRef} {...stylex.props(styles.card, styles.cardResult)}>
-            <Flexbox gap={6}>
+            <Flexbox gap={8}>
               {result.header}
               {model.result.effect && result.effectLabel && (
-                <Text style={{ wordBreak: 'break-word' }} weight={500}>
-                  {result.effectLabel[model.result.effect]}
-                </Text>
+                <Flexbox horizontal align={'center'} gap={8}>
+                  <span
+                    {...stylex.props(
+                      styles.chip,
+                      model.result.effect === 'retry' && styles.chipInfo,
+                      model.result.effect === 'fail' && styles.chipError,
+                    )}
+                  >
+                    <Icon icon={EFFECT_ICON[model.result.effect]} size={14} />
+                  </span>
+                  <Text style={{ wordBreak: 'break-word' }} weight={600}>
+                    {result.effectLabel[model.result.effect]}
+                  </Text>
+                </Flexbox>
               )}
               {model.result.note && (
                 <Text fontSize={13} style={{ wordBreak: 'break-word' }} type={'secondary'}>

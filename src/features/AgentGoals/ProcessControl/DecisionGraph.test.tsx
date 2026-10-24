@@ -29,12 +29,12 @@ describe('DecisionGraph', () => {
   it('draws the picked option, its effect and the note on the result card', () => {
     render(
       <DecisionGraph
+        result={{ effectLabel, header: <span>Dana</span> }}
+        root={{ question: 'Retry or retire?' }}
         model={{
           options,
           result: { actor: 'user', effect: 'retire', from: 'option', note: 'not worth it' },
         }}
-        result={{ effectLabel, header: <span>Dana</span> }}
-        root={{ question: 'Retry or retire?' }}
       />,
     );
 

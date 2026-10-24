@@ -90,10 +90,15 @@ const Decider = memo<{ row: DecisionRow }>(({ row }) => {
 
 Decider.displayName = 'GoalDecisionDecider';
 
-const DecisionTime = memo<{ at: Date }>(({ at }) => {
+const DecisionTime = memo<{ at: Date; compact?: boolean }>(({ at, compact }) => {
   const { text, title } = useActivityTime(at);
   return (
-    <Text fontSize={12} style={TIME_STYLE} title={title} type={'secondary'}>
+    <Text
+      fontSize={12}
+      style={compact ? { flex: 'none' } : TIME_STYLE}
+      title={title}
+      type={'secondary'}
+    >
       {text}
     </Text>
   );
@@ -151,9 +156,9 @@ const DecisionRowView = memo<{
               retry: t('goalProcess.decisions.effect.retry'),
             },
             header: (
-              <Flexbox horizontal align={'center'} gap={8} justify={'space-between'} wrap={'wrap'}>
+              <Flexbox horizontal align={'center'} gap={8} wrap={'wrap'}>
                 <Decider row={row} />
-                <DecisionTime at={row.resolvedAt ?? decision.createdAt} />
+                <DecisionTime compact at={row.resolvedAt ?? decision.createdAt} />
               </Flexbox>
             ),
           }}
