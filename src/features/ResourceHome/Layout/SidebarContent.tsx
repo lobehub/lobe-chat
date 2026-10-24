@@ -5,6 +5,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
+import SidebarFavorites from '@/features/HomeSidebar/Body/Favorites';
 import SideBarLayout from '@/features/NavPanel/SideBarLayout';
 import { pageActions, usePageStore } from '@/store/page';
 
@@ -36,12 +37,13 @@ const FullListDrawerHost = memo(() => {
 FullListDrawerHost.displayName = 'DocsFullListDrawerHost';
 
 export enum GroupKey {
+  Favorites = 'favorites',
   Library = 'library',
   MyDocs = 'my-docs',
   Shared = 'shared-docs',
 }
 
-const DEFAULT_OPEN = [GroupKey.Library, GroupKey.MyDocs, GroupKey.Shared];
+const DEFAULT_OPEN = [GroupKey.Favorites, GroupKey.Library, GroupKey.MyDocs, GroupKey.Shared];
 
 /**
  * Docs sidebar: the four sections in the header, then shortcuts — recent
@@ -61,6 +63,7 @@ const ResourceSidebarContent = memo(() => {
               indicatorPlacement="inline"
               style={{ gap: 8 }}
             >
+              <SidebarFavorites itemKey={GroupKey.Favorites} />
               <SidebarBody itemKey={GroupKey.Library} />
               <PageSection itemKey={GroupKey.MyDocs} scope={'mine'} />
               {workspaceId && <PageSection itemKey={GroupKey.Shared} scope={'shared'} />}
