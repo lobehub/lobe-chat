@@ -103,9 +103,11 @@ export class TreeActionImpl {
   #queuedRevalidate = new Set<string>();
 
   /**
-   * Folders whose rendered rows came from an explorer list with optimistic
-   * overlays still pending (see `reconcile`). The snapshot keeps their last
-   * confirmed rows; the explorer's settle or a server answer for the folder clears it.
+   * Folders whose rendered rows are not confirmed by the server: an explorer
+   * list with optimistic overlays still pending (see `reconcile`), or a folder
+   * whose refresh failed during `revalidateLoaded`. The snapshot keeps their
+   * last confirmed rows; the explorer's settle or a server answer for the
+   * folder clears it.
    */
   #unconfirmedFolders = new Set<string>();
 
@@ -427,7 +429,15 @@ export class TreeActionImpl {
 
     this.#pendingBatch += 1;
     try {
-      await Promise.all([...targets].map((folderId) => this.#revalidateFolder(folderId)));
+      const refreshed = await Promise.all(
+        [...targets].map((folderId) => this.#revalidateFolder(folderId)),
+      );
+      // A folder that failed (or was deferred behind an in-flight load) still
+      // shows its pre-deletion rows: keep it out of the snapshot until a later
+      // refresh confirms it, or a reload would repaint the deleted rows.
+      [...targets].forEach((folderId, index) => {
+        if (!refreshed[index]) this.#unconfirmedFolders.add(folderId);
+      });
     } finally {
       this.#pendingBatch -= 1;
       this.#persistSnapshot();
@@ -437,12 +447,13 @@ export class TreeActionImpl {
   /**
    * Refetch one folder while its current rows stay on screen. A failure keeps
    * them (status back to idle) rather than flagging the folder as errored.
+   * Resolves `true` only when the folder's rows now come from this refetch.
    */
-  #revalidateFolder = async (folderId: string) => {
+  #revalidateFolder = async (folderId: string): Promise<boolean> => {
     const { epoch, knowledgeBaseId, status } = this.#get();
     if (status[folderId] === 'loading' || status[folderId] === 'revalidating') {
       this.#queuedRevalidate.add(folderId);
-      return;
+      return false;
     }
 
     this.#set(
@@ -459,7 +470,7 @@ export class TreeActionImpl {
         showFilesInKnowledgeBase: false,
       });
 
-      if (this.#get().epoch !== epoch) return;
+      if (this.#get().epoch !== epoch) return false;
 
       this.#set(
         {
@@ -475,14 +486,16 @@ export class TreeActionImpl {
       this.#unconfirmedFolders.delete(folderId);
       this.#persistSnapshot();
       this.#runQueuedRevalidate(folderId);
+      return true;
     } catch {
-      if (this.#get().epoch !== epoch) return;
+      if (this.#get().epoch !== epoch) return false;
       this.#set(
         { status: { ...this.#get().status, [folderId]: 'idle' } },
         false,
         'tree/revalidate/error',
       );
       this.#runQueuedRevalidate(folderId);
+      return false;
     }
   };
 

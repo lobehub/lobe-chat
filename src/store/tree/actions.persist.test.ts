@@ -507,4 +507,37 @@ describe('TreeActionImpl.revalidateLoaded — a delete only the server can enume
     expect(stored).not.toContain('doc-a');
     expect(stored).not.toContain('doc-b');
   });
+  // Regression: a failed folder refresh keeps its old rows on screen, and the
+  // batch's closing snapshot write used to persist them, so a reload repainted
+  // the rows the search-wide delete had just removed.
+  it('keeps a folder whose refresh failed out of the stored snapshot', async () => {
+    const { actions, state } = await loadTwoFolders();
+    const rootFolders = [serverRow('folder-a', true), serverRow('folder-b', true)];
+    actions.forgetSnapshot();
+
+    mockGetKnowledgeItems
+      .mockReset()
+      .mockImplementation(({ parentId }) => {
+        if (parentId === 'folder-b') return Promise.reject(new Error('network'));
+        if (parentId === null) return Promise.resolve({ items: rootFolders });
+        return Promise.resolve({ items: [] });
+      });
+
+    await actions.revalidateLoaded('');
+
+    // The failed folder keeps its rows on screen; only the persisted copy drops them.
+    expect(state.children['folder-b']).toEqual([file('doc-b')]);
+    const stored = JSON.stringify(state.snapshotMap['kb-1'] ?? {});
+    expect(stored).not.toContain('doc-a');
+    expect(stored).not.toContain('doc-b');
+
+    // A later successful refresh confirms the folder and persists it again.
+    mockGetKnowledgeItems
+      .mockReset()
+      .mockImplementation(({ parentId }) =>
+        Promise.resolve({ items: parentId === 'folder-b' ? [serverRow('doc-c')] : rootFolders }),
+      );
+    await actions.revalidate('folder-b');
+    expect(JSON.stringify(state.snapshotMap['kb-1'] ?? {})).toContain('doc-c');
+  });
 });
