@@ -6,12 +6,16 @@ import type {
   ChannelJobStatus,
   ChannelMemberActorType,
   ChannelMemberConfig,
+  ChannelMemberGrantMetadata,
   ChannelMemberGrantRevokeReason,
   ChannelMemberGrantStatus,
   ChannelMemberMetadata,
   ChannelMemberRole,
+  ChannelMessageMetadata,
   ChannelMessageRoutingSource,
   ChannelMessageRoutingStatus,
+  ChannelMetadata,
+  ChannelThreadMetadata,
   ChannelVisibility,
 } from '@lobechat/types';
 import { sql } from 'drizzle-orm';
@@ -84,6 +88,7 @@ export const channels = pgTable(
      * Ignored for personal channels.
      */
     visibility: text('visibility').$type<ChannelVisibility>().notNull().default('private'),
+    metadata: jsonb('metadata').$type<ChannelMetadata>().default({}),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
@@ -203,6 +208,7 @@ export const channelMemberGrants = pgTable(
     decidedAt: timestamptz('decided_at'),
     revokedAt: timestamptz('revoked_at'),
     revokeReason: text('revoke_reason').$type<ChannelMemberGrantRevokeReason>(),
+    metadata: jsonb('metadata').$type<ChannelMemberGrantMetadata>().default({}),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
@@ -255,6 +261,7 @@ export const channelThreads = pgTable(
     rootSequence: integer('root_sequence').notNull(),
     /** Member ids (people and Agents) following this Thread. */
     followerMemberIds: jsonb('follower_member_ids').$type<string[]>().notNull().default([]),
+    metadata: jsonb('metadata').$type<ChannelThreadMetadata>().default({}),
     createdAt: createdAt(),
   },
   // Threads and messages reference each other; the annotation breaks the type cycle.
@@ -302,6 +309,7 @@ export const channelMessages = pgTable(
     routingAttempt: integer('routing_attempt').notNull().default(0),
     /** Agent member ids that actually received a job for this message. */
     recipientMemberIds: jsonb('recipient_member_ids').$type<string[]>().notNull().default([]),
+    metadata: jsonb('metadata').$type<ChannelMessageMetadata>().default({}),
 
     createdAt: createdAt(),
   },

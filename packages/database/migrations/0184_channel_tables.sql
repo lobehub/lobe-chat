@@ -51,6 +51,7 @@ CREATE TABLE IF NOT EXISTS "channel_member_grants" (
 	"decided_at" timestamp with time zone,
 	"revoked_at" timestamp with time zone,
 	"revoke_reason" text,
+	"metadata" jsonb DEFAULT '{}'::jsonb,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
@@ -104,6 +105,7 @@ CREATE TABLE IF NOT EXISTS "channel_messages" (
 	"routing_reason" text,
 	"routing_attempt" integer DEFAULT 0 NOT NULL,
 	"recipient_member_ids" jsonb DEFAULT '[]'::jsonb NOT NULL,
+	"metadata" jsonb DEFAULT '{}'::jsonb,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "channel_messages_scope_unique" UNIQUE("channel_id","id"),
 	CONSTRAINT "channel_messages_sender_check" CHECK ("channel_messages"."user_id" IS NULL OR "channel_messages"."agent_id" IS NULL),
@@ -117,6 +119,7 @@ CREATE TABLE IF NOT EXISTS "channel_threads" (
 	"root_message_id" uuid NOT NULL,
 	"root_sequence" integer NOT NULL,
 	"follower_member_ids" jsonb DEFAULT '[]'::jsonb NOT NULL,
+	"metadata" jsonb DEFAULT '{}'::jsonb,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "channel_threads_scope_unique" UNIQUE("channel_id","id")
 );
@@ -131,6 +134,7 @@ CREATE TABLE IF NOT EXISTS "channels" (
 	"sequence" integer DEFAULT 0 NOT NULL,
 	"archived" boolean DEFAULT false NOT NULL,
 	"visibility" text DEFAULT 'private' NOT NULL,
+	"metadata" jsonb DEFAULT '{}'::jsonb,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "channels_direct_visibility_check" CHECK ("channels"."agent_id" IS NULL OR "channels"."visibility" = 'private')

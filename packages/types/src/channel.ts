@@ -54,6 +54,18 @@ export interface ChannelMemberConfig {
 /** Free-form member state that does not need its own column. */
 export type ChannelMemberMetadata = Record<string, unknown>;
 
+/** Free-form channel state that does not need its own column. */
+export type ChannelMetadata = Record<string, unknown>;
+
+/** Free-form grant state that does not need its own column. */
+export type ChannelMemberGrantMetadata = Record<string, unknown>;
+
+/** Free-form Thread state that does not need its own column. */
+export type ChannelThreadMetadata = Record<string, unknown>;
+
+/** Free-form public message state that does not need its own column. */
+export type ChannelMessageMetadata = Record<string, unknown>;
+
 /** Effective Agent settings and Channel environment, frozen once when a job is claimed. */
 export interface ChannelExecutionConfig extends LobeAgentConfig, ChannelMemberConfig {
   provider: string;

@@ -13,6 +13,7 @@ import {
   channelMessageFiles,
   channelMessages,
   channels,
+  channelThreads,
   files,
   projects,
   users,
@@ -144,6 +145,30 @@ describe('channel schema', () => {
     expect(job.messageId).toMatch(
       /^[\da-f]{8}-[\da-f]{4}-4[\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}$/i,
     );
+  });
+
+  it('defaults metadata to an empty object on every extensible channel table', async () => {
+    const { agent, channel, owner } = await createChannel();
+    const message = await createMessage(channel.id, owner.id, 1);
+    const [thread] = await serverDB
+      .insert(channelThreads)
+      .values({ channelId: channel.id, rootMessageId: message.id, rootSequence: 1 })
+      .returning();
+    const [grant] = await serverDB
+      .insert(channelMemberGrants)
+      .values({
+        channelId: channel.id,
+        deviceId: 'device-1',
+        deviceOwnerId: otherId,
+        memberId: agent.id,
+        requestedByMemberId: owner.id,
+        workingDirectory: '/repo',
+      })
+      .returning();
+
+    for (const row of [channel, owner, agent, grant, thread, message]) {
+      expect(row.metadata).toEqual({});
+    }
   });
 
   describe('members', () => {
