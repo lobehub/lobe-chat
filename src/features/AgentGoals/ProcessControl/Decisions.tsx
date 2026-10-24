@@ -130,6 +130,7 @@ const DecisionRowView = memo<{
         <Decider row={row} />
         <DecisionTime at={row.resolvedAt ?? decision.createdAt} />
         <ActionIcon
+          aria-label={t('goalProcess.decisions.openNode')}
           icon={ArrowUpRight}
           size={'small'}
           title={t('goalProcess.decisions.openNode')}
