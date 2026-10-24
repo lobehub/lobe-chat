@@ -36,7 +36,14 @@ export const signalDecisions = pgTable(
     signalId: uuid('signal_id')
       .references(() => signals.id, { onDelete: 'cascade' })
       .notNull(),
-    /** Kept when the agent is deleted: the decision is a record of what the pipeline did. */
+    /**
+     * Kept when the agent is deleted: the decision is a record of what the pipeline did.
+     *
+     * Nullable only for that case, so the unique index below does not constrain rows without an
+     * agent — and must not: making NULLs collide (`NULLS NOT DISTINCT`, or a partial index on
+     * `agent_id IS NULL`) would make deleting a second agent that decided the same signal fail on
+     * the `SET NULL` update. `SignalDecisionModel.record` requires an agent instead.
+     */
     agentId: text('agent_id').references(() => agents.id, { onDelete: 'set null' }),
 
     userId: text('user_id')

@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { eq } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
@@ -149,6 +149,52 @@ describe('SignalDecisionModel', () => {
     expect(again?.outcome).toBe('wake');
     expect(v2?.id).not.toBe(first?.id);
     expect(await model.listBySignal(signal.id)).toHaveLength(2);
+  });
+
+  it('returns each agent’s own decision when the same signal is redelivered', async () => {
+    const otherAgentId = 'signal-decision-agent-2';
+    await serverDB.insert(agents).values({ id: otherAgentId, userId });
+    const signal = await recordSignal();
+    const model = new SignalDecisionModel(serverDB, userId);
+
+    const first = await model.record(decisionInput(signal.id));
+    const second = await model.record(decisionInput(signal.id, { agentId: otherAgentId }));
+    const secondAgain = await model.record(decisionInput(signal.id, { agentId: otherAgentId }));
+    const firstAgain = await model.record(decisionInput(signal.id));
+
+    expect(second?.id).not.toBe(first?.id);
+    expect(secondAgain?.id).toBe(second?.id);
+    expect(secondAgain?.agentId).toBe(otherAgentId);
+    expect(firstAgain?.id).toBe(first?.id);
+    expect(await model.listBySignal(signal.id)).toHaveLength(2);
+  });
+
+  it('keeps the decisions when two agents that decided the same signal are deleted', async () => {
+    const otherAgentId = 'signal-decision-agent-2';
+    await serverDB.insert(agents).values({ id: otherAgentId, userId });
+    const signal = await recordSignal();
+    const model = new SignalDecisionModel(serverDB, userId);
+    await model.record(decisionInput(signal.id));
+    await model.record(decisionInput(signal.id, { agentId: otherAgentId }));
+
+    // Both rows end up with a NULL agent. The unique index must not make that collide, or the
+    // second delete would fail on the ON DELETE SET NULL update.
+    await serverDB.delete(agents).where(inArray(agents.id, [agentId, otherAgentId]));
+
+    const rows = await model.listBySignal(signal.id);
+    expect(rows).toHaveLength(2);
+    expect(rows.every((row) => row.agentId === null)).toBe(true);
+  });
+
+  it('refuses a decision without an agent, since the idempotency key needs one', async () => {
+    const signal = await recordSignal();
+    const model = new SignalDecisionModel(serverDB, userId);
+
+    // @ts-expect-error `agentId` is required
+    await expect(model.record({ ...decisionInput(signal.id), agentId: undefined })).rejects.toThrow(
+      /needs the agent/,
+    );
+    expect(await model.listBySignal(signal.id)).toHaveLength(0);
   });
 
   it('refuses to attach a decision to another user’s signal', async () => {

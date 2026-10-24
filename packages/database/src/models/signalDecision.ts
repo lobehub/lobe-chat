@@ -5,7 +5,17 @@ import type { NewSignalDecision, SignalDecisionItem, SignalDecisionLabelItem } f
 import { signalDecisionLabels, signalDecisions, signals } from '../schemas';
 import type { LobeChatDatabase } from '../type';
 
-export type RecordSignalDecisionInput = Omit<NewSignalDecision, 'id' | 'userId' | 'workspaceId'>;
+export type RecordSignalDecisionInput = Omit<
+  NewSignalDecision,
+  'agentId' | 'id' | 'userId' | 'workspaceId'
+> & {
+  /**
+   * Required on purpose. `agent_id` is nullable only because deleting an agent clears it
+   * (`ON DELETE SET NULL`); a decision is always made by one agent, and the idempotency key
+   * `(signal_id, agent_id, pipeline_version)` cannot hold for a missing one.
+   */
+  agentId: string;
+};
 
 export interface AddSignalDecisionLabelInput {
   actor?: string;
@@ -34,10 +44,12 @@ export class SignalDecisionModel {
    * Records what the pipeline decided for one signal.
    *
    * Idempotent on `(signal_id, agent_id, pipeline_version)`: a redelivered message returns the
-   * decision already stored instead of adding a second one. Returns `undefined` when the signal
+   * decision already stored for the same agent instead of adding a second one. Returns `undefined` when the signal
    * does not belong to this user.
    */
   record = async (input: RecordSignalDecisionInput): Promise<SignalDecisionItem | undefined> => {
+    if (!input.agentId) throw new Error('A signal decision needs the agent that made it');
+
     const [owned] = await this.db
       .select({ id: signals.id })
       .from(signals)
@@ -67,6 +79,7 @@ export class SignalDecisionModel {
         and(
           eq(signalDecisions.signalId, input.signalId),
           eq(signalDecisions.userId, this.userId),
+          eq(signalDecisions.agentId, input.agentId),
           eq(signalDecisions.pipelineVersion, input.pipelineVersion),
         ),
       )
