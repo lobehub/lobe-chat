@@ -1,6 +1,7 @@
 import { createRequestHandler, RouterContextProvider } from 'react-router';
 
 import { cloudflareContext, type WorkerExecutionContext } from '../app/lib/cloudflareContext';
+import { withNoIndexHeader } from './headers';
 
 const API_PREFIXES = ['/api', '/oidc', '/trpc', '/webapi'];
 
@@ -26,6 +27,9 @@ export default {
 
     const context = new RouterContextProvider();
     context.set(cloudflareContext, { ctx, env });
-    return requestHandler(request, context);
+
+    // Everything the framework answers with is a share page, so all of it stays out of search
+    // results. The API branch above proxies the backend and keeps that response's own headers.
+    return withNoIndexHeader(await requestHandler(request, context));
   },
 };
