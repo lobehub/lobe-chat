@@ -21,7 +21,7 @@ import { useCurrentProjectList, useProjectStore } from '@/store/project';
 import { useProjectDirectories, useProjectDirectoryStore } from '@/store/projectWorkingDirectory';
 
 import { openCreateProjectModal } from '../CreateProjectModal';
-import { getProjectConversationPath } from '../Layout/navigation';
+import { getProjectTopicPath } from '../Layout/navigation';
 import { openBindDirectoryModal } from './BindDirectoryModal';
 
 function AssociateTopicContent({ topicId, agentId }: { topicId: string; agentId?: string }) {
@@ -72,7 +72,7 @@ function AssociateTopicContent({ topicId, agentId }: { topicId: string; agentId?
       });
       await useChatStore.getState().refreshTopic();
       close();
-      navigate(getProjectConversationPath(projectId, topicId));
+      navigate(getProjectTopicPath(projectId, topicId));
     } catch (error) {
       console.error('Failed to associate topic', error);
       setError(error);
@@ -87,7 +87,7 @@ function AssociateTopicContent({ topicId, agentId }: { topicId: string; agentId?
         <Button
           onClick={() => {
             close();
-            navigate(getProjectConversationPath(projectId, topicId));
+            navigate(getProjectTopicPath(projectId, topicId));
           }}
         >
           {t('topics.viewProject')}

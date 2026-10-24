@@ -251,7 +251,7 @@ describe('TopicItem active state', () => {
     );
     expect(screen.getByTestId('nav-item')).toHaveAttribute(
       'data-href',
-      '/team/project/project-1/conversation/project-topic',
+      '/team/project/project-1/topic/project-topic',
     );
     expect(screen.getByTestId('nav-item')).toHaveAttribute('data-active', 'true');
   });

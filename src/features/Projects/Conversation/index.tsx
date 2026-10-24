@@ -25,7 +25,7 @@ import {
   useProjectTopics,
 } from '@/store/projectWorkingDirectory';
 
-import { getProjectConversationPath } from '../Layout/navigation';
+import { getProjectTopicPath } from '../Layout/navigation';
 import { freshProjectTopicAgentId } from './freshProjectTopicAgentId';
 import { projectConversationStage } from './projectConversationStage';
 import { useMarkProjectTopicRead } from './useMarkProjectTopicRead';
@@ -107,12 +107,9 @@ const ProjectConversation = memo(() => {
     );
   }, [conversationAgentId]);
 
-  const getConversationPath = useCallback(
-    () => getProjectConversationPath(projectSlug!),
-    [projectSlug],
-  );
+  const getConversationPath = useCallback(() => getProjectTopicPath(projectSlug!), [projectSlug]);
   const getTopicPath = useCallback(
-    (_agentId: string, topicId: string) => getProjectConversationPath(projectSlug!, topicId),
+    (_agentId: string, topicId: string) => getProjectTopicPath(projectSlug!, topicId),
     [projectSlug],
   );
 

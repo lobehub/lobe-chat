@@ -5,7 +5,7 @@ import { taskDetailPath } from '@/features/AgentTasks/shared/taskDetailPath';
 import type { SendButtonHandler } from '@/features/ChatInput/store/initialState';
 import { appendTaskAttachments } from '@/features/Home/InputArea/taskAttachments';
 import { taskNameFromMessage } from '@/features/Home/InputArea/taskName';
-import { getProjectConversationPath } from '@/features/Projects/Layout/navigation';
+import { getProjectTopicPath } from '@/features/Projects/Layout/navigation';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { agentService } from '@/services/agent';
 import { topicService } from '@/services/topic';
@@ -136,7 +136,7 @@ export const useProjectComposer = (
       }
       clearContent();
       clearChatUploadFileList();
-      navigate(getProjectConversationPath(project.slug ?? project.id, topic.id));
+      navigate(getProjectTopicPath(project.slug ?? project.id, topic.id));
     } finally {
       setSending(false);
     }

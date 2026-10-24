@@ -1,4 +1,4 @@
-import type { RouteObject } from 'react-router';
+import { Navigate, type RouteObject, useLocation, useParams } from 'react-router';
 
 import { goalsRouteMeta } from '@/features/AgentGoals/routeMeta';
 import { tasksRouteMeta } from '@/features/AgentTasks/routeMeta';
@@ -11,6 +11,15 @@ import {
 import { projectAcceptanceRoute } from '@/spa/router/projectAcceptanceRoutes';
 import { scheduledTaskListLoader } from '@/spa/router/scheduledTaskListLoader';
 import { dynamicElement, dynamicLayout, ErrorBoundary } from '@/utils/router';
+
+/** Topics used to live under `conversation/`: keep old links and restored tabs working. */
+const LegacyProjectConversationRedirect = () => {
+  const { topicId } = useParams<{ topicId?: string }>();
+  const { hash, search } = useLocation();
+  const pathname = topicId ? `../../topic/${topicId}` : '../topic';
+
+  return <Navigate replace relative="path" to={{ hash, pathname, search }} />;
+};
 
 /**
  * One project's workspace under `/project/:projectId`: its home, topics, tasks,
@@ -30,13 +39,14 @@ export const projectWorkspaceRoute: RouteObject = {
     },
     {
       element: dynamicElement(
-        () => import('@/routes/(main)/project/[projectId]/conversation'),
-        'Desktop > Project Conversation',
-        { preloadId: 'project-conversation' },
+        () => import('@/routes/(main)/project/[projectId]/topic'),
+        'Desktop > Project Topic',
+        { preloadId: 'project-topic' },
       ),
       handle: { meta: projectConversationRouteMeta },
-      path: 'conversation/:topicId?',
+      path: 'topic/:topicId?',
     },
+    { element: <LegacyProjectConversationRedirect />, path: 'conversation/:topicId?' },
     {
       element: dynamicElement(
         () => import('@/routes/(main)/project/[projectId]/tasks'),

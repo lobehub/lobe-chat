@@ -32,7 +32,7 @@ import { isDesktop } from '@/const/version';
 import { createMoveTopicsModal } from '@/features/AgentTopicManager/MoveTopicsModal';
 import { createTopicForwardModal } from '@/features/Conversation/MessageForward/TopicForwardModal';
 import { confirmRemoveTopic } from '@/features/DeleteTopicConfirm';
-import { getProjectConversationPath } from '@/features/Projects/Layout/navigation';
+import { getProjectTopicPath } from '@/features/Projects/Layout/navigation';
 import { openShareModal } from '@/features/ShareModal';
 import { openTopicDoctorModal } from '@/features/TopicDoctorModal';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
@@ -72,7 +72,7 @@ export const useTopicItemDropdownMenu = ({
   const navigate = useWorkspaceAwareNavigate();
   const activeWorkspaceId = useActiveWorkspaceId();
   const { pathname } = useActiveLocation();
-  const routeTopicId = pathname.match(/\/project\/[^/]+\/conversation\/([^/]+)\/?$/)?.[1];
+  const routeTopicId = pathname.match(/\/project\/[^/]+\/topic\/([^/]+)\/?$/)?.[1];
   const activeWorkspaceSlug = useActiveWorkspaceSlug();
   const { allowed: canCreateTopic } = usePermission('create_content');
   const { allowed: canEditTopic } = usePermission('edit_own_content');
@@ -275,7 +275,7 @@ export const useTopicItemDropdownMenu = ({
               t('duplicateTitle', { ns: 'chat', title }),
             );
             await refresh();
-            navigate(getProjectConversationPath(scope.projectId, newId));
+            navigate(getProjectTopicPath(scope.projectId, newId));
             toast.success(t('duplicateSuccess', { ns: 'topic' }));
           } finally {
             loadingToast.close();

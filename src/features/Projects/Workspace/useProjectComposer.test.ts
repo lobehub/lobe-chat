@@ -150,7 +150,7 @@ describe('useProjectComposer', () => {
       message: 'Plan the next milestone\nwith details',
       onMessageAccepted: expect.any(Function),
     });
-    expect(mocks.navigate).toHaveBeenCalledWith('/project/apollo/conversation/tpc_1');
+    expect(mocks.navigate).toHaveBeenCalledWith('/project/apollo/topic/tpc_1');
     expect(input.clearContent).toHaveBeenCalled();
     expect(mocks.clearChatUploadFileList).toHaveBeenCalled();
     expect(mocks.createTask).not.toHaveBeenCalled();
