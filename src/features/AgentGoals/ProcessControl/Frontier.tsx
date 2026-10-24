@@ -596,8 +596,13 @@ const FrontierRow = memo<{
               {node.description}
             </Text>
           )}
-          {item.kind === 'stale' && <StaleBody view={view} />}
-          <AttemptLedger view={subject ?? view} />
+          {item.kind === 'stale' ? (
+            // The open attempt would read "Running" under a "Stalled" badge; the
+            // body already says when it went quiet and what happens next.
+            <StaleBody view={view} />
+          ) : (
+            <AttemptLedger view={subject ?? view} />
+          )}
         </Flexbox>
       )}
     </Block>
