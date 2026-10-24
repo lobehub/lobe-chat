@@ -1,7 +1,6 @@
 import { getWorkingDirSourcePath } from '@lobechat/types';
 import {
   Alert,
-  Avatar,
   Button,
   createModal,
   Flexbox,
@@ -22,6 +21,7 @@ import { useProjectDirectories, useProjectDirectoryStore } from '@/store/project
 
 import { openCreateProjectModal } from '../CreateProjectModal';
 import { getProjectTopicPath } from '../Layout/navigation';
+import ProjectAvatar from '../ProjectAvatar';
 import { openBindDirectoryModal } from './BindDirectoryModal';
 
 function AssociateTopicContent({ topicId, agentId }: { topicId: string; agentId?: string }) {
@@ -108,7 +108,7 @@ function AssociateTopicContent({ topicId, agentId }: { topicId: string; agentId?
             value: p.id,
             label: (
               <Flexbox horizontal align="center" gap={8}>
-                <Avatar avatar={p.avatar || '📁'} size={20} />
+                <ProjectAvatar avatar={p.avatar} name={p.name} />
                 {p.name}
               </Flexbox>
             ),

@@ -164,7 +164,8 @@ export class MarketSandboxProvider implements SandboxProvider {
           // throwaway sandbox that cannot see the persistent volume's file.
           sandboxCwd,
           sandboxInstanceId,
-          sandboxMode,
+          // Widened for `drive` like callTool's; remove with the SDK bump.
+          sandboxMode: sandboxMode as Exclude<SandboxMode, 'drive'> | undefined,
           sandboxSpecification: sandboxSpecification as Record<string, unknown> | undefined,
           sandboxWorkingDir,
           topicId,
