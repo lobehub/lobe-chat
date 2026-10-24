@@ -1,6 +1,6 @@
 'use client';
 
-import { createStaticStyles } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import isEqual from 'fast-deep-equal';
 import { memo, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router';
@@ -18,18 +18,10 @@ export interface SelectedTool {
   type: ToolDetailType;
 }
 
-const styles = createStaticStyles(({ css }) => ({
-  detail: css`
-    overflow-y: auto;
-    flex: 1;
-  `,
-  root: css`
-    overflow: hidden;
-    display: flex;
-    flex: 1;
-    height: 100%;
-  `,
-}));
+const styles = stylex.create({
+  detail: { overflowY: 'auto', flex: '1' },
+  root: { overflow: 'hidden', display: 'flex', flex: '1', height: '100%' },
+});
 
 interface ToolSettingsProps {
   /**
@@ -88,7 +80,7 @@ export const ToolSettings = memo<ToolSettingsProps>(({ viewMode }) => {
   return (
     <>
       <NavHeader />
-      <div className={styles.root}>
+      <div {...stylex.props(styles.root)}>
         <LeftPanel
           selectedIdentifier={selected?.identifier}
           viewMode={viewMode}
@@ -97,7 +89,7 @@ export const ToolSettings = memo<ToolSettingsProps>(({ viewMode }) => {
         />
 
         {selected && (
-          <div className={styles.detail}>
+          <div {...stylex.props(styles.detail)}>
             <SkillDetail
               identifier={selected.identifier}
               type={selected.type}

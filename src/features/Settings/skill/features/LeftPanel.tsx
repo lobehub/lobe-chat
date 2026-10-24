@@ -1,7 +1,9 @@
 'use client';
 
-import { Button, createStaticStyles, DropdownMenu, Flexbox, Icon, Text } from '@lobehub/ui';
+import { Button, DropdownMenu, Flexbox, Icon, Text } from '@lobehub/ui';
 import { GithubIcon } from '@lobehub/ui/icons';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { FileArchive, Grid2x2Plus, Link, Store } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,34 +17,31 @@ import { openUploadSkillModal } from '@/features/SkillStore/SkillList/UploadSkil
 import { type ToolDetailType } from './SkillDetail';
 import SkillList, { type SkillViewMode } from './SkillList';
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  body: css`
-    overflow-y: auto;
-    flex: 1;
-    padding-block: 4px;
-    padding-inline: 8px;
-  `,
-  header: css`
-    display: flex;
-    flex-shrink: 0;
-    gap: 8px;
-    align-items: center;
-    justify-content: space-between;
-
-    height: 42px;
-    padding-inline: 16px;
-    border-block-end: 1px solid ${cssVar.colorBorderSecondary};
-  `,
-  root: css`
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-
-    width: 300px;
-    min-width: 260px;
-    border-inline-end: 1px solid ${cssVar.colorBorderSecondary};
-  `,
-}));
+const styles = stylex.create({
+  body: { overflowY: 'auto', flex: '1', paddingBlock: '4px', paddingInline: '8px' },
+  header: {
+    display: 'flex',
+    flexShrink: 0,
+    gap: '8px',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    height: '42px',
+    paddingInline: '16px',
+    borderBlockEndWidth: '1px',
+    borderBlockEndStyle: 'solid',
+    borderBlockEndColor: cssVar.colorBorderSecondary,
+  },
+  root: {
+    overflowY: 'auto',
+    display: 'flex',
+    flexDirection: 'column',
+    width: '300px',
+    minWidth: '260px',
+    borderInlineEndWidth: '1px',
+    borderInlineEndStyle: 'solid',
+    borderInlineEndColor: cssVar.colorBorderSecondary,
+  },
+});
 
 interface LeftPanelProps {
   onDeleteSelected: () => void;
@@ -64,8 +63,8 @@ const LeftPanel = memo<LeftPanelProps>(
 
     return (
       <>
-        <div className={styles.root}>
-          <div className={styles.header}>
+        <div {...stylex.props(styles.root)}>
+          <div {...stylex.props(styles.header)}>
             <Text strong style={{ fontSize: 14 }}>
               {isConnectorView
                 ? t('skillView.connectors', 'Connectors')
@@ -138,7 +137,7 @@ const LeftPanel = memo<LeftPanelProps>(
             </div>
           </div>
 
-          <div className={styles.body}>
+          <div {...stylex.props(styles.body)}>
             <SkillList
               selectedIdentifier={selectedIdentifier}
               viewMode={viewMode}
