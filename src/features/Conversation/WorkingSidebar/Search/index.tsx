@@ -149,8 +149,7 @@ export const TopicSearchPane = memo<TopicSearchPaneProps>(({ active, topicId }) 
   const inputRef = useRef<HTMLInputElement>(null);
   const [value, setValue] = useState('');
   const keyword = useDebounce(value, { wait: SEARCH_DEBOUNCE_MS }).trim();
-  const { data, error, isLoading, mutate } = useTopicSearch(topicId, keyword);
-  const matches = useMemo(() => (keyword ? (data ?? []) : []), [data, keyword]);
+  const { failed, isSearching, matches, retry } = useTopicSearch(topicId, keyword);
   const matchIds = useMemo(() => matches.map((match) => match.id), [matches]);
   const { activeId, activeIndex, select, step } = useMatchNavigation(matchIds);
   const agentName = useAgentStore(agentSelectors.currentAgentDisplayName);
@@ -195,14 +194,13 @@ export const TopicSearchPane = memo<TopicSearchPaneProps>(({ active, topicId }) 
           {t('workingPanel.search.hint')}
         </Text>
       );
-    if (error && !data)
+    if (failed)
       return (
         <Text fontSize={12} type={'secondary'}>
-          {t('workingPanel.search.error')}{' '}
-          <a onClick={() => mutate()}>{t('workingPanel.search.retry')}</a>
+          {t('workingPanel.search.error')} <a onClick={retry}>{t('workingPanel.search.retry')}</a>
         </Text>
       );
-    if (isLoading && !data) return <Skeleton.Text rows={4} />;
+    if (isSearching && matches.length === 0) return <Skeleton.Text rows={4} />;
     if (matches.length === 0)
       return (
         <Text fontSize={12} type={'secondary'}>
