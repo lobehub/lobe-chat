@@ -145,7 +145,7 @@ const ProjectConversation = memo(() => {
     return <AsyncError error={detailSWR.error} variant="page" onRetry={detailSWR.revalidate} />;
   }
   const stage = projectConversationStage({
-    agentConfigLoading: agent.isLoading,
+    agentConfigLoading: !!agent.isLoading,
     chatAgentId,
     conversationAgentId,
     hasProject: !!detail,

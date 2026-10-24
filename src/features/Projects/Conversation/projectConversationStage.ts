@@ -10,8 +10,7 @@
  * A topic switch must not drop back to `loading`: that unmounts the workspace,
  * so the header and composer blink out and the message list starts over. A
  * topic whose detail is still being fetched is `ready` too. Its readers update
- * when the row lands, and a run fetches the row itself
- * (`resolveExistingTopicForRun`).
+ * when the row lands, and a send waits for the row (`useTopicDetailSendGuard`).
  */
 export type ProjectConversationStage = 'agentPending' | 'loading' | 'ready';
 
