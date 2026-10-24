@@ -3,7 +3,9 @@ import { buildChannelPrompt, CHANNEL_INSTRUCTIONS } from '@lobechat/prompts';
 import type { ChannelExecutionConfig } from '@lobechat/types';
 import { isRecord } from '@lobechat/utils/object';
 import { and, asc, eq, isNull, or } from 'drizzle-orm';
+import pMap from 'p-map';
 
+import { getServerDB } from '@/database/core/db-adaptor';
 import { AgentOperationModel } from '@/database/models/agentOperation';
 import { MessageModel } from '@/database/models/message';
 import type { ChannelClaim } from '@/database/repositories/channel';
@@ -19,7 +21,7 @@ import { isQueueAgentRuntimeEnabled } from '@/server/services/queue/impls';
 
 import { resolveChannelAttachments } from './attachments';
 import { notifyChannel } from './notify';
-import { wakeChannel } from './queue';
+import { registerLocalChannelAdvance, wakeChannel } from './queue';
 
 const LEASE_MS = 60_000;
 
@@ -69,10 +71,10 @@ export class ChannelCoordinator {
         members.flatMap(({ config }) => (config?.deviceOwnerId ? [config.deviceOwnerId] : [])),
       ),
     ];
-    const presence = await Promise.all(
-      owners.map((owner) =>
-        getScopedOnlineDevices(this.db, owner, channel.workspaceId ?? undefined),
-      ),
+    const presence = await pMap(
+      owners,
+      (owner) => getScopedOnlineDevices(this.db, owner, channel.workspaceId ?? undefined),
+      { concurrency: 5 },
     );
     const onlineDeviceIds = presence
       .flat()
@@ -289,3 +291,7 @@ export class ChannelCoordinator {
     }
   };
 }
+
+registerLocalChannelAdvance(async (channelId) => {
+  await new ChannelCoordinator(await getServerDB()).advance(channelId);
+});

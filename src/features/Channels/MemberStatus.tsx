@@ -18,15 +18,15 @@ export function MemberStatus({ detail }: { detail: ChannelDetail }) {
   const { t } = useTranslation('channel');
   const navigate = useWorkspaceAwareNavigate();
   const [openMemberId, setOpenMemberId] = useState<string>();
-  const members = detail.members.filter((member) => member.active);
+  const { channel, jobs = [], members: allMembers = [] } = detail;
+  const members = allMembers.filter((member) => member.active);
 
   return (
     <Flexbox horizontal align="center" aria-label={t('membersTitle')} gap={4}>
       {members.map((member) => {
         const name = memberName(member, t('deletedMember'));
         const avatar = memberAvatar(member);
-        const job =
-          member.actorType === 'agent' ? memberCurrentJob(detail.jobs, member.id) : undefined;
+        const job = member.actorType === 'agent' ? memberCurrentJob(jobs, member.id) : undefined;
         const tone = job ? channelJobTone(job) : member.executionPaused ? 'attention' : 'quiet';
         const label = t(
           job ? channelJobStatus(job) : member.executionPaused ? 'status.paused' : 'status.idle',
@@ -92,7 +92,7 @@ export function MemberStatus({ detail }: { detail: ChannelDetail }) {
           </Popover>
         );
       })}
-      {!detail.channel.archived && (
+      {channel && !channel.archived && (
         <ActionIcon
           aria-label={t('addMembers')}
           icon={Plus}
@@ -102,8 +102,8 @@ export function MemberStatus({ detail }: { detail: ChannelDetail }) {
             openCreateChannel({
               existing: {
                 agentIds: members.flatMap((member) => (member.agentId ? [member.agentId] : [])),
-                id: detail.channel.id,
-                title: detail.channel.title,
+                id: channel.id,
+                title: channel.title,
               },
             })
           }

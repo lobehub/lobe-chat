@@ -77,7 +77,9 @@ export function MessageReceipts({
 }) {
   const { t } = useTranslation('channel');
   const [expanded, setExpanded] = useState(false);
-  const jobs = detail.jobs.filter((job) => job.messageId === message.id);
+  const { channel, jobs: allJobs = [], members = [] } = detail;
+  const jobs = allJobs.filter((job) => job.messageId === message.id);
+  if (!channel) return null;
   if (!jobs.length)
     return message.routingStatus === 'pending' || message.routingStatus === 'unassigned' ? (
       <span {...stylex.props(statusStyles.receipts, styles.muted)}>
@@ -86,7 +88,7 @@ export function MessageReceipts({
     ) : null;
 
   const receipts = jobs.map((job) => {
-    const member = detail.members.find((entry) => entry.id === job.memberId);
+    const member = members.find((entry) => entry.id === job.memberId);
     return { avatar: memberAvatar(member), job, name: memberName(member, t('unnamedAgent')) };
   });
   // Finished replies fold into one avatar row so the timeline stays quiet.
@@ -120,12 +122,7 @@ export function MessageReceipts({
               placement="bottomLeft"
               trigger="click"
               content={
-                <ReceiptDetail
-                  avatar={avatar}
-                  channelId={detail.channel.id}
-                  job={job}
-                  name={name}
-                />
+                <ReceiptDetail avatar={avatar} channelId={channel.id} job={job} name={name} />
               }
             >
               <Button

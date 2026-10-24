@@ -1,6 +1,7 @@
 import { isHeterogeneousAgentModelId } from '@lobechat/const';
 import type { LobeChatDatabase } from '@lobechat/database';
 import { isChannelRuntime } from '@lobechat/types';
+import pMap from 'p-map';
 
 import { DeviceModel } from '@/database/models/device';
 import type {
@@ -82,7 +83,10 @@ export class ChannelService {
   }
 
   create = async (input: { agents: ChannelAgentSelection[]; title: string }) => {
-    const agents = await Promise.all(input.agents.map((agent) => this.resolveAgent(agent)));
+    // Resolving probes devices, so cap the work one request can start.
+    const agents = await pMap(input.agents, (agent) => this.resolveAgent(agent), {
+      concurrency: 5,
+    });
     return this.repository.create({ agents, title: input.title });
   };
 
@@ -104,11 +108,10 @@ export class ChannelService {
     // Do not return private storage keys or route through an unrelated ordinary-chat ACL.
     return {
       ...view,
-      attachments: await Promise.all(
-        view.attachments.map(async (file) => ({
-          ...file,
-          url: await files.getFullFileUrl(file.url, 300),
-        })),
+      attachments: await pMap(
+        view.attachments,
+        async (file) => ({ ...file, url: await files.getFullFileUrl(file.url, 300) }),
+        { concurrency: 10 },
       ),
     };
   };

@@ -4,6 +4,17 @@ import { LocalQueueServiceImpl } from '@/server/services/queue/impls';
 
 const localWakeups = new Map<string, ReturnType<typeof setTimeout>>();
 
+type LocalChannelAdvance = (channelId: string) => Promise<void>;
+let localAdvance: LocalChannelAdvance | undefined;
+
+/**
+ * Without QStash a wakeup advances the Channel in-process. The coordinator registers how,
+ * because it imports `wakeChannel` and this module must not import it back.
+ */
+export const registerLocalChannelAdvance = (advance: LocalChannelAdvance) => {
+  localAdvance = advance;
+};
+
 /** A persisted message/job is the outbox. Queue delivery only wakes its idempotent consumer. */
 export const wakeChannel = async (channelId: string, delay = 0) => {
   const queue = new QueueService();
@@ -16,11 +27,8 @@ export const wakeChannel = async (channelId: string, delay = 0) => {
       setTimeout(async () => {
         localWakeups.delete(key);
         try {
-          const [{ getServerDB }, { ChannelCoordinator }] = await Promise.all([
-            import('@/database/core/db-adaptor'),
-            import('./ChannelCoordinator'),
-          ]);
-          await new ChannelCoordinator(await getServerDB()).advance(channelId);
+          if (!localAdvance) throw new Error('No local Channel runner is registered');
+          await localAdvance(channelId);
         } catch (error) {
           console.error('[channel:advance]', error);
           await wakeChannel(channelId, 60_000);

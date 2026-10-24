@@ -27,7 +27,7 @@ vi.mock('@/server/services/deviceGateway/scopedDevices', () => ({
 vi.mock('@/server/services/queue/impls', () => ({ isQueueAgentRuntimeEnabled: vi.fn() }));
 vi.mock('./attachments', () => ({ resolveChannelAttachments: vi.fn() }));
 vi.mock('./notify', () => ({ notifyChannel: vi.fn() }));
-vi.mock('./queue', () => ({ wakeChannel: vi.fn() }));
+vi.mock('./queue', () => ({ registerLocalChannelAdvance: vi.fn(), wakeChannel: vi.fn() }));
 
 describe('Channel completion physical writer confirmation', () => {
   beforeEach(() => vi.clearAllMocks());

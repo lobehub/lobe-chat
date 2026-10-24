@@ -1,5 +1,9 @@
+// Registers the in-process runner for a sweep that runs before any Channel request.
+import './ChannelCoordinator';
+
 import type { LobeChatDatabase } from '@lobechat/database';
 import { and, asc, eq, lt, min, or } from 'drizzle-orm';
+import pMap from 'p-map';
 
 import { channelJobs, channelMessages } from '@/database/schemas';
 
@@ -35,9 +39,20 @@ export const recoverChannels = async (db: LobeChatDatabase) => {
       .orderBy(asc(min(channelMessages.createdAt)))
       .limit(50),
   ]);
-  const results = await Promise.allSettled(
-    [...new Set([...jobs, ...routing].map((row) => row.channelId))].map((id) => wakeChannel(id)),
+  const ids = [...new Set([...jobs, ...routing].map((row) => row.channelId))];
+  // Try every wakeup even when one fails, then report the failure once.
+  let failed = false;
+  await pMap(
+    ids,
+    async (id) => {
+      try {
+        await wakeChannel(id);
+      } catch (error) {
+        failed = true;
+        console.error('[channel:recover]', id, error);
+      }
+    },
+    { concurrency: 10 },
   );
-  if (results.some((result) => result.status === 'rejected'))
-    throw new Error('Channel recovery could not enqueue every wakeup');
+  if (failed) throw new Error('Channel recovery could not enqueue every wakeup');
 };

@@ -17,10 +17,9 @@ export const THREAD_FLOAT_BREAKPOINT = 760;
 
 const ThreadFollowers = ({ detail, threadId }: { detail: ChannelDetail; threadId: string }) => {
   const { t } = useTranslation('channel');
-  const thread = detail.threads.find((entry) => entry.id === threadId);
-  const followers = detail.members.filter(
-    (member) => member.active && thread?.followerMemberIds.includes(member.id),
-  );
+  const { members = [], threads = [] } = detail;
+  const followerIds = threads.find((entry) => entry.id === threadId)?.followerMemberIds ?? [];
+  const followers = members.filter((member) => member.active && followerIds.includes(member.id));
   const names = followers.map((member) => memberName(member, t('deletedMember'))).join('、');
   return (
     <Flexbox
@@ -112,7 +111,7 @@ export function ThreadPanel({
             }
             {...stylex.props(styles.threadHeader)}
           />
-          {lastThreadId && (
+          {lastThreadId && detail.channel && (
             <ChannelConversation
               channelId={detail.channel.id}
               key={lastThreadId}
