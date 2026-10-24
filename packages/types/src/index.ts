@@ -30,6 +30,7 @@ export * from './environment';
 export * from './eval';
 export * from './expertise';
 export * from './export';
+export * from './favorite';
 export * from './fetch';
 export * from './files';
 export * from './followUpAction';

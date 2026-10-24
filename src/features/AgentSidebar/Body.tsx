@@ -1,6 +1,7 @@
 import { AccordionRoot, Flexbox } from '@lobehub/ui';
 import React, { memo, useCallback, useMemo } from 'react';
 
+import SidebarFavorites from '@/features/HomeSidebar/Body/Favorites';
 import { useAgentStore } from '@/store/agent';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
@@ -8,10 +9,12 @@ import { systemStatusSelectors } from '@/store/global/selectors';
 import Topic from './Topic';
 
 export enum ChatSidebarKey {
+  Favorites = 'favorites',
   Topic = 'topic',
 }
 
 const DEFAULT_EXPANDED: Record<string, boolean> = {
+  [ChatSidebarKey.Favorites]: true,
   [ChatSidebarKey.Topic]: true,
 };
 
@@ -33,6 +36,7 @@ const Body = memo(() => {
       updateSystemStatus({
         expandAgentSidebarSectionsByAgent: {
           [agentId]: {
+            [ChatSidebarKey.Favorites]: keys.includes(ChatSidebarKey.Favorites),
             [ChatSidebarKey.Topic]: keys.includes(ChatSidebarKey.Topic),
           },
         },
@@ -49,6 +53,9 @@ const Body = memo(() => {
         value={expandedKeys}
         onValueChange={(next) => handleExpandedChange(next as string[])}
       >
+        {/* The same pinned pages as the home sidebar, so a favorite opened from
+            here keeps the rest of the list in reach. */}
+        <SidebarFavorites itemKey={ChatSidebarKey.Favorites} />
         <Topic
           expanded={expandedKeys.includes(ChatSidebarKey.Topic)}
           itemKey={ChatSidebarKey.Topic}

@@ -61,6 +61,7 @@ import { documentLikeRouter } from './documentLike';
 import { environmentRouter } from './environment';
 import { expertiseRouter } from './expertise';
 import { exporterRouter } from './exporter';
+import { favoriteRouter } from './favorite';
 import { fileRouter } from './file';
 import { followUpActionRouter } from './followUpAction';
 import { generationRouter } from './generation';
@@ -130,6 +131,7 @@ export const lambdaRouter = router({
   agentLabel: agentLabelRouter,
   agentSkills: agentSkillsRouter,
   environment: environmentRouter,
+  favorite: favoriteRouter,
   sandboxStorage: sandboxStorageRouter,
   agentTrace: agentTraceRouter,
   expertise: expertiseRouter,
