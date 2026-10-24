@@ -11,7 +11,7 @@ import {
   logTimingSink as logTiming,
   runTimedSinkStage as runTimedStage,
 } from '@lobechat/utils';
-import { and, desc, eq, isNull, lt, or } from 'drizzle-orm';
+import { and, desc, eq, inArray, isNull, lt, or } from 'drizzle-orm';
 
 import { messagePlugins, messages, messageTranslates, messageTTS, users } from '../../schemas';
 import { createChatImageItem, materializeChatAudioItem } from './attachments';
@@ -81,7 +81,36 @@ export class MessagePageQueries extends MessageScope {
         )
       : undefined;
 
-    // 1. get basic messages with joins, excluding messages that belong to MessageGroups
+    // 1a. Pick the page's ids first, on `messages` alone. Joining before the limit
+    // made Postgres join and sort every ungrouped row of the topic (wide rows,
+    // TOAST included, external merge on disk) only to keep `pageSize` of them,
+    // so a read cost the topic's size instead of the page's. The id-only sort is
+    // narrow, and an index on (topic_id, created_at, id) serves it top-N.
+    const pageIds = this.db
+      .select({ id: messages.id })
+      .from(messages)
+      .where(
+        and(
+          scope,
+          // Filter out messages that belong to MessageGroups
+          isNull(messages.messageGroupId),
+          where,
+          beforeCondition,
+        ),
+      )
+      // Page from the NEWEST messages, not the oldest. `desc` + limit/offset
+      // fetches the most recent `pageSize` rows, so a topic with more than
+      // `pageSize` mainline messages keeps its latest turns (including the
+      // final answer) instead of silently dropping them — the previous
+      // `asc + limit` truncated exactly the newest batch, which is the worst
+      // possible slice for a chat transcript. The page is reversed back to
+      // ascending immediately below, so every downstream consumer is
+      // unaffected; only *which* rows are fetched changed. See.
+      .orderBy(desc(messages.createdAt), desc(messages.id))
+      .limit(pageSize)
+      .offset(offset);
+
+    // 1b. get basic messages with joins for that page only
     const result = await runTimedStage(
       timing,
       'db.message.queryWithWhere.baseSelect',
@@ -150,30 +179,12 @@ export class MessagePageQueries extends MessageScope {
             ttsVoice: messageTTS.voice,
           })
           .from(messages)
-          .where(
-            and(
-              scope,
-              // Filter out messages that belong to MessageGroups
-              isNull(messages.messageGroupId),
-              where,
-              beforeCondition,
-            ),
-          )
+          .where(inArray(messages.id, pageIds))
           .leftJoin(messagePlugins, eq(messagePlugins.id, messages.id))
           .leftJoin(messageTranslates, eq(messageTranslates.id, messages.id))
           .leftJoin(messageTTS, eq(messageTTS.id, messages.id))
           .leftJoin(users, eq(users.id, messages.userId))
-          // Page from the NEWEST messages, not the oldest. `desc` + limit/offset
-          // fetches the most recent `pageSize` rows, so a topic with more than
-          // `pageSize` mainline messages keeps its latest turns (including the
-          // final answer) instead of silently dropping them — the previous
-          // `asc + limit` truncated exactly the newest batch, which is the worst
-          // possible slice for a chat transcript. The page is reversed back to
-          // ascending immediately below, so every downstream consumer is
-          // unaffected; only *which* rows are fetched changed. See.
-          .orderBy(desc(messages.createdAt), desc(messages.id))
-          .limit(pageSize)
-          .offset(offset),
+          .orderBy(desc(messages.createdAt), desc(messages.id)),
       { current, pageSize },
     );
     logTiming(timing, 'db.message.queryWithWhere.baseSelect:rows', { rowCount: result.length });
