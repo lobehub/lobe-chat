@@ -296,20 +296,27 @@ describe('resource manager store actions', () => {
       expect(useResourceManagerStore.getState().selectionTotal).toBe(2);
     });
 
-    it('should delete the selected search hits by id instead of by the folder query', async () => {
+    it('should delete the whole search query instead of a lookup per hit', async () => {
       const deleteResources = vi.fn().mockResolvedValue(undefined);
       useResourceManagerStore.setState({ selectAllState: 'all', selectedFileIds: ['hit-2'] });
       useFileStore.setState({ deleteResources } as any);
-      mockResolveSelectionIds.mockResolvedValue({ ids: ['hit-1', 'hit-2', 'hit-3'], total: 3 });
+      mockDeleteResourcesByQuery.mockResolvedValue({ count: 2 });
 
       await useResourceManagerStore.getState().onActionClick('delete');
 
-      expect(mockResolveSelectionIds).toHaveBeenCalledWith(
-        expect.objectContaining({ q: 'report' }),
+      // The exclusions ride along with the query: no id resolution, and no
+      // per-hit detail lookup inside `deleteResources` for every hit.
+      expect(mockDeleteResourcesByQuery).toHaveBeenCalledWith(
+        expect.objectContaining({ filesOnly: true, q: 'report' }),
+        ['hit-2'],
       );
-      expect(mockDeleteResourcesByQuery).not.toHaveBeenCalled();
-      expect(deleteResources).toHaveBeenCalledWith(['hit-1', 'hit-3']);
-      expect(mockDropNodes).toHaveBeenCalledWith(['hit-1', 'hit-3'], 'folder-a');
+      expect(mockDeleteResourcesByQuery.mock.calls[0][0]).not.toHaveProperty('parentId');
+      expect(mockResolveSelectionIds).not.toHaveBeenCalled();
+      expect(deleteResources).not.toHaveBeenCalled();
+      // The deleted ids are only known to the server now, so the tree is
+      // dropped and refetched instead of patched row by row.
+      expect(mockDropNodes).not.toHaveBeenCalled();
+      expect(mockForgetSnapshot).toHaveBeenCalledTimes(1);
     });
 
     it('should chunk search hits that live outside the listed folder', async () => {

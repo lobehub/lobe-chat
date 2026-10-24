@@ -404,17 +404,17 @@ export class ResourceManagerStoreActionImpl {
         const { useTreeStore } = await import('@/store/tree');
         const currentFolderKey = fileStore.queryParams?.parentId ?? '';
 
-        // Delete-by-query only stands for the folder list: search hits span
-        // every folder, so a select-all over them deletes by resolved ids below.
-        const isSearching = !!getExplorerSearchParams(this.#get());
+        // Delete-by-query stands for whichever list the user acted on: the
+        // folder list, or the search overlay's query while a keyword is typed.
+        // Resolving a select-all into ids first would run one detail lookup per
+        // hit inside `deleteResources` before the batch delete starts, so a
+        // large search paid a lookup for every row it was about to delete.
+        const deleteQuery = selectAllState === 'all' ? this.#selectionQuery() : undefined;
 
-        if (selectAllState === 'all' && !isSearching && fileStore.queryParams) {
+        if (deleteQuery) {
           const { resourceService } = await import('@/services/resource');
 
-          await resourceService.deleteResourcesByQuery(
-            fileStore.queryParams as any,
-            selectedFileIds,
-          );
+          await resourceService.deleteResourcesByQuery(deleteQuery, selectedFileIds);
           // The deleted set is only known to the server, so the cached searches
           // cannot drop those rows by id: invalidate the surfaces instead and
           // let the refetch paint whatever survived.
@@ -425,10 +425,10 @@ export class ResourceManagerStoreActionImpl {
           // caller's workspace role — members delete only their own rows, owners
           // the full query scope — so the revalidation repaints the survivors.
           await fileStore.evictResourceLists();
-          // The deleted set is only known to the server here, and every row in
-          // it was a child of the listed folder, so refetch that one folder.
-          // The persisted tree is dropped first: if that refetch never lands,
-          // a reload must not repaint the deleted rows.
+          // The deleted set is only known to the server here, so the persisted
+          // tree cannot drop those rows by id either: drop the snapshot and
+          // refetch the listed folder. Dropping it first means a refetch that
+          // never lands still cannot repaint the deleted rows on reload.
           useTreeStore.getState().forgetSnapshot();
           void useTreeStore.getState().revalidate(currentFolderKey);
 
