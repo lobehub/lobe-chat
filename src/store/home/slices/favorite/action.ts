@@ -15,6 +15,9 @@ const LIST_PARAMS = {} as Record<string, never>;
 
 type FavoriteSnapshot = Partial<Pick<FavoriteItem, 'icon' | 'path' | 'title'>>;
 
+/** Rows added on the client before the server confirmed them. */
+export const isOptimisticId = (id: string) => id.startsWith('optimistic:');
+
 const isTarget = (item: FavoriteItem, type: FavoriteType, targetId: string) =>
   item.type === type && item.targetId === targetId;
 
@@ -36,6 +39,8 @@ export class FavoriteActionImpl {
   readonly #list;
   /** Writes per target reach the server in order, so a quick re-toggle cannot land reversed. */
   readonly #targetQueues = new Map<string, Promise<unknown>>();
+  /** Reorders reach the server in drag order, so the last drag wins. */
+  #reorderQueue: Promise<unknown> = Promise.resolve();
 
   constructor(set: Setter, get: () => HomeStore, _api?: unknown) {
     void _api;
@@ -111,7 +116,15 @@ export class FavoriteActionImpl {
         const rest = items.filter((item) => !ids.includes(item.id));
         return [...listed, ...rest];
       },
-      () => favoriteService.reorder(ids),
+      () => {
+        // A row whose add is still pending has no server id to place yet.
+        const persistedIds = ids.filter((id) => !isOptimisticId(id));
+        const operation = this.#reorderQueue
+          .catch(() => undefined)
+          .then(() => favoriteService.reorder(persistedIds));
+        this.#reorderQueue = operation;
+        return operation;
+      },
     );
   };
 
@@ -131,7 +144,7 @@ export class FavoriteActionImpl {
     snapshot: FavoriteSnapshot,
   ): Promise<void> => {
     const item = favoriteSelectors.getFavorite(type, targetId)(this.#get());
-    if (!item || item.id.startsWith('optimistic:')) return;
+    if (!item || isOptimisticId(item.id)) return;
 
     const changes = Object.fromEntries(
       Object.entries(snapshot).filter(

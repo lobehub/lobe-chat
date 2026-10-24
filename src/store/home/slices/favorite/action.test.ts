@@ -133,6 +133,51 @@ describe('favorite slice', () => {
     expect(reorder).toHaveBeenCalledWith(['fav_c', 'fav_a', 'fav_b']);
   });
 
+  it('sends overlapping reorders in drag order, so the last drag wins', async () => {
+    await loadWith([favorite('a'), favorite('b'), favorite('c')]);
+    const sent: string[][] = [];
+    const settle: (() => void)[] = [];
+    vi.spyOn(favoriteService, 'reorder').mockImplementation(async (ids) => {
+      sent.push(ids);
+      await new Promise<void>((resolve) => settle.push(resolve));
+    });
+
+    let first!: Promise<void>;
+    let second!: Promise<void>;
+    act(() => {
+      first = useHomeStore.getState().reorderFavorites(['fav_b', 'fav_a', 'fav_c']);
+      second = useHomeStore.getState().reorderFavorites(['fav_c', 'fav_b', 'fav_a']);
+    });
+
+    await waitFor(() => expect(sent).toHaveLength(1));
+    // The second drag waits for the first request instead of racing it.
+    expect(sent).toEqual([['fav_b', 'fav_a', 'fav_c']]);
+
+    await act(async () => {
+      settle[0]();
+      await first;
+    });
+    await waitFor(() => expect(sent).toHaveLength(2));
+    await act(async () => {
+      settle[1]();
+      await second;
+    });
+
+    expect(sent[1]).toEqual(['fav_c', 'fav_b', 'fav_a']);
+    expect(list().map((item) => item.targetId)).toEqual(['c', 'b', 'a']);
+  });
+
+  it('leaves a row still being added out of the persisted order', async () => {
+    await loadWith([favorite('a'), favorite('b')]);
+    const reorder = vi.spyOn(favoriteService, 'reorder').mockResolvedValue();
+
+    await act(() =>
+      useHomeStore.getState().reorderFavorites(['fav_b', 'optimistic:page:c', 'fav_a']),
+    );
+
+    expect(reorder).toHaveBeenCalledWith(['fav_b', 'fav_a']);
+  });
+
   it('rewrites a snapshot only when the target changed', async () => {
     await loadWith([favorite('a', { title: 'Old' })]);
     const update = vi.spyOn(favoriteService, 'update').mockResolvedValue();

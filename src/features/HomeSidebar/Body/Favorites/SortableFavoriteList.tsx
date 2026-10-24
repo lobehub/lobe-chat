@@ -31,6 +31,7 @@ import { toFavoritePath } from '@/features/Favorites/path';
 import NavItem from '@/features/NavPanel/components/NavItem';
 import { useActiveLocation } from '@/hooks/useActiveLocation';
 import { useHomeStore } from '@/store/home';
+import { isOptimisticId } from '@/store/home/slices/favorite/action';
 
 import {
   RowKeyboardSensor,
@@ -53,6 +54,8 @@ const styles = stylex.create({
 const SortableFavoriteItem = memo<{ active: boolean; item: FavoriteItemType }>(
   ({ active, item }) => {
     const { attributes, isDragging, listeners, setNodeRef, transform, transition } = useSortable({
+      // A row still being added has no server id, so its position could not be saved.
+      disabled: isOptimisticId(item.id),
       id: item.id,
     });
 
