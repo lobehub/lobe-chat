@@ -84,13 +84,17 @@ export const createInterventionProjection = (get: () => ChatStore) => {
         // server) replaces the immer-frozen object, so it is not ours to undo.
         const current = dbMessageSelectors.getDbMessageById(id)(get())?.pluginIntervention;
         if (current !== applied) return;
-        // The message reducers `merge`, which skips `undefined`, so a key the decision
-        // added (`rejectedReason`) stays behind. It only renders on a rejected card,
-        // and the next decision on this card overwrites it.
+        // The message reducers `merge`, which skips `undefined`, so restoring an absent
+        // `rejectedReason` as `undefined` would keep the abandoned one, and a retry
+        // rejecting without a reason would show it. An empty reason renders as none.
         dispatchInterventionState(
           get,
           id,
-          { ...original, status: original?.status ?? 'pending' },
+          {
+            ...original,
+            rejectedReason: original?.rejectedReason ?? '',
+            status: original?.status ?? 'pending',
+          },
           context,
         );
       });

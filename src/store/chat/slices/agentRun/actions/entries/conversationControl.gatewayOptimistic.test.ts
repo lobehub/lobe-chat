@@ -174,6 +174,35 @@ describe('Gateway approval cards update before the resume returns', () => {
     expect(interventionOf('tool-1')).toMatchObject({ batchId: 'batch-1', status: 'pending' });
   });
 
+  it('drops an abandoned rejection reason when a retry rejects without one', async () => {
+    seedPendingTools(['tool-1']);
+    const { result, resume } = setupGateway();
+    resume.reject(new Error('network error'));
+
+    await act(async () => {
+      await expect(
+        result.current.rejectAndContinueToolCalling('tool-1', 'not now'),
+      ).rejects.toThrow('network error');
+    });
+
+    const retry = createDeferred();
+    vi.mocked(result.current.executeGatewayAgent).mockReturnValueOnce(retry.promise);
+    let rejection!: Promise<void>;
+    await act(async () => {
+      rejection = result.current.rejectAndContinueToolCalling('tool-1');
+      await vi.waitFor(() => expect(result.current.executeGatewayAgent).toHaveBeenCalledTimes(2));
+    });
+
+    // The reason renders on a rejected card only when truthy.
+    expect(interventionOf('tool-1')?.status).toBe('rejected');
+    expect(interventionOf('tool-1')?.rejectedReason).toBeFalsy();
+
+    await act(async () => {
+      retry.resolve();
+      await rejection;
+    });
+  });
+
   it('lets the server state win when another device already resolved the card', async () => {
     seedPendingTools(['tool-1']);
     const { result } = setupGateway();
