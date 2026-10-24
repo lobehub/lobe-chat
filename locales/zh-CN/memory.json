@@ -68,6 +68,7 @@
   "entity.kind.relationship.example": "和团队、家人的关系",
   "entity.list.clearSearch": "清除搜索",
   "entity.list.loadMore": "加载更早的情境",
+  "entity.list.loadMoreRetry": "加载失败，点击重试",
   "entity.list.loadedOf": "{{loaded}} / {{total}}",
   "entity.list.noMatch": "没有找到和「{{keyword}}」有关的情境",
   "entity.list.pick": "从左侧选一个情境",

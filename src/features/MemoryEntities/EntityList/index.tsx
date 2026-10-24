@@ -64,22 +64,23 @@ const EntityList = memo(() => {
   const [keyword, setKeyword] = useState('');
   const format = useEntityFormat();
   const { t } = format;
-  const { entities: contexts, hasMore, links, loadMore, total } = useEntityDataContext();
-  const [loadingMore, setLoadingMore] = useState(false);
+  const {
+    entities: contexts,
+    hasMore,
+    isLoadingMore,
+    links,
+    loadMore,
+    loadMoreError,
+    total,
+  } = useEntityDataContext();
 
   // With pages still unloaded, a keyword also asks the server so older contexts can be found.
+  // Clearing the keyword drops the search at once, so 「加载更早的情境」 pages the full list.
   const needle = keyword.trim();
   const debouncedNeedle = useDebounce(needle, { wait: 400 });
-  const { data: remoteMatches } = useRemoteContextSearch(debouncedNeedle, hasMore);
-
-  const handleLoadMore = async () => {
-    setLoadingMore(true);
-    try {
-      await loadMore();
-    } finally {
-      setLoadingMore(false);
-    }
-  };
+  const remoteMatches = useRemoteContextSearch(
+    hasMore && needle ? debouncedNeedle || undefined : undefined,
+  );
   const { select, selectedId } = useSelection();
 
   const groups = useMemo(() => {
@@ -118,7 +119,9 @@ const EntityList = memo(() => {
         <div {...stylex.props(styles.heading)}>
           <h1 {...stylex.props(styles.title)}>{t('entity.list.title')}</h1>
           <span {...stylex.props(styles.count)}>
-            {hasMore ? t('entity.list.loadedOf', { loaded: contexts.length, total }) : contexts.length}
+            {hasMore
+              ? t('entity.list.loadedOf', { loaded: contexts.length, total })
+              : contexts.length}
           </span>
         </div>
         <SearchBar
@@ -163,12 +166,12 @@ const EntityList = memo(() => {
         {hasMore && !needle && (
           <Button
             block
-            loading={loadingMore}
+            loading={isLoadingMore}
             type={'text'}
             {...stylex.props(styles.more)}
-            onClick={handleLoadMore}
+            onClick={loadMore}
           >
-            {t('entity.list.loadMore')}
+            {t(loadMoreError ? 'entity.list.loadMoreRetry' : 'entity.list.loadMore')}
           </Button>
         )}
       </div>

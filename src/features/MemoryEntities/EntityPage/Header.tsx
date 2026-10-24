@@ -24,7 +24,7 @@ const styles = stylex.create({
     backgroundColor: 'transparent',
     borderStyle: 'none',
     color: {
-      default: cssVar.colorTextTertiary,
+      'default': cssVar.colorTextTertiary,
       ':hover': cssVar.colorText,
     },
     cursor: 'pointer',
@@ -70,10 +70,10 @@ const Header = memo<HeaderProps>(({ entity }) => {
   const typeNote =
     entity.rawType && entity.rawType.toLowerCase() !== entity.kind ? entity.rawType : undefined;
 
-  const handleStatus = async (value: string, status: MemoryEntity['status']) => {
+  const handleStatus = async (value: string) => {
     ensureSelected(entity.id);
     try {
-      await setStatus(entity.id, value, status);
+      await setStatus(entity.id, value);
     } catch {
       toast.error({ title: t('entity.header.statusFailed') });
     }
@@ -130,13 +130,13 @@ const Header = memo<HeaderProps>(({ entity }) => {
                   icon: <Icon icon={RotateCcwIcon} />,
                   key: 'reopen',
                   label: t('entity.header.reopen'),
-                  onClick: () => handleStatus('ongoing', 'active'),
+                  onClick: () => handleStatus('ongoing'),
                 }
               : {
                   icon: <Icon icon={ArchiveIcon} />,
                   key: 'close',
                   label: t('entity.header.markDone'),
-                  onClick: () => handleStatus('completed', 'closed'),
+                  onClick: () => handleStatus('completed'),
                 },
             { type: 'divider' },
             {

@@ -1,149 +1,109 @@
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 
-import { useClientDataSWR } from '@/libs/swr';
-import { memoryCRUDService, userMemoryService } from '@/services/userMemory';
+import { memoryCRUDService } from '@/services/userMemory';
+import { useUserMemoryStore } from '@/store/userMemory';
+import { memoryListKey } from '@/store/userMemory/utils/replica';
 import { LayersEnum } from '@/types/userMemory';
 
-import {
-  mergeById,
-  type RawActivityItem,
-  type RawContextItem,
-  toActivity,
-  toEntity,
-  uniqueById,
-} from './adapt';
+import { fromActivityRow, fromContextRow, linkedEntityOf, mergeById, uniqueById } from './adapt';
 import { linkByNames } from './link';
-import { type MemoryActivity, type MemoryEntity } from './types';
 
-const PAGE_SIZE = 100;
-/** 99% of users have ≤150 contexts and ≤230 activities; three pages cover them up front. */
-const INITIAL_PAGES = 3;
-const SEARCH_SIZE = 50;
+/** The backend's page cap. One page covers the activities of ~99% of users. */
+export const ENTITY_PAGE_SIZE = 100;
 
-const fetchPage = (layer: LayersEnum, page: number, q?: string, pageSize = PAGE_SIZE) =>
-  userMemoryService.queryMemories({ layer, page, pageSize, q });
+/** Entry key of the unfiltered context list in the memory store. */
+const ALL_CONTEXTS = memoryListKey({});
 
-const fetchInitial = async <T>(layer: LayersEnum) => {
-  const items: T[] = [];
-  let total = 0;
-  let pages = 0;
-  for (let page = 1; page <= INITIAL_PAGES; page++) {
-    const result = await fetchPage(layer, page);
-    items.push(...(result.items as unknown as T[]));
-    total = result.total ?? items.length;
-    pages = page;
-    if (items.length >= total || result.items.length < PAGE_SIZE) break;
-  }
-  return { items, pages, total };
-};
+/**
+ * The entity pages read the memory store's replica-backed lists: contexts (one entry per
+ * search, offset paging, optimistic delete with the offset repair) and activities, plus the
+ * memory detail replica for a deep link outside the loaded pages. Edits patch every loaded and
+ * persisted query, so the Memory portal and other memory pages see them too.
+ */
+export const useEntityData = (selectedId?: string) => {
+  const useFetchContexts = useUserMemoryStore((s) => s.useFetchContexts);
+  const useFetchActivities = useUserMemoryStore((s) => s.useFetchActivities);
+  const useFetchMemoryDetail = useUserMemoryStore((s) => s.useFetchMemoryDetail);
+  const loadMoreContexts = useUserMemoryStore((s) => s.loadMoreContexts);
+  const deleteContext = useUserMemoryStore((s) => s.deleteContext);
+  const updateContextEntity = useUserMemoryStore((s) => s.internal_updateContextEntity);
 
-interface EntityData {
-  activities: MemoryActivity[];
-  /** Pages of the unfiltered context list loaded so far. */
-  contextPages: number;
-  contextTotal: number;
-  entities: MemoryEntity[];
-}
+  const contexts = useFetchContexts({ pageSize: ENTITY_PAGE_SIZE });
+  const activityList = useFetchActivities({ pageSize: ENTITY_PAGE_SIZE });
+  // Read the unfiltered entry itself: the store's flat mirrors follow whichever query is
+  // active, and a search in the list makes its own query active.
+  const listState = useUserMemoryStore((s) => s.contextListEntries[ALL_CONTEXTS]);
 
-const fetchEntityData = async (): Promise<EntityData> => {
-  const [contexts, activities] = await Promise.all([
-    fetchInitial<RawContextItem>(LayersEnum.Context),
-    fetchInitial<RawActivityItem>(LayersEnum.Activity),
-  ]);
-  return {
-    activities: uniqueById(activities.items.map(toActivity)),
-    contextPages: contexts.pages,
-    contextTotal: contexts.total,
-    entities: uniqueById(contexts.items.map(toEntity)),
-  };
-};
+  const contextRows = contexts.data?.items;
+  const activityRows = activityList.data?.items;
+  const entities = useMemo(
+    () => uniqueById((contextRows ?? []).map(fromContextRow)),
+    [contextRows],
+  );
+  const activities = useMemo(
+    () => uniqueById((activityRows ?? []).map(fromActivityRow)),
+    [activityRows],
+  );
+  const isLoading = (!contextRows && !contexts.error) || (!activityRows && !activityList.error);
 
-const KEY = 'memory-entity-pages';
-
-export const useEntityData = () => {
-  const { data, error, isLoading, mutate } = useClientDataSWR<EntityData>(KEY, fetchEntityData, {
-    revalidateOnFocus: false,
-  });
-
-  const hasMore = !!data && data.contextPages * PAGE_SIZE < data.contextTotal;
-
+  // A deep link (e.g. "open in memory" from a chat) may point past the loaded pages.
+  const loaded = entities.some((e) => e.id === selectedId);
+  const detail = useFetchMemoryDetail(
+    !isLoading && !loaded && selectedId ? selectedId : null,
+    LayersEnum.Context,
+  );
+  const linked = useMemo(
+    () => (selectedId ? linkedEntityOf(detail.data, selectedId) : undefined),
+    [detail.data, selectedId],
+  );
+  // The deep-linked page needs its timeline too, so it joins the loaded ones for linking.
   const links = useMemo(
-    () => (data ? linkByNames(data.entities, data.activities) : undefined),
-    [data],
+    () =>
+      contextRows && activityRows
+        ? linkByNames(linked ? mergeById(entities, [linked]) : entities, activities)
+        : undefined,
+    [activities, activityRows, contextRows, entities, linked],
   );
 
-  const addEntities = useCallback(
-    (incoming: MemoryEntity[], patch?: Partial<EntityData>) =>
-      mutate(
-        (current) =>
-          current && { ...current, ...patch, entities: mergeById(current.entities, incoming) },
-        { revalidate: false },
-      ),
-    [mutate],
-  );
-
-  /** Writes go to the backend first; the list is patched in place instead of refetched. */
-  const patchEntity = (id: string, fn: (entity: MemoryEntity) => MemoryEntity | undefined) =>
-    mutate(
-      (current) =>
-        current && {
-          ...current,
-          entities: current.entities.flatMap((entity) => {
-            if (entity.id !== id) return [entity];
-            const next = fn(entity);
-            return next ? [next] : [];
-          }),
-        },
-      { revalidate: false },
-    );
-
-  /** Next page of the unfiltered list, for users with more contexts than the first load. */
-  const loadMore = async () => {
-    if (!data) return;
-    const page = data.contextPages + 1;
-    const result = await fetchPage(LayersEnum.Context, page);
-    await addEntities((result.items as unknown as RawContextItem[]).map(toEntity), {
-      contextPages: page,
-      contextTotal: result.total ?? data.contextTotal,
-    });
+  /** Rows in the lists are patched in place; a deep-linked row is refetched. */
+  const afterEdit = async (id: string) => {
+    if (linked?.id === id) await detail.mutate();
   };
-
 
   const updateNow = async (id: string, description: string) => {
     await memoryCRUDService.updateContext(id, { description });
-    await patchEntity(id, (entity) => ({
-      ...entity,
-      description,
-      updatedAt: new Date().toISOString(),
-    }));
+    updateContextEntity(id, (row) => ({ ...row, description, updatedAt: new Date() }));
+    await afterEdit(id);
   };
 
-  const setStatus = async (id: string, statusValue: string, status: MemoryEntity['status']) => {
-    await memoryCRUDService.updateContext(id, { currentStatus: statusValue });
-    await patchEntity(id, (entity) => ({ ...entity, status, statusValue }));
+  const setStatus = async (id: string, currentStatus: string) => {
+    await memoryCRUDService.updateContext(id, { currentStatus });
+    updateContextEntity(id, (row) => ({ ...row, currentStatus }));
+    await afterEdit(id);
   };
 
-  const remove = async (id: string) => {
-    await memoryCRUDService.deleteContext(id);
-    await patchEntity(id, () => undefined);
-    // Offset pages shift once a row is gone; reload them so 「加载更早的情境」 does not skip one.
-    if (hasMore) await mutate();
-  };
-
+  /** Optimistic; rejects (after rolling back) when the server refuses. */
+  const remove = (id: string) => deleteContext(id);
 
   return {
-    activities: data?.activities ?? [],
-    entities: data?.entities ?? [],
-    error,
+    activities,
+    entities,
+    error: contexts.error,
     /** The unfiltered list has pages not loaded yet. */
-    hasMore,
+    hasMore: !!listState?.hasMore,
     isLoading,
+    isLoadingMore: !!listState?.isLoadingMore,
+    linked,
     links,
-    loadMore,
+    loadMore: loadMoreContexts,
+    loadMoreError: listState?.loadMoreError,
     remove,
-    retry: () => mutate(),
+    retry: () => {
+      void contexts.mutate();
+      void activityList.mutate();
+    },
     setStatus,
-    total: data?.contextTotal ?? 0,
+    total: listState?.total ?? entities.length,
     updateNow,
   };
 };
@@ -151,26 +111,14 @@ export const useEntityData = () => {
 export type EntityDataApi = ReturnType<typeof useEntityData>;
 
 /**
- * Server-side search for contexts outside the loaded pages. Its rows are shown as matches as
- * they are: the server also searches fields the list does not hold (status, parent details).
+ * Server-side search through the context list's own query entry. Its rows are shown as matches
+ * as they are: the server also searches fields the list does not hold (status, parent details).
+ * An empty keyword reads the unfiltered entry, so the search query only becomes the store's
+ * active one while a keyword is typed.
  */
-export const useRemoteContextSearch = (q: string, enabled: boolean) =>
-  useClientDataSWR<MemoryEntity[]>(
-    enabled && q ? ['memory-entity-pages-search', q] : null,
-    async () => {
-      const result = await fetchPage(LayersEnum.Context, 1, q, SEARCH_SIZE);
-      return uniqueById((result.items as unknown as RawContextItem[]).map(toEntity));
-    },
-    { revalidateOnFocus: false },
-  );
-
-/** A deep link (e.g. "open in memory" from a chat) may point past the loaded pages. */
-export const useLinkedContext = (id: string | undefined, enabled: boolean) =>
-  useClientDataSWR<MemoryEntity | null>(
-    enabled && id ? ['memory-entity-pages-context', id] : null,
-    async () => {
-      const detail = await userMemoryService.getMemoryDetail({ id: id!, layer: LayersEnum.Context });
-      return detail && 'context' in detail ? toEntity(detail as unknown as RawContextItem) : null;
-    },
-    { revalidateOnFocus: false },
-  );
+export const useRemoteContextSearch = (q: string | undefined) => {
+  const useFetchContexts = useUserMemoryStore((s) => s.useFetchContexts);
+  const { data } = useFetchContexts({ pageSize: ENTITY_PAGE_SIZE, q });
+  const rows = q ? data?.items : undefined;
+  return useMemo(() => (rows ? uniqueById(rows.map(fromContextRow)) : undefined), [rows]);
+};

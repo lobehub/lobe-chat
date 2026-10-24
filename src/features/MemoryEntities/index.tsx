@@ -11,7 +11,7 @@ import { lastTouchedOf } from './derive';
 import EntityList from './EntityList';
 import EntityPage from './EntityPage';
 import { ErrorState, FirstRunState, LoadingState } from './states';
-import { useEntityData, useLinkedContext } from './useEntityData';
+import { useEntityData } from './useEntityData';
 import { useSelection } from './useSelection';
 
 const styles = stylex.create({
@@ -24,24 +24,23 @@ const styles = stylex.create({
  */
 const MemoryEntities = memo(() => {
   const { t } = useTranslation('memory');
-  const data = useEntityData();
   const { selectedId } = useSelection();
+  const data = useEntityData(selectedId);
+  const { linked } = data;
   const loaded = data.entities.find((e) => e.id === selectedId);
-  const { data: linked } = useLinkedContext(selectedId, !data.isLoading && !loaded);
 
   // Nothing picked yet (or the pick was deleted): open the page that moved most recently.
   const entity = useMemo(() => {
-    const picked = loaded ?? (linked?.id === selectedId ? linked : undefined);
+    const picked = loaded ?? linked;
     if (picked) return picked;
     return data.entities
       .filter((e) => e.status === 'active')
       .sort((a, b) => lastTouchedOf(b, data.links).localeCompare(lastTouchedOf(a, data.links)))[0];
-  }, [data.entities, data.links, linked, loaded, selectedId]);
+  }, [data.entities, data.links, linked, loaded]);
 
   let content;
   if (data.isLoading) content = <LoadingState />;
-  else if (data.error && data.entities.length === 0)
-    content = <ErrorState onRetry={data.retry} />;
+  else if (data.error && data.entities.length === 0) content = <ErrorState onRetry={data.retry} />;
   else if (data.entities.length === 0) content = <FirstRunState />;
   else
     content = (

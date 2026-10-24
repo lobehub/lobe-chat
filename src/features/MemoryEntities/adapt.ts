@@ -113,6 +113,29 @@ export const uniqueById = <T extends { id: string }>(items: T[]): T[] => {
   });
 };
 
-/** Adds rows fetched later (next page, search, deep link) without duplicating loaded ones. */
+/** Adds rows fetched later (server search hits) without duplicating loaded ones. */
 export const mergeById = <T extends { id: string }>(current: T[], incoming: T[]): T[] =>
   uniqueById([...current, ...incoming]);
+
+/**
+ * The memory store keeps context rows flattened (`{ ...memory, ...context }`) and activity rows
+ * as the activity list returns them; both carry what `toEntity` / `toActivity` read.
+ */
+export const fromContextRow = (row: object): MemoryEntity => {
+  const flat = row as RawContextItem['context'] & RawMemoryRow;
+  return toEntity({ context: flat, memory: flat });
+};
+
+export const fromActivityRow = (row: object): MemoryActivity => {
+  const flat = row as RawActivityItem['activity'] & RawMemoryRow;
+  return toActivity({ activity: flat, memory: flat });
+};
+
+/**
+ * The memory detail replica keeps a flattened row (`{ ...memory, ...context }`), or `null`
+ * once the server no longer has it. Only a row for the requested id is a page.
+ */
+export const linkedEntityOf = (detail: unknown, id: string): MemoryEntity | undefined =>
+  detail && typeof detail === 'object' && (detail as { id?: unknown }).id === id
+    ? fromContextRow(detail)
+    : undefined;

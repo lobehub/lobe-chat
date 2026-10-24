@@ -68,6 +68,7 @@
   "entity.kind.relationship.example": "Your team, your family",
   "entity.list.clearSearch": "Clear search",
   "entity.list.loadMore": "Load older contexts",
+  "entity.list.loadMoreRetry": "Couldn't load older contexts. Retry",
   "entity.list.loadedOf": "{{loaded}} / {{total}}",
   "entity.list.noMatch": "No contexts match \"{{keyword}}\"",
   "entity.list.pick": "Pick a context on the left",
