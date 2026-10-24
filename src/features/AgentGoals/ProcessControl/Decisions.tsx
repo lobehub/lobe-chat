@@ -9,8 +9,9 @@ import { useTranslation } from 'react-i18next';
 
 import { useActivityTime } from '@/hooks/useActivityTime';
 
+import DecisionGraph from './DecisionGraph';
+import { buildDecisionGraph } from './decisionGraphModel';
 import { buildDecisionRows, type DecisionRow } from './decisionList';
-import DecisionOptionTree from './DecisionOptionTree';
 import { AgentActor, UserActor } from './GoalActors';
 import type { GoalGraphView } from './goalGraphViewModel';
 import { useDecisionCopy } from './GoalResultFollowUps';
@@ -19,8 +20,9 @@ import { useDecisionCopy } from './GoalResultFollowUps';
  * Every call this goal stopped to ask, and who answered it — the trace behind
  * "why did it go this way". Open questions lead, then settled ones newest
  * first, each with the answer picked, any guidance written with it, and the
- * person or agent who gave it. A row opens into the options the question
- * offered (see `DecisionOptionTree`); open questions start opened.
+ * person or agent who gave it. A row opens into a graph of the decision (see
+ * `DecisionGraph`): what raised it, the options it offered, where the answer
+ * went. Open questions start opened.
  *
  * Answering still happens where the question is raised (the frontier); the
  * arrow on a row opens the node it was asked on.
@@ -104,7 +106,9 @@ const DecisionRowView = memo<{
   divided: boolean;
   onSelect: (nodeId: string) => void;
   row: DecisionRow;
-}>(({ copy, divided, onSelect, row }) => {
+  /** The task whose gate this is, when the question was raised by one. */
+  subject?: { id: string; title: string };
+}>(({ copy, divided, onSelect, row, subject }) => {
   const { t } = useTranslation('chat');
   const [open, setOpen] = useState(row.actor === 'pending');
   const { decision } = row;
@@ -137,24 +141,41 @@ const DecisionRowView = memo<{
           onClick={() => onSelect(decision.nodeId)}
         />
       </Flexbox>
-      {copy.detail && (
-        <Text
-          fontSize={13}
-          style={{ paddingInlineStart: 20, wordBreak: 'break-word' }}
-          type={'secondary'}
-        >
-          {copy.detail}
-        </Text>
-      )}
       {open ? (
-        <DecisionOptionTree
-          chosenId={decision.resolvedOptionId}
-          note={row.note}
-          options={copy.options}
-          recommendedId={decision.recommendedOptionId}
+        <DecisionGraph
+          model={buildDecisionGraph(row, copy.options)}
+          result={{
+            effectLabel: {
+              fail: t('goalProcess.decisions.effect.fail'),
+              retire: t('goalProcess.decisions.effect.retire'),
+              retry: t('goalProcess.decisions.effect.retry'),
+            },
+            header: (
+              <Flexbox horizontal align={'center'} gap={8} justify={'space-between'} wrap={'wrap'}>
+                <Decider row={row} />
+                <DecisionTime at={row.resolvedAt ?? decision.createdAt} />
+              </Flexbox>
+            ),
+          }}
+          root={{
+            ...(subject
+              ? { context: { onOpen: () => onSelect(subject.id), title: subject.title } }
+              : {}),
+            ...(copy.detail ? { detail: copy.detail } : {}),
+            question: copy.question,
+          }}
         />
       ) : (
         <>
+          {copy.detail && (
+            <Text
+              fontSize={13}
+              style={{ paddingInlineStart: 20, wordBreak: 'break-word' }}
+              type={'secondary'}
+            >
+              {copy.detail}
+            </Text>
+          )}
           {copy.choice && (
             <Flexbox horizontal align={'flex-start'} gap={6} style={{ paddingInlineStart: 20 }}>
               <Icon
@@ -200,15 +221,20 @@ const Decisions = memo<{ graph: GoalGraphView; onSelect: (nodeId: string) => voi
 
     return (
       <Flexbox gap={0}>
-        {rows.map((row, index) => (
-          <DecisionRowView
-            copy={copyOf(row)}
-            divided={index > 0}
-            key={row.decision.id}
-            row={row}
-            onSelect={onSelect}
-          />
-        ))}
+        {rows.map((row, index) => {
+          const subjectId = graph.byId[row.decision.nodeId]?.gateSubjectId;
+          const subjectNode = subjectId ? graph.byId[subjectId]?.node : undefined;
+          return (
+            <DecisionRowView
+              copy={copyOf(row)}
+              divided={index > 0}
+              key={row.decision.id}
+              row={row}
+              subject={subjectNode ? { id: subjectNode.id, title: subjectNode.title } : undefined}
+              onSelect={onSelect}
+            />
+          );
+        })}
       </Flexbox>
     );
   },
