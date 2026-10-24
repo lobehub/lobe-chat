@@ -3813,6 +3813,21 @@ export default {
   'workingPanel.files.showInReview': 'Show in Review',
   'workingPanel.files.showInSystem': 'Reveal in Folder',
   'workingPanel.files.title': 'Files',
+  'workingPanel.search.empty': 'No messages contain "{{keyword}}"',
+  'workingPanel.search.error': 'Search failed. Try again.',
+  'workingPanel.search.hint':
+    'Searches every message in this topic, including earlier history that is not loaded yet.',
+  'workingPanel.search.limitReached':
+    'Showing the first {{count}} messages. Use a more specific keyword to narrow it down.',
+  'workingPanel.search.next': 'Next match',
+  'workingPanel.search.placeholder': 'Find in this topic',
+  'workingPanel.search.prev': 'Previous match',
+  'workingPanel.search.resultCount_one': '{{count}} message',
+  'workingPanel.search.resultCount_other': '{{count}} messages',
+  'workingPanel.search.retry': 'Retry',
+  'workingPanel.search.role.assistant': 'Assistant',
+  'workingPanel.search.role.user': 'You',
+  'workingPanel.search.title': 'Search',
   'workingPanel.files.truncatedNotice':
     'Some expanded folders are too large to list fully — only the first entries are shown',
   'workingPanel.files.views.changes': 'Git Changes',

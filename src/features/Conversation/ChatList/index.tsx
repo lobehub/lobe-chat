@@ -35,6 +35,8 @@ import AgentSignalReceiptList from './components/AgentSignalReceiptList';
 import { RefreshError } from './components/RefreshError';
 import VirtualizedList from './components/VirtualizedList';
 import { useAgentSignalReceipts } from './hooks/useAgentSignalReceipts';
+import { useDeepLinkBranchActivation } from './hooks/useDeepLinkBranchActivation';
+import { useDeepLinkHistoryBackfill } from './hooks/useDeepLinkHistoryBackfill';
 import { useForwardPagingFallback } from './hooks/useForwardPagingFallback';
 import { useInitialRevalidation } from './hooks/useInitialRevalidation';
 import { useMessageRefreshError } from './hooks/useMessageRefreshError';
@@ -288,6 +290,22 @@ const ChatList = memo<ChatListProps>(
       [rowIds.length, rowById, defaultWorkflowExpandLevel, receiptsByAnchor],
     );
     const messagesInit = useConversationStore(dataSelectors.messagesInit);
+    const dbMessages = useConversationStore(dataSelectors.dbMessages);
+    const loadEarlierMessages = useConversationStore((s) => s.loadEarlierMessages);
+    const switchMessageBranch = useConversationStore((s) => s.switchMessageBranch);
+    const deepLinkTargetLoaded = useDeepLinkBranchActivation({
+      deepLink: messageDeepLink,
+      messages: dbMessages,
+      resolved: !!resolvedMessageDeepLink,
+      switchMessageBranch,
+    });
+    useDeepLinkHistoryBackfill({
+      deepLinkKey: messageDeepLink?.navigationKey,
+      loadedCount: dbMessages.length,
+      loadEarlierMessages,
+      ready: messagesInit && paging === 'backward',
+      resolved: !!resolvedMessageDeepLink || deepLinkTargetLoaded,
+    });
 
     // When topicId is null (new conversation), show welcome directly without waiting for fetch
     // because there's no server data to fetch - only local optimistic updates exist

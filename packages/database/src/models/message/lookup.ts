@@ -1,7 +1,8 @@
-import type { DBMessageItem, IThreadType } from '@lobechat/types';
+import { TOPIC_MESSAGE_SEARCH_LIMIT } from '@lobechat/const';
+import type { DBMessageItem, IThreadType, TopicMessageSearchMatch } from '@lobechat/types';
 import { ThreadType } from '@lobechat/types';
 import type { SQL } from 'drizzle-orm';
-import { and, asc, desc, eq, inArray, isNull, lte, not, or, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, inArray, isNull, lte, ne, not, or, sql } from 'drizzle-orm';
 
 import {
   agentsToSessions,
@@ -13,10 +14,12 @@ import {
 } from '../../schemas';
 import { sanitizeBm25Query } from '../../utils/bm25';
 import { inJsonStringArray } from '../../utils/inJsonStringArray';
+import { ilikeContains } from '../../utils/like';
 import { searchableMessage } from '../../utils/searchableMessage';
 import { notShareVisitorMessage } from '../../utils/shareVisitor';
 import { buildWorkspaceWhere } from '../../utils/workspace';
 import { MessageScope } from './scope';
+import { buildMessageSearchSnippet } from './searchSnippet';
 
 export class MessageLookupQueries extends MessageScope {
   /**
@@ -291,6 +294,49 @@ export class MessageLookupQueries extends MessageScope {
       .orderBy(asc(messages.createdAt));
 
     return result as DBMessageItem[];
+  };
+
+  /**
+   * Literal, case-insensitive find over one topic's mainline (thread rows are
+   * left out), oldest first: the order the conversation reads in. Tool results
+   * are skipped because the conversation renders them as tool cards, not text.
+   */
+  searchInTopic = async ({
+    keyword,
+    limit = TOPIC_MESSAGE_SEARCH_LIMIT,
+    topicId,
+  }: {
+    keyword: string;
+    limit?: number;
+    topicId: string;
+  }): Promise<TopicMessageSearchMatch[]> => {
+    const needle = keyword.trim();
+    if (!needle) return [];
+
+    const rows = await this.db
+      .select({
+        content: messages.content,
+        createdAt: messages.createdAt,
+        id: messages.id,
+        role: messages.role,
+      })
+      .from(messages)
+      .where(
+        and(
+          this.ownership(),
+          eq(messages.topicId, topicId),
+          isNull(messages.threadId),
+          ne(messages.role, 'tool'),
+          ilikeContains(messages.content, needle),
+        ),
+      )
+      .orderBy(asc(messages.createdAt), asc(messages.id))
+      .limit(limit);
+
+    return rows.map(({ content, ...row }) => ({
+      ...row,
+      ...buildMessageSearchSnippet(content ?? '', needle),
+    }));
   };
 
   queryByKeyword = async (keyword: string) => {
