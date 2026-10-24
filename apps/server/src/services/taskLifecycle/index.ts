@@ -33,6 +33,7 @@ import {
   notifyScheduledTaskFailed,
 } from '@/business/server/task/notifyScheduledTaskResult';
 import { notifyTaskRunFailed } from '@/business/server/task/notifyTaskRunFailed';
+import { onTaskRunCompleted } from '@/business/server/task/onTaskRunCompleted';
 import { BriefModel } from '@/database/models/brief';
 import { GoalModel } from '@/database/models/goal';
 import { TaskModel } from '@/database/models/task';
@@ -329,6 +330,29 @@ export class TaskLifecycleService {
             taskIdentifier,
             error,
           ),
+        );
+      }
+
+      // 7. Run-completed follow-up through the `@/business` slot (default impl
+      //    is a no-op), after the post-run transition above. Awaited so it
+      //    finishes inside this callback, which in production is a queued
+      //    workflow request; a failure is logged and never fails the lifecycle.
+      try {
+        await onTaskRunCompleted({
+          agentId: currentTask?.assigneeAgentId ?? undefined,
+          lastAssistantContent,
+          operationId: params.operationId,
+          taskId,
+          taskIdentifier,
+          topicId,
+          userId: this.userId,
+          workspaceId: this.workspaceId,
+        });
+      } catch (error) {
+        console.error(
+          '[TaskLifecycle] run-completed follow-up failed for task=%s (non-fatal):',
+          taskIdentifier,
+          error,
         );
       }
     } else if (reason === 'error') {
