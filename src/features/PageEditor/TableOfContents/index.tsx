@@ -13,8 +13,9 @@ import { collectHeadings, findActiveIndex, findBodyRoot, isSameOutline } from '.
 const ACTIVE_THRESHOLD = 96;
 const SCROLL_MARGIN = 24;
 const MIN_HEADINGS = 2;
-const RAIL_INSET = 12;
-const RAIL_PADDING = 8;
+// Kept tight to the pane edge: the strip the rail takes is width wide tables lose.
+const RAIL_INSET = 4;
+const RAIL_PADDING_INLINE = 4;
 
 const prefersReducedMotion = () =>
   window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
@@ -68,8 +69,8 @@ const styles = stylex.create({
     display: 'flex',
     flexDirection: 'column',
     gap: 10,
-    paddingBlock: RAIL_PADDING,
-    paddingInline: RAIL_PADDING,
+    paddingBlock: 8,
+    paddingInline: RAIL_PADDING_INLINE,
   },
   panel: {
     backgroundColor: cssVar.colorBgElevated,
@@ -100,7 +101,7 @@ const LINE_WIDTH: Record<TocHeading['level'], number> = { 1: 20, 2: 14, 3: 9 };
 const ITEM_INDENT: Record<TocHeading['level'], number> = { 1: 8, 2: 20, 3: 32 };
 
 /** Width of the strip the rail (including its hover area) takes from the pane's inline end. */
-export const TOC_RAIL_GUTTER = RAIL_INSET + RAIL_PADDING * 2 + LINE_WIDTH[1];
+export const TOC_RAIL_GUTTER = RAIL_INSET + RAIL_PADDING_INLINE * 2 + LINE_WIDTH[1];
 
 interface TableOfContentsProps {
   /** Element holding the page body; its first Lexical root is the outline source. */
