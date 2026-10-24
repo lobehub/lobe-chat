@@ -72,6 +72,61 @@ const persistStopBeforeInit = async (
 };
 
 /**
+ * Whether the run stopped being this worker's while its init was awaited, and
+ * if so, the outcome that settles it. Stop can land during the init, and the
+ * abort poll is not armed yet: saving this worker's pre-init `running` state
+ * would overwrite the interrupted one and walk straight into LLM work, so
+ * re-read before writing anything. The init can also outlive the inactivity
+ * watchdog: abandonment (or a recovery that replaced this run) settles the
+ * operation, its lifecycle included, and may delete the runtime state. A
+ * missing state, a terminal one, or a terminal durable row all mean the run is
+ * no longer this worker's.
+ */
+const settleIfReleasedDuringInit = async (
+  deps: DeferredInitDeps,
+  {
+    agentState,
+    operationId,
+    stepIndex,
+  }: { agentState: AgentState; operationId: string; stepIndex: number },
+  initOutcome: 'failed' | 'finished',
+): Promise<DeferredInitOutcome | undefined> => {
+  const { coordinator } = deps;
+  const latest = await coordinator.loadAgentState(operationId);
+  if ((await coordinator.isInterrupted(operationId)) || latest?.status === 'interrupted') {
+    log(
+      '[%s][%d] Interrupted while the deferred init ran (init %s); settling the stop',
+      operationId,
+      stepIndex,
+      initOutcome,
+    );
+    await persistStopBeforeInit(coordinator, operationId, latest ?? agentState);
+    Object.assign(agentState, latest ?? {}, { status: 'interrupted' });
+    return { result: await deps.settleSkippedStep(agentState) };
+  }
+
+  const endedStatus = !latest
+    ? 'missing'
+    : isTerminalAgentStatus(latest.status)
+      ? latest.status
+      : await loadTerminalDurableStatus(deps.agentOperationModel, operationId, stepIndex);
+  if (endedStatus) {
+    log(
+      '[%s][%d] Operation ended while the deferred init ran (%s, init %s); dropping it',
+      operationId,
+      stepIndex,
+      endedStatus,
+      initOutcome,
+    );
+    return {
+      result: { nextStepScheduled: false, state: latest ?? {}, stepResult: null, success: true },
+    };
+  }
+
+  return undefined;
+};
+
+/**
  * The run may have been created without its init — the send path returned as
  * soon as the messages were durable and left discovery and the context
  * assembly to this worker. The turn's request is still on the state, which is
@@ -136,46 +191,24 @@ export const runPendingInit = async (
   }
 
   const initStartedAt = Date.now();
-  const initialized = await deps.runDeferredInit({
-    operationId,
-    request,
-    state: agentState,
-  });
-
-  // Stop can land while the init is awaited, and the abort poll is not
-  // armed yet. Saving this worker's pre-init `running` state now would
-  // overwrite the interrupted one and walk straight into LLM work, so
-  // re-read before writing anything.
-  const latest = await coordinator.loadAgentState(operationId);
-  if ((await coordinator.isInterrupted(operationId)) || latest?.status === 'interrupted') {
-    log('[%s][%d] Interrupted during deferred init; discarding its result', operationId, stepIndex);
-    await persistStopBeforeInit(coordinator, operationId, latest ?? agentState);
-    Object.assign(agentState, latest ?? {}, { status: 'interrupted' });
-    return { result: await deps.settleSkippedStep(agentState) };
-  }
-
-  // The init can outlive the inactivity watchdog: abandonment (or a
-  // recovery that replaced this run) settles the operation, its
-  // lifecycle included, and may delete the runtime state while the
-  // init is awaited. A missing state, a terminal one, or a terminal
-  // durable row all mean the run is no longer this worker's — saving
-  // the stale `running` snapshot would resurrect it into LLM work.
-  const endedStatus = !latest
-    ? 'missing'
-    : isTerminalAgentStatus(latest.status)
-      ? latest.status
-      : await loadTerminalDurableStatus(deps.agentOperationModel, operationId, stepIndex);
-  if (endedStatus) {
-    log(
-      '[%s][%d] Operation ended during deferred init (%s); discarding its result',
+  let initialized: Awaited<ReturnType<DeferredInitRunner>>;
+  try {
+    initialized = await deps.runDeferredInit({
       operationId,
-      stepIndex,
-      endedStatus,
-    );
-    return {
-      result: { nextStepScheduled: false, state: latest ?? {}, stepResult: null, success: true },
-    };
+      request,
+      state: agentState,
+    });
+  } catch (error) {
+    // A failure is only this worker's to report while it still owns the run.
+    // A Stop (or an abandonment) that landed while the init was awaited wins:
+    // the step error handler would overwrite it with `error`.
+    const released = await settleIfReleasedDuringInit(deps, params, 'failed');
+    if (released) return released;
+    throw error;
   }
+
+  const released = await settleIfReleasedDuringInit(deps, params, 'finished');
+  if (released) return released;
 
   // One write: the initialized slots, the assembled context (a
   // redelivery after this save finds the request gone and must still

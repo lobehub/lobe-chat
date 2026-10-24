@@ -448,6 +448,52 @@ describe('AgentRuntimeService executeStep', () => {
       expect(step).not.toHaveBeenCalled();
     });
 
+    // A Stop that lands while the init awaits its I/O, followed by that I/O
+    // failing, is still a stop: the failure must not reach the step error
+    // handler, which would overwrite `interrupted` with `error`.
+    it('settles a stop that landed before the init rejected as interrupted, not as an error', async () => {
+      const runDeferredInit = vi.fn().mockRejectedValue(new Error('discovery exploded'));
+      const svc = buildService(runDeferredInit);
+      const { coordinator, step } = wireStep(svc);
+      coordinator.isInterrupted.mockResolvedValueOnce(false).mockResolvedValue(true);
+      const lifecycle = (svc as any).completionLifecycle;
+      vi.spyOn(lifecycle, 'emitSignalEvents').mockResolvedValue([]);
+      const dispatch = vi.spyOn(lifecycle, 'dispatchHooks').mockResolvedValue(undefined);
+      const publish = vi.spyOn((svc as any).streamManager, 'publishStreamEvent');
+
+      await svc.executeStep({ ...mockParams, stepIndex: 0 });
+
+      expect(step).not.toHaveBeenCalled();
+      for (const [, saved] of coordinator.saveAgentState.mock.calls) {
+        expect(saved.status).toBe('interrupted');
+      }
+      expect(dispatch).toHaveBeenCalledWith(
+        'test-operation-1',
+        expect.objectContaining({ status: 'interrupted' }),
+        'interrupted',
+      );
+      expect(publish).not.toHaveBeenCalledWith(
+        'test-operation-1',
+        expect.objectContaining({ type: 'error' }),
+      );
+    });
+
+    it('drops a rejected init of a run that was abandoned meanwhile instead of failing it', async () => {
+      const runDeferredInit = vi.fn().mockRejectedValue(new Error('discovery exploded'));
+      const svc = buildService(runDeferredInit);
+      const { coordinator, step } = wireStep(svc);
+      coordinator.isInterrupted.mockResolvedValue(false);
+      vi.spyOn((svc as any).agentOperationModel, 'findById')
+        .mockResolvedValueOnce({ id: 'test-operation-1', status: 'running' })
+        .mockResolvedValue({ id: 'test-operation-1', status: 'abandoned' });
+
+      const result = await svc.executeStep({ ...mockParams, stepIndex: 0 });
+
+      expect(result).toMatchObject({ nextStepScheduled: false, success: true });
+      expect(coordinator.saveAgentState).not.toHaveBeenCalled();
+      expect(step).not.toHaveBeenCalled();
+    });
+
     it('refuses to run when no runner is wired', async () => {
       const svc = buildService(undefined);
       const { step } = wireStep(svc);
