@@ -193,6 +193,8 @@ describe('channel schema', () => {
 
       expect(owner).toMatchObject({ actorType: 'user', config: null, role: 'owner' });
       expect(agent).toMatchObject({ actorType: 'agent', config: agentConfig, role: null });
+      expect(owner.metadata).toEqual({});
+      expect(agent.metadata).toEqual({});
     });
 
     it('rejects members whose fields do not match their actor type', async () => {

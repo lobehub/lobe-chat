@@ -1290,6 +1290,7 @@ table channel_members {
   name text
   description text [not null, default: '']
   config jsonb
+  metadata jsonb [default: `{}`]
   active boolean [not null, default: true]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]

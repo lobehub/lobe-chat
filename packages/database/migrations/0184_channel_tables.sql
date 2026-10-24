@@ -66,6 +66,7 @@ CREATE TABLE IF NOT EXISTS "channel_members" (
 	"name" text,
 	"description" text DEFAULT '' NOT NULL,
 	"config" jsonb,
+	"metadata" jsonb DEFAULT '{}'::jsonb,
 	"active" boolean DEFAULT true NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,

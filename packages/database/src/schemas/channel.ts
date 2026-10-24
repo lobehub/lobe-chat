@@ -8,6 +8,7 @@ import type {
   ChannelMemberConfig,
   ChannelMemberGrantRevokeReason,
   ChannelMemberGrantStatus,
+  ChannelMemberMetadata,
   ChannelMemberRole,
   ChannelMessageRoutingSource,
   ChannelMessageRoutingStatus,
@@ -134,6 +135,7 @@ export const channelMembers = pgTable(
     description: text('description').notNull().default(''),
     /** Channel-specific device/directory environment only. */
     config: jsonb('config').$type<ChannelMemberConfig>(),
+    metadata: jsonb('metadata').$type<ChannelMemberMetadata>().default({}),
 
     /** False once the member leaves; retain job and Thread references. */
     active: boolean('active').notNull().default(true),

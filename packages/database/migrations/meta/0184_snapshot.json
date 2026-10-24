@@ -10978,6 +10978,13 @@
           "primaryKey": false,
           "notNull": false
         },
+        "metadata": {
+          "name": "metadata",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'{}'::jsonb"
+        },
         "active": {
           "name": "active",
           "type": "boolean",

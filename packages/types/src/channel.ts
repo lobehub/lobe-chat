@@ -51,6 +51,9 @@ export interface ChannelMemberConfig {
   workingDirectory?: string;
 }
 
+/** Free-form member state that does not need its own column. */
+export type ChannelMemberMetadata = Record<string, unknown>;
+
 /** Effective Agent settings and Channel environment, frozen once when a job is claimed. */
 export interface ChannelExecutionConfig extends LobeAgentConfig, ChannelMemberConfig {
   provider: string;
